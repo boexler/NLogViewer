@@ -103,6 +103,66 @@
   <data name="Status_Stopped" xml:space="preserve">
     <value>Oprit</value>
   </data>
+  <data name="ImportDestination_Title" xml:space="preserve">
+    <value>Import destination</value>
+  </data>
+  <data name="ImportDestination_Instructions" xml:space="preserve">
+    <value>Choose where to load the selected file(s).</value>
+  </data>
+  <data name="ImportDestination_ExistingTab" xml:space="preserve">
+    <value>Append to an existing tab</value>
+  </data>
+  <data name="ImportDestination_SingleNewTab" xml:space="preserve">
+    <value>One new tab for all files</value>
+  </data>
+  <data name="ImportDestination_PerFileNewTab" xml:space="preserve">
+    <value>New tab for each file</value>
+  </data>
+  <data name="ImportDestination_OK" xml:space="preserve">
+    <value>_OK</value>
+  </data>
+  <data name="ImportDestination_Cancel" xml:space="preserve">
+    <value>_Cancel</value>
+  </data>
+  <data name="ImportDestination_SelectTab" xml:space="preserve">
+    <value>Please select a tab.</value>
+  </data>
+  <data name="Import_OpenTitle" xml:space="preserve">
+    <value>Open Log File</value>
+  </data>
+  <data name="Import_NoSupportedFiles" xml:space="preserve">
+    <value>No supported log files were found.</value>
+  </data>
+  <data name="Import_TabMerged" xml:space="preserve">
+    <value>Merged import</value>
+  </data>
+  <data name="Import_Starting" xml:space="preserve">
+    <value>Starting...</value>
+  </data>
+  <data name="Import_InProgress" xml:space="preserve">
+    <value>Importing...</value>
+  </data>
+  <data name="Import_FileError_Format" xml:space="preserve">
+    <value>Error importing {0}: {1}</value>
+  </data>
+  <data name="Import_BatchComplete" xml:space="preserve">
+    <value>Import finished.</value>
+  </data>
+  <data name="Import_FormatDetectError" xml:space="preserve">
+    <value>Error detecting file format</value>
+  </data>
+  <data name="Import_ParseProgress_Format" xml:space="preserve">
+    <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
+  </data>
+  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
+    <value>Loaded {0} log entries from {1}</value>
+  </data>
+  <data name="Import_ApplyProgress_Format" xml:space="preserve">
+    <value>Adding to view: {0}%</value>
+  </data>
+  <data name="Import_ParseError" xml:space="preserve">
+    <value>Error parsing file</value>
+  </data>
 </root>
 
 

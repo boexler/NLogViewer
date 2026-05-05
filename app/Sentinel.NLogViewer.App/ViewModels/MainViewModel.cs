@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -18,10 +17,10 @@ using Sentinel.NLogViewer.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NLog;
-using NLog.Config;
 using Sentinel.NLogViewer.App.Models;
 using Sentinel.NLogViewer.App.Services;
 using Sentinel.NLogViewer.App;
+
 namespace Sentinel.NLogViewer.App.ViewModels;
 
 /// <summary>
@@ -332,239 +331,387 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var dialog = new OpenFileDialog
 		{
 			Filter = "Log Files (*.xml;*.log;*.txt;*.json)|*.xml;*.log;*.txt;*.json|XML Files (*.xml)|*.xml|Text Files (*.txt;*.log)|*.txt;*.log|JSON Files (*.json)|*.json|All Files (*.*)|*.*",
-			Title = "Open Log File"
+			Title = _localizationService.GetString("Import_OpenTitle", "Open Log File"),
+			Multiselect = true
 		};
 
-		if (dialog.ShowDialog() == true)
-		{
-			var filePath = dialog.FileName;
-			var extension = Path.GetExtension(filePath).ToLowerInvariant();
+		if (dialog.ShowDialog() == true && dialog.FileNames.Length > 0)
+			BeginImportPathsFromUi(dialog.FileNames);
+	}
 
-			// For text files, check format detection
-			if (extension == ".txt" || extension == ".log" || extension == "")
+	/// <summary>
+	/// Starts unified import for paths given by the open-file dialog or drag-drop (filters and asks destination).
+	/// </summary>
+	public void BeginImportPathsFromUi(IEnumerable<string> rawPaths)
+	{
+		var filtered = (rawPaths ?? Enumerable.Empty<string>())
+			.Where(IsSupportedImportPath)
+			.Distinct(StringComparer.OrdinalIgnoreCase)
+			.ToList();
+
+		if (filtered.Count == 0)
+		{
+			StatusMessage = _localizationService.GetString("Import_NoSupportedFiles", "No supported log files were found.");
+			return;
+		}
+
+		if (IsLoading)
+			return;
+
+		if (!TryResolveImportBatchContext(filtered, out var ctx) || ctx == null)
+			return;
+
+		_ = RunImportBatchAsync(filtered, ctx);
+	}
+
+	/// <summary>
+	/// Returns whether the path is a supported regular file for import (aligned with the open-file filter).
+	/// </summary>
+	private static bool IsSupportedImportPath(string path)
+	{
+		if (string.IsNullOrWhiteSpace(path))
+			return false;
+
+		try
+		{
+			var attributes = File.GetAttributes(path);
+			if ((attributes & FileAttributes.Directory) != 0 || (attributes & FileAttributes.Device) != 0)
+				return false;
+		}
+		catch
+		{
+			return false;
+		}
+
+		var extension = Path.GetExtension(path);
+		return extension.Equals(".xml", StringComparison.OrdinalIgnoreCase)
+		       || extension.Equals(".log", StringComparison.OrdinalIgnoreCase)
+		       || extension.Equals(".txt", StringComparison.OrdinalIgnoreCase)
+		       || extension.Equals(".json", StringComparison.OrdinalIgnoreCase)
+		       || extension.Length == 0;
+	}
+
+	/// <summary>
+	/// Shows the destination dialog when needed and builds the batch context.
+	/// </summary>
+	private bool TryResolveImportBatchContext(IReadOnlyList<string> paths, out LogFileImportBatchContext? ctx)
+	{
+		ctx = null;
+		if (paths.Count == 0)
+			return false;
+
+		if (LogTabs.Count == 0 && paths.Count == 1)
+		{
+			ctx = new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.PerFileNewTab, null, null);
+			return true;
+		}
+
+		var owner = System.Windows.Application.Current.MainWindow;
+		var sharedHeader = paths.Count > 1
+			? _localizationService.GetString("Import_TabMerged", "Merged import")
+			: Path.GetFileName(paths[0]);
+
+		if (LogTabs.Count == 0)
+		{
+			var dlgMinimal = new ImportDestinationWindow(LogTabs.ToList(), null, showExistingTabOption: false)
 			{
-				HandleTextFileWithFormatDetection(filePath);
-			}
-			else
-			{
-				// For XML/JSON, parse directly
-				ParseFileDirectly(filePath);
-			}
+				Owner = owner
+			};
+			if (dlgMinimal.ShowDialog() != true)
+				return false;
+
+			ctx = dlgMinimal.SelectedMode == LogFileImportBatchContext.DestinationMode.SingleNewTab
+				? new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.SingleNewTab, null, sharedHeader)
+				: new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.PerFileNewTab, null, null);
+			return true;
+		}
+
+		var dlgFull = new ImportDestinationWindow(LogTabs.ToList(), SelectedTab, showExistingTabOption: true)
+		{
+			Owner = owner
+		};
+		if (dlgFull.ShowDialog() != true)
+			return false;
+
+		switch (dlgFull.SelectedMode)
+		{
+			case LogFileImportBatchContext.DestinationMode.ExistingTab:
+				var tab = dlgFull.SelectedExistingTab;
+				if (tab == null)
+					return false;
+				ctx = new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.ExistingTab, tab, null);
+				return true;
+			case LogFileImportBatchContext.DestinationMode.SingleNewTab:
+				ctx = new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.SingleNewTab, null, sharedHeader);
+				return true;
+			default:
+				ctx = new LogFileImportBatchContext(LogFileImportBatchContext.DestinationMode.PerFileNewTab, null, null);
+				return true;
 		}
 	}
 
 	/// <summary>
-	/// Handles text file opening with format detection and optional mapping dialog
+	/// Parses each file in order and applies logs according to <paramref name="ctx"/>.
 	/// </summary>
-	private void HandleTextFileWithFormatDetection(string filePath)
-	{
-		Task.Run(() =>
-		{
-			try
-			{
-				// Get format configuration
-				var format = _fileParserService.GetTextFileFormat(filePath);
-
-				// If format detection failed or auto-mapping is incomplete, show dialog
-				if (format == null || !format.ColumnMapping.IsValid())
-				{
-					// Read sample lines for the dialog
-					var sampleLines = File.ReadLines(filePath).Take(20).ToList();
-
-					// If format is null, create a basic one for detection
-					if (format == null)
-					{
-						var detector = App.ServiceProvider?.GetRequiredService<TextFileFormatDetector>();
-						format = detector?.DetectFormat(filePath);
-					}
-
-					// Show dialog on UI thread
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
-					{
-						if (format != null)
-						{
-							var viewModel = new ColumnMappingViewModel(format, sampleLines, filePath);
-							var mappingWindow = new ColumnMappingWindow(viewModel);
-							var mainWindow = System.Windows.Application.Current.MainWindow;
-
-							if (mappingWindow.ShowDialog(mainWindow) == true)
-							{
-								var finalFormat = mappingWindow.FinalFormat;
-
-								// Save format if requested
-								if (mappingWindow.SaveForPattern && !string.IsNullOrEmpty(mappingWindow.FilePattern))
-								{
-									_fileParserService.SaveTextFileFormat(mappingWindow.FilePattern, finalFormat);
-								}
-
-								// Parse with the configured format
-								ParseFileWithFormat(filePath, finalFormat);
-							}
-							else
-							{
-								// User cancelled, try parsing with detected format or fallback
-								ParseFileDirectly(filePath);
-							}
-						}
-						else
-						{
-							// Format detection completely failed, use fallback parsing
-							ParseFileDirectly(filePath);
-						}
-					});
-				}
-				else
-				{
-					// Format is valid, parse directly
-					ParseFileDirectly(filePath);
-				}
-			}
-			catch (Exception ex)
-			{
-				System.Windows.Application.Current.Dispatcher.Invoke(() =>
-				{
-					StatusMessage = $"Error detecting file format: {ex.Message}";
-					// Fallback to direct parsing
-					ParseFileDirectly(filePath);
-				});
-			}
-		});
-	}
-
-	/// <summary>
-	/// Parses a file directly without format configuration
-	/// </summary>
-	private void ParseFileDirectly(string filePath)
+	private async Task RunImportBatchAsync(IReadOnlyList<string> paths, LogFileImportBatchContext ctx)
 	{
 		IsLoading = true;
-		LoadingProgress = "Starting...";
-		StatusMessage = "Parsing file...";
+		LoadingProgress = _localizationService.GetString("Import_Starting", "Starting...");
+		StatusMessage = _localizationService.GetString("Import_InProgress", "Importing...");
 
-		Task.Run(async () =>
+		try
 		{
-			try
+			for (var i = 0; i < paths.Count; i++)
 			{
-				var progress = new Progress<(int current, int total)>(p =>
+				var path = paths[i];
+				try
 				{
-					var percentage = p.total > 0 ? (p.current * 100 / p.total) : 0;
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
-					{
-						LoadingProgress = $"Processing: {p.current} / {p.total} ({percentage}%)";
-					});
-				});
-
-				var logEvents = await _fileParserService.ParseFileAsync(filePath, progress);
-
-				// Batch-add logs to CacheTarget for better performance
-				System.Windows.Application.Current.Dispatcher.Invoke(() =>
-				{
-					ProcessParsedLogs(logEvents, filePath);
-					IsLoading = false;
-					LoadingProgress = string.Empty;
-					StatusMessage = $"Loaded {logEvents.Count} log entries from {Path.GetFileName(filePath)}";
-				});
-			}
+					await ImportSinglePathAsync(path, ctx, i + 1, paths.Count).ConfigureAwait(true);
+				}
 			catch (Exception ex)
 			{
-				System.Windows.Application.Current.Dispatcher.Invoke(() =>
-				{
-					IsLoading = false;
-					LoadingProgress = string.Empty;
-					StatusMessage = $"Error parsing file: {ex.Message}";
-				});
+				var pathName = Path.GetFileName(path);
+				var tpl = _localizationService.GetString(
+					"Import_FileError_Format",
+					"Error importing {0}: {1}");
+				StatusMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, pathName, ex.Message);
 			}
-		});
+			}
+
+			StatusMessage = _localizationService.GetString("Import_BatchComplete", "Import finished.");
+		}
+		finally
+		{
+			IsLoading = false;
+			LoadingProgress = string.Empty;
+		}
 	}
 
 	/// <summary>
-	/// Parses a file with a specific format configuration
+	/// Runs format detection (if needed) and parsing for a single path in a batch.
 	/// </summary>
-	private void ParseFileWithFormat(string filePath, TextFileFormat format)
+	private async Task ImportSinglePathAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
 	{
-		IsLoading = true;
-		LoadingProgress = "Starting...";
-		StatusMessage = "Parsing file...";
-
-		Task.Run(async () =>
-		{
-			try
-			{
-				var progress = new Progress<(int current, int total)>(p =>
-				{
-					var percentage = p.total > 0 ? (p.current * 100 / p.total) : 0;
-					System.Windows.Application.Current.Dispatcher.Invoke(() =>
-					{
-						LoadingProgress = $"Processing: {p.current} / {p.total} ({percentage}%)";
-					});
-				});
-
-				// Temporarily save format for this parsing session
-				_fileParserService.SaveTextFileFormat(Path.GetFileName(filePath), format);
-
-				var logEvents = await _fileParserService.ParseFileAsync(filePath, progress);
-
-				// Batch-add logs to CacheTarget for better performance
-				System.Windows.Application.Current.Dispatcher.Invoke(() =>
-				{
-					ProcessParsedLogs(logEvents, filePath);
-					IsLoading = false;
-					LoadingProgress = string.Empty;
-					StatusMessage = $"Loaded {logEvents.Count} log entries from {Path.GetFileName(filePath)}";
-				});
-			}
-			catch (Exception ex)
-			{
-				System.Windows.Application.Current.Dispatcher.Invoke(() =>
-				{
-					IsLoading = false;
-					LoadingProgress = string.Empty;
-					StatusMessage = $"Error parsing file: {ex.Message}";
-				});
-			}
-		});
+		var extension = Path.GetExtension(filePath).ToLowerInvariant();
+		if (extension == ".txt" || extension == ".log" || extension == "")
+			await ImportTextFormatFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
+		else
+			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
 	}
 
 	/// <summary>
-	/// Processes parsed log events and adds them to the appropriate tab
+	/// Text / extensionless log paths: detect format, optionally show column-mapping, then parse.
 	/// </summary>
-	private void ProcessParsedLogs(List<LogEventInfo> logEvents, string fileName)
+	private async Task ImportTextFormatFlowAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
 	{
-		// We're already on the Dispatcher thread, no need to invoke
+		var dispatcher = System.Windows.Application.Current.Dispatcher;
+		TextFileFormat? format;
+		try
+		{
+			format = await Task.Run(() => _fileParserService.GetTextFileFormat(filePath)).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			await dispatcher.InvokeAsync(() =>
+			{
+				StatusMessage = _localizationService.GetString("Import_FormatDetectError", "Error detecting file format") +
+				                $": {ex.Message}";
+			}).Task.ConfigureAwait(false);
+			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
+			return;
+		}
+
+		if (format != null && format.ColumnMapping.IsValid())
+		{
+			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
+			return;
+		}
+
+		var sampleLines =
+			await Task.Run(() => File.ReadLines(filePath).Take(20).ToList()).ConfigureAwait(false);
+
+		if (format == null)
+		{
+			var detector = App.ServiceProvider?.GetRequiredService<TextFileFormatDetector>();
+			format = detector?.DetectFormat(filePath);
+		}
+
+		TextFileFormat? mappedFormat = await dispatcher.InvokeAsync(() =>
+		{
+			if (format == null)
+				return null;
+
+			var viewModel = new ColumnMappingViewModel(format, sampleLines, filePath);
+			var mappingWindow = new ColumnMappingWindow(viewModel);
+			var mainWindow = System.Windows.Application.Current.MainWindow;
+
+			if (mappingWindow.ShowDialog(mainWindow) != true)
+				return null;
+
+			var userFormat = mappingWindow.FinalFormat;
+
+			if (mappingWindow.SaveForPattern && !string.IsNullOrEmpty(mappingWindow.FilePattern))
+				_fileParserService.SaveTextFileFormat(mappingWindow.FilePattern, userFormat);
+
+			return userFormat;
+		}).Task.ConfigureAwait(false);
+
+		if (mappedFormat != null)
+			await ParseAndApplyWithFormatAsync(filePath, mappedFormat, ctx, index, total).ConfigureAwait(true);
+		else
+			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
+	}
+
+	/// <summary>
+	/// Parses using an explicit text format and applies to the tab batch target.
+	/// </summary>
+	private async Task ParseAndApplyWithFormatAsync(string filePath, TextFileFormat format,
+		LogFileImportBatchContext ctx, int index, int total)
+	{
+		var dispatcher = System.Windows.Application.Current.Dispatcher;
+
+		var progress = new Progress<(int current, int total)>(p =>
+		{
+			var percentage = p.total > 0 ? p.current * 100 / p.total : 0;
+			dispatcher.Invoke(() => { LoadingProgress = FormatParseProgress(filePath, index, total, p.current, p.total, percentage); });
+		});
+
+		await Task.Run(() => _fileParserService.SaveTextFileFormat(Path.GetFileName(filePath), format)).ConfigureAwait(false);
+
+		List<LogEventInfo> logEvents;
+		try
+		{
+			logEvents = await _fileParserService.ParseFileAsync(filePath, progress).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			await dispatcher.InvokeAsync(() =>
+			{
+				StatusMessage = _localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}";
+			}).Task.ConfigureAwait(false);
+			return;
+		}
+
+		await dispatcher.InvokeAsync(() =>
+		{
+			ApplyParsedLogs(logEvents, filePath, ctx);
+			StatusMessage = FormatLoadedStatus(filePath, logEvents.Count);
+			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
+		}).Task.ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// Parses without injecting a new text format and applies to the batch target.
+	/// </summary>
+	private async Task ImportDirectParseFlowAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
+	{
+		var dispatcher = System.Windows.Application.Current.Dispatcher;
+
+		var progress = new Progress<(int current, int total)>(p =>
+		{
+			var percentage = p.total > 0 ? p.current * 100 / p.total : 0;
+			dispatcher.Invoke(() => { LoadingProgress = FormatParseProgress(filePath, index, total, p.current, p.total, percentage); });
+		});
+
+		List<LogEventInfo> logEvents;
+		try
+		{
+			logEvents = await _fileParserService.ParseFileAsync(filePath, progress).ConfigureAwait(false);
+		}
+		catch (Exception ex)
+		{
+			await dispatcher.InvokeAsync(() =>
+			{
+				StatusMessage = _localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}";
+			}).Task.ConfigureAwait(false);
+			return;
+		}
+
+		await dispatcher.InvokeAsync(() =>
+		{
+			ApplyParsedLogs(logEvents, filePath, ctx);
+			StatusMessage = FormatLoadedStatus(filePath, logEvents.Count);
+			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
+		}).Task.ConfigureAwait(false);
+	}
+
+	private string FormatParseProgress(string filePath, int fileIndex, int fileTotal, int current, int parsedTotal,
+		int percentage)
+	{
+		var name = Path.GetFileName(filePath);
+		var tpl = _localizationService.GetString(
+			"Import_ParseProgress_Format",
+			"File {0}/{1} — {2}: {3} / {4} ({5}%)");
+		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, fileIndex, fileTotal, name,
+			current, parsedTotal, percentage);
+	}
+
+	private string FormatLoadedStatus(string filePath, int count)
+	{
+		var name = Path.GetFileName(filePath);
+		var tpl = _localizationService.GetString(
+			"Import_LoadedFromFile_Format",
+			"Loaded {0} log entries from {1}");
+		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, count, name);
+	}
+
+	/// <summary>
+	/// Appends parsed rows to the tab chosen for this import batch.
+	/// </summary>
+	private void ApplyParsedLogs(List<LogEventInfo> logEvents, string filePath, LogFileImportBatchContext ctx)
+	{
 		if (logEvents == null || logEvents.Count == 0)
 			return;
-		
-		// Find or create tab for this file
-		var tab = LogTabs.FirstOrDefault(t => t.TargetName == $"File_{Path.GetFileName(fileName)}");
-		if (tab == null)
+
+		LogTabViewModel tab;
+		switch (ctx.Mode)
 		{
-			tab = new LogTabViewModel
-			{
-				Header = Path.GetFileName(fileName),
-				TargetName = $"File_{Path.GetFileName(fileName)}",
-				MaxCount = int.MaxValue
-			};
-			LogTabs.Add(tab);
-			SelectedTab = tab;
+			case LogFileImportBatchContext.DestinationMode.ExistingTab:
+				tab = ctx.ExistingTargetTab
+				      ?? throw new InvalidOperationException("Existing tab target is not set.");
+				break;
+			case LogFileImportBatchContext.DestinationMode.SingleNewTab:
+				if (ctx.SharedNewTab == null)
+				{
+					ctx.SharedNewTab = new LogTabViewModel
+					{
+						Header = ctx.SharedTabHeaderWhenSingleNewTab ?? Path.GetFileName(filePath),
+						TargetName = $"FileImport_{Guid.NewGuid()}",
+						MaxCount = int.MaxValue
+					};
+					LogTabs.Add(ctx.SharedNewTab);
+					SelectedTab = ctx.SharedNewTab;
+				}
+
+				tab = ctx.SharedNewTab;
+				break;
+			default:
+				tab = new LogTabViewModel
+				{
+					Header = Path.GetFileName(filePath),
+					TargetName = $"FileImport_{Guid.NewGuid()}",
+					MaxCount = int.MaxValue
+				};
+				LogTabs.Add(tab);
+				SelectedTab = tab;
+				break;
 		}
 
-		// Add all log events in batches to avoid UI freezing (Cache replays to NLogViewer when it subscribes)
 		const int batchSize = 500;
-		for (int i = 0; i < logEvents.Count; i += batchSize)
+		for (var i = 0; i < logEvents.Count; i += batchSize)
 		{
 			var batch = logEvents.Skip(i).Take(batchSize).ToList();
-			
 			foreach (var logEvent in batch)
-			{
 				tab.AddLogEvent(logEvent);
-			}
-			
-			// Update progress during batch writing
+
 			if (i + batchSize < logEvents.Count)
 			{
 				var progress = (i + batchSize) * 100 / logEvents.Count;
-				LoadingProgress = $"Adding to view: {progress}%";
+				LoadingProgress = string.Format(System.Globalization.CultureInfo.CurrentCulture,
+					_localizationService.GetString("Import_ApplyProgress_Format", "Adding to view: {0}%"), progress);
 			}
 		}
+
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 	}
 

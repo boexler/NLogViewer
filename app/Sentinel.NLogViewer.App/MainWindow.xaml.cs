@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +34,35 @@ namespace Sentinel.NLogViewer.App
 #if DEBUG
             AddDebugMenu();
 #endif
+        }
+
+        /// <summary>
+        /// Accept file drops onto the tab area.
+        /// </summary>
+        private void LogTabsArea_PreviewDragOver(object sender, DragEventArgs e)
+        {
+	        e.Handled = true;
+	        e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop)
+		        ? DragDropEffects.Copy
+		        : DragDropEffects.None;
+        }
+
+        /// <summary>
+        /// Imports dropped paths using the same flow as Open File.
+        /// </summary>
+        private void LogTabsArea_Drop(object sender, DragEventArgs e)
+        {
+	        if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+		        return;
+
+	        if (e.Data.GetData(DataFormats.FileDrop) is not string[] rawPaths)
+		        return;
+
+	        var paths = rawPaths.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
+	        if (paths.Length == 0)
+		        return;
+
+	        _viewModel.BeginImportPathsFromUi(paths);
         }
 
 #if DEBUG

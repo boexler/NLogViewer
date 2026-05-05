@@ -76,9 +76,13 @@
         </ToolBar>
         
         <!-- Main Content: TabControl with NLogViewers -->
-        <TabControl Grid.Row="1" 
+        <TabControl x:Name="LogTabsControl"
+                    Grid.Row="1"
                     ItemsSource="{Binding LogTabs}"
                     SelectedItem="{Binding SelectedTab}"
+                    AllowDrop="True"
+                    PreviewDragOver="LogTabsArea_PreviewDragOver"
+                    Drop="LogTabsArea_Drop"
                     attachedProperties:TabContent.IsCached="True"
                     attachedProperties:TabContent.Template="{StaticResource TabControlContentTemplate}">
             <TabControl.ItemTemplate>
