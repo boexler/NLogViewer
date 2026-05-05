@@ -18,11 +18,11 @@
         <Grid.Resources>
             <DataTemplate x:Key="TabControlContentTemplate" DataType="models:LogTabViewModel">
                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                <dj:NLogViewer 
+                <dj:NLogViewerBase 
                     x:Name="NLogViewer1"
                     Tag="{Binding ElementName=NLogViewer1}"
-                    CacheTarget="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
-                    DataContext="{Binding DataContext.NLogViewer, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
+                    ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                    MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>

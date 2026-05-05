@@ -22,8 +22,6 @@ using NLog.Config;
 using Sentinel.NLogViewer.App.Models;
 using Sentinel.NLogViewer.App.Services;
 using Sentinel.NLogViewer.App;
-using Sentinel.NLogViewer.Wpf.Targets;
-
 namespace Sentinel.NLogViewer.App.ViewModels;
 
 /// <summary>
@@ -663,7 +661,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// Finds the NLogViewer instance in the currently selected tab's visual tree
 	/// </summary>
 	/// <returns>The NLogViewer instance if found, null otherwise</returns>
-	private Wpf.NLogViewer? FindNLogViewerInTab()
+	private Wpf.NLogViewerBase? FindNLogViewerInTab()
 	{
 		if (SelectedTab == null)
 			return null;
@@ -689,14 +687,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			if (contentControl != null && contentControl.DataContext == SelectedTab)
 			{
 				// Found the content control for the selected tab, now find NLogViewer
-				var nLogViewer = FindVisualChild<Wpf.NLogViewer>(contentControl);
+				var nLogViewer = FindVisualChild<Wpf.NLogViewerBase>(contentControl);
 				if (nLogViewer != null)
 					return nLogViewer;
 			}
 		}
 
 		// Fallback: Search directly in TabControl for NLogViewer
-		return FindVisualChild<Wpf.NLogViewer>(tabControl);
+		return FindVisualChild<Wpf.NLogViewerBase>(tabControl);
 	}
 
 	/// <summary>
