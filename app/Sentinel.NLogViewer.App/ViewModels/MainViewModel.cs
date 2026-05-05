@@ -200,6 +200,35 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		SelectedTab = null;
 	}
 
+	/// <summary>
+	/// Moves the given tab next to a target tab (e.g. after a header drag-and-drop).
+	/// </summary>
+	/// <param name="source">Tab being dragged.</param>
+	/// <param name="target">Tab header that was dropped on.</param>
+	/// <param name="insertBefore">
+	/// When true, the source is inserted before the target; when false, after the target.
+	/// </param>
+	public void MoveTab(LogTabViewModel source, LogTabViewModel target, bool insertBefore)
+	{
+		if (source == null || target == null || ReferenceEquals(source, target))
+			return;
+
+		var oldIndex = LogTabs.IndexOf(source);
+		var targetIndex = LogTabs.IndexOf(target);
+		if (oldIndex < 0 || targetIndex < 0)
+			return;
+
+		var newIndex = insertBefore ? targetIndex : targetIndex + 1;
+		if (oldIndex < newIndex)
+			newIndex--;
+
+		if (oldIndex == newIndex)
+			return;
+
+		newIndex = Math.Clamp(newIndex, 0, LogTabs.Count - 1);
+		LogTabs.Move(oldIndex, newIndex);
+	}
+
 	public bool IsListening
 	{
 		get => _isListening;

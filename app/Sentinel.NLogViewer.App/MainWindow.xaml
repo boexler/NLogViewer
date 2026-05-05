@@ -91,6 +91,16 @@
                     Drop="LogTabsArea_Drop"
                     attachedProperties:TabContent.IsCached="True"
                     attachedProperties:TabContent.Template="{StaticResource TabControlContentTemplate}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem">
+                    <Setter Property="AllowDrop" Value="True"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LogTabItem_PreviewMouseLeftButtonDown"/>
+                    <EventSetter Event="PreviewMouseLeftButtonUp" Handler="LogTabItem_PreviewMouseLeftButtonUp"/>
+                    <EventSetter Event="PreviewMouseMove" Handler="LogTabItem_PreviewMouseMove"/>
+                    <EventSetter Event="PreviewDragOver" Handler="LogTabItem_PreviewDragOver"/>
+                    <EventSetter Event="Drop" Handler="LogTabItem_Drop"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
