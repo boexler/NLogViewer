@@ -107,13 +107,13 @@
     <value>Import destination</value>
   </data>
   <data name="ImportDestination_Instructions" xml:space="preserve">
-    <value>Choose where to load the selected file(s).</value>
+    <value>Elija dónde cargar el/los archivo(s) seleccionado(s).</value>
   </data>
   <data name="ImportDestination_ExistingTab" xml:space="preserve">
     <value>Append to an existing tab</value>
   </data>
   <data name="ImportDestination_SingleNewTab" xml:space="preserve">
-    <value>One new tab for all files</value>
+    <value>Una pestaña nueva para todos los archivo(s)</value>
   </data>
   <data name="ImportDestination_PerFileNewTab" xml:space="preserve">
     <value>New tab for each file</value>
@@ -131,7 +131,7 @@
     <value>Open Log File</value>
   </data>
   <data name="Import_NoSupportedFiles" xml:space="preserve">
-    <value>No supported log files were found.</value>
+    <value>No se encontraron archivo(s) de registro compatibles.</value>
   </data>
   <data name="Import_TabMerged" xml:space="preserve">
     <value>Merged import</value>

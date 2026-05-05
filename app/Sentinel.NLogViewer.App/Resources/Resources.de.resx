@@ -113,7 +113,7 @@
     <value>An vorhandenen Reiter anhängen</value>
   </data>
   <data name="ImportDestination_SingleNewTab" xml:space="preserve">
-    <value>Ein neuer Reiter für alle Dateien</value>
+    <value>Ein neuer Reiter für alle Datei(en)</value>
   </data>
   <data name="ImportDestination_PerFileNewTab" xml:space="preserve">
     <value>Pro Datei ein neuer Reiter</value>
@@ -131,7 +131,7 @@
     <value>Logdatei öffnen</value>
   </data>
   <data name="Import_NoSupportedFiles" xml:space="preserve">
-    <value>Keine unterstützten Logdateien gefunden.</value>
+    <value>Keine unterstützten Logdatei(en) gefunden.</value>
   </data>
   <data name="Import_TabMerged" xml:space="preserve">
     <value>Zusammengeführter Import</value>

@@ -113,7 +113,7 @@
     <value>Append to an existing tab</value>
   </data>
   <data name="ImportDestination_SingleNewTab" xml:space="preserve">
-    <value>One new tab for all files</value>
+    <value>One new tab for all file(s)</value>
   </data>
   <data name="ImportDestination_PerFileNewTab" xml:space="preserve">
     <value>New tab for each file</value>
@@ -131,7 +131,7 @@
     <value>Open Log File</value>
   </data>
   <data name="Import_NoSupportedFiles" xml:space="preserve">
-    <value>No supported log files were found.</value>
+    <value>No supported log file(s) were found.</value>
   </data>
   <data name="Import_TabMerged" xml:space="preserve">
     <value>Merged import</value>

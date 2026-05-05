@@ -39,7 +39,7 @@
             <RadioButton x:Name="SingleNewTabRadio"
                          GroupName="ImportDest"
                          Margin="0,0,0,8"
-                         Content="{helpers:Resource Key=ImportDestination_SingleNewTab, DefaultValue=One new tab for all files}"
+                         Content="{helpers:Resource Key=ImportDestination_SingleNewTab, DefaultValue=One new tab for all file(s)}"
                          Checked="ModeRadio_Checked" />
             <RadioButton x:Name="PerFileNewTabRadio"
                          GroupName="ImportDest"

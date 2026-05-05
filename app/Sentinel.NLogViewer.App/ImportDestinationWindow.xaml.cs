@@ -16,6 +16,7 @@ public partial class ImportDestinationWindow : Window
 {
 	private readonly IList<LogTabViewModel> _tabs;
 	private readonly bool _showExistingTabOption;
+	private readonly bool _showPerFileNewTabOption;
 	private readonly LogTabViewModel? _preferredExistingTab;
 
 	/// <summary>
@@ -34,20 +35,23 @@ public partial class ImportDestinationWindow : Window
 	/// <param name="tabs">Open tabs used for "existing tab" mode.</param>
 	/// <param name="preferredExistingTab">Tab to pre-select when enabling existing-tab mode.</param>
 	/// <param name="showExistingTabOption">When false (no open tabs yet), hides existing-tab UI.</param>
+	/// <param name="showPerFileNewTabOption">When false (single file only), hides the "new tab per file" choice.</param>
 	public ImportDestinationWindow(IList<LogTabViewModel> tabs, LogTabViewModel? preferredExistingTab,
-		bool showExistingTabOption)
+		bool showExistingTabOption, bool showPerFileNewTabOption = true)
 	{
 		if (tabs == null)
 			throw new ArgumentNullException(nameof(tabs));
 
 		_tabs = tabs;
 		_showExistingTabOption = showExistingTabOption;
+		_showPerFileNewTabOption = showPerFileNewTabOption;
 		_preferredExistingTab = preferredExistingTab;
 
 		InitializeComponent();
 
 		TabsListBox.ItemsSource = _tabs;
 		UpdateExistingTabAvailability();
+		UpdatePerFileNewTabOptionVisibility();
 		ApplyInitialSelection();
 		UpdateOkEnabled();
 
@@ -97,6 +101,14 @@ public partial class ImportDestinationWindow : Window
 		TabsListBox.IsEnabled = ExistingTabRadio.IsChecked == true;
 	}
 
+	/// <summary>
+	/// Hides "new tab per file" when only one file is being imported (option is redundant).
+	/// </summary>
+	private void UpdatePerFileNewTabOptionVisibility()
+	{
+		PerFileNewTabRadio.Visibility = _showPerFileNewTabOption ? Visibility.Visible : Visibility.Collapsed;
+	}
+
 	private void ModeRadio_Checked(object sender, RoutedEventArgs e)
 	{
 		if (TabsListBox == null || ExistingTabRadio == null || OkButton == null)
@@ -135,7 +147,7 @@ public partial class ImportDestinationWindow : Window
 			SelectedMode = LogFileImportBatchContext.DestinationMode.ExistingTab;
 			SelectedExistingTab = tab;
 		}
-		else if (PerFileNewTabRadio.IsChecked == true)
+		else if (_showPerFileNewTabOption && PerFileNewTabRadio.IsChecked == true)
 		{
 			SelectedMode = LogFileImportBatchContext.DestinationMode.PerFileNewTab;
 			SelectedExistingTab = null;

@@ -413,7 +413,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		if (LogTabs.Count == 0)
 		{
-			var dlgMinimal = new ImportDestinationWindow(LogTabs.ToList(), null, showExistingTabOption: false)
+			var dlgMinimal = new ImportDestinationWindow(LogTabs.ToList(), null, showExistingTabOption: false,
+					showPerFileNewTabOption: paths.Count > 1)
 			{
 				Owner = owner
 			};
@@ -426,7 +427,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			return true;
 		}
 
-		var dlgFull = new ImportDestinationWindow(LogTabs.ToList(), SelectedTab, showExistingTabOption: true)
+		var dlgFull = new ImportDestinationWindow(LogTabs.ToList(), SelectedTab, showExistingTabOption: true,
+				showPerFileNewTabOption: paths.Count > 1)
 		{
 			Owner = owner
 		};
