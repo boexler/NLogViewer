@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -56,6 +57,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
+		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
 
 		// Initialize commands
 		StartListeningCommand = new AsyncRelayCommand(StartListeningAsync, () => !_isListening);
@@ -66,6 +68,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		AboutCommand = new RelayCommand(ShowAbout);
 		ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
 		ExportLogsCommand = new RelayCommand(ExportLogs, () => SelectedTab != null);
+		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
+		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
 
 		// Initialize current language flag
 		UpdateLanguageFlag();
@@ -137,8 +141,63 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				OnPropertyChanged();
 				// Update ExportLogsCommand CanExecute
 				((RelayCommand)ExportLogsCommand).RaiseCanExecuteChanged();
+				((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
+				((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 			}
 		}
+	}
+
+	private void OnLogTabsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+	{
+		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
+		((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
+	}
+
+	/// <summary>
+	/// Removes the selected tab after user confirms.
+	/// </summary>
+	private void CloseCurrentTab()
+	{
+		if (SelectedTab == null)
+			return;
+
+		var caption = _localizationService.GetString("Confirm_CloseCurrentTab_Caption", "Close tab");
+		var message = _localizationService.GetString(
+			"Confirm_CloseCurrentTab_Message",
+			"Do you really want to close the current tab?");
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		    MessageBoxResult.Yes)
+			return;
+
+		var index = LogTabs.IndexOf(SelectedTab);
+		if (index < 0)
+			return;
+
+		LogTabs.RemoveAt(index);
+
+		if (LogTabs.Count == 0)
+			SelectedTab = null;
+		else
+			SelectedTab = LogTabs[Math.Min(index, LogTabs.Count - 1)];
+	}
+
+	/// <summary>
+	/// Clears all tabs after user confirms.
+	/// </summary>
+	private void CloseAllTabs()
+	{
+		var caption = _localizationService.GetString("Confirm_CloseAllTabs_Caption", "Close all tabs");
+		var message = _localizationService.GetString(
+			"Confirm_CloseAllTabs_Message",
+			"Do you really want to close all tabs?");
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		    MessageBoxResult.Yes)
+			return;
+
+		LogTabs.Clear();
+		SelectedTab = null;
 	}
 
 	public bool IsListening
@@ -203,6 +262,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand AboutCommand { get; }
 	public ICommand ChangeLanguageCommand { get; }
 	public ICommand ExportLogsCommand { get; }
+	public ICommand CloseCurrentTabCommand { get; }
+	public ICommand CloseAllTabsCommand { get; }
 
 	/// <summary>
 	/// Gets the flag emoji for the current language
@@ -911,6 +972,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	public void Dispose()
 	{
+		LogTabs.CollectionChanged -= OnLogTabsCollectionChanged;
 		StopListening();
 		//_udpReceiverService.LogReceived -= OnLogReceived;
 		//_fileParserService.LogParsed -= OnLogReceived;

@@ -88,6 +88,27 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>*.log formátum</value>
   </data>
+  <data name="Menu_Logs_Tabs" xml:space="preserve">
+    <value>_Lapok</value>
+  </data>
+  <data name="Menu_CloseCurrentTab" xml:space="preserve">
+    <value>Aktuális _lap bezárása</value>
+  </data>
+  <data name="Menu_CloseAllTabs" xml:space="preserve">
+    <value>Összes lap _bezárása</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
+    <value>Lap bezárása</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
+    <value>Biztosan bezárja az aktuális lapot?</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
+    <value>Összes lap bezárása</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
+    <value>Biztosan bezárja az összes lapot?</value>
+  </data>
   <data name="Button_StartListening" xml:space="preserve">
     <value>Figyelés indítása</value>
   </data>

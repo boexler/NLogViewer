@@ -48,6 +48,12 @@
                           InputGestureText="Ctrl+,"/>
             </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Logs, DefaultValue=_Logs}">
+                <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
+                              Command="{Binding CloseCurrentTabCommand}"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_CloseAllTabs, DefaultValue=Close _all tabs}"
+                              Command="{Binding CloseAllTabsCommand}"/>
+                </MenuItem>
                 <MenuItem Header="{helpers:Resource Key=Menu_Export, DefaultValue=_Export}">
                     <MenuItem Header="{helpers:Resource Key=Menu_ExportLogFormat, DefaultValue=*.log format}" 
                               Command="{Binding ExportLogsCommand}"/>

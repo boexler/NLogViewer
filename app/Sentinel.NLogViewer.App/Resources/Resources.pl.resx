@@ -88,6 +88,27 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>format *.log</value>
   </data>
+  <data name="Menu_Logs_Tabs" xml:space="preserve">
+    <value>_Karty</value>
+  </data>
+  <data name="Menu_CloseCurrentTab" xml:space="preserve">
+    <value>Zamknij _bieżącą kartę</value>
+  </data>
+  <data name="Menu_CloseAllTabs" xml:space="preserve">
+    <value>Zamknij _wszystkie karty</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
+    <value>Zamknij kartę</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
+    <value>Czy na pewno chcesz zamknąć bieżącą kartę?</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
+    <value>Zamknij wszystkie karty</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
+    <value>Czy na pewno chcesz zamknąć wszystkie karty?</value>
+  </data>
   <data name="Button_StartListening" xml:space="preserve">
     <value>Rozpocznij nasłuchiwanie</value>
   </data>

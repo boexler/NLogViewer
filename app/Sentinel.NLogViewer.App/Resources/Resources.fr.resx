@@ -88,6 +88,27 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>format *.log</value>
   </data>
+  <data name="Menu_Logs_Tabs" xml:space="preserve">
+    <value>_Onglets</value>
+  </data>
+  <data name="Menu_CloseCurrentTab" xml:space="preserve">
+    <value>Fermer l'onglet _actuel</value>
+  </data>
+  <data name="Menu_CloseAllTabs" xml:space="preserve">
+    <value>Fermer _tous les onglets</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
+    <value>Fermer l'onglet</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
+    <value>Voulez-vous vraiment fermer l'onglet actuel ?</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
+    <value>Fermer tous les onglets</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
+    <value>Voulez-vous vraiment fermer tous les onglets ?</value>
+  </data>
   <data name="Button_StartListening" xml:space="preserve">
     <value>Démarrer l'écoute</value>
   </data>

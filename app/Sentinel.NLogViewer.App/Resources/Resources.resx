@@ -88,6 +88,27 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>*.log format</value>
   </data>
+  <data name="Menu_Logs_Tabs" xml:space="preserve">
+    <value>_Tabs</value>
+  </data>
+  <data name="Menu_CloseCurrentTab" xml:space="preserve">
+    <value>Close _current tab</value>
+  </data>
+  <data name="Menu_CloseAllTabs" xml:space="preserve">
+    <value>Close _all tabs</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
+    <value>Close tab</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
+    <value>Do you really want to close the current tab?</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
+    <value>Close all tabs</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
+    <value>Do you really want to close all tabs?</value>
+  </data>
   <data name="Button_StartListening" xml:space="preserve">
     <value>Start Listening</value>
   </data>
