@@ -88,6 +88,27 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>*.log Format</value>
   </data>
+  <data name="Menu_Logs_Tabs" xml:space="preserve">
+    <value>_Tabs</value>
+  </data>
+  <data name="Menu_CloseCurrentTab" xml:space="preserve">
+    <value>Aktuelles _Tab schließen</value>
+  </data>
+  <data name="Menu_CloseAllTabs" xml:space="preserve">
+    <value>Alle Tabs _schließen</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
+    <value>Tab schließen</value>
+  </data>
+  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
+    <value>Möchten Sie das aktuelle Tab wirklich schließen?</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
+    <value>Alle Tabs schließen</value>
+  </data>
+  <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
+    <value>Möchten Sie wirklich alle Tabs schließen?</value>
+  </data>
   <data name="Button_StartListening" xml:space="preserve">
     <value>Lauschen starten</value>
   </data>
@@ -102,6 +123,66 @@
   </data>
   <data name="Status_Stopped" xml:space="preserve">
     <value>Gestoppt</value>
+  </data>
+  <data name="ImportDestination_Title" xml:space="preserve">
+    <value>Importziel</value>
+  </data>
+  <data name="ImportDestination_Instructions" xml:space="preserve">
+    <value>Wählen Sie, wohin die ausgewählte(n) Datei(en) geladen werden sollen.</value>
+  </data>
+  <data name="ImportDestination_ExistingTab" xml:space="preserve">
+    <value>An vorhandenen Reiter anhängen</value>
+  </data>
+  <data name="ImportDestination_SingleNewTab" xml:space="preserve">
+    <value>Ein neuer Reiter für alle Datei(en)</value>
+  </data>
+  <data name="ImportDestination_PerFileNewTab" xml:space="preserve">
+    <value>Pro Datei ein neuer Reiter</value>
+  </data>
+  <data name="ImportDestination_OK" xml:space="preserve">
+    <value>_OK</value>
+  </data>
+  <data name="ImportDestination_Cancel" xml:space="preserve">
+    <value>_Abbrechen</value>
+  </data>
+  <data name="ImportDestination_SelectTab" xml:space="preserve">
+    <value>Bitte einen Reiter auswählen.</value>
+  </data>
+  <data name="Import_OpenTitle" xml:space="preserve">
+    <value>Logdatei öffnen</value>
+  </data>
+  <data name="Import_NoSupportedFiles" xml:space="preserve">
+    <value>Keine unterstützten Logdatei(en) gefunden.</value>
+  </data>
+  <data name="Import_TabMerged" xml:space="preserve">
+    <value>Zusammengeführter Import</value>
+  </data>
+  <data name="Import_Starting" xml:space="preserve">
+    <value>Wird gestartet...</value>
+  </data>
+  <data name="Import_InProgress" xml:space="preserve">
+    <value>Import läuft...</value>
+  </data>
+  <data name="Import_FileError_Format" xml:space="preserve">
+    <value>Fehler beim Importieren von {0}: {1}</value>
+  </data>
+  <data name="Import_BatchComplete" xml:space="preserve">
+    <value>Import abgeschlossen.</value>
+  </data>
+  <data name="Import_FormatDetectError" xml:space="preserve">
+    <value>Fehler bei der Formerkennung</value>
+  </data>
+  <data name="Import_ParseProgress_Format" xml:space="preserve">
+    <value>Datei {0}/{1} — {2}: {3} / {4} ({5}%)</value>
+  </data>
+  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
+    <value>{0} Logeinträge aus {1} geladen</value>
+  </data>
+  <data name="Import_ApplyProgress_Format" xml:space="preserve">
+    <value>Ansicht wird befüllt: {0}%</value>
+  </data>
+  <data name="Import_ParseError" xml:space="preserve">
+    <value>Fehler beim Parsen der Datei</value>
   </data>
 </root>
 

@@ -11,7 +11,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper
 {
     /// <summary>
     /// Attached behavior to render a TextBlock with highlighted segments based on ActiveSearchTerms.
-    /// It uses the ancestor NLogViewer to access resolvers and highlight brush.
+    /// It uses an ancestor <see cref="NLogViewerBase"/> to access resolvers and highlight brush.
     /// </summary>
     public static class MessageHighlighter
     {
@@ -58,7 +58,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper
         /// </summary>
         private static void TryUpdate(TextBlock textBlock)
         {
-            var nlogViewer = FindAncestor<NLogViewer>(textBlock);
+            var nlogViewer = FindAncestor<NLogViewerBase>(textBlock);
             if (nlogViewer == null)
                 return;
 

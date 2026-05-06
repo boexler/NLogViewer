@@ -1,0 +1,66 @@
+<Window x:Class="Sentinel.NLogViewer.App.ImportDestinationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.NLogViewer.App.Helpers"
+        mc:Ignorable="d"
+        Title="{helpers:Resource Key=ImportDestination_Title, DefaultValue=Import destination}"
+        Height="440"
+        Width="480"
+        MinHeight="340"
+        MinWidth="380"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,12"
+                   Text="{helpers:Resource Key=ImportDestination_Instructions, DefaultValue=Choose where to load the selected file(s).}" />
+
+        <StackPanel Grid.Row="1">
+            <RadioButton x:Name="ExistingTabRadio"
+                         GroupName="ImportDest"
+                         Margin="0,0,0,8"
+                         Content="{helpers:Resource Key=ImportDestination_ExistingTab, DefaultValue=Append to an existing tab}"
+                         Checked="ModeRadio_Checked" />
+            <ListBox x:Name="TabsListBox"
+                     DisplayMemberPath="Header"
+                     MinHeight="120"
+                     Margin="24,0,0,12"
+                     SelectionChanged="TabsListBox_SelectionChanged" />
+            <RadioButton x:Name="SingleNewTabRadio"
+                         GroupName="ImportDest"
+                         Margin="0,0,0,8"
+                         Content="{helpers:Resource Key=ImportDestination_SingleNewTab, DefaultValue=One new tab for all file(s)}"
+                         Checked="ModeRadio_Checked" />
+            <RadioButton x:Name="PerFileNewTabRadio"
+                         GroupName="ImportDest"
+                         Margin="0,0,0,0"
+                         Content="{helpers:Resource Key=ImportDestination_PerFileNewTab, DefaultValue=New tab for each file}"
+                         Checked="ModeRadio_Checked" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,16,0,0">
+            <Button x:Name="OkButton"
+                    Content="{helpers:Resource Key=ImportDestination_OK, DefaultValue=_OK}"
+                    Width="92"
+                    Margin="0,0,8,0"
+                    IsDefault="True"
+                    Click="OkButton_Click" />
+            <Button Content="{helpers:Resource Key=ImportDestination_Cancel, DefaultValue=_Cancel}"
+                    Width="92"
+                    IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

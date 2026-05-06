@@ -18,11 +18,11 @@
         <Grid.Resources>
             <DataTemplate x:Key="TabControlContentTemplate" DataType="models:LogTabViewModel">
                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                <dj:NLogViewer 
+                <dj:NLogViewerBase 
                     x:Name="NLogViewer1"
                     Tag="{Binding ElementName=NLogViewer1}"
-                    CacheTarget="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
-                    DataContext="{Binding DataContext.NLogViewer, Mode=OneWayToSource, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
+                    ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                    MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -48,6 +48,12 @@
                           InputGestureText="Ctrl+,"/>
             </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Logs, DefaultValue=_Logs}">
+                <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
+                              Command="{Binding CloseCurrentTabCommand}"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_CloseAllTabs, DefaultValue=Close _all tabs}"
+                              Command="{Binding CloseAllTabsCommand}"/>
+                </MenuItem>
                 <MenuItem Header="{helpers:Resource Key=Menu_Export, DefaultValue=_Export}">
                     <MenuItem Header="{helpers:Resource Key=Menu_ExportLogFormat, DefaultValue=*.log format}" 
                               Command="{Binding ExportLogsCommand}"/>
@@ -76,11 +82,25 @@
         </ToolBar>
         
         <!-- Main Content: TabControl with NLogViewers -->
-        <TabControl Grid.Row="1" 
+        <TabControl x:Name="LogTabsControl"
+                    Grid.Row="1"
                     ItemsSource="{Binding LogTabs}"
                     SelectedItem="{Binding SelectedTab}"
+                    AllowDrop="True"
+                    PreviewDragOver="LogTabsArea_PreviewDragOver"
+                    Drop="LogTabsArea_Drop"
                     attachedProperties:TabContent.IsCached="True"
                     attachedProperties:TabContent.Template="{StaticResource TabControlContentTemplate}">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem">
+                    <Setter Property="AllowDrop" Value="True"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LogTabItem_PreviewMouseLeftButtonDown"/>
+                    <EventSetter Event="PreviewMouseLeftButtonUp" Handler="LogTabItem_PreviewMouseLeftButtonUp"/>
+                    <EventSetter Event="PreviewMouseMove" Handler="LogTabItem_PreviewMouseMove"/>
+                    <EventSetter Event="PreviewDragOver" Handler="LogTabItem_PreviewDragOver"/>
+                    <EventSetter Event="Drop" Handler="LogTabItem_Drop"/>
+                </Style>
+            </TabControl.ItemContainerStyle>
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
