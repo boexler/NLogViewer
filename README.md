@@ -29,6 +29,15 @@ NLogViewer is a ui control library to visualize NLog logs in your personal appli
 
 supported Framework: `.NET8`
 
+## Desktop application (Sentinel.NLogViewer.App)
+
+GitHub **Releases** ship:
+
+- **MSI installer** (`NLogViewer-<version>-win-x64.msi`): installs under Program Files with a license dialog (MIT), Start Menu shortcut, and optional features (desktop shortcut, `.log` association) selectable in **Custom** setup. File association for `.nlog` is on by default. Silent install: `msiexec /i NLogViewer-<version>-win-x64.msi /qn` (optional features with higher install level stay off unless you raise `INSTALLLEVEL` or use transforms).
+- **Portable ZIP** (self-contained and framework-dependent): unpack and run `Sentinel.NLogViewer.App.exe` from any folder; a `NLogViewer.portable` marker file directs settings to `appsettings.json` beside the app (see `README-Portable.txt` in the ZIP). Installed (MSI) copies keep using per-user `%LocalAppData%\Sentinel.NLogViewer.App\`.
+
+Build the installer locally (Windows): `dotnet build installer/Sentinel.NLogViewer.Installer.wixproj -c Release` — output `installer/bin/Release/NLogViewer.msi`.
+
 ![NLogViewer][p2]
 
 ## Material Design Theme

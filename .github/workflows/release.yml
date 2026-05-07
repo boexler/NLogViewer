@@ -72,6 +72,30 @@ jobs:
         $version = $env:VERSION
         Rename-Item -Path "publish/self-contained" -NewName "NLogViewer-SelfContained-win-x64-$version"
         Rename-Item -Path "publish/framework-dependent" -NewName "NLogViewer-FrameworkDependent-win-x64-$version"
+    - name: Add portable marker and readme to published folders
+      run: |
+        $version = $env:VERSION
+        $folders = @(
+          "publish/NLogViewer-SelfContained-win-x64-$version",
+          "publish/NLogViewer-FrameworkDependent-win-x64-$version"
+        )
+        foreach ($d in $folders) {
+          New-Item -ItemType File -Path (Join-Path $d "NLogViewer.portable") -Force | Out-Null
+          Copy-Item -Path "dist/portable/README-Portable.txt" -Destination (Join-Path $d "README-Portable.txt") -Force
+        }
+    - name: Build installer MSI
+      run: |
+        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
+        $installerVersion = "$mp.0"
+        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj -c Release -p:InstallerVersion=$installerVersion
+        New-Item -ItemType Directory -Force -Path publish | Out-Null
+        Copy-Item installer/bin/Release/NLogViewer.msi "publish/NLogViewer-$($env:VERSION)-win-x64.msi"
+    - name: Upload MSI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NLogViewer-msi
+        path: publish/NLogViewer-${{ env.VERSION }}-win-x64.msi
+        if-no-files-found: error
     - name: Upload Self-Contained artifact
       uses: actions/upload-artifact@v4
       with:
@@ -104,6 +128,11 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: NLogViewer-FrameworkDependent-win-x64
+        path: artifacts
+    - name: Download MSI artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: NLogViewer-msi
         path: artifacts
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.7
@@ -173,31 +202,54 @@ jobs:
             }
           }
           
-          // Upload application artifacts (only ZIP files)
-          const artifactsDir = './artifacts';
-          if (fs.existsSync(artifactsDir)) {
-            const artifactFiles = fs.readdirSync(artifactsDir);
-            for (const file of artifactFiles) {
-              const filePath = path.join(artifactsDir, file);
+          function collectFilesRecursive(dir, out) {
+            if (!fs.existsSync(dir)) return;
+            for (const name of fs.readdirSync(dir)) {
+              const filePath = path.join(dir, name);
               const stats = fs.statSync(filePath);
-              
-              // Only upload ZIP files, skip directories
-              if (stats.isFile() && file.endsWith('.zip')) {
-                const data = fs.readFileSync(filePath);
-
-                console.log(`Uploading application asset: ${file} (${stats.size} bytes)`);
-                await github.rest.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: release_id,
-                  name: file,
-                  data: data,
-                  headers: {
-                    'content-type': 'application/zip',
-                    'content-length': stats.size.toString()
-                  }
-                });
+              if (stats.isDirectory()) {
+                collectFilesRecursive(filePath, out);
+              } else if (stats.isFile()) {
+                out.push(filePath);
               }
+            }
+          }
+
+          // Upload application artifacts (ZIP from bash step, plus MSI from nested artifact paths)
+          const artifactsDir = './artifacts';
+          const artifactFiles = [];
+          collectFilesRecursive(artifactsDir, artifactFiles);
+          for (const filePath of artifactFiles) {
+            const file = path.basename(filePath);
+            const stats = fs.statSync(filePath);
+            if (file.endsWith('.zip')) {
+              const data = fs.readFileSync(filePath);
+              console.log(`Uploading application asset: ${file} (${stats.size} bytes)`);
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release_id,
+                name: file,
+                data: data,
+                headers: {
+                  'content-type': 'application/zip',
+                  'content-length': stats.size.toString()
+                }
+              });
+            } else if (file.endsWith('.msi')) {
+              const data = fs.readFileSync(filePath);
+              console.log(`Uploading application asset: ${file} (${stats.size} bytes)`);
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release_id,
+                name: file,
+                data: data,
+                headers: {
+                  'content-type': 'application/octet-stream',
+                  'content-length': stats.size.toString()
+                }
+              });
             }
           }
     - name: Publish the package to GitHub Packages & nuget.org    
