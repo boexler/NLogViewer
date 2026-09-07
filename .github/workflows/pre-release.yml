@@ -8,10 +8,14 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         ref: ${{ github.ref }}
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '8.x'
     - name: Build solution
       run: dotnet build -c Release
     - name: Run tests
@@ -19,7 +23,7 @@ jobs:
     - name: Pack NuGet packages
       run: dotnet pack -c Release --no-build -o nuget
     - name: Upload nuget packages as artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: NuGet
         path: nuget
@@ -32,21 +36,21 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         ref: ${{ github.ref }}
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.x'
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
+      uses: gittools/actions/gitversion/setup@v4.7.0
       with:
         versionSpec: '6.x'
     - name: Run GitVersion
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
+      uses: gittools/actions/gitversion/execute@v4.7.0
     - name: Set VERSION environment variable
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
@@ -91,19 +95,19 @@ jobs:
         New-Item -ItemType Directory -Force -Path publish | Out-Null
         Copy-Item installer/bin/Release/NLogViewer.msi "publish/NLogViewer-$($env:VERSION)-win-x64.msi"
     - name: Upload MSI artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: NLogViewer-msi
         path: publish/NLogViewer-${{ env.VERSION }}-win-x64.msi
         if-no-files-found: error
     - name: Upload Self-Contained artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: NLogViewer-SelfContained-win-x64
         path: publish/NLogViewer-SelfContained-win-x64-${{ env.VERSION }}
         if-no-files-found: error
     - name: Upload Framework-Dependent artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: NLogViewer-FrameworkDependent-win-x64
         path: publish/NLogViewer-FrameworkDependent-win-x64-${{ env.VERSION }}
@@ -114,8 +118,12 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '8.x'
     - name: Download nuget artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: NuGet
         path: nuget

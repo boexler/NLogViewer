@@ -216,7 +216,8 @@ namespace Sentinel.NLogViewer.App
         /// </summary>
         private void LanguageButton_Click(object sender, RoutedEventArgs e)
         {
-	        using var scope = App.ServiceProvider.CreateScope();
+	        var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
+	        using var scope = provider.CreateScope();
 	        var languageWindow = scope.ServiceProvider.GetRequiredService<LanguageSelectionWindow>();
 	        var result = languageWindow.ShowDialog(this);
 

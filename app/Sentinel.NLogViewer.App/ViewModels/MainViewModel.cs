@@ -34,7 +34,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private readonly ConfigurationService _configService;
 	private readonly LocalizationService _localizationService;
 	private bool _isListening;
-	private string _listeningStatus;
+	private string _listeningStatus = string.Empty;
 	private string _statusMessage = "Ready";
 	private string _lastLogTimestamp = string.Empty;
 	private LogTabViewModel? _selectedTab;
@@ -125,7 +125,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEvent(logEvent.LogEventInfo);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
-		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName.Name}";
+		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName?.Name}";
 	}
 
 	public ObservableCollection<LogTabViewModel> LogTabs { get; }
@@ -356,7 +356,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			Task.Run(async () =>
 			{
 				await Task.Delay(500); // Small delay to ensure UI is ready
-				System.Windows.Application.Current.Dispatcher.Invoke(() => _ = StartListeningAsync());
+				System.Windows.Application.Current.Dispatcher.Invoke(() => { _ = StartListeningAsync(); });
 			});
 		}
 	}
@@ -809,7 +809,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	private void OpenSettings()
 	{
-		using var scope = App.ServiceProvider.CreateScope();
+		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
+		using var scope = provider.CreateScope();
 		var settingsWindow = scope.ServiceProvider.GetRequiredService<SettingsWindow>();
 		var result = settingsWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
 		if (result == true)

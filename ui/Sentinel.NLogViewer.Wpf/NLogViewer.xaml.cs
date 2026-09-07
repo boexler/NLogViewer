@@ -14,7 +14,7 @@ namespace Sentinel.NLogViewer.Wpf
     /// </summary>
     public partial class NLogViewer : NLogViewerBase
     {
-        private IDisposable _subscription;
+        private IDisposable? _subscription;
         private bool _isListening;
 
         /// <summary>

@@ -12,7 +12,16 @@
 
     <DefineConstants>$(DefineConstants);InstallerVersion=$(InstallerVersion)</DefineConstants>
 
+    <IsPackable>false</IsPackable>
+
   </PropertyGroup>
+
+  <!--
+    WixToolset.Sdk does not import the NuGet pack targets, so a solution-wide `dotnet pack`
+    aborts with MSB4057 ("target Pack does not exist"). The installer ships as an MSI, not as a
+    NuGet package, so a no-op target is the correct contract here.
+  -->
+  <Target Name="Pack" />
 
   <ItemGroup>
 
@@ -20,7 +29,7 @@
 
     <ProjectReference Include="..\app\Sentinel.NLogViewer.App\Sentinel.NLogViewer.App.csproj" Publish="true">
 
-      <AdditionalProperties>SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true</AdditionalProperties>
+      <AdditionalProperties>SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;RuntimeIdentifier=win-x64</AdditionalProperties>
 
     </ProjectReference>
 

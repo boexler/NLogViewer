@@ -7,7 +7,8 @@
     <StartupObject>Sentinel.NLogViewer.App.App</StartupObject>
     <RootNamespace>Sentinel.NLogViewer.App</RootNamespace>
     <AssemblyName>Sentinel.NLogViewer.App</AssemblyName>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- Restore runtime packs for WiX/publish; omit single RuntimeIdentifier so plain build is RID-agnostic -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>

@@ -118,6 +118,11 @@ namespace Sentinel.NLogViewer.Wpf
     /// </summary>
     public class NLogViewerBase : Control
     {
+        /// <summary>
+        /// Parses a brush for dependency-property default metadata (hex string).
+        /// </summary>
+        private static Brush MetadataBrush(string hex) => (Brush)new BrushConverter().ConvertFrom(hex)!;
+
         // ##############################################################################################################################
         // Dependency Properties
         // ##############################################################################################################################
@@ -146,7 +151,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty TraceBackgroundProperty =
             DependencyProperty.Register(nameof(TraceBackground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#D3D3D3"))));
+                new PropertyMetadata(MetadataBrush("#D3D3D3")));
 
         /// <summary>
         /// The foreground for the trace output
@@ -164,7 +169,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty TraceForegroundProperty =
             DependencyProperty.Register(nameof(TraceForeground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#042271"))));
+                new PropertyMetadata(MetadataBrush("#042271")));
 
         /// <summary>
         /// The background for the debug output
@@ -182,7 +187,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty DebugBackgroundProperty =
             DependencyProperty.Register(nameof(DebugBackground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#90EE90"))));
+                new PropertyMetadata(MetadataBrush("#90EE90")));
 
         /// <summary>
         /// The foreground for the debug output
@@ -200,7 +205,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty DebugForegroundProperty =
             DependencyProperty.Register(nameof(DebugForeground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#042271"))));
+                new PropertyMetadata(MetadataBrush("#042271")));
 
         /// <summary>
         /// The background for the info output
@@ -218,7 +223,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty InfoBackgroundProperty = DependencyProperty.Register(nameof(InfoBackground),
             typeof(Brush), typeof(NLogViewerBase),
-            new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#0000FF"))));
+new PropertyMetadata(MetadataBrush("#0000FF")));
 
         /// <summary>
         /// The foreground for the info output
@@ -253,7 +258,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty WarnBackgroundProperty = DependencyProperty.Register(nameof(WarnBackground),
             typeof(Brush), typeof(NLogViewerBase),
-            new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#FFFF00"))));
+new PropertyMetadata(MetadataBrush("#FFFF00")));
 
         /// <summary>
         /// The foreground for the warn output
@@ -271,7 +276,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty WarnForegroundProperty = DependencyProperty.Register(nameof(WarnForeground),
             typeof(Brush), typeof(NLogViewerBase),
-            new PropertyMetadata((Brush) (new BrushConverter().ConvertFrom("#324B5C"))));
+new PropertyMetadata(MetadataBrush("#324B5C")));
 
         /// <summary>
         /// The background for the error output
@@ -365,7 +370,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty TextSearchTermBackgroundProperty =
             DependencyProperty.Register(nameof(TextSearchTermBackground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFFFBE6"))));
+                new PropertyMetadata(MetadataBrush("#FFFFFBE6")));
 
         /// <summary>
         /// Border brush for plain text search term chips
@@ -383,7 +388,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty TextSearchTermBorderBrushProperty =
             DependencyProperty.Register(nameof(TextSearchTermBorderBrush), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFFC107"))));
+                new PropertyMetadata(MetadataBrush("#FFFFC107")));
 
         /// <summary>
         /// Foreground brush for plain text search term chips
@@ -419,7 +424,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty RegexSearchTermBackgroundProperty =
             DependencyProperty.Register(nameof(RegexSearchTermBackground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFFFBE6"))));
+                new PropertyMetadata(MetadataBrush("#FFFFFBE6")));
 
         /// <summary>
         /// Border brush for regex search term chips
@@ -437,7 +442,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty RegexSearchTermBorderBrushProperty =
             DependencyProperty.Register(nameof(RegexSearchTermBorderBrush), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFFC107"))));
+                new PropertyMetadata(MetadataBrush("#FFFFC107")));
 
         /// <summary>
         /// Foreground brush for regex search term chips
@@ -473,7 +478,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty RegexPrefixForegroundProperty =
             DependencyProperty.Register(nameof(RegexPrefixForeground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFF8F00"))));
+                new PropertyMetadata(MetadataBrush("#FFFF8F00")));
 
         /// <summary>
         /// Background brush used to highlight matched search text in the message
@@ -491,7 +496,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty SearchHighlightBackgroundProperty =
             DependencyProperty.Register(nameof(SearchHighlightBackground), typeof(Brush), typeof(NLogViewerBase),
-                new PropertyMetadata((Brush)(new BrushConverter().ConvertFrom("#FFFF80C0"))));
+                new PropertyMetadata(MetadataBrush("#FFFF80C0")));
 
         #endregion
         
@@ -1085,7 +1090,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// <param name="showColumn">Whether the column should be visible</param>
         /// <param name="originalWidth">The original width of the column</param>
         /// <param name="originalIndex">The original index of the column (0=ID, 1=Level, 2=TimeStamp, 3=LoggerName)</param>
-        private void UpdateColumnVisibility(AutoSizedGridView gridView, GridViewColumn originalColumn, bool showColumn, double originalWidth, int originalIndex)
+        private void UpdateColumnVisibility(AutoSizedGridView gridView, GridViewColumn? originalColumn, bool showColumn, double originalWidth, int originalIndex)
         {
 	        if (originalColumn == null) return;
 
@@ -1121,25 +1126,25 @@ namespace Sentinel.NLogViewer.Wpf
 	        var insertionIndex = 0;
 	        
 	        // Check ID column (original index 0)
-	        if (originalIndex > 0 && ShowIdColumn && gridView.Columns.Contains(_originalIdColumn))
+	        if (originalIndex > 0 && ShowIdColumn && _originalIdColumn != null && gridView.Columns.Contains(_originalIdColumn))
 	        {
 		        insertionIndex++;
 	        }
 	        
 	        // Check Level column (original index 1)
-	        if (originalIndex > 1 && ShowLevelColumn && gridView.Columns.Contains(_originalLevelColumn))
+	        if (originalIndex > 1 && ShowLevelColumn && _originalLevelColumn != null && gridView.Columns.Contains(_originalLevelColumn))
 	        {
 		        insertionIndex++;
 	        }
 	        
 	        // Check TimeStamp column (original index 2)
-	        if (originalIndex > 2 && ShowTimeStampColumn && gridView.Columns.Contains(_originalTimeStampColumn))
+	        if (originalIndex > 2 && ShowTimeStampColumn && _originalTimeStampColumn != null && gridView.Columns.Contains(_originalTimeStampColumn))
 	        {
 		        insertionIndex++;
 	        }
 	        
 	        // Check LoggerName column (original index 3)
-	        if (originalIndex > 3 && ShowLoggerNameColumn && gridView.Columns.Contains(_originalLoggerNameColumn))
+	        if (originalIndex > 3 && ShowLoggerNameColumn && _originalLoggerNameColumn != null && gridView.Columns.Contains(_originalLoggerNameColumn))
 	        {
 		        insertionIndex++;
 	        }
@@ -1659,10 +1664,10 @@ namespace Sentinel.NLogViewer.Wpf
         private Window? _ParentWindow;
 
         // Store original column references and widths for restoration
-        private GridViewColumn _originalIdColumn;
-        private GridViewColumn _originalLevelColumn;
-        private GridViewColumn _originalTimeStampColumn;
-        private GridViewColumn _originalLoggerNameColumn;
+        private GridViewColumn? _originalIdColumn;
+        private GridViewColumn? _originalLevelColumn;
+        private GridViewColumn? _originalTimeStampColumn;
+        private GridViewColumn? _originalLoggerNameColumn;
         private double _originalIdColumnWidth = 40;
         private double _originalLevelColumnWidth = double.NaN; // Auto
         private double _originalTimeStampColumnWidth = double.NaN; // Auto
@@ -1671,7 +1676,7 @@ namespace Sentinel.NLogViewer.Wpf
         /// <summary>
         /// Reference to the ListView template part for programmatic access
         /// </summary>
-        private ListView PART_ListView => GetTemplateChild("PART_ListView") as ListView;
+        private ListView? PART_ListView => GetTemplateChild("PART_ListView") as ListView;
 
         #endregion
 
@@ -1809,7 +1814,7 @@ namespace Sentinel.NLogViewer.Wpf
                 DisposeViewerResources();
         }
 
-        private void _ParentWindowOnClosed(object sender, EventArgs e)
+        private void _ParentWindowOnClosed(object? sender, EventArgs e)
         {
             DisposeViewerResources();
         }

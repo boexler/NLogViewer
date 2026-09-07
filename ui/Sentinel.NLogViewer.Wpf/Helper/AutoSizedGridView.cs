@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 using System.Windows.Controls;
 using NLog;
 
@@ -21,7 +23,8 @@ namespace Sentinel.NLogViewer.Wpf.Helper
                 if (info.LoggerName.Length > _MaxLoggerNameLength)
                 {
                     _MaxLoggerNameLength = info.LoggerName.Length;
-                    Observable.Timer(TimeSpan.FromMilliseconds(1)).ObserveOn(SynchronizationContext.Current).Subscribe(l =>
+                    var sync = SynchronizationContext.Current ?? new DispatcherSynchronizationContext(Application.Current?.Dispatcher ?? System.Windows.Threading.Dispatcher.CurrentDispatcher);
+                    Observable.Timer(TimeSpan.FromMilliseconds(1)).ObserveOn(sync).Subscribe(l =>
                     {
                         foreach (GridViewColumn column in Columns)
                         {

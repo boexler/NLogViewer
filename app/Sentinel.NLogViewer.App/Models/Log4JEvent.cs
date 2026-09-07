@@ -20,7 +20,7 @@ public class Log4JEvent : ILogEvent
 	/// Gets or sets the name of the logger that generated this event.
 	/// Corresponds to the "logger" attribute in the log4j:event element.
 	/// </summary>
-	public string Logger { get; set; }
+	public string Logger { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets or sets the log level of this event.
@@ -38,19 +38,19 @@ public class Log4JEvent : ILogEvent
 	/// Gets or sets the name of the thread that generated this event.
 	/// Corresponds to the "thread" attribute in the log4j:event element.
 	/// </summary>
-	public string Thread { get; set; }
+	public string Thread { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets or sets the log message content.
 	/// Extracted from the log4j:message child element of the log4j:event.
 	/// </summary>
-	public string Message { get; set; }
+	public string Message { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets or sets the exception or throwable information (stack trace) associated with this log event.
 	/// Extracted from the log4j:throwable child element of the log4j:event. May be null if no exception information is included.
 	/// </summary>
-	public string Throwable { get; set; }
+	public string? Throwable { get; set; }
 
 	/// <summary>
 	/// Gets or sets the location information (class, method, file, line) where the log event was generated.
@@ -166,7 +166,7 @@ public class Log4JEvent : ILogEvent
 	/// Safely handles missing or invalid log4japp values by returning null.
 	/// </summary>
 	/// <returns>The extracted application name, or null if the property is missing or doesn't match the expected pattern.</returns>
-	private AppName ExtractAppName()
+	private AppName? ExtractAppName()
 	{
 		if (!Properties.TryGetValue("log4japp", out var log4jApp) || string.IsNullOrEmpty(log4jApp))
 		{

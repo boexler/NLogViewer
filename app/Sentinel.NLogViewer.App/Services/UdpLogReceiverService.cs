@@ -54,7 +54,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 				var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 				_cancellationTokens.Add(cts);
 
-				Task.Run(() => ReceiveLoop(udpClient, port, cts.Token), cts.Token);
+				_ = Task.Run(() => ReceiveLoop(udpClient, port, cts.Token), cts.Token);
 			}
 			catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.NativeErrorCode == WSAEADDRINUSE)
 			{

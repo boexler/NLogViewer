@@ -34,8 +34,8 @@ public class CacheTarget : Target, ICacheTarget
 			predicate = predicate.And(t => t.Name.Equals(targetName, StringComparison.CurrentCultureIgnoreCase) ||t.Name.Equals($"{targetName}_wrapped", StringComparison.CurrentCultureIgnoreCase));
 		}
                 
-		var target = (CacheTarget)LogManager.Configuration.AllTargets.FirstOrDefault(predicate.Compile());
-		if (target == null)
+		var found = LogManager.Configuration.AllTargets.FirstOrDefault(predicate.Compile());
+		if (found is not CacheTarget target)
 		{
 			target = new CacheTarget(defaultMaxCount) { Name = targetName ?? nameof(CacheTarget)};
 			LogManager.Configuration.AddTarget(target.Name, target);
