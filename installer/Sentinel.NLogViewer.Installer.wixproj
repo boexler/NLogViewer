@@ -6,6 +6,19 @@
 
     <OutputName>NLogViewer</OutputName>
 
+    <!--
+      The app publishes as win-x64, so the MSI must be x64 too: ProgramFiles64Folder and the
+      64-bit registry view are only available to an x64 package. An x86 package would install a
+      64-bit app into "Program Files (x86)".
+    -->
+    <InstallerPlatform>x64</InstallerPlatform>
+
+    <!--
+      ICE61 fires because AllowSameVersionUpgrades makes VersionMax inclusive, which the validator
+      reads as "removes a non-older version". That is the intended behaviour here, see Package.wxs.
+    -->
+    <SuppressIces>ICE61</SuppressIces>
+
     <!-- Four-part version required for MSI; overridden in CI via /p:InstallerVersion= -->
 
     <InstallerVersion Condition="'$(InstallerVersion)' == ''">1.0.0.0</InstallerVersion>
@@ -29,7 +42,8 @@
 
     <ProjectReference Include="..\app\Sentinel.NLogViewer.App\Sentinel.NLogViewer.App.csproj" Publish="true">
 
-      <AdditionalProperties>SelfContained=true;PublishSingleFile=true;IncludeNativeLibrariesForSelfExtract=true;RuntimeIdentifier=win-x64</AdditionalProperties>
+      <!-- No PublishSingleFile: the MSI should lay out the runtime and assemblies as individual files. -->
+      <AdditionalProperties>SelfContained=true;PublishSingleFile=false;RuntimeIdentifier=win-x64</AdditionalProperties>
 
     </ProjectReference>
 

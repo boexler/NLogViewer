@@ -14,6 +14,10 @@
             <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
             <converters:SvgImageSourceConverter x:Key="SvgImageSourceConverter"/>
+            <!-- Title-bar / Alt-Tab icon for every Window; the EXE icon comes from ApplicationIcon. -->
+            <Style TargetType="Window">
+                <Setter Property="Icon" Value="pack://application:,,,/Resources/icons/icons8-analysieren-64.ico"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

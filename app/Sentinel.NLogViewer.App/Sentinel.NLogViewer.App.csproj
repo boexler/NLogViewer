@@ -7,12 +7,14 @@
     <StartupObject>Sentinel.NLogViewer.App.App</StartupObject>
     <RootNamespace>Sentinel.NLogViewer.App</RootNamespace>
     <AssemblyName>Sentinel.NLogViewer.App</AssemblyName>
+    <ApplicationIcon>Resources\icons\icons8-analysieren-64.ico</ApplicationIcon>
     <!-- Restore runtime packs for WiX/publish; omit single RuntimeIdentifier so plain build is RID-agnostic -->
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Resources\icons\icons8-analysieren-256.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +25,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\flags\*.svg" />
+    <Resource Include="Resources\icons\icons8-analysieren-64.ico" />
+    <Resource Include="Resources\icons\icons8-analysieren-64.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +52,10 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Sentinel.NLogViewer.App.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Resources\icons\icons8-analysieren-256.png" />
   </ItemGroup>
 
   <ItemGroup>

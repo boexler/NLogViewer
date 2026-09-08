@@ -1,17 +1,27 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
-  <Package Name="Sentinel NLogViewer"
+  <Package Name="Sentinel.NLogViewer"
            Manufacturer="Dominic Böxler"
            Version="$(var.InstallerVersion)"
            UpgradeCode="E8F9A0B1-C2D3-4E5F-8A7B-6C5D4E3F2A10"
            Scope="perMachine">
 
-    <SummaryInformation Description="Sentinel NLogViewer — visualize NLog / log output" />
+    <SummaryInformation Description="Sentinel.NLogViewer — visualize NLog / log output" />
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of NLogViewer is already installed." />
+    <!--
+      AllowSameVersionUpgrades is required because InstallerVersion only carries
+      major.minor.patch.0: consecutive builds of the same patch level share a ProductVersion, and
+      without it Windows Installer would place a second product side by side instead of replacing
+      the previous installation (including the earlier "Program Files (x86)" layout).
+    -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of Sentinel.NLogViewer is already installed." />
 
     <MediaTemplate EmbedCab="yes" CompressionLevel="medium" />
+
+    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.NLogViewer.App\Resources\icons\icons8-analysieren-64.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
 
@@ -20,7 +30,7 @@
 
     <!-- Main application (default on) -->
     <Feature Id="FeatureMain"
-             Title="NLogViewer"
+             Title="Sentinel.NLogViewer"
              Level="1"
              Description="Core application files and Start Menu shortcut. Optional items can be enabled below.">
       <ComponentGroupRef Id="HarvestedComponents" />
@@ -51,11 +61,11 @@
   </Package>
 
   <Fragment>
-    <StandardDirectory Id="ProgramFiles6432Folder">
-      <Directory Id="INSTALLFOLDER" Name="Sentinel NLogViewer" />
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Sentinel.NLogViewer" />
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder">
-      <Directory Id="ApplicationProgramsFolder" Name="NLogViewer" />
+      <Directory Id="ApplicationProgramsFolder" Name="Sentinel.NLogViewer" />
     </StandardDirectory>
     <StandardDirectory Id="DesktopFolder" />
   </Fragment>
@@ -70,10 +80,11 @@
                        Value="1"
                        KeyPath="yes" />
         <Shortcut Id="ScStartMenu"
-                  Name="Sentinel NLogViewer"
+                  Name="Sentinel.NLogViewer"
                   Description="NLog log viewer"
                   WorkingDirectory="INSTALLFOLDER"
-                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe" />
+                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Icon="AppIcon.ico" />
         <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
       </Component>
     </ComponentGroup>
@@ -89,10 +100,11 @@
                        Value="1"
                        KeyPath="yes" />
         <Shortcut Id="ScDesktop"
-                  Name="Sentinel NLogViewer"
+                  Name="Sentinel.NLogViewer"
                   Description="NLog log viewer"
                   WorkingDirectory="INSTALLFOLDER"
-                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe" />
+                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Icon="AppIcon.ico" />
       </Component>
     </ComponentGroup>
   </Fragment>
