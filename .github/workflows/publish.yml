@@ -1,7 +1,9 @@
 name: Publish
 on: [workflow_dispatch]
 env:
-  DOTNET_CLI_TELEMETRY_OPTOUT: true  
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # Leftover MSBuild nodes keep obj/ files open and break subsequent WPF markup compilation.
+  MSBUILDDISABLENODEREUSE: 1
 jobs:
   build:
     name: Build
@@ -17,7 +19,8 @@ jobs:
       with:
         dotnet-version: '8.x'
     - name: Build solution
-      run: dotnet build -c Release
+      # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
+      run: dotnet build -c Release -m:1
     - name: Run tests
       run: dotnet test -c Release --no-build --verbosity normal
     - name: Pack NuGet packages
