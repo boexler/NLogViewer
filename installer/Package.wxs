@@ -24,9 +24,115 @@
     <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="OPEN_DEFAULT_APPS" Value="1" />
 
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <ui:WixUI Id="WixUI_FeatureTree" />
+
+    <!--
+      Windows protects the per-user default-app choice. The MSI therefore registers NLogViewer as
+      a capable handler and, when requested, opens the Windows confirmation page after setup.
+    -->
+    <UI>
+      <Dialog Id="LogAssociationDlg"
+              Width="370"
+              Height="270"
+              Title="[ProductName] Setup">
+        <Control Id="Title"
+                 Type="Text"
+                 X="15"
+                 Y="6"
+                 Width="340"
+                 Height="25"
+                 Transparent="yes"
+                 NoPrefix="yes"
+                 Text="{\WixUI_Font_Title}Dateizuordnung" />
+        <Control Id="Description"
+                 Type="Text"
+                 X="25"
+                 Y="45"
+                 Width="320"
+                 Height="35"
+                 Text="Sentinel.NLogViewer wurde als Anwendung zum Öffnen von .log-Dateien registriert." />
+        <Control Id="OpenDefaultAppsCheckBox"
+                 Type="CheckBox"
+                 X="25"
+                 Y="95"
+                 Width="320"
+                 Height="30"
+                 Property="OPEN_DEFAULT_APPS"
+                 CheckBoxValue="1"
+                 Text="*.log Dateien immer mit NLogViewer öffnen" />
+        <Control Id="DefaultAppsNotice"
+                 Type="Text"
+                 X="25"
+                 Y="135"
+                 Width="320"
+                 Height="45"
+                 Text="Windows benötigt hierfür Ihre Bestätigung. Nach Abschluss des Setups wird die Seite „Standard-Apps“ geöffnet." />
+        <Control Id="Back"
+                 Type="PushButton"
+                 X="180"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Text="Zurück" />
+        <Control Id="Next"
+                 Type="PushButton"
+                 X="236"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Default="yes"
+                 Text="Weiter" />
+        <Control Id="Cancel"
+                 Type="PushButton"
+                 X="304"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Cancel="yes"
+                 Text="Abbrechen" />
+      </Dialog>
+
+      <Publish Dialog="CustomizeDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="LogAssociationDlg"
+               Order="5"
+               Condition="NOT Installed AND &amp;FeatureAssocLog = 3" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="CustomizeDlg" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="VerifyReadyDlg" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Cancel"
+               Event="SpawnDialog"
+               Value="CancelDlg" />
+      <Publish Dialog="VerifyReadyDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="LogAssociationDlg"
+               Order="5"
+               Condition="NOT Installed AND &amp;FeatureAssocLog = 3" />
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction"
+               Value="OpenDefaultApps"
+               Order="1"
+               Condition="OPEN_DEFAULT_APPS = 1 AND NOT Installed AND &amp;FeatureAssocLog = 3" />
+    </UI>
+
+    <CustomAction Id="OpenDefaultApps"
+                  Directory="WindowsFolder"
+                  ExeCommand="explorer.exe &quot;ms-settings:defaultapps?registeredAppUser=Sentinel.NLogViewer&quot;"
+                  Execute="immediate"
+                  Return="asyncNoWait"
+                  Impersonate="yes" />
 
     <!-- Main application (default on) -->
     <Feature Id="FeatureMain"
@@ -171,6 +277,24 @@
       <Component Id="CmpLogExtension" Guid="D1E2F3A4-B5C6-4789-ABCD-EF0123456789">
         <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\.log\OpenWithProgids">
           <RegistryValue Name="NLogViewer.log" Type="string" Value="" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpLogCapabilities" Guid="E2F3A4B5-C6D7-489A-BCDE-F0123456789A">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities">
+          <RegistryValue Name="ApplicationName" Type="string" Value="Sentinel.NLogViewer" />
+          <RegistryValue Name="ApplicationDescription"
+                         Type="string"
+                         Value="View and analyze NLog and log files." />
+          <RegistryValue Name=".log"
+                         Type="string"
+                         Value="NLogViewer.log"
+                         Key="FileAssociations" />
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="SOFTWARE\RegisteredApplications">
+          <RegistryValue Name="Sentinel.NLogViewer"
+                         Type="string"
+                         Value="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities"
+                         KeyPath="yes" />
         </RegistryKey>
       </Component>
     </ComponentGroup>
