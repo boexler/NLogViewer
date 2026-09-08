@@ -35,6 +35,7 @@
              Description="Core application files and Start Menu shortcut. Optional items can be enabled below.">
       <ComponentGroupRef Id="HarvestedComponents" />
       <ComponentGroupRef Id="ShortcutComponents" />
+      <ComponentGroupRef Id="InstallFolderComponents" />
       <Feature Id="FeatureAssocNlog"
                Title="Associate .nlog files"
                Level="1"
@@ -62,12 +63,28 @@
 
   <Fragment>
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="INSTALLFOLDER" Name="Sentinel.NLogViewer" />
+      <Directory Id="COMPANYFOLDER" Name="Boexler">
+        <Directory Id="INSTALLFOLDER" Name="Sentinel.NLogViewer" />
+      </Directory>
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder">
       <Directory Id="ApplicationProgramsFolder" Name="Sentinel.NLogViewer" />
     </StandardDirectory>
     <StandardDirectory Id="DesktopFolder" />
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="InstallFolderComponents" Directory="COMPANYFOLDER">
+      <Component Id="CmpRemoveCompanyFolder" Guid="A1B2C3D4-E5F6-4789-ABCD-EF0123456789">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Name="CompanyFolder"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <RemoveFolder Id="RemoveCompanyFolder" On="uninstall" />
+      </Component>
+    </ComponentGroup>
   </Fragment>
 
   <Fragment>
