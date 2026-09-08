@@ -1,5 +1,5 @@
 name: Commit
-on: 
+on:
   push:
   pull_request:
 env:
@@ -7,8 +7,8 @@ env:
   # Leftover MSBuild nodes keep obj/ files open and break subsequent WPF markup compilation.
   MSBUILDDISABLENODEREUSE: 1
 jobs:
-  build:
-    name: Build
+  ci:
+    name: CI
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -20,34 +20,6 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.x'
-    - name: Build solution
-      # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
-      run: dotnet build -c Release -m:1
-    - name: Run tests
-      run: dotnet test -c Release --no-build --verbosity normal
-    - name: Pack NuGet packages
-      run: dotnet pack -c Release --no-build -o nuget
-    - name: Upload nuget packages as artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: NuGet
-        path: nuget
-        if-no-files-found: error
-        retention-days: 1
-
-  publish-app:
-    name: Publish Application
-    needs: [build]
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v7
-      with:
-        fetch-depth: 0
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: '8.x'
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v4.7.0
       with:
@@ -55,15 +27,22 @@ jobs:
     - name: Run GitVersion
       id: gitversion
       uses: gittools/actions/gitversion/execute@v4.7.0
-    - name: Set VERSION environment variable
+    - name: Set version environment variables
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
+        $safeVersion = $version -replace '[^a-zA-Z0-9\.\-]', '_'
+        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
         Add-Content $env:GITHUB_ENV "VERSION=$version"
-    - name: Normalize version
-      run: |
-        $rawVersion = $env:VERSION
-        $safeVersion = $rawVersion -replace '[^a-zA-Z0-9\.\-]', '_'
         Add-Content $env:GITHUB_ENV "SAFE_VERSION=$safeVersion"
+        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
+    - name: Build solution
+      # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
+      # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
+      run: dotnet build NLogViewer.CI.slnf -c Release -m:1
+    - name: Run tests
+      run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
+    - name: Pack NuGet packages
+      run: dotnet pack NLogViewer.CI.slnf -c Release --no-build -o nuget
     - name: Publish Self-Contained
       run: |
         dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
@@ -98,17 +77,43 @@ jobs:
           New-Item -ItemType File -Path (Join-Path $d "NLogViewer.portable") -Force | Out-Null
           Copy-Item -Path "dist/portable/README-Portable.txt" -Destination (Join-Path $d "README-Portable.txt") -Force
         }
+    - name: Build installer MSI
+      run: |
+        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj `
+          -c Release `
+          -m:1 `
+          -p:InstallerVersion=$env:INSTALLER_VERSION
+        $msi = Get-ChildItem -Path installer -Recurse -Filter NLogViewer.msi |
+          Where-Object { $_.FullName -match '[\\/]bin[\\/]' } |
+          Select-Object -First 1
+        if (-not $msi) { throw "NLogViewer.msi was not produced under installer/bin" }
+        New-Item -ItemType Directory -Force -Path publish | Out-Null
+        Copy-Item $msi.FullName "publish/NLogViewer-$($env:SAFE_VERSION)-win-x64.msi"
+    - name: Upload NuGet packages
+      uses: actions/upload-artifact@v7
+      with:
+        name: NuGet-${{ env.SAFE_VERSION }}
+        path: nuget
+        if-no-files-found: error
+        retention-days: 7
+    - name: Upload MSI
+      uses: actions/upload-artifact@v7
+      with:
+        name: NLogViewer-msi-${{ env.SAFE_VERSION }}
+        path: publish/NLogViewer-${{ env.SAFE_VERSION }}-win-x64.msi
+        if-no-files-found: error
+        retention-days: 7
     - name: Upload Self-Contained artifact
       uses: actions/upload-artifact@v7
       with:
         name: NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
         path: publish/NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
         if-no-files-found: error
-        retention-days: 1
+        retention-days: 7
     - name: Upload Framework-Dependent artifact
       uses: actions/upload-artifact@v7
       with:
         name: NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
         path: publish/NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
         if-no-files-found: error
-        retention-days: 1
+        retention-days: 7
