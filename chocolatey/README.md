@@ -18,6 +18,21 @@ The Chocolatey CLI supports SemVer 2, but the Chocolatey Community Repository cu
 The development workflow therefore keeps SemVer 2 for NuGet packages and uses a flattened
 prerelease label without dots for the Chocolatey package.
 
+## Packaging
+
+`chocolatey/pack.ps1` is the only supported way to build the nupkg. It copies
+`LICENSE.md` to `LICENSE.txt`, writes `VERIFICATION.txt` with the MSI SHA256,
+and fills GitHub URLs from the current repository (`GITHUB_REPOSITORY` in CI, or
+`git remote origin` locally). Do not run `choco pack` on the nuspec template
+directly; it still contains placeholders.
+
+```powershell
+./chocolatey/pack.ps1 `
+  -Version 3.2.0 `
+  -MsiPath path/to/Sentinel.LogViewer.msi `
+  -OutputDirectory chocolatey-packages
+```
+
 ## Publishing
 
 The `Publish Dev` GitHub Actions workflow always builds a prerelease of `Sentinel.LogViewer` and

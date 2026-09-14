@@ -170,6 +170,9 @@ publish/
 # NuGet package output directory used by `dotnet pack -o nuget` (CI + local)
 nuget/
 
+# Chocolatey pack output used by CI and local `chocolatey/pack.ps1`
+chocolatey-packages/
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml

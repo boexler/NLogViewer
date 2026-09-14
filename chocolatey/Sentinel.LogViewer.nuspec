@@ -5,11 +5,12 @@
     <version>0.0.0</version>
     <title>Sentinel.LogViewer</title>
     <authors>Dominic Böxler</authors>
-    <projectUrl>https://github.com/boexler/NLogViewer</projectUrl>
-    <projectSourceUrl>https://github.com/boexler/NLogViewer</projectSourceUrl>
-    <packageSourceUrl>https://github.com/boexler/NLogViewer/tree/master/chocolatey</packageSourceUrl>
-    <bugTrackerUrl>https://github.com/boexler/NLogViewer/issues</bugTrackerUrl>
-    <licenseUrl>https://github.com/boexler/NLogViewer/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>__REPO_URL__</projectUrl>
+    <projectSourceUrl>__REPO_URL__</projectSourceUrl>
+    <packageSourceUrl>__PACKAGE_SOURCE_URL__</packageSourceUrl>
+    <bugTrackerUrl>__BUG_TRACKER_URL__</bugTrackerUrl>
+    <licenseUrl>__LICENSE_URL__</licenseUrl>
+    <iconUrl>__ICON_URL__</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>nlog log viewer desktop windows</tags>
     <summary>View and analyze NLog and log files on Windows.</summary>
@@ -19,7 +20,7 @@ Sentinel.LogViewer is a Windows desktop application for viewing and analyzing NL
 The package embeds the official x64 MSI. Stable and prerelease versions share the same package ID;
 use Chocolatey's `--pre` option to install or upgrade to a development version.
     </description>
-    <releaseNotes>https://github.com/boexler/NLogViewer/releases</releaseNotes>
+    <releaseNotes>__RELEASE_NOTES_URL__</releaseNotes>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />

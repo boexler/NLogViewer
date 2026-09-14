@@ -101,13 +101,13 @@ jobs:
           "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
 
     - name: Pack Chocolatey package
+      env:
+        GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       run: |
-        New-Item -ItemType Directory -Force -Path chocolatey-packages | Out-Null
-        Copy-Item "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi" `
-          "chocolatey/tools/Sentinel.LogViewer.msi"
-        choco pack chocolatey/Sentinel.LogViewer.nuspec `
-          --version $env:VERSION `
-          --output-directory chocolatey-packages
+        ./chocolatey/pack.ps1 `
+          -Version $env:VERSION `
+          -MsiPath "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi" `
+          -OutputDirectory chocolatey-packages
 
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v7
