@@ -1,4 +1,5 @@
 name: Release
+
 on:
   push:
     tags:
@@ -12,99 +13,94 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   # Leftover MSBuild nodes keep obj/ files open and break subsequent WPF markup compilation.
   MSBUILDDISABLENODEREUSE: 1
-jobs:
-  build:
-    name: Build
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v7
-      with:
-        fetch-depth: 0
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: '8.x'
-    - name: Build solution
-      # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
-      run: dotnet build -c Release -m:1
-    - name: Run tests
-      run: dotnet test -c Release --no-build --verbosity normal
-    - name: Pack NuGet packages
-      run: dotnet pack -c Release --no-build -o nuget
-    - name: Upload nuget packages as artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: NuGet
-        path: nuget
-        if-no-files-found: error
 
-  publish-app:
-    name: Publish Application
-    needs: [build]
+jobs:
+  release:
+    name: Build and publish
     runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v7
       with:
         fetch-depth: 0
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.x'
+
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v4.7.0
       with:
         versionSpec: '6.x'
+
     - name: Run GitVersion
       id: gitversion
       uses: gittools/actions/gitversion/execute@v4.7.0
-    - name: Set VERSION environment variable
+
+    - name: Set version
       id: version
+      shell: pwsh
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
+        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
         Add-Content $env:GITHUB_ENV "VERSION=$version"
+        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
         Add-Content $env:GITHUB_OUTPUT "version=$version"
-    - name: Publish Self-Contained
+
+    - name: Build solution
+      # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
+      run: dotnet build NLogViewer.CI.slnf -c Release -m:1
+
+    - name: Run tests
+      run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
+
+    - name: Pack NuGet packages
+      run: dotnet pack NLogViewer.CI.slnf -c Release --no-build -o nuget
+
+    - name: Publish self-contained application
       run: |
         dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
           -c Release `
           -p:SelfContained=true `
           -p:PublishSingleFile=true `
           -p:RuntimeIdentifier=win-x64 `
+          -p:Version=$env:VERSION `
           -p:IncludeNativeLibrariesForSelfExtract=true `
           -o publish/self-contained
-    - name: Publish Framework-Dependent
+
+    - name: Publish framework-dependent application
       run: |
         dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
           -c Release `
           -p:SelfContained=false `
           -p:RuntimeIdentifier=win-x64 `
+          -p:Version=$env:VERSION `
           -o publish/framework-dependent
-    - name: Rename folders with version
+
+    - name: Prepare portable application folders
       run: |
-        $version = $env:VERSION
-        Rename-Item -Path "publish/self-contained" -NewName "Sentinel.LogViewer-SelfContained-win-x64-$version"
-        Rename-Item -Path "publish/framework-dependent" -NewName "Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
-    - name: Add portable marker and readme to published folders
-      run: |
-        $version = $env:VERSION
         $folders = @(
-          "publish/Sentinel.LogViewer-SelfContained-win-x64-$version",
-          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
+          @{ Source = "publish/self-contained"; Target = "Sentinel.LogViewer-SelfContained-win-x64-$env:VERSION" },
+          @{ Source = "publish/framework-dependent"; Target = "Sentinel.LogViewer-FrameworkDependent-win-x64-$env:VERSION" }
         )
-        foreach ($d in $folders) {
-          New-Item -ItemType File -Path (Join-Path $d "NLogViewer.portable") -Force | Out-Null
-          Copy-Item -Path "dist/portable/README-Portable.txt" -Destination (Join-Path $d "README-Portable.txt") -Force
+        foreach ($folder in $folders) {
+          Rename-Item -Path $folder.Source -NewName $folder.Target
+          $targetPath = Join-Path "publish" $folder.Target
+          New-Item -ItemType File -Path (Join-Path $targetPath "NLogViewer.portable") -Force | Out-Null
+          Copy-Item "dist/portable/README-Portable.txt" $targetPath -Force
         }
+
     - name: Build installer MSI
       run: |
-        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
-        $installerVersion = "$mp.0"
-        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj -c Release -m:1 -p:InstallerVersion=$installerVersion
-        New-Item -ItemType Directory -Force -Path publish | Out-Null
-        Copy-Item installer/bin/Release/Sentinel.LogViewer.msi "publish/Sentinel.LogViewer-$($env:VERSION)-win-x64.msi"
-    - name: Pack stable Chocolatey package
+        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj `
+          -c Release `
+          -m:1 `
+          -p:InstallerVersion=$env:INSTALLER_VERSION
+        Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" `
+          "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
+
+    - name: Pack Chocolatey package
       run: |
         New-Item -ItemType Directory -Force -Path chocolatey-packages | Out-Null
         Copy-Item "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi" `
@@ -112,214 +108,103 @@ jobs:
         choco pack chocolatey/Sentinel.LogViewer.nuspec `
           --version $env:VERSION `
           --output-directory chocolatey-packages
-    - name: Upload MSI artifact
+
+    - name: Upload NuGet packages
       uses: actions/upload-artifact@v7
       with:
-        name: Sentinel.LogViewer-msi
+        name: NuGet-${{ steps.version.outputs.version }}
+        path: nuget
+        if-no-files-found: error
+
+    - name: Upload MSI
+      uses: actions/upload-artifact@v7
+      with:
+        name: Sentinel.LogViewer-msi-${{ steps.version.outputs.version }}
         path: publish/Sentinel.LogViewer-${{ steps.version.outputs.version }}-win-x64.msi
         if-no-files-found: error
-    - name: Upload stable Chocolatey artifact
+
+    - name: Upload self-contained application
       uses: actions/upload-artifact@v7
       with:
-        name: Chocolatey-Sentinel.LogViewer
-        path: chocolatey-packages
-        if-no-files-found: error
-    - name: Upload Self-Contained artifact
-      uses: actions/upload-artifact@v7
-      with:
-        name: Sentinel.LogViewer-SelfContained-win-x64
+        name: Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.version }}
         path: publish/Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.version }}
         if-no-files-found: error
-    - name: Upload Framework-Dependent artifact
+
+    - name: Upload framework-dependent application
       uses: actions/upload-artifact@v7
       with:
-        name: Sentinel.LogViewer-FrameworkDependent-win-x64
+        name: Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.version }}
         path: publish/Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.version }}
         if-no-files-found: error
 
-  publish:
-    name: Publish
-    needs: [build, publish-app]
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v7
+    - name: Upload Chocolatey package
+      uses: actions/upload-artifact@v7
       with:
-        fetch-depth: 0
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: '8.x'
-    - name: Download nuget artifacts
-      uses: actions/download-artifact@v8
-      with:
-        name: NuGet
-        path: nuget
-    - name: Download application artifacts
-      uses: actions/download-artifact@v8
-      with:
-        name: Sentinel.LogViewer-SelfContained-win-x64
-        path: artifacts
-    - name: Download application artifacts
-      uses: actions/download-artifact@v8
-      with:
-        name: Sentinel.LogViewer-FrameworkDependent-win-x64
-        path: artifacts
-    - name: Download MSI artifact
-      uses: actions/download-artifact@v8
-      with:
-        name: Sentinel.LogViewer-msi
-        path: artifacts
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v4.7.0
-      with:
-        versionSpec: '6.x'
-    - name: Run GitVersion
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v4.7.0
-    - name: Create versioned ZIPs
-      run: |
-        cd artifacts
-        # Each downloaded artifact is in its own directory
-        # Find the versioned folder inside and create a ZIP from it
-        for artifactDir in */; do
-          if [ -d "$artifactDir" ]; then
-            cd "$artifactDir"
-            # The versioned folder should be the only subdirectory
-            for versionedDir in */; do
-              if [ -d "$versionedDir" ]; then
-                dirname=$(basename "$versionedDir")
-                zipname="${dirname}.zip"
-                cd "$versionedDir"
-                zip -r "../../$zipname" .
-                cd ..
-                break
-              fi
-            done
-            cd ..
-          fi
-        done
-    - name: Get release
-      id: get_release
-      uses: actions/github-script@v8
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        result-encoding: string
-        script: |
-          const tag = context.ref.replace(/^refs\/tags\//, '');
-          const { data } = await github.rest.repos.getReleaseByTag({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            tag
-          });
-          return String(data.id);
-    - name: Upload artifacts to release
-      uses: actions/github-script@v8
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const fs = require('fs');
-          const path = require('path');
-
-          const release_id = '${{ steps.get_release.outputs.result }}';
-          
-          // Upload NuGet packages
-          const nugetDir = './nuget';
-          if (fs.existsSync(nugetDir)) {
-            const nugetFiles = fs.readdirSync(nugetDir);
-            for (const file of nugetFiles) {
-              const filePath = path.join(nugetDir, file);
-              const data = fs.readFileSync(filePath);
-              const stats = fs.statSync(filePath);
-
-              console.log(`Uploading NuGet asset: ${file} (${stats.size} bytes)`);
-              await github.rest.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release_id,
-                name: file,
-                data: data,
-                headers: {
-                  'content-type': 'application/octet-stream',
-                  'content-length': stats.size.toString()
-                }
-              });
-            }
-          }
-          
-          function collectFilesRecursive(dir, out) {
-            if (!fs.existsSync(dir)) return;
-            for (const name of fs.readdirSync(dir)) {
-              const filePath = path.join(dir, name);
-              const stats = fs.statSync(filePath);
-              if (stats.isDirectory()) {
-                collectFilesRecursive(filePath, out);
-              } else if (stats.isFile()) {
-                out.push(filePath);
-              }
-            }
-          }
-
-          // Upload application artifacts (ZIP from bash step, plus MSI from nested artifact paths)
-          const artifactsDir = './artifacts';
-          const artifactFiles = [];
-          collectFilesRecursive(artifactsDir, artifactFiles);
-          for (const filePath of artifactFiles) {
-            const file = path.basename(filePath);
-            const stats = fs.statSync(filePath);
-            if (file.endsWith('.zip')) {
-              const data = fs.readFileSync(filePath);
-              console.log(`Uploading application asset: ${file} (${stats.size} bytes)`);
-              await github.rest.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release_id,
-                name: file,
-                data: data,
-                headers: {
-                  'content-type': 'application/zip',
-                  'content-length': stats.size.toString()
-                }
-              });
-            } else if (file.endsWith('.msi')) {
-              const data = fs.readFileSync(filePath);
-              console.log(`Uploading application asset: ${file} (${stats.size} bytes)`);
-              await github.rest.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release_id,
-                name: file,
-                data: data,
-                headers: {
-                  'content-type': 'application/octet-stream',
-                  'content-length': stats.size.toString()
-                }
-              });
-            }
-          }
-    - name: Publish the package to GitHub Packages & nuget.org    
-      run: |
-        dotnet nuget add source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --name github --username ${{ github.repository_owner }} --password ${{ github.token }} --store-password-in-clear-text
-        dotnet nuget push ./nuget/*.nupkg --source github
-        dotnet nuget push ./nuget/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
-
-  publish-chocolatey:
-    name: Publish Chocolatey
-    needs: [publish]
-    runs-on: windows-latest
-    steps:
-    - name: Download stable Chocolatey artifact
-      uses: actions/download-artifact@v8
-      with:
-        name: Chocolatey-Sentinel.LogViewer
+        name: Chocolatey-Sentinel.LogViewer-${{ steps.version.outputs.version }}
         path: chocolatey-packages
-    - name: Publish stable Chocolatey package
+        if-no-files-found: error
+
+    - name: Create portable ZIP archives
+      run: |
+        $folders = @(
+          "publish/Sentinel.LogViewer-SelfContained-win-x64-$env:VERSION",
+          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$env:VERSION"
+        )
+        foreach ($folder in $folders) {
+          Compress-Archive -Path (Join-Path $folder '*') -DestinationPath "$folder.zip"
+        }
+
+    - name: Upload GitHub Release assets
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $tag = "${{ github.ref_name }}"
+        $title = "Sentinel.LogViewer $env:VERSION"
+        $assets = @(
+          Get-ChildItem nuget -Filter '*.nupkg'
+          Get-ChildItem chocolatey-packages -Filter '*.nupkg'
+          Get-ChildItem publish -Filter '*.msi'
+          Get-ChildItem publish -Filter '*.zip'
+        ) | ForEach-Object { $_.FullName }
+
+        gh release view $tag --json id 2>$null
+        if ($LASTEXITCODE -eq 0) {
+          gh release upload $tag @assets --clobber
+        } else {
+          gh release create $tag @assets `
+            --title $title `
+            --generate-notes `
+            --target ${{ github.sha }}
+        }
+
+    - name: Push NuGet packages
+      run: |
+        dotnet nuget add source `
+          "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+          --name github `
+          --username "${{ github.repository_owner }}" `
+          --password "${{ github.token }}" `
+          --store-password-in-clear-text
+        $packages = @(Get-ChildItem nuget -Filter '*.nupkg')
+        if ($packages.Count -eq 0) {
+          throw "No NuGet packages were found in nuget/."
+        }
+        foreach ($package in $packages) {
+          dotnet nuget push $package.FullName --source github --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet nuget push $package.FullName `
+            --source "https://api.nuget.org/v3/index.json" `
+            --api-key "${{ secrets.NUGET_API_KEY }}" `
+            --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
+
+    - name: Push Chocolatey package
       run: |
         $packages = @(Get-ChildItem chocolatey-packages -Filter "*.nupkg")
         if ($packages.Count -ne 1) {
           throw "Expected exactly one Chocolatey package, found $($packages.Count)."
         }
-        $package = $packages[0]
-        choco push $package.FullName `
+        choco push $packages[0].FullName `
           --source "https://push.chocolatey.org/" `
           --api-key "${{ secrets.CHOCOLATEY_API_KEY }}"

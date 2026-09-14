@@ -27,8 +27,9 @@ jobs:
     - name: Run GitVersion
       id: gitversion
       uses: gittools/actions/gitversion/execute@v4.7.0
-    - name: Set version environment variables
+    - name: Set version
       id: version
+      shell: pwsh
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
         $safeVersion = $version -replace '[^a-zA-Z0-9\.\-]', '_'
@@ -85,12 +86,8 @@ jobs:
           -c Release `
           -m:1 `
           -p:InstallerVersion=$env:INSTALLER_VERSION
-        $msi = Get-ChildItem -Path installer -Recurse -Filter Sentinel.LogViewer.msi |
-          Where-Object { $_.FullName -match '[\\/]bin[\\/]' } |
-          Select-Object -First 1
-        if (-not $msi) { throw "Sentinel.LogViewer.msi was not produced under installer/bin" }
-        New-Item -ItemType Directory -Force -Path publish | Out-Null
-        Copy-Item $msi.FullName "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
+        Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" `
+          "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v7
       with:

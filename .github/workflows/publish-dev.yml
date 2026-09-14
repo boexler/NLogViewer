@@ -42,7 +42,7 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v4.7.0
 
-    - name: Set development version
+    - name: Set version
       id: version
       shell: pwsh
       run: |
@@ -217,13 +217,21 @@ jobs:
           --username "${{ github.repository_owner }}" `
           --password "${{ github.token }}" `
           --store-password-in-clear-text
-        dotnet nuget push "nuget/*.nupkg" `
-          --source github `
-          --skip-duplicate
-        dotnet nuget push "nuget/*.nupkg" `
-          --source "https://api.nuget.org/v3/index.json" `
-          --api-key "${{ secrets.NUGET_API_KEY }}" `
-          --skip-duplicate
+        $packages = @(Get-ChildItem nuget -Filter '*.nupkg')
+        if ($packages.Count -eq 0) {
+          throw "No NuGet packages were found in nuget/."
+        }
+        foreach ($package in $packages) {
+          dotnet nuget push $package.FullName `
+            --source github `
+            --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet nuget push $package.FullName `
+            --source "https://api.nuget.org/v3/index.json" `
+            --api-key "${{ secrets.NUGET_API_KEY }}" `
+            --skip-duplicate
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
 
     - name: Push development Chocolatey package
       if: ${{ inputs.publish }}
