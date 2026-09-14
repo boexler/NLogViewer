@@ -4,7 +4,7 @@
 
     <OutputType>Package</OutputType>
 
-    <OutputName>NLogViewer</OutputName>
+    <OutputName>Sentinel.LogViewer</OutputName>
 
     <!--
       The app publishes as win-x64, so the MSI must be x64 too: ProgramFiles64Folder and the

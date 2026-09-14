@@ -28,6 +28,7 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v4.7.0
     - name: Set version environment variables
+      id: version
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
         $safeVersion = $version -replace '[^a-zA-Z0-9\.\-]', '_'
@@ -35,6 +36,7 @@ jobs:
         Add-Content $env:GITHUB_ENV "VERSION=$version"
         Add-Content $env:GITHUB_ENV "SAFE_VERSION=$safeVersion"
         Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
+        Add-Content $env:GITHUB_OUTPUT "safe_version=$safeVersion"
     - name: Build solution
       # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
       # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
@@ -64,14 +66,14 @@ jobs:
     - name: Rename folders with version
       run: |
         $version = $env:SAFE_VERSION
-        Rename-Item -Path "publish/self-contained" -NewName "NLogViewer-SelfContained-win-x64-$version"
-        Rename-Item -Path "publish/framework-dependent" -NewName "NLogViewer-FrameworkDependent-win-x64-$version"
+        Rename-Item -Path "publish/self-contained" -NewName "Sentinel.LogViewer-SelfContained-win-x64-$version"
+        Rename-Item -Path "publish/framework-dependent" -NewName "Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
     - name: Add portable marker and readme to published folders
       run: |
         $version = $env:SAFE_VERSION
         $folders = @(
-          "publish/NLogViewer-SelfContained-win-x64-$version",
-          "publish/NLogViewer-FrameworkDependent-win-x64-$version"
+          "publish/Sentinel.LogViewer-SelfContained-win-x64-$version",
+          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
         )
         foreach ($d in $folders) {
           New-Item -ItemType File -Path (Join-Path $d "NLogViewer.portable") -Force | Out-Null
@@ -83,37 +85,37 @@ jobs:
           -c Release `
           -m:1 `
           -p:InstallerVersion=$env:INSTALLER_VERSION
-        $msi = Get-ChildItem -Path installer -Recurse -Filter NLogViewer.msi |
+        $msi = Get-ChildItem -Path installer -Recurse -Filter Sentinel.LogViewer.msi |
           Where-Object { $_.FullName -match '[\\/]bin[\\/]' } |
           Select-Object -First 1
-        if (-not $msi) { throw "NLogViewer.msi was not produced under installer/bin" }
+        if (-not $msi) { throw "Sentinel.LogViewer.msi was not produced under installer/bin" }
         New-Item -ItemType Directory -Force -Path publish | Out-Null
-        Copy-Item $msi.FullName "publish/NLogViewer-$($env:SAFE_VERSION)-win-x64.msi"
+        Copy-Item $msi.FullName "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v7
       with:
-        name: NuGet-${{ env.SAFE_VERSION }}
+        name: NuGet-${{ steps.version.outputs.safe_version }}
         path: nuget
         if-no-files-found: error
         retention-days: 7
     - name: Upload MSI
       uses: actions/upload-artifact@v7
       with:
-        name: NLogViewer-msi-${{ env.SAFE_VERSION }}
-        path: publish/NLogViewer-${{ env.SAFE_VERSION }}-win-x64.msi
+        name: Sentinel.LogViewer-msi-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-${{ steps.version.outputs.safe_version }}-win-x64.msi
         if-no-files-found: error
         retention-days: 7
     - name: Upload Self-Contained artifact
       uses: actions/upload-artifact@v7
       with:
-        name: NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
-        path: publish/NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
+        name: Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.safe_version }}
         if-no-files-found: error
         retention-days: 7
     - name: Upload Framework-Dependent artifact
       uses: actions/upload-artifact@v7
       with:
-        name: NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
-        path: publish/NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
+        name: Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
         if-no-files-found: error
         retention-days: 7

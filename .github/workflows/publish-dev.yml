@@ -1,0 +1,239 @@
+name: Publish Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish this build to GitHub Packages, nuget.org, Chocolatey, and a GitHub prerelease
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  MSBUILDDISABLENODEREUSE: 1
+
+jobs:
+  publish-dev:
+    name: Build and publish dev
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 0
+        ref: ${{ github.ref }}
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: '8.x'
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v4.7.0
+      with:
+        versionSpec: '6.x'
+
+    - name: Run GitVersion
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v4.7.0
+
+    - name: Set development version
+      id: version
+      shell: pwsh
+      run: |
+        $baseVersion = "${{ steps.gitversion.outputs.majorMinorPatch }}"
+        $version = "$baseVersion-dev.${{ github.run_number }}.${{ github.run_attempt }}"
+        $runNumber = [int64]"${{ github.run_number }}"
+        $runAttempt = [int]"${{ github.run_attempt }}"
+        $chocolateyVersion = '{0}-dev{1:D10}{2:D3}' -f $baseVersion, $runNumber, $runAttempt
+        Add-Content $env:GITHUB_ENV "DEV_VERSION=$version"
+        Add-Content $env:GITHUB_ENV "CHOCO_VERSION=$chocolateyVersion"
+        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$baseVersion.0"
+        Add-Content $env:GITHUB_OUTPUT "version=$version"
+        Add-Content $env:GITHUB_OUTPUT "chocolatey_version=$chocolateyVersion"
+
+    - name: Build solution
+      run: dotnet build NLogViewer.CI.slnf -c Release -m:1
+
+    - name: Run tests
+      run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
+
+    - name: Pack development NuGet packages
+      run: |
+        dotnet pack NLogViewer.CI.slnf `
+          -c Release `
+          --no-build `
+          -p:PackageVersion=$env:DEV_VERSION `
+          -p:Version=$env:DEV_VERSION `
+          -o nuget
+
+    - name: Publish self-contained application
+      run: |
+        dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
+          -c Release `
+          -p:SelfContained=true `
+          -p:PublishSingleFile=true `
+          -p:RuntimeIdentifier=win-x64 `
+          -p:Version=$env:DEV_VERSION `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -o publish/self-contained
+
+    - name: Publish framework-dependent application
+      run: |
+        dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
+          -c Release `
+          -p:SelfContained=false `
+          -p:RuntimeIdentifier=win-x64 `
+          -p:Version=$env:DEV_VERSION `
+          -o publish/framework-dependent
+
+    - name: Prepare portable application folders
+      run: |
+        $folders = @(
+          @{
+            Source = "publish/self-contained"
+            Target = "Sentinel.LogViewer-SelfContained-win-x64-$env:DEV_VERSION"
+          },
+          @{
+            Source = "publish/framework-dependent"
+            Target = "Sentinel.LogViewer-FrameworkDependent-win-x64-$env:DEV_VERSION"
+          }
+        )
+
+        foreach ($folder in $folders) {
+          Rename-Item -Path $folder.Source -NewName $folder.Target
+          $targetPath = Join-Path "publish" $folder.Target
+          New-Item -ItemType File -Path (Join-Path $targetPath "NLogViewer.portable") -Force | Out-Null
+          Copy-Item "dist/portable/README-Portable.txt" $targetPath -Force
+        }
+
+    - name: Build installer MSI
+      run: |
+        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj `
+          -c Release `
+          -m:1 `
+          -p:InstallerVersion=$env:INSTALLER_VERSION
+
+        $target = "publish/Sentinel.LogViewer-$env:DEV_VERSION-win-x64.msi"
+        Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" $target
+
+    - name: Pack development Chocolatey package
+      run: |
+        New-Item -ItemType Directory -Force -Path chocolatey-packages | Out-Null
+        Copy-Item "publish/Sentinel.LogViewer-$env:DEV_VERSION-win-x64.msi" `
+          "chocolatey/tools/Sentinel.LogViewer.msi"
+        choco pack chocolatey/Sentinel.LogViewer.nuspec `
+          --version $env:CHOCO_VERSION `
+          --output-directory chocolatey-packages
+
+    - name: Upload NuGet packages
+      uses: actions/upload-artifact@v7
+      with:
+        name: NuGet-${{ steps.version.outputs.version }}
+        path: nuget
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: Upload MSI
+      uses: actions/upload-artifact@v7
+      with:
+        name: Sentinel.LogViewer-msi-${{ steps.version.outputs.version }}
+        path: publish/Sentinel.LogViewer-${{ steps.version.outputs.version }}-win-x64.msi
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: Upload self-contained application
+      uses: actions/upload-artifact@v7
+      with:
+        name: Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.version }}
+        path: publish/Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.version }}
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: Upload framework-dependent application
+      uses: actions/upload-artifact@v7
+      with:
+        name: Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.version }}
+        path: publish/Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.version }}
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: Upload development Chocolatey package
+      uses: actions/upload-artifact@v7
+      with:
+        name: Chocolatey-Sentinel.LogViewer-${{ steps.version.outputs.chocolatey_version }}
+        path: chocolatey-packages
+        if-no-files-found: error
+        retention-days: 7
+
+    - name: Create portable ZIP archives
+      if: ${{ inputs.publish }}
+      run: |
+        $folders = @(
+          "publish/Sentinel.LogViewer-SelfContained-win-x64-$env:DEV_VERSION",
+          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$env:DEV_VERSION"
+        )
+        foreach ($folder in $folders) {
+          Compress-Archive -Path (Join-Path $folder '*') -DestinationPath "$folder.zip"
+        }
+
+    - name: Create GitHub prerelease
+      if: ${{ inputs.publish }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        $tag = "dev-$env:DEV_VERSION"
+        $title = "Sentinel.LogViewer $env:DEV_VERSION"
+        $notes = @"
+        Development build from ``${{ github.ref_name }}`` (``${{ github.sha }}``).
+
+        Install Chocolatey with ``choco upgrade Sentinel.LogViewer --pre -y``.
+        NuGet packages are prereleases and require a prerelease-capable restore.
+        "@
+        $assets = @(
+          Get-ChildItem nuget -Filter '*.nupkg'
+          Get-ChildItem chocolatey-packages -Filter '*.nupkg'
+          Get-ChildItem publish -Filter '*.msi'
+          Get-ChildItem publish -Filter '*.zip'
+        ) | ForEach-Object { $_.FullName }
+
+        gh release create $tag @assets `
+          --prerelease `
+          --title $title `
+          --notes $notes `
+          --target ${{ github.sha }}
+
+    - name: Push development NuGet packages
+      if: ${{ inputs.publish }}
+      run: |
+        dotnet nuget add source `
+          "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" `
+          --name github `
+          --username "${{ github.repository_owner }}" `
+          --password "${{ github.token }}" `
+          --store-password-in-clear-text
+        dotnet nuget push "nuget/*.nupkg" `
+          --source github `
+          --skip-duplicate
+        dotnet nuget push "nuget/*.nupkg" `
+          --source "https://api.nuget.org/v3/index.json" `
+          --api-key "${{ secrets.NUGET_API_KEY }}" `
+          --skip-duplicate
+
+    - name: Push development Chocolatey package
+      if: ${{ inputs.publish }}
+      run: |
+        $packages = @(Get-ChildItem chocolatey-packages -Filter "*.nupkg")
+        if ($packages.Count -ne 1) {
+          throw "Expected exactly one Chocolatey package, found $($packages.Count)."
+        }
+        $package = $packages[0]
+        choco push $package.FullName `
+          --source "https://push.chocolatey.org/" `
+          --api-key "${{ secrets.CHOCOLATEY_API_KEY }}"
+
