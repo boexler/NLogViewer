@@ -7,6 +7,8 @@
     <StartupObject>Sentinel.NLogViewer.Wpf.TestApp.App</StartupObject>
     <RootNamespace>Sentinel.NLogViewer.Wpf.TestApp</RootNamespace>
     <AssemblyName>Sentinel.NLogViewer.Wpf.TestApp</AssemblyName>
+    <!-- Demo application; never published to a package feed. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Sentinel.NLogViewer.TestLogging</RootNamespace>
     <AssemblyName>Sentinel.NLogViewer.TestLogging</AssemblyName>
+    <!-- Internal log generator for demos and manual testing; not a published library. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

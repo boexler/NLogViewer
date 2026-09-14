@@ -160,9 +160,9 @@ jobs:
       run: |
         $tag = "${{ github.ref_name }}"
         $title = "Sentinel.LogViewer $env:VERSION"
+        # Release assets are end-user downloads only: the installer and the portable ZIPs.
+        # Library packages go to NuGet, the Chocolatey package goes to the Chocolatey feed.
         $assets = @(
-          Get-ChildItem nuget -Filter '*.nupkg'
-          Get-ChildItem chocolatey-packages -Filter '*.nupkg'
           Get-ChildItem publish -Filter '*.msi'
           Get-ChildItem publish -Filter '*.zip'
         ) | ForEach-Object { $_.FullName }

@@ -64,10 +64,12 @@ jobs:
       run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
 
     - name: Pack development NuGet packages
+      # UpdateVersionProperties=false stops GitVersion.MsBuild from overwriting the explicit dev version.
       run: |
         dotnet pack NLogViewer.CI.slnf `
           -c Release `
           --no-build `
+          -p:UpdateVersionProperties=false `
           -p:PackageVersion=$env:DEV_VERSION `
           -p:Version=$env:DEV_VERSION `
           -o nuget
@@ -79,6 +81,7 @@ jobs:
           -p:SelfContained=true `
           -p:PublishSingleFile=true `
           -p:RuntimeIdentifier=win-x64 `
+          -p:UpdateVersionProperties=false `
           -p:Version=$env:DEV_VERSION `
           -p:IncludeNativeLibrariesForSelfExtract=true `
           -o publish/self-contained
@@ -89,6 +92,7 @@ jobs:
           -c Release `
           -p:SelfContained=false `
           -p:RuntimeIdentifier=win-x64 `
+          -p:UpdateVersionProperties=false `
           -p:Version=$env:DEV_VERSION `
           -o publish/framework-dependent
 
@@ -195,9 +199,9 @@ jobs:
         Install Chocolatey with ``choco upgrade Sentinel.LogViewer --pre -y``.
         NuGet packages are prereleases and require a prerelease-capable restore.
         "@
+        # Release assets are end-user downloads only: the installer and the portable ZIPs.
+        # Library packages go to NuGet, the Chocolatey package goes to the Chocolatey feed.
         $assets = @(
-          Get-ChildItem nuget -Filter '*.nupkg'
-          Get-ChildItem chocolatey-packages -Filter '*.nupkg'
           Get-ChildItem publish -Filter '*.msi'
           Get-ChildItem publish -Filter '*.zip'
         ) | ForEach-Object { $_.FullName }
