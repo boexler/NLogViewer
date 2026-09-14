@@ -22,9 +22,9 @@ public record AppName
 public class AppInfo
 {
 	/// <summary>
-	/// Application name
+	/// Application name. May be null when the source log event carries no usable app identifier.
 	/// </summary>
-	public AppName AppName { get; set; } = new("Unknown", Guid.NewGuid().ToString());
+	public AppName? AppName { get; set; } = new("Unknown", Guid.NewGuid().ToString());
 
 	/// <summary>
 	/// Sender/Remote endpoint information
@@ -38,7 +38,8 @@ public class AppInfo
 
 	public override string ToString()
 	{
-		return string.IsNullOrEmpty(Sender) ? AppName.Name : $"{AppName.Name} @ {Sender}";
+		var name = AppName?.Name ?? string.Empty;
+		return string.IsNullOrEmpty(Sender) ? name : $"{name} @ {Sender}";
 	}
 
 	public override bool Equals(object? obj)

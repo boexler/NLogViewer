@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -39,6 +40,21 @@ namespace Sentinel.NLogViewer.App
 #if DEBUG
             AddDebugMenu();
 #endif
+        }
+
+        /// <summary>
+        /// Activates this window and imports paths supplied by a shell or secondary-process invocation.
+        /// </summary>
+        public void HandleExternalInvocation(IReadOnlyList<string> arguments)
+        {
+            if (WindowState == System.Windows.WindowState.Minimized)
+                WindowState = System.Windows.WindowState.Normal;
+
+            Show();
+            Activate();
+
+            if (arguments.Count > 0)
+                _viewModel.BeginImportPathsFromUi(arguments);
         }
 
         /// <summary>
@@ -216,7 +232,8 @@ namespace Sentinel.NLogViewer.App
         /// </summary>
         private void LanguageButton_Click(object sender, RoutedEventArgs e)
         {
-	        using var scope = App.ServiceProvider.CreateScope();
+	        var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
+	        using var scope = provider.CreateScope();
 	        var languageWindow = scope.ServiceProvider.GetRequiredService<LanguageSelectionWindow>();
 	        var result = languageWindow.ShowDialog(this);
 

@@ -1,62 +1,50 @@
 name: Commit
-on: 
+on:
   push:
   pull_request:
 env:
-  DOTNET_CLI_TELEMETRY_OPTOUT: true  
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # Leftover MSBuild nodes keep obj/ files open and break subsequent WPF markup compilation.
+  MSBUILDDISABLENODEREUSE: 1
 jobs:
-  build:
-    name: Build
+  ci:
+    name: CI
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         fetch-depth: 0
         ref: ${{ github.ref }}
-    - name: Build solution
-      run: dotnet build -c Release
-    - name: Run tests
-      run: dotnet test -c Release --no-build --verbosity normal
-    - name: Pack NuGet packages
-      run: dotnet pack -c Release --no-build -o nuget
-    - name: Upload nuget packages as artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: NuGet
-        path: nuget
-        if-no-files-found: error
-        retention-days: 1
-
-  publish-app:
-    name: Publish Application
-    needs: [build]
-    runs-on: windows-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.x'
     - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
+      uses: gittools/actions/gitversion/setup@v4.7.0
       with:
         versionSpec: '6.x'
     - name: Run GitVersion
       id: gitversion
-      uses: gittools/actions/gitversion/execute@v0.9.7
-    - name: Set VERSION environment variable
+      uses: gittools/actions/gitversion/execute@v4.7.0
+    - name: Set version environment variables
+      id: version
       run: |
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
+        $safeVersion = $version -replace '[^a-zA-Z0-9\.\-]', '_'
+        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
         Add-Content $env:GITHUB_ENV "VERSION=$version"
-    - name: Normalize version
-      run: |
-        $rawVersion = $env:VERSION
-        $safeVersion = $rawVersion -replace '[^a-zA-Z0-9\.\-]', '_'
         Add-Content $env:GITHUB_ENV "SAFE_VERSION=$safeVersion"
+        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
+        Add-Content $env:GITHUB_OUTPUT "safe_version=$safeVersion"
+    - name: Build solution
+      # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
+      # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
+      run: dotnet build NLogViewer.CI.slnf -c Release -m:1
+    - name: Run tests
+      run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
+    - name: Pack NuGet packages
+      run: dotnet pack NLogViewer.CI.slnf -c Release --no-build -o nuget
     - name: Publish Self-Contained
       run: |
         dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
@@ -78,19 +66,56 @@ jobs:
     - name: Rename folders with version
       run: |
         $version = $env:SAFE_VERSION
-        Rename-Item -Path "publish/self-contained" -NewName "NLogViewer-SelfContained-win-x64-$version"
-        Rename-Item -Path "publish/framework-dependent" -NewName "NLogViewer-FrameworkDependent-win-x64-$version"
+        Rename-Item -Path "publish/self-contained" -NewName "Sentinel.LogViewer-SelfContained-win-x64-$version"
+        Rename-Item -Path "publish/framework-dependent" -NewName "Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
+    - name: Add portable marker and readme to published folders
+      run: |
+        $version = $env:SAFE_VERSION
+        $folders = @(
+          "publish/Sentinel.LogViewer-SelfContained-win-x64-$version",
+          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$version"
+        )
+        foreach ($d in $folders) {
+          New-Item -ItemType File -Path (Join-Path $d "NLogViewer.portable") -Force | Out-Null
+          Copy-Item -Path "dist/portable/README-Portable.txt" -Destination (Join-Path $d "README-Portable.txt") -Force
+        }
+    - name: Build installer MSI
+      run: |
+        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj `
+          -c Release `
+          -m:1 `
+          -p:InstallerVersion=$env:INSTALLER_VERSION
+        $msi = Get-ChildItem -Path installer -Recurse -Filter Sentinel.LogViewer.msi |
+          Where-Object { $_.FullName -match '[\\/]bin[\\/]' } |
+          Select-Object -First 1
+        if (-not $msi) { throw "Sentinel.LogViewer.msi was not produced under installer/bin" }
+        New-Item -ItemType Directory -Force -Path publish | Out-Null
+        Copy-Item $msi.FullName "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
+    - name: Upload NuGet packages
+      uses: actions/upload-artifact@v7
+      with:
+        name: NuGet-${{ steps.version.outputs.safe_version }}
+        path: nuget
+        if-no-files-found: error
+        retention-days: 7
+    - name: Upload MSI
+      uses: actions/upload-artifact@v7
+      with:
+        name: Sentinel.LogViewer-msi-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-${{ steps.version.outputs.safe_version }}-win-x64.msi
+        if-no-files-found: error
+        retention-days: 7
     - name: Upload Self-Contained artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
-        path: publish/NLogViewer-SelfContained-win-x64-${{ env.SAFE_VERSION }}
+        name: Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-SelfContained-win-x64-${{ steps.version.outputs.safe_version }}
         if-no-files-found: error
-        retention-days: 1
+        retention-days: 7
     - name: Upload Framework-Dependent artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
-        path: publish/NLogViewer-FrameworkDependent-win-x64-${{ env.SAFE_VERSION }}
+        name: Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
+        path: publish/Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
         if-no-files-found: error
-        retention-days: 1
+        retention-days: 7

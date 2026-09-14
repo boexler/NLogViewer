@@ -180,7 +180,7 @@ namespace Sentinel.NLogViewer.Wpf
                 return false;
             }
             
-            return _canExecute?.Invoke((T)parameter) ?? true;
+            return _canExecute?.Invoke((T)parameter!) ?? true;
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Sentinel.NLogViewer.Wpf
             }
             else if (parameter == null && !typeof(T).IsValueType)
             {
-                _execute((T)parameter);
+                _execute(default!);
             }
             else if (parameter != null)
             {

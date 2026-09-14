@@ -247,7 +247,6 @@ namespace Sentinel.NLogViewer.App.Tests.Parsers
                 "   ",
                 "2024-01-15 10:30:45 INFO [Logger] Valid message",
                 "",
-                null
             };
 
             // Act

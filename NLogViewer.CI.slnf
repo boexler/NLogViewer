@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "NLogViewer.sln",
+    "projects": [
+      "app\\Sentinel.NLogViewer.App\\Sentinel.NLogViewer.App.csproj",
+      "app\\Sentinel.NLogViewer.TestLogging\\Sentinel.NLogViewer.TestLogging.csproj",
+      "ui\\Sentinel.NLogViewer.Wpf\\Sentinel.NLogViewer.Wpf.csproj",
+      "ui\\Sentinel.NLogViewer.Wpf.MaterialDesign\\Sentinel.NLogViewer.Wpf.MaterialDesign.csproj",
+      "testapp\\Sentinel.NLogViewer.App.TestApp\\Sentinel.NLogViewer.App.TestApp.csproj",
+      "testapp\\Sentinel.NLogViewer.Wpf.TestApp\\Sentinel.NLogViewer.Wpf.TestApp.csproj",
+      "testapp\\Sentinel.NLogViewer.Wpf.MaterialDesign.TestApp\\Sentinel.NLogViewer.Wpf.MaterialDesign.TestApp.csproj",
+      "tests\\Sentinel.NLogViewer.App.Tests\\Sentinel.NLogViewer.App.Tests.csproj"
+    ]
+  }
+}

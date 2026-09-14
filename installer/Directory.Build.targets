@@ -1,0 +1,12 @@
+<Project>
+  <!--
+    HarvestDirectory runs only when @(HarvestDirectory) is non-empty (Heat target condition).
+    We populate those items in ResolveWixPublishHarvestDir, so that target must run before
+    HarvestDirectory is scheduled. Prepending to HarvestDependsOn ensures ResolveWixPublishHarvestDir
+    runs at the start of Harvest; relying only on HarvestDirectoryDependsOn never runs because
+    the parent target is skipped while the item list is still empty.
+  -->
+  <PropertyGroup>
+    <HarvestDependsOn>ResolveWixPublishHarvestDir;$(HarvestDependsOn)</HarvestDependsOn>
+  </PropertyGroup>
+</Project>

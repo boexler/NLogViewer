@@ -1,0 +1,271 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Sentinel.LogViewer"
+           Manufacturer="Dominic Böxler"
+           Version="$(var.InstallerVersion)"
+           UpgradeCode="E8F9A0B1-C2D3-4E5F-8A7B-6C5D4E3F2A10"
+           Scope="perMachine">
+
+    <SummaryInformation Description="Sentinel.LogViewer — visualize NLog / log output" />
+
+    <!--
+      AllowSameVersionUpgrades is required because InstallerVersion only carries
+      major.minor.patch.0: consecutive builds of the same patch level share a ProductVersion, and
+      without it Windows Installer would place a second product side by side instead of replacing
+      the previous installation (including the earlier "Program Files (x86)" layout).
+    -->
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of Sentinel.LogViewer is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="medium" />
+
+    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.NLogViewer.App\Resources\icons\icons8-analysieren-64.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="OPEN_DEFAULT_APPS" Value="1" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <ui:WixUI Id="WixUI_FeatureTree" />
+
+    <!--
+      Windows protects the per-user default-app choice. The MSI therefore registers NLogViewer as
+      a capable handler and, when requested, opens the Windows confirmation page after setup.
+    -->
+    <UI>
+      <Dialog Id="LogAssociationDlg"
+              Width="370"
+              Height="270"
+              Title="[ProductName] Setup">
+        <Control Id="Title"
+                 Type="Text"
+                 X="15"
+                 Y="6"
+                 Width="340"
+                 Height="25"
+                 Transparent="yes"
+                 NoPrefix="yes"
+                 Text="{\WixUI_Font_Title}Dateizuordnung" />
+        <Control Id="Description"
+                 Type="Text"
+                 X="25"
+                 Y="45"
+                 Width="320"
+                 Height="35"
+                 Text="Sentinel.LogViewer wurde als Anwendung zum Öffnen von .log-Dateien registriert." />
+        <Control Id="OpenDefaultAppsCheckBox"
+                 Type="CheckBox"
+                 X="25"
+                 Y="95"
+                 Width="320"
+                 Height="30"
+                 Property="OPEN_DEFAULT_APPS"
+                 CheckBoxValue="1"
+                 Text="*.log Dateien immer mit Sentinel.LogViewer öffnen" />
+        <Control Id="DefaultAppsNotice"
+                 Type="Text"
+                 X="25"
+                 Y="135"
+                 Width="320"
+                 Height="45"
+                 Text="Windows benötigt hierfür Ihre Bestätigung. Nach Abschluss des Setups wird die Seite „Standard-Apps“ geöffnet." />
+        <Control Id="Back"
+                 Type="PushButton"
+                 X="180"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Text="Zurück" />
+        <Control Id="Next"
+                 Type="PushButton"
+                 X="236"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Default="yes"
+                 Text="Weiter" />
+        <Control Id="Cancel"
+                 Type="PushButton"
+                 X="304"
+                 Y="243"
+                 Width="56"
+                 Height="17"
+                 Cancel="yes"
+                 Text="Abbrechen" />
+      </Dialog>
+
+      <Publish Dialog="CustomizeDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="LogAssociationDlg"
+               Order="5"
+               Condition="NOT Installed AND &amp;FeatureAssocLog = 3" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="CustomizeDlg" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Next"
+               Event="NewDialog"
+               Value="VerifyReadyDlg" />
+      <Publish Dialog="LogAssociationDlg"
+               Control="Cancel"
+               Event="SpawnDialog"
+               Value="CancelDlg" />
+      <Publish Dialog="VerifyReadyDlg"
+               Control="Back"
+               Event="NewDialog"
+               Value="LogAssociationDlg"
+               Order="5"
+               Condition="NOT Installed AND &amp;FeatureAssocLog = 3" />
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction"
+               Value="OpenDefaultApps"
+               Order="1"
+               Condition="OPEN_DEFAULT_APPS = 1 AND NOT Installed AND &amp;FeatureAssocLog = 3" />
+    </UI>
+
+    <CustomAction Id="OpenDefaultApps"
+                  Directory="WindowsFolder"
+                  ExeCommand="explorer.exe &quot;ms-settings:defaultapps?registeredAppUser=Sentinel.LogViewer&quot;"
+                  Execute="immediate"
+                  Return="asyncNoWait"
+                  Impersonate="yes" />
+
+    <!-- Main application (default on) -->
+    <Feature Id="FeatureMain"
+             Title="Sentinel.LogViewer"
+             Level="1"
+             Description="Core application files and Start Menu shortcut. Optional items can be enabled below.">
+      <ComponentGroupRef Id="HarvestedComponents" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+      <ComponentGroupRef Id="InstallFolderComponents" />
+    </Feature>
+
+    <Feature Id="FeatureDesktop"
+             Title="Desktop shortcut"
+             Level="100"
+             AllowAdvertise="no"
+             Description="Optional shortcut on the desktop (not installed by default—enable in Custom setup).">
+      <ComponentGroupRef Id="DesktopShortcutComponents" />
+    </Feature>
+
+    <Feature Id="FeatureAssocLog"
+             Title="Associate .log files"
+             Level="100"
+             AllowAdvertise="no"
+             Description="Register Sentinel.LogViewer as an option for .log files (not installed by default—enable in Custom setup).">
+      <ComponentGroupRef Id="FileAssocLogComponents" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="COMPANYFOLDER" Name="Boexler">
+        <Directory Id="INSTALLFOLDER" Name="Sentinel.NLogViewer" />
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Sentinel.LogViewer" />
+    </StandardDirectory>
+    <StandardDirectory Id="DesktopFolder" />
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="InstallFolderComponents" Directory="COMPANYFOLDER">
+      <Component Id="CmpRemoveCompanyFolder" Guid="A1B2C3D4-E5F6-4789-ABCD-EF0123456789">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Name="CompanyFolder"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <RemoveFolder Id="RemoveCompanyFolder" On="uninstall" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ShortcutComponents" Directory="ApplicationProgramsFolder">
+      <Component Id="CmpStartMenuShortcut" Guid="C4D5E6F7-A8B9-4012-CDE3-456789ABCDEF">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Name="StartMenuShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <Shortcut Id="ScStartMenu"
+                  Name="Sentinel.LogViewer"
+                  Description="NLog log viewer"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Icon="AppIcon.ico" />
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="DesktopShortcutComponents" Directory="DesktopFolder">
+      <Component Id="CmpDesktopShortcut" Guid="D5E6F7A8-B9C0-4123-DEF4-56789ABCDEF0">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Name="DesktopShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <Shortcut Id="ScDesktop"
+                  Name="Sentinel.LogViewer"
+                  Description="NLog log viewer"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Icon="AppIcon.ico" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="FileAssocLogComponents" Directory="INSTALLFOLDER">
+      <Component Id="CmpLogProgId" Guid="B9C0D1E2-F3A4-4567-89AB-CDEF01234567">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log">
+          <RegistryValue Type="string" Value="Log file" />
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\DefaultIcon">
+          <RegistryValue Type="string" Value="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe,0" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpLogOpenCommand" Guid="C0D1E2F3-A4B5-4678-9ABC-DEF012345678">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\shell\open\command">
+          <RegistryValue Type="string"
+                         Value="&quot;[INSTALLFOLDER]Sentinel.NLogViewer.App.exe&quot; &quot;%1&quot;"
+                         KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpLogExtension" Guid="D1E2F3A4-B5C6-4789-ABCD-EF0123456789">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\.log\OpenWithProgids">
+          <RegistryValue Name="NLogViewer.log" Type="string" Value="" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpLogCapabilities" Guid="E2F3A4B5-C6D7-489A-BCDE-F0123456789A">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities">
+          <RegistryValue Name="ApplicationName" Type="string" Value="Sentinel.LogViewer" />
+          <RegistryValue Name="ApplicationDescription"
+                         Type="string"
+                         Value="View and analyze NLog and log files." />
+          <RegistryValue Name=".log"
+                         Type="string"
+                         Value="NLogViewer.log"
+                         Key="FileAssociations" />
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="SOFTWARE\RegisteredApplications">
+          <RegistryValue Name="Sentinel.LogViewer"
+                         Type="string"
+                         Value="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities"
+                         KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

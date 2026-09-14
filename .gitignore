@@ -167,6 +167,9 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+# NuGet package output directory used by `dotnet pack -o nuget` (CI + local)
+nuget/
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml

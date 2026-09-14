@@ -253,7 +253,7 @@ namespace Sentinel.NLogViewer.App.AttachedProperties
 				_border.Child = GetCurrentContent();
 			}
 
-			private ContentControl GetCurrentContent()
+			private ContentControl? GetCurrentContent()
 			{
 				var item = _tabControl.SelectedItem;
 				if (item == null) return null;

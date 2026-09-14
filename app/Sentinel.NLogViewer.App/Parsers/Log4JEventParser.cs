@@ -52,10 +52,10 @@ public class Log4JEventParser
 
 		var evt = new Log4JEvent
 		{
-			Logger = (string)root.Attribute("logger") ?? string.Empty,
-			Level = ParseLogLevel((string)root.Attribute("level")),
-			Thread = (string)root.Attribute("thread") ?? string.Empty,
-			Timestamp = ParseLong((string)root.Attribute("timestamp")),
+			Logger = (string?)root.Attribute("logger") ?? string.Empty,
+			Level = ParseLogLevel((string?)root.Attribute("level")),
+			Thread = (string?)root.Attribute("thread") ?? string.Empty,
+			Timestamp = ParseLong((string?)root.Attribute("timestamp")),
 			Message = ExtractMessage(root, ns),
 			Throwable = ExtractValue(root.Element(ns + "throwable")),
 			LocationInfo = ExtractLocationInfo(root, ns),
@@ -63,7 +63,7 @@ public class Log4JEventParser
 		};
 
 		if (string.IsNullOrEmpty(evt.Thread))
-			evt.Thread = ExtractValue(root.Element(ns + "thread"));
+			evt.Thread = ExtractValue(root.Element(ns + "thread")) ?? string.Empty;
 
 		return evt;
 	}
@@ -91,7 +91,7 @@ public class Log4JEventParser
 	/// </summary>
 	/// <param name="element">The XML element to extract the value from. Can be null.</param>
 	/// <returns>The trimmed element value, or null if the element is null or empty.</returns>
-	private string ExtractValue(XElement element)
+	private string? ExtractValue(XElement? element)
 	{
 		if (element == null)
 			return null;
@@ -107,7 +107,7 @@ public class Log4JEventParser
 	/// <param name="root">The root log4j:event element.</param>
 	/// <param name="ns">The XML namespace for log4j elements.</param>
 	/// <returns>A Log4JLocationInfo object, or null if the locationInfo element is not present.</returns>
-	private Log4JLocationInfo ExtractLocationInfo(XElement root, XNamespace ns)
+	private Log4JLocationInfo? ExtractLocationInfo(XElement root, XNamespace ns)
 	{
 		var e = root.Element(ns + "locationInfo");
 		if (e == null)
@@ -115,10 +115,10 @@ public class Log4JEventParser
 
 		return new Log4JLocationInfo
 		{
-			Class = (string)e.Attribute("class") ?? string.Empty,
-			Method = (string)e.Attribute("method") ?? string.Empty,
-			File = (string)e.Attribute("file") ?? string.Empty,
-			Line = ParseNullableInt((string)e.Attribute("line"))
+			Class = (string?)e.Attribute("class") ?? string.Empty,
+			Method = (string?)e.Attribute("method") ?? string.Empty,
+			File = (string?)e.Attribute("file") ?? string.Empty,
+			Line = ParseNullableInt((string?)e.Attribute("line"))
 		};
 	}
 
@@ -138,8 +138,8 @@ public class Log4JEventParser
 
 		foreach (var d in props.Elements(ns + "data"))
 		{
-			var name = (string)d.Attribute("name");
-			var value = (string)d.Attribute("value");
+			var name = (string?)d.Attribute("name");
+			var value = (string?)d.Attribute("value");
 
 			if (!string.IsNullOrEmpty(name))
 				dict[name] = value ?? string.Empty;
@@ -154,7 +154,7 @@ public class Log4JEventParser
 	/// </summary>
 	/// <param name="levelString">The string representation of the log level (e.g., "INFO", "ERROR").</param>
 	/// <returns>The corresponding Log4JLevel enum value, or Log4JLevel.Unknown if the string cannot be parsed.</returns>
-	private Log4JLevel ParseLogLevel(string levelString)
+	private Log4JLevel ParseLogLevel(string? levelString)
 	{
 		if (string.IsNullOrWhiteSpace(levelString))
 			return Log4JLevel.Unknown;
@@ -178,8 +178,10 @@ public class Log4JEventParser
 	/// </summary>
 	/// <param name="value">The string to parse.</param>
 	/// <returns>The parsed long value, or 0 if parsing fails.</returns>
-	private long ParseLong(string value)
+	private long ParseLong(string? value)
 	{
+		if (string.IsNullOrEmpty(value))
+			return 0L;
 		return long.TryParse(value, out long result) ? result : 0L;
 	}
 
@@ -188,8 +190,10 @@ public class Log4JEventParser
 	/// </summary>
 	/// <param name="value">The string to parse.</param>
 	/// <returns>The parsed integer value, or null if parsing fails or the input is null/empty.</returns>
-	private int? ParseNullableInt(string value)
+	private int? ParseNullableInt(string? value)
 	{
+		if (string.IsNullOrEmpty(value))
+			return null;
 		return int.TryParse(value, out int result) ? result : null;
 	}
 }

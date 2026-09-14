@@ -13,13 +13,13 @@ namespace Sentinel.NLogViewer.Wpf
             scrollViewer?.ScrollToEnd();
         }
 
-        public static Visual GetDescendantByType(Visual element, Type type)
+        public static Visual? GetDescendantByType(Visual? element, Type type)
         {
             if (element != null)
             {
                 if (element.GetType() != type)
                 {
-                    Visual foundElement = null;
+                    Visual? foundElement = null;
                     (element as FrameworkElement)?.ApplyTemplate();
 
                     for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)

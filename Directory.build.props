@@ -10,6 +10,7 @@
     <PackageTags>sentinel nlog</PackageTags>
     <Description>NLogViewer is a ui control library to visualize NLog logs</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -26,5 +27,6 @@
       <PackagePath>LICENSE.md</PackagePath>
       <Visible>false</Visible>
     </Content>
+    <None Include="$(MSBuildThisFileDirectory)/PackageReadme.md" Pack="true" PackagePath="PackageReadme.md" Visible="false" />
   </ItemGroup>
 </Project>

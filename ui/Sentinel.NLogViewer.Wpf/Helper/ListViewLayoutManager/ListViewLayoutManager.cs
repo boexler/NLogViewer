@@ -34,12 +34,12 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         // ##########################################################################################
 
         private readonly ListView _ListView;
-        private ScrollViewer _ScrollViewer;
+        private ScrollViewer? _ScrollViewer;
         private bool _Loaded;
         private bool _Resizing;
-        private Cursor _ResizeCursor;
+        private Cursor? _ResizeCursor;
         private ScrollBarVisibility _VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-        private GridViewColumn _AutoSizedColumn;
+        private GridViewColumn? _AutoSizedColumn;
 
         private const double _ZERO_WIDTH_RANGE = 0.1;
 
@@ -112,7 +112,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         {
             Application.Current.Dispatcher.InvokeAsync(delegate
             {
-                GridView view = _ListView.View as GridView;
+                GridView? view = _ListView.View as GridView;
                 if (view == null || view.Columns.Count == 0)
                 {
                     return;
@@ -163,7 +163,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
                     }
 
                     // search the first fill column
-                    GridViewColumn fillColumn = null;
+                    GridViewColumn? fillColumn = null;
                     for (int i = 0; i < view.Columns.Count; i++)
                     {
                         GridViewColumn gridViewColumn = view.Columns[i];
@@ -256,13 +256,17 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(start); i++)
             {
-                Visual childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
-                if (childVisual is Thumb)
+                Visual? childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
+                if (childVisual == null)
                 {
-                    GridViewColumn gridViewColumn = _FindParentColumn(childVisual);
+                    continue;
+                }
+
+                if (childVisual is Thumb thumb)
+                {
+                    GridViewColumn? gridViewColumn = _FindParentColumn(thumb);
                     if (gridViewColumn != null)
                     {
-                        Thumb thumb = childVisual as Thumb;
                         if (ProportionalColumn.IsProportionalColumn(gridViewColumn) ||
                             FixedColumn.IsFixedColumn(gridViewColumn) || _IsFillColumn(gridViewColumn))
                         {
@@ -279,14 +283,13 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
                         }
                     }
                 }
-                else if (childVisual is GridViewColumnHeader)
+                else if (childVisual is GridViewColumnHeader columnHeader)
                 {
-                    GridViewColumnHeader columnHeader = childVisual as GridViewColumnHeader;
                     columnHeader.SizeChanged += _GridColumnHeaderSizeChanged;
                 }
-                else if (_ScrollViewer == null && childVisual is ScrollViewer)
+                else if (_ScrollViewer == null && childVisual is ScrollViewer sv)
                 {
-                    _ScrollViewer = childVisual as ScrollViewer;
+                    _ScrollViewer = sv;
                     _ScrollViewer.ScrollChanged += _ScrollViewerScrollChanged;
                     // assume we do the regulation of the horizontal scrollbar
                     _ScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
@@ -301,13 +304,17 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(start); i++)
             {
-                Visual childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
-                if (childVisual is Thumb)
+                Visual? childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
+                if (childVisual == null)
                 {
-                    GridViewColumn gridViewColumn = _FindParentColumn(childVisual);
+                    continue;
+                }
+
+                if (childVisual is Thumb thumb)
+                {
+                    GridViewColumn? gridViewColumn = _FindParentColumn(thumb);
                     if (gridViewColumn != null)
                     {
-                        Thumb thumb = childVisual as Thumb;
                         if (ProportionalColumn.IsProportionalColumn(gridViewColumn) ||
                             FixedColumn.IsFixedColumn(gridViewColumn) || _IsFillColumn(gridViewColumn))
                         {
@@ -324,22 +331,21 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
                         }
                     }
                 }
-                else if (childVisual is GridViewColumnHeader)
+                else if (childVisual is GridViewColumnHeader columnHeader)
                 {
-                    GridViewColumnHeader columnHeader = childVisual as GridViewColumnHeader;
                     columnHeader.SizeChanged -= _GridColumnHeaderSizeChanged;
                 }
-                else if (_ScrollViewer == null && childVisual is ScrollViewer)
+                else if (childVisual is ScrollViewer sv && ReferenceEquals(sv, _ScrollViewer))
                 {
-                    _ScrollViewer = childVisual as ScrollViewer;
-                    _ScrollViewer.ScrollChanged -= _ScrollViewerScrollChanged;
+                    sv.ScrollChanged -= _ScrollViewerScrollChanged;
+                    _ScrollViewer = null;
                 }
 
                 _UnRegisterEvents(childVisual);
             }
         }
 
-        private GridViewColumn _FindParentColumn(DependencyObject element)
+        private GridViewColumn? _FindParentColumn(DependencyObject? element)
         {
             if (element == null)
             {
@@ -348,7 +354,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
 
             while (element != null)
             {
-                GridViewColumnHeader gridViewColumnHeader = element as GridViewColumnHeader;
+                GridViewColumnHeader? gridViewColumnHeader = element as GridViewColumnHeader;
                 if (gridViewColumnHeader != null)
                 {
                     return (gridViewColumnHeader).Column;
@@ -360,21 +366,25 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             return null;
         }
 
-        private GridViewColumnHeader _FindColumnHeader(DependencyObject start, GridViewColumn gridViewColumn)
+        private GridViewColumnHeader? _FindColumnHeader(DependencyObject? start, GridViewColumn gridViewColumn)
         {
+            if (start == null)
+            {
+                return null;
+            }
+
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(start); i++)
             {
-                Visual childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
-                if (childVisual is GridViewColumnHeader)
+                Visual? childVisual = VisualTreeHelper.GetChild(start, i) as Visual;
+                if (childVisual is GridViewColumnHeader gridViewHeader)
                 {
-                    GridViewColumnHeader gridViewHeader = childVisual as GridViewColumnHeader;
                     if (gridViewHeader.Column == gridViewColumn)
                     {
                         return gridViewHeader;
                     }
                 }
 
-                GridViewColumnHeader childGridViewHeader = _FindColumnHeader(childVisual, gridViewColumn);
+                GridViewColumnHeader? childGridViewHeader = _FindColumnHeader(childVisual, gridViewColumn);
                 if (childGridViewHeader != null)
                 {
                     return childGridViewHeader;
@@ -386,7 +396,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
 
         private void _InitColumns()
         {
-            GridView view = _ListView.View as GridView;
+            GridView? view = _ListView.View as GridView;
             if (view == null)
             {
                 return;
@@ -406,7 +416,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
                     continue;
                 }
 
-                GridViewColumnHeader columnHeader = _FindColumnHeader(_ListView, gridViewColumn);
+                GridViewColumnHeader? columnHeader = _FindColumnHeader(_ListView, gridViewColumn);
                 if (columnHeader == null)
                 {
                     continue;
@@ -465,7 +475,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
                 return false;
             }
 
-            GridView view = _ListView.View as GridView;
+            GridView? view = _ListView.View as GridView;
             if (view == null || view.Columns.Count == 0)
             {
                 return false;
@@ -475,15 +485,13 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             return isFillColumn.HasValue && isFillColumn.Value;
         }
 
-        private void _ThumbPreviewMouseMove(object sender, MouseEventArgs e)
+        private void _ThumbPreviewMouseMove(object? sender, MouseEventArgs e)
         {
-            Thumb thumb = sender as Thumb;
-            if (thumb == null)
+            if (sender is not Thumb thumb)
             {
                 return;
             }
-
-            GridViewColumn gridViewColumn = _FindParentColumn(thumb);
+            GridViewColumn? gridViewColumn = _FindParentColumn(thumb);
             if (gridViewColumn == null)
             {
                 return;
@@ -529,10 +537,18 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             }
         }
 
-        private void _ThumbPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void _ThumbPreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
-            Thumb thumb = sender as Thumb;
-            GridViewColumn gridViewColumn = _FindParentColumn(thumb);
+            if (sender is not Thumb thumb)
+            {
+                return;
+            }
+
+            GridViewColumn? gridViewColumn = _FindParentColumn(thumb);
+            if (gridViewColumn == null)
+            {
+                return;
+            }
 
             // suppress column resizing for proportional, fixed and range fill columns
             if (ProportionalColumn.IsProportionalColumn(gridViewColumn) ||
@@ -543,14 +559,18 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             }
         }
 
-        private void _GridColumnWidthChanged(object sender, EventArgs e)
+        private void _GridColumnWidthChanged(object? sender, EventArgs e)
         {
             if (!_Loaded)
             {
                 return;
             }
 
-            GridViewColumn gridViewColumn = sender as GridViewColumn;
+            GridViewColumn? gridViewColumn = sender as GridViewColumn;
+            if (gridViewColumn == null)
+            {
+                return;
+            }
 
             // suppress column resizing for proportional and fixed columns
             if (ProportionalColumn.IsProportionalColumn(gridViewColumn) || FixedColumn.IsFixedColumn(gridViewColumn))
@@ -562,7 +582,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             if (RangeColumn.IsRangeColumn(gridViewColumn))
             {
                 // special case: auto column width - maybe conflicts with min/max range
-                if (gridViewColumn != null && gridViewColumn.Width.Equals(double.NaN))
+                if (gridViewColumn.Width.Equals(double.NaN))
                 {
                     _AutoSizedColumn = gridViewColumn;
                     return; // handled by the change header size event
@@ -579,15 +599,19 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         }
 
         // handle autosized column
-        private void _GridColumnHeaderSizeChanged(object sender, SizeChangedEventArgs e)
+        private void _GridColumnHeaderSizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (_AutoSizedColumn == null)
             {
                 return;
             }
 
-            GridViewColumnHeader gridViewColumnHeader = sender as GridViewColumnHeader;
-            if (gridViewColumnHeader != null && gridViewColumnHeader.Column == _AutoSizedColumn)
+            if (sender is not GridViewColumnHeader gridViewColumnHeader)
+            {
+                return;
+            }
+
+            if (gridViewColumnHeader.Column == _AutoSizedColumn)
             {
                 if (gridViewColumnHeader.Width.Equals(double.NaN))
                 {
@@ -600,7 +624,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
             }
         }
 
-        private void _ScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void _ScrollViewerScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
             if (_Loaded && Math.Abs(e.ViewportWidthChange - 0) > _ZERO_WIDTH_RANGE)
             {
@@ -611,7 +635,7 @@ namespace Sentinel.NLogViewer.Wpf.Helper.ListViewLayoutManager
         private static void _OnLayoutManagerEnabledChanged(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs e)
         {
-            ListView listView = dependencyObject as ListView;
+            ListView? listView = dependencyObject as ListView;
             if (listView != null)
             {
                 bool enabled = (bool) e.NewValue;

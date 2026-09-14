@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Sentinel.NLogViewer.Wpf;
@@ -31,7 +32,7 @@ namespace Sentinel.NLogViewer.Wpf.TestApp
 
         public MainWindow()
         {
-            Title = $"NLogViewer TestApp v{Assembly.GetEntryAssembly().GetName().Version} - framework v{AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName}";
+            Title = $"NLogViewer TestApp v{Assembly.GetEntryAssembly()?.GetName().Version} - framework v{AppDomain.CurrentDomain.SetupInformation.TargetFrameworkName}";
             InitializeComponent();
             DataContext = this;
             
@@ -39,7 +40,8 @@ namespace Sentinel.NLogViewer.Wpf.TestApp
             
             Stopwatch stopwatch = Stopwatch.StartNew();
             Random random = new Random();
-            Observable.Interval(TimeSpan.FromMilliseconds(200)).ObserveOn(SynchronizationContext.Current).Subscribe(l =>
+            var sync = SynchronizationContext.Current ?? new DispatcherSynchronizationContext(Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher);
+            Observable.Interval(TimeSpan.FromMilliseconds(200)).ObserveOn(sync).Subscribe(l =>
             {
                 //if((_CntMessage == 10 || _CntError == 20) && TabControl1.Items.Count > 0)
                 //    TabControl1.Items.RemoveAt(0);

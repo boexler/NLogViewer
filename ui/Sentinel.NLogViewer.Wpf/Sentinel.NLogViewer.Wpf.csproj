@@ -4,7 +4,8 @@
     <TargetFramework>net8-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Sentinel.NLogViewer.Wpf</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Packing runs as an explicit `dotnet pack` step; packing during build competes with WPF markup compilation for obj/. -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>Sentinel.NLogViewer</PackageId>
   </PropertyGroup>
 

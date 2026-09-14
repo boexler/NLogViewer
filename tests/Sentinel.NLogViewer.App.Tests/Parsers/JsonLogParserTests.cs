@@ -132,8 +132,9 @@ namespace Sentinel.NLogViewer.App.Tests.Parsers
 
             // Assert
             Assert.Single(results);
-            Assert.NotNull(results[0].Exception);
-            Assert.Contains("Test exception message", results[0].Exception.Message);
+            var exception = results[0].Exception;
+            Assert.NotNull(exception);
+            Assert.Contains("Test exception message", exception.Message);
         }
 
         [Fact]

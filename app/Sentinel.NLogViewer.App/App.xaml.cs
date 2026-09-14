@@ -1,6 +1,5 @@
 using System;
-using System.Globalization;
-using System.Threading;
+using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +13,7 @@ namespace Sentinel.NLogViewer.App
     /// </summary>
     public partial class App : Application
     {
+        private readonly SingleInstanceService _singleInstanceService = new();
         private IHost? _host;
 
 #if DEBUG
@@ -22,6 +22,9 @@ namespace Sentinel.NLogViewer.App
 
         public App()
         {
+            if (!_singleInstanceService.IsPrimaryInstance)
+                return;
+
             // Build the host with dependency injection
             var hostBuilder = Host.CreateApplicationBuilder();
 
@@ -77,6 +80,12 @@ namespace Sentinel.NLogViewer.App
         {
             base.OnStartup(e);
 
+            if (!_singleInstanceService.IsPrimaryInstance)
+            {
+                ForwardInvocationAndExit(e.Args);
+                return;
+            }
+
             // Create and show the main window using DI
             // Create a scope for the main window and its dependencies
             if (_host != null)
@@ -87,6 +96,13 @@ namespace Sentinel.NLogViewer.App
 
                 // Store the scope so it's disposed when the window closes
                 mainWindow.Closed += (s, args) => scope.Dispose();
+
+                _singleInstanceService.InvocationReceived += (_, arguments) =>
+                    Dispatcher.BeginInvoke(() => mainWindow.HandleExternalInvocation(arguments));
+                _singleInstanceService.StartListening();
+
+                if (e.Args.Length > 0)
+                    mainWindow.Loaded += (_, _) => mainWindow.HandleExternalInvocation(e.Args);
 
                 mainWindow.Show();
 
@@ -104,6 +120,37 @@ namespace Sentinel.NLogViewer.App
                     });
                 }
 #endif
+            }
+        }
+
+        /// <summary>
+        /// Forwards a secondary process invocation to the primary process and exits.
+        /// </summary>
+        private void ForwardInvocationAndExit(string[] arguments)
+        {
+            try
+            {
+                _singleInstanceService.ForwardInvocationAsync(arguments).GetAwaiter().GetResult();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(
+                    $"The running Sentinel.NLogViewer instance could not be reached.{Environment.NewLine}{ex.Message}",
+                    "Sentinel.NLogViewer",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch (TimeoutException ex)
+            {
+                MessageBox.Show(
+                    $"The running Sentinel.NLogViewer instance did not respond.{Environment.NewLine}{ex.Message}",
+                    "Sentinel.NLogViewer",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            finally
+            {
+                Shutdown();
             }
         }
 
@@ -130,6 +177,7 @@ namespace Sentinel.NLogViewer.App
 #endif
             // Dispose the host and all registered services
             _host?.Dispose();
+            _singleInstanceService.Dispose();
             base.OnExit(e);
         }
 

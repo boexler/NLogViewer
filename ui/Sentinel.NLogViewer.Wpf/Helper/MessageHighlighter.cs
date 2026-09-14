@@ -163,14 +163,14 @@ namespace Sentinel.NLogViewer.Wpf.Helper
             }
         }
 
-        private static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
+        private static T? FindAncestor<T>(DependencyObject? current) where T : DependencyObject
         {
             while (current != null)
             {
                 if (current is T typed) return typed;
                 current = System.Windows.Media.VisualTreeHelper.GetParent(current);
             }
-            return null;
+            return default;
         }
     }
 }
