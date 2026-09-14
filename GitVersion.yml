@@ -67,7 +67,7 @@ branches:
     is-main-branch: false
     pre-release-weight: 30000
   feature:
-    mode: ManualDeployment
+    mode: ContinuousDelivery
     label: '{BranchName}'
     increment: Inherit
     prevent-increment:
@@ -130,7 +130,8 @@ branches:
     is-main-branch: true
     pre-release-weight: 55000
   unknown:
-    mode: ManualDeployment
+    # Increment the pre-release number with each commit (e.g. …-branch.1, …-branch.2).
+    mode: ContinuousDelivery
     label: '{BranchName}'
     increment: Inherit
     prevent-increment:
