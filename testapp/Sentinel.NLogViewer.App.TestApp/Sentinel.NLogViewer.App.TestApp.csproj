@@ -5,6 +5,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Sentinel.NLogViewer.App.TestApp</RootNamespace>
     <AssemblyName>Sentinel.NLogViewer.App.TestApp</AssemblyName>
+    <!-- Demo application; never published to a package feed. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

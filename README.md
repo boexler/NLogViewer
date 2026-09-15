@@ -38,6 +38,8 @@ GitHub **Releases** ship:
 
 Build the installer locally (Windows): `dotnet build installer/Sentinel.NLogViewer.Installer.wixproj -c Release` — output `installer/bin/Release/Sentinel.LogViewer.msi`.
 
+**Versioning:** MSI, portable ZIPs, and NuGet packages always use GitVersion `fullSemVer` (for example `3.2.0-124-wix-installer-implementation-and-portable-versions.88` on a feature branch, or `3.2.0` on a release tag). The Chocolatey Community package is the only exception; it uses a flattened prerelease such as `3.2.0-dev0000000004001`. See [chocolatey/README.md](chocolatey/README.md).
+
 ![NLogViewer][p2]
 
 ## Material Design Theme

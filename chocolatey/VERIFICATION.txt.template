@@ -1,0 +1,19 @@
+VERIFICATION
+Verification is intended to assist the Chocolatey moderators and community
+in verifying that this package's contents are trustworthy.
+
+This package embeds the official Sentinel.LogViewer x64 MSI built from:
+
+  __REPO_URL__
+
+File: tools\Sentinel.LogViewer.msi
+Checksum Type: sha256
+Checksum: __SHA256__
+
+To verify the embedded installer:
+
+1. Download the MSI for package version __VERSION__ from the GitHub Releases page:
+   __REPO_URL__/releases
+2. Compute the SHA256 checksum, for example:
+   Get-FileHash -Algorithm SHA256 -Path .\Sentinel.LogViewer.msi
+3. Confirm that the hash matches the checksum listed above.

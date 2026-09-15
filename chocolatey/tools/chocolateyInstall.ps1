@@ -1,3 +1,4 @@
+# Silent-installs the embedded Sentinel.LogViewer MSI.
 $ErrorActionPreference = 'Stop'
 
 $toolsDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition

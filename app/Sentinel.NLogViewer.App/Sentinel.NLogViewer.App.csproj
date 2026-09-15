@@ -10,6 +10,8 @@
     <ApplicationIcon>Resources\icons\icons8-analysieren-64.ico</ApplicationIcon>
     <!-- Restore runtime packs for WiX/publish; omit single RuntimeIdentifier so plain build is RID-agnostic -->
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!-- The desktop app ships as MSI, Chocolatey package and portable ZIP, never as a NuGet package. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
