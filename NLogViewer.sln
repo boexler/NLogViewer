@@ -38,6 +38,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{
 EndProject
 Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Sentinel.NLogViewer.Installer", "installer\Sentinel.NLogViewer.Installer.wixproj", "{BFA0BBF7-DF4D-4818-AAB3-AFEDA6FDD41D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{5C0C4B92-CA80-40A5-A78C-B18E67C10527}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\commit.yml = .github\workflows\commit.yml
+		.github\workflows\publish-dev.yml = .github\workflows\publish-dev.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

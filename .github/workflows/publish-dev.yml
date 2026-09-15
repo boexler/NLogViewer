@@ -45,15 +45,17 @@ jobs:
     - name: Set version
       id: version
       shell: pwsh
+      # MSI, NuGet, and portable ZIPs use GitVersion fullSemVer. Only Chocolatey
+      # flattens the prerelease (community feed does not accept SemVer 2 dots).
       run: |
-        $baseVersion = "${{ steps.gitversion.outputs.majorMinorPatch }}"
-        $version = "$baseVersion-dev.${{ github.run_number }}.${{ github.run_attempt }}"
+        $version = "${{ steps.gitversion.outputs.fullSemVer }}"
+        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
         $runNumber = [int64]"${{ github.run_number }}"
         $runAttempt = [int]"${{ github.run_attempt }}"
-        $chocolateyVersion = '{0}-dev{1:D10}{2:D3}' -f $baseVersion, $runNumber, $runAttempt
-        Add-Content $env:GITHUB_ENV "DEV_VERSION=$version"
+        $chocolateyVersion = '{0}-dev{1:D10}{2:D3}' -f $mp, $runNumber, $runAttempt
+        Add-Content $env:GITHUB_ENV "VERSION=$version"
         Add-Content $env:GITHUB_ENV "CHOCO_VERSION=$chocolateyVersion"
-        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$baseVersion.0"
+        Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
         Add-Content $env:GITHUB_OUTPUT "version=$version"
         Add-Content $env:GITHUB_OUTPUT "chocolatey_version=$chocolateyVersion"
 
@@ -64,15 +66,7 @@ jobs:
       run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
 
     - name: Pack development NuGet packages
-      # UpdateVersionProperties=false stops GitVersion.MsBuild from overwriting the explicit dev version.
-      run: |
-        dotnet pack NLogViewer.CI.slnf `
-          -c Release `
-          --no-build `
-          -p:UpdateVersionProperties=false `
-          -p:PackageVersion=$env:DEV_VERSION `
-          -p:Version=$env:DEV_VERSION `
-          -o nuget
+      run: dotnet pack NLogViewer.CI.slnf -c Release --no-build -o nuget
 
     - name: Publish self-contained application
       run: |
@@ -81,8 +75,7 @@ jobs:
           -p:SelfContained=true `
           -p:PublishSingleFile=true `
           -p:RuntimeIdentifier=win-x64 `
-          -p:UpdateVersionProperties=false `
-          -p:Version=$env:DEV_VERSION `
+          -p:Version=$env:VERSION `
           -p:IncludeNativeLibrariesForSelfExtract=true `
           -o publish/self-contained
 
@@ -92,8 +85,7 @@ jobs:
           -c Release `
           -p:SelfContained=false `
           -p:RuntimeIdentifier=win-x64 `
-          -p:UpdateVersionProperties=false `
-          -p:Version=$env:DEV_VERSION `
+          -p:Version=$env:VERSION `
           -o publish/framework-dependent
 
     - name: Prepare portable application folders
@@ -101,11 +93,11 @@ jobs:
         $folders = @(
           @{
             Source = "publish/self-contained"
-            Target = "Sentinel.LogViewer-SelfContained-win-x64-$env:DEV_VERSION"
+            Target = "Sentinel.LogViewer-SelfContained-win-x64-$env:VERSION"
           },
           @{
             Source = "publish/framework-dependent"
-            Target = "Sentinel.LogViewer-FrameworkDependent-win-x64-$env:DEV_VERSION"
+            Target = "Sentinel.LogViewer-FrameworkDependent-win-x64-$env:VERSION"
           }
         )
 
@@ -123,7 +115,7 @@ jobs:
           -m:1 `
           -p:InstallerVersion=$env:INSTALLER_VERSION
 
-        $target = "publish/Sentinel.LogViewer-$env:DEV_VERSION-win-x64.msi"
+        $target = "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
         Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" $target
 
     - name: Pack development Chocolatey package
@@ -132,7 +124,7 @@ jobs:
       run: |
         ./chocolatey/pack.ps1 `
           -Version $env:CHOCO_VERSION `
-          -MsiPath "publish/Sentinel.LogViewer-$env:DEV_VERSION-win-x64.msi" `
+          -MsiPath "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi" `
           -OutputDirectory chocolatey-packages
 
     - name: Upload NuGet packages
@@ -179,8 +171,8 @@ jobs:
       if: ${{ inputs.publish }}
       run: |
         $folders = @(
-          "publish/Sentinel.LogViewer-SelfContained-win-x64-$env:DEV_VERSION",
-          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$env:DEV_VERSION"
+          "publish/Sentinel.LogViewer-SelfContained-win-x64-$env:VERSION",
+          "publish/Sentinel.LogViewer-FrameworkDependent-win-x64-$env:VERSION"
         )
         foreach ($folder in $folders) {
           Compress-Archive -Path (Join-Path $folder '*') -DestinationPath "$folder.zip"
@@ -191,8 +183,8 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        $tag = "dev-$env:DEV_VERSION"
-        $title = "Sentinel.LogViewer $env:DEV_VERSION"
+        $tag = "dev-$env:VERSION"
+        $title = "Sentinel.LogViewer $env:VERSION"
         $notes = @"
         Development build from ``${{ github.ref_name }}`` (``${{ github.sha }}``).
 

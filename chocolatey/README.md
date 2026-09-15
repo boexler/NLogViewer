@@ -15,8 +15,8 @@ choco upgrade Sentinel.LogViewer --pre -y
 ```
 
 The Chocolatey CLI supports SemVer 2, but the Chocolatey Community Repository currently does not.
-The development workflow therefore keeps SemVer 2 for NuGet packages and uses a flattened
-prerelease label without dots for the Chocolatey package.
+
+**Do not** put GitVersion `fullSemVer` or SemVer 2 labels such as `3.2.0-dev.4.1` on the Chocolatey package. MSI, portable ZIPs, and NuGet packages always use `fullSemVer`. Only this package flattens development builds to `major.minor.patch-dev{runNumber:D10}{runAttempt:D3}` (for example `3.2.0-dev0000000004001`). Tagged releases pack Chocolatey with the same stable `fullSemVer` as the MSI (`3.2.0`).
 
 ## Packaging
 
