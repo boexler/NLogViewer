@@ -34,10 +34,16 @@ jobs:
         $version = "${{ steps.gitversion.outputs.fullSemVer }}"
         $safeVersion = $version -replace '[^a-zA-Z0-9\.\-]', '_'
         $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
+        $runNumber = [int64]"${{ github.run_number }}"
+        $runAttempt = [int]"${{ github.run_attempt }}"
+        # Chocolatey Community does not accept SemVer 2; flatten like publish-dev.yml.
+        $chocolateyVersion = '{0}-dev{1:D10}{2:D3}' -f $mp, $runNumber, $runAttempt
         Add-Content $env:GITHUB_ENV "VERSION=$version"
         Add-Content $env:GITHUB_ENV "SAFE_VERSION=$safeVersion"
+        Add-Content $env:GITHUB_ENV "CHOCO_VERSION=$chocolateyVersion"
         Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
         Add-Content $env:GITHUB_OUTPUT "safe_version=$safeVersion"
+        Add-Content $env:GITHUB_OUTPUT "chocolatey_version=$chocolateyVersion"
     - name: Build solution
       # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
       # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
@@ -88,6 +94,14 @@ jobs:
           -p:InstallerVersion=$env:INSTALLER_VERSION
         Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
+    - name: Pack Chocolatey package
+      env:
+        GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      run: |
+        ./chocolatey/pack.ps1 `
+          -Version $env:CHOCO_VERSION `
+          -MsiPath "publish/Sentinel.LogViewer-$env:SAFE_VERSION-win-x64.msi" `
+          -OutputDirectory chocolatey-packages
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v7
       with:
@@ -114,5 +128,12 @@ jobs:
       with:
         name: Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
         path: publish/Sentinel.LogViewer-FrameworkDependent-win-x64-${{ steps.version.outputs.safe_version }}
+        if-no-files-found: error
+        retention-days: 7
+    - name: Upload Chocolatey package
+      uses: actions/upload-artifact@v7
+      with:
+        name: Chocolatey-Sentinel.LogViewer-${{ steps.version.outputs.chocolatey_version }}
+        path: chocolatey-packages
         if-no-files-found: error
         retention-days: 7
