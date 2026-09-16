@@ -213,18 +213,16 @@ namespace Sentinel.NLogViewer.App
 #endif
 
         /// <summary>
-        /// Sets the window title with the application version
+        /// Sets the window title with the four-part application version (for example "v4.0.0.0").
         /// </summary>
         private void SetWindowTitleWithVersion()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var versionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-            
-            string version = versionAttribute?.InformationalVersion 
-                ?? assembly.GetName().Version?.ToString() 
-                ?? "Unknown";
-            
-            this.Title = $"NLogViewer Client Application - {version}";
+            // InformationalVersion includes GitVersion build metadata ("+Branch.master.Sha...").
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+
+            this.Title = version is null
+                ? "NLogViewer Client Application"
+                : $"NLogViewer Client Application - v{version}";
         }
 
         /// <summary>
