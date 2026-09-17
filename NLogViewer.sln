@@ -11,13 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.Wpf.Mat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.Wpf.MaterialDesign.TestApp", "testapp\Sentinel.NLogViewer.Wpf.MaterialDesign.TestApp\Sentinel.NLogViewer.Wpf.MaterialDesign.TestApp.csproj", "{D1CF3283-A165-477B-A08A-BEBFCD7A7712}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.App", "app\Sentinel.NLogViewer.App\Sentinel.NLogViewer.App.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F123456789AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.LogViewer", "app\Sentinel.LogViewer\Sentinel.LogViewer.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F123456789AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.TestLogging", "app\Sentinel.NLogViewer.TestLogging\Sentinel.NLogViewer.TestLogging.csproj", "{E5F6A7B8-C9D0-1234-EF56-789ABCDE0123}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.App.TestApp", "testapp\Sentinel.NLogViewer.App.TestApp\Sentinel.NLogViewer.App.TestApp.csproj", "{C3D4E5F6-A7B8-9012-CDEF-123456789ABC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.LogViewer.TestApp", "testapp\Sentinel.LogViewer.TestApp\Sentinel.LogViewer.TestApp.csproj", "{C3D4E5F6-A7B8-9012-CDEF-123456789ABC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.NLogViewer.App.Tests", "tests\Sentinel.NLogViewer.App.Tests\Sentinel.NLogViewer.App.Tests.csproj", "{D4E5F6A7-B8C9-0123-DEF1-23456789ABCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sentinel.LogViewer.Tests", "tests\Sentinel.LogViewer.Tests\Sentinel.LogViewer.Tests.csproj", "{D4E5F6A7-B8C9-0123-DEF1-23456789ABCD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FF9C764-5BB9-4E66-B48B-6B7D746EA817}"
 	ProjectSection(SolutionItems) = preProject

@@ -1,13 +1,13 @@
-﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
 
-  <Package Name="Sentinel.LogViewer"
+  <Package Name="Sentinel LogViewer"
            Manufacturer="Dominic Böxler"
            Version="$(var.InstallerVersion)"
            UpgradeCode="E8F9A0B1-C2D3-4E5F-8A7B-6C5D4E3F2A10"
            Scope="perMachine">
 
-    <SummaryInformation Description="Sentinel.LogViewer — visualize NLog / log output" />
+    <SummaryInformation Description="Sentinel LogViewer — visualize NLog / log output" />
 
     <!--
       AllowSameVersionUpgrades is required because InstallerVersion only carries
@@ -16,11 +16,11 @@
       the previous installation (including the earlier "Program Files (x86)" layout).
     -->
     <MajorUpgrade AllowSameVersionUpgrades="yes"
-                  DowngradeErrorMessage="A newer version of Sentinel.LogViewer is already installed." />
+                  DowngradeErrorMessage="A newer version of Sentinel LogViewer is already installed." />
 
     <MediaTemplate EmbedCab="yes" CompressionLevel="medium" />
 
-    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.NLogViewer.App\Resources\icons\icons8-analysieren-64.ico" />
+    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -53,7 +53,7 @@
                  Y="45"
                  Width="320"
                  Height="35"
-                 Text="Sentinel.LogViewer wurde als Anwendung zum Öffnen von .log-Dateien registriert." />
+                 Text="Sentinel LogViewer wurde als Anwendung zum Öffnen von .log-Dateien registriert." />
         <Control Id="OpenDefaultAppsCheckBox"
                  Type="CheckBox"
                  X="25"
@@ -62,7 +62,7 @@
                  Height="30"
                  Property="OPEN_DEFAULT_APPS"
                  CheckBoxValue="1"
-                 Text="*.log Dateien immer mit Sentinel.LogViewer öffnen" />
+                 Text="*.log Dateien immer mit Sentinel LogViewer öffnen" />
         <Control Id="DefaultAppsNotice"
                  Type="Text"
                  X="25"
@@ -136,7 +136,7 @@
 
     <!-- Main application (default on) -->
     <Feature Id="FeatureMain"
-             Title="Sentinel.LogViewer"
+             Title="Sentinel LogViewer"
              Level="1"
              Description="Core application files and Start Menu shortcut. Optional items can be enabled below.">
       <ComponentGroupRef Id="HarvestedComponents" />
@@ -156,7 +156,7 @@
              Title="Associate .log files"
              Level="100"
              AllowAdvertise="no"
-             Description="Register Sentinel.LogViewer as an option for .log files (not installed by default—enable in Custom setup).">
+             Description="Register Sentinel LogViewer as an option for .log files (not installed by default—enable in Custom setup).">
       <ComponentGroupRef Id="FileAssocLogComponents" />
     </Feature>
   </Package>
@@ -164,11 +164,11 @@
   <Fragment>
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="COMPANYFOLDER" Name="Boexler">
-        <Directory Id="INSTALLFOLDER" Name="Sentinel.NLogViewer" />
+        <Directory Id="INSTALLFOLDER" Name="Sentinel.LogViewer" />
       </Directory>
     </StandardDirectory>
     <StandardDirectory Id="ProgramMenuFolder">
-      <Directory Id="ApplicationProgramsFolder" Name="Sentinel.LogViewer" />
+      <Directory Id="ApplicationProgramsFolder" Name="Sentinel LogViewer" />
     </StandardDirectory>
     <StandardDirectory Id="DesktopFolder" />
   </Fragment>
@@ -197,10 +197,10 @@
                        Value="1"
                        KeyPath="yes" />
         <Shortcut Id="ScStartMenu"
-                  Name="Sentinel.LogViewer"
+                  Name="Sentinel LogViewer"
                   Description="NLog log viewer"
                   WorkingDirectory="INSTALLFOLDER"
-                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Target="[INSTALLFOLDER]Sentinel.LogViewer.exe"
                   Icon="AppIcon.ico" />
         <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
       </Component>
@@ -217,10 +217,10 @@
                        Value="1"
                        KeyPath="yes" />
         <Shortcut Id="ScDesktop"
-                  Name="Sentinel.LogViewer"
+                  Name="Sentinel LogViewer"
                   Description="NLog log viewer"
                   WorkingDirectory="INSTALLFOLDER"
-                  Target="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe"
+                  Target="[INSTALLFOLDER]Sentinel.LogViewer.exe"
                   Icon="AppIcon.ico" />
       </Component>
     </ComponentGroup>
@@ -233,13 +233,13 @@
           <RegistryValue Type="string" Value="Log file" />
         </RegistryKey>
         <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\DefaultIcon">
-          <RegistryValue Type="string" Value="[INSTALLFOLDER]Sentinel.NLogViewer.App.exe,0" KeyPath="yes" />
+          <RegistryValue Type="string" Value="[INSTALLFOLDER]Sentinel.LogViewer.exe,0" KeyPath="yes" />
         </RegistryKey>
       </Component>
       <Component Id="CmpLogOpenCommand" Guid="C0D1E2F3-A4B5-4678-9ABC-DEF012345678">
         <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\shell\open\command">
           <RegistryValue Type="string"
-                         Value="&quot;[INSTALLFOLDER]Sentinel.NLogViewer.App.exe&quot; &quot;%1&quot;"
+                         Value="&quot;[INSTALLFOLDER]Sentinel.LogViewer.exe&quot; &quot;%1&quot;"
                          KeyPath="yes" />
         </RegistryKey>
       </Component>
@@ -249,8 +249,8 @@
         </RegistryKey>
       </Component>
       <Component Id="CmpLogCapabilities" Guid="E2F3A4B5-C6D7-489A-BCDE-F0123456789A">
-        <RegistryKey Root="HKLM" Key="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities">
-          <RegistryValue Name="ApplicationName" Type="string" Value="Sentinel.LogViewer" />
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Boexler\Sentinel.LogViewer\Capabilities">
+          <RegistryValue Name="ApplicationName" Type="string" Value="Sentinel LogViewer" />
           <RegistryValue Name="ApplicationDescription"
                          Type="string"
                          Value="View and analyze NLog and log files." />
@@ -262,7 +262,7 @@
         <RegistryKey Root="HKLM" Key="SOFTWARE\RegisteredApplications">
           <RegistryValue Name="Sentinel.LogViewer"
                          Type="string"
-                         Value="SOFTWARE\Boexler\Sentinel.NLogViewer\Capabilities"
+                         Value="SOFTWARE\Boexler\Sentinel.LogViewer\Capabilities"
                          KeyPath="yes" />
         </RegistryKey>
       </Component>

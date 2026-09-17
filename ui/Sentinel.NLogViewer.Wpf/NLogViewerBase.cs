@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Sentinel.NLogViewer.App.Models;
+using Sentinel.NLogViewer.Wpf.Models;
 using Sentinel.NLogViewer.Wpf.Extensions;
 using Sentinel.NLogViewer.Wpf.Helper;
 using Sentinel.NLogViewer.Wpf.Resolver;

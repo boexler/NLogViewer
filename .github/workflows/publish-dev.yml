@@ -70,7 +70,7 @@ jobs:
 
     - name: Publish self-contained application
       run: |
-        dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
+        dotnet publish app/Sentinel.LogViewer/Sentinel.LogViewer.csproj `
           -c Release `
           -p:SelfContained=true `
           -p:PublishSingleFile=true `
@@ -81,7 +81,7 @@ jobs:
 
     - name: Publish framework-dependent application
       run: |
-        dotnet publish app/Sentinel.NLogViewer.App/Sentinel.NLogViewer.App.csproj `
+        dotnet publish app/Sentinel.LogViewer/Sentinel.LogViewer.csproj `
           -c Release `
           -p:SelfContained=false `
           -p:RuntimeIdentifier=win-x64 `

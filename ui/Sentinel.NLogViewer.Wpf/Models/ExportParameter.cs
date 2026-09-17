@@ -1,6 +1,6 @@
 using Sentinel.NLogViewer.Wpf.Resolver;
 
-namespace Sentinel.NLogViewer.App.Models;
+namespace Sentinel.NLogViewer.Wpf.Models;
 
 /// <summary>
 /// Represents the export format options for log export functionality

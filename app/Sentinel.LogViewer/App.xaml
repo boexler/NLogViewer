@@ -1,0 +1,24 @@
+<Application x:Class="Sentinel.LogViewer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xamlConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlConverter;assembly=Sentinel.NLogViewer.Wpf"
+             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.NLogViewer.Wpf"
+             xmlns:converters="clr-namespace:Sentinel.LogViewer.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- NLogViewer Design Styles -->
+                <ResourceDictionary Source="pack://application:,,,/Sentinel.NLogViewer.Wpf;component/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Converters -->
+            <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
+            <converters:SvgImageSourceConverter x:Key="SvgImageSourceConverter"/>
+            <!-- Title-bar / Alt-Tab icon for every Window; the EXE icon comes from ApplicationIcon. -->
+            <Style TargetType="Window">
+                <Setter Property="Icon" Value="pack://application:,,,/Resources/icons/icons8-analysieren-64.ico"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+

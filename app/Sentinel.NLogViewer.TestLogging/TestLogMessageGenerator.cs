@@ -10,13 +10,13 @@ public static class TestLogMessageGenerator
     private static readonly string[] LoggerNames =
     {
         "Sentinel.NLogViewer.TestLogging",
-        "Sentinel.NLogViewer.App.Services",
-        "Sentinel.NLogViewer.App.Services.DataService",
-        "Sentinel.NLogViewer.App.Services.NetworkService",
-        "Sentinel.NLogViewer.App.Controllers",
-        "Sentinel.NLogViewer.App.Controllers.HomeController",
-        "Sentinel.NLogViewer.App.Models",
-        "Sentinel.NLogViewer.App.Utils"
+        "Sentinel.LogViewer.Services",
+        "Sentinel.LogViewer.Services.DataService",
+        "Sentinel.LogViewer.Services.NetworkService",
+        "Sentinel.LogViewer.Controllers",
+        "Sentinel.LogViewer.Controllers.HomeController",
+        "Sentinel.LogViewer.Models",
+        "Sentinel.LogViewer.Utils"
     };
 
     private static readonly string[] Messages =
