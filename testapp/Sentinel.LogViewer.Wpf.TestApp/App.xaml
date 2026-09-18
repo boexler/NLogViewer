@@ -1,0 +1,18 @@
+<Application x:Class="Sentinel.LogViewer.Wpf.TestApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter;assembly=Sentinel.LogViewer.Wpf"
+             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.LogViewer.Wpf"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- LogViewer Design Styles -->
+                <ResourceDictionary Source="pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Converters -->
+            <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

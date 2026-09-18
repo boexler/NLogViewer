@@ -17,8 +17,8 @@ public partial class ColumnMappingWindow : Window
 		InitializeComponent();
 		DataContext = _viewModel;
 
-		_viewModel.CancelCommand = new Sentinel.NLogViewer.Wpf.RelayCommand(() => DialogResult = false);
-		_viewModel.SaveCommand = new Sentinel.NLogViewer.Wpf.RelayCommand(() =>
+		_viewModel.CancelCommand = new Sentinel.LogViewer.Wpf.RelayCommand(() => DialogResult = false);
+		_viewModel.SaveCommand = new Sentinel.LogViewer.Wpf.RelayCommand(() =>
 		{
 			DialogResult = true;
 			Close();

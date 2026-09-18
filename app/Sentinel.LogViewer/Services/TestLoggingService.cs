@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using Sentinel.NLogViewer.TestLogging;
+using Sentinel.LogViewer.TestLogging;
 
 namespace Sentinel.LogViewer.Services;
 

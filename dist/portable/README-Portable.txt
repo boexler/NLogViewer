@@ -1,4 +1,4 @@
-NLogViewer – portable distribution
+LogViewer – portable distribution
 ==================================
 
 These ZIP packages are portable: unpack anywhere (including a USB drive) and run

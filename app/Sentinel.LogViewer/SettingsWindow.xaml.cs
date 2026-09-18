@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using Sentinel.NLogViewer.Wpf;
+using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.ViewModels;
 
 namespace Sentinel.LogViewer

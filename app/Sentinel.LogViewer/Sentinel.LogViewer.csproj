@@ -52,8 +52,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ui\Sentinel.NLogViewer.Wpf\Sentinel.NLogViewer.Wpf.csproj" />
-    <ProjectReference Include="..\Sentinel.NLogViewer.TestLogging\Sentinel.NLogViewer.TestLogging.csproj" />
+    <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
+    <ProjectReference Include="..\Sentinel.LogViewer.TestLogging\Sentinel.LogViewer.TestLogging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

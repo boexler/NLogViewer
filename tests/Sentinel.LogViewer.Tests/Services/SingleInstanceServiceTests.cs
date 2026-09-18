@@ -18,8 +18,8 @@ public sealed class SingleInstanceServiceTests
     public async Task ForwardInvocationAsync_WithSecondaryInstance_ForwardsArguments()
     {
         var uniqueName = Guid.NewGuid().ToString("N");
-        var mutexName = $@"Local\Boexler.Sentinel.NLogViewer.Tests.{uniqueName}";
-        var pipeName = $"Boexler.Sentinel.NLogViewer.Tests.{uniqueName}";
+        var mutexName = $@"Local\Boexler.Sentinel.LogViewer.Tests.{uniqueName}";
+        var pipeName = $"Boexler.Sentinel.LogViewer.Tests.{uniqueName}";
         using var primary = new SingleInstanceService(mutexName, pipeName);
         using var secondary = new SingleInstanceService(mutexName, pipeName);
         var receivedInvocation = new TaskCompletionSource<IReadOnlyList<string>>(
@@ -44,8 +44,8 @@ public sealed class SingleInstanceServiceTests
     public async Task ForwardInvocationAsync_WithoutArguments_ForwardsActivationRequest()
     {
         var uniqueName = Guid.NewGuid().ToString("N");
-        var mutexName = $@"Local\Boexler.Sentinel.NLogViewer.Tests.{uniqueName}";
-        var pipeName = $"Boexler.Sentinel.NLogViewer.Tests.{uniqueName}";
+        var mutexName = $@"Local\Boexler.Sentinel.LogViewer.Tests.{uniqueName}";
+        var pipeName = $"Boexler.Sentinel.LogViewer.Tests.{uniqueName}";
         using var primary = new SingleInstanceService(mutexName, pipeName);
         using var secondary = new SingleInstanceService(mutexName, pipeName);
         var receivedInvocation = new TaskCompletionSource<IReadOnlyList<string>>(

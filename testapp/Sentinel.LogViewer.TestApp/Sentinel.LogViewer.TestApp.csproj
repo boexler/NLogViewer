@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\app\Sentinel.NLogViewer.TestLogging\Sentinel.NLogViewer.TestLogging.csproj" />
+    <ProjectReference Include="..\..\app\Sentinel.LogViewer.TestLogging\Sentinel.LogViewer.TestLogging.csproj" />
   </ItemGroup>
 
 </Project>

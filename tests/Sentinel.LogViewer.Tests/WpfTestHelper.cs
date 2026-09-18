@@ -1,6 +1,6 @@
 using System.Windows.Threading;
 using NLog;
-using WpfNLogViewer = Sentinel.NLogViewer.Wpf.NLogViewer;
+using WpfLogViewer = Sentinel.LogViewer.Wpf.LogViewer;
 
 namespace Sentinel.LogViewer.Tests;
 
@@ -10,15 +10,15 @@ namespace Sentinel.LogViewer.Tests;
 public static class WpfTestHelper
 {
 	/// <summary>
-	/// Creates an NLogViewer, feeds it with the given log events via a TestCacheTarget,
+	/// Creates an LogViewer, feeds it with the given log events via a TestCacheTarget,
 	/// and waits for the viewer to process them (async pipeline + dispatcher). Call from within RunOnStaThread.
 	/// </summary>
 	/// <param name="testData">Log events to feed into the viewer.</param>
 	/// <returns>The viewer with CacheTarget set and events processed.</returns>
-	public static WpfNLogViewer CreateViewerWithTestData(IEnumerable<LogEventInfo> testData)
+	public static WpfLogViewer CreateViewerWithTestData(IEnumerable<LogEventInfo> testData)
 	{
 		var list = testData?.ToList() ?? new List<LogEventInfo>();
-		var viewer = new WpfNLogViewer();
+		var viewer = new WpfLogViewer();
 		var cache = new TestCacheTarget();
 		cache.AddRange(list);
 		viewer.StartListen(cache);
@@ -29,9 +29,9 @@ public static class WpfTestHelper
 	/// <summary>
 	/// Waits until the viewer's LogEvents.View contains at least expectedCount items (or timeout).
 	/// Pumps the current dispatcher so that async subscription callbacks run.
-	/// NLogViewer uses SubscribeOn(Scheduler.Default) and Buffer(100ms), so an initial delay is needed.
+	/// LogViewer uses SubscribeOn(Scheduler.Default) and Buffer(100ms), so an initial delay is needed.
 	/// </summary>
-	public static void WaitForViewerEvents(WpfNLogViewer viewer, int expectedCount, int timeoutMs = 2000)
+	public static void WaitForViewerEvents(WpfLogViewer viewer, int expectedCount, int timeoutMs = 2000)
 	{
 		// Give the async pipeline time: subscription on thread pool + Buffer(100ms) + dispatch
 		Thread.Sleep(200);

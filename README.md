@@ -2,30 +2,30 @@
 [2]: https://github.com/dojo90/NLogViewer/blob/master/src/NLogViewer/Targets/CacheTarget.cs
 [3]: https://github.com/yarseyah/sentinel#nlogs-nlogviewer-target-configuration
 
-[p1]: doc/images/control.png "NLogViewer"
-[p2]: doc/images/overview.gif "NLogViewer"
-[p3]: doc/images/colors.png "NLogViewer"
-[p4]: doc/images/openpopup.gif "NLogViewer"
-[p5]: doc/images/newtask.gif "NLogViewer"
+[p1]: doc/images/control.png "LogViewer"
+[p2]: doc/images/overview.gif "LogViewer"
+[p3]: doc/images/colors.png "LogViewer"
+[p4]: doc/images/openpopup.gif "LogViewer"
+[p5]: doc/images/newtask.gif "LogViewer"
 [p6]: doc/images/nlogviewercolumns.png "Column Visibility Properties"
 [p7]: doc/images/filters1.png "Filter Buttons - All Visible"
 [p8]: doc/images/filters2.png "Filter Buttons - Some Hidden"
 [p9]: doc/images/controls1.png "Control Buttons - All Visible"
 [p10]: doc/images/controls2.png "Control Buttons - Hidden"
 
-[nuget]: https://nuget.org/packages/Sentinel.NLogViewer/
+[nuget]: https://nuget.org/packages/Sentinel.LogViewer.Wpf/
 
 ## Nuget
 
-[![NuGet](https://img.shields.io/nuget/v/sentinel.nlogviewer.svg "nuget")](https://www.nuget.org/packages/Sentinel.NLogViewer)
-[![NuGetDownloads](https://img.shields.io/nuget/dt/sentinel.nlogviewer.svg "nuget downloads")](https://www.nuget.org/packages/Sentinel.NLogViewer)
+[![NuGet](https://img.shields.io/nuget/v/sentinel.logviewer.wpf.svg "nuget")](https://www.nuget.org/packages/Sentinel.LogViewer.Wpf)
+[![NuGetDownloads](https://img.shields.io/nuget/dt/sentinel.logviewer.wpf.svg "nuget downloads")](https://www.nuget.org/packages/Sentinel.LogViewer.Wpf)
 
 A NuGet-package is available [here][nuget].
 
-NLogViewer
-==========
+Sentinel.LogViewer
+=================
 
-NLogViewer is a ui control library to visualize NLog logs in your personal application. It is mainly based on [Sentinel][1] and its controls.
+LogViewer is a ui control library to visualize NLog logs in your personal application. It is mainly based on [Sentinel][1] and its controls.
 
 supported Framework: `.NET8`
 
@@ -36,17 +36,17 @@ GitHub **Releases** ship:
 - **MSI installer** (`Sentinel.LogViewer-<version>-win-x64.msi`): installs under Program Files with a license dialog (MIT), Start Menu shortcut, and optional features (desktop shortcut, `.log` association) selectable in **Custom** setup. Silent install: `msiexec /i Sentinel.LogViewer-<version>-win-x64.msi /qn` (optional features with higher install level stay off unless you raise `INSTALLLEVEL` or use transforms).
 - **Portable ZIP** (self-contained and framework-dependent): unpack and run `Sentinel.LogViewer.exe` from any folder; a `NLogViewer.portable` marker file directs settings to `appsettings.json` beside the app (see `README-Portable.txt` in the ZIP). Installed (MSI) copies keep using per-user `%LocalAppData%\Sentinel.LogViewer\`.
 
-Build the installer locally (Windows): `dotnet build installer/Sentinel.NLogViewer.Installer.wixproj -c Release` — output `installer/bin/Release/Sentinel.LogViewer.msi`.
+Build the installer locally (Windows): `dotnet build installer/Sentinel.LogViewer.Installer.wixproj -c Release` — output `installer/bin/Release/Sentinel.LogViewer.msi`.
 
 **Versioning:** MSI, portable ZIPs, and NuGet packages always use GitVersion `fullSemVer` (for example `3.2.0-124-wix-installer-implementation-and-portable-versions.88` on a feature branch, or `3.2.0` on a release tag). The Chocolatey Community package is the only exception; it uses a flattened prerelease such as `3.2.0-dev0000000004001`. See [chocolatey/README.md](chocolatey/README.md).
 
-![NLogViewer][p2]
+![LogViewer][p2]
 
 ## Material Design Theme
 
-This project also includes **NLogViewer.MaterialDesign** - a Material Design theme and style package for the NLogViewer control. The Material Design theme provides a modern, clean UI following Google's Material Design guidelines.
+This project also includes **Sentinel.LogViewer.Wpf.MaterialDesign** - a Material Design theme and style package for the LogViewer control. The Material Design theme provides a modern, clean UI following Google's Material Design guidelines.
 
-📦 **NLogViewer.MaterialDesign** - [View Project](src/NLogViewer.MaterialDesign/)
+📦 **Sentinel.LogViewer.Wpf.MaterialDesign** - [View Project](ui/Sentinel.LogViewer.Wpf.MaterialDesign/)
 
 ## Quick Start
 
@@ -55,25 +55,25 @@ This project also includes **NLogViewer.MaterialDesign** - a Material Design the
 Add the following NuGet package reference to your project:
 
 ```xml
-<PackageReference Include="NLogViewer" Version="[version]" />
+<PackageReference Include="Sentinel.LogViewer.Wpf" Version="[version]" />
 ```
 
 ### 2. Configure Application Resources
 
-In your `App.xaml`, add the NLogViewer theme and styles:
+In your `App.xaml`, add the LogViewer theme and styles:
 
 ```xml
 <Application x:Class="YourApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:xamlConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlConverter;assembly=Sentinel.NLogViewer.Wpf"
-             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.NLogViewer.Wpf"
+             xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter;assembly=Sentinel.LogViewer.Wpf"
+             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.LogViewer.Wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- NLogViewer Theme -->
-                <ResourceDictionary Source="pack://application:,,,/Sentinel.NLogViewer.Wpf;component/Themes/Generic.xaml"/>
+                <!-- LogViewer Theme -->
+                <ResourceDictionary Source="pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
@@ -88,16 +88,16 @@ Add the namespace and use the control in your XAML:
 <Window x:Class="YourApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dj="clr-namespace:Sentinel.NLogViewer.Wpf;assembly=Sentinel.NLogViewer.Wpf">
+        xmlns:dj="clr-namespace:Sentinel.LogViewer.Wpf;assembly=Sentinel.LogViewer.Wpf">
     <Grid>
-        <dj:NLogViewer />
+        <dj:LogViewer />
     </Grid>
 </Window>
 ```
 
 ### NLog Configuration
 
-`NLogViewer` is subscribing to [CacheTarget][2]. By default, the `NLogViewer` is automatically creating a [CacheTarget][2] with `loggingPattern  "*"` and `LogLevel "Trace"`.
+`LogViewer` is subscribing to [CacheTarget][2]. By default, the `LogViewer` is automatically creating a [CacheTarget][2] with `loggingPattern  "*"` and `LogLevel "Trace"`.
 
 If you want to customize the `loggingPattern` and `LogLevel`, add the following to your `Nlog.config`.
 
@@ -110,7 +110,7 @@ If you want to customize the `loggingPattern` and `LogLevel`, add the following 
   autoReload="true">
 
   <extensions> 
-    <add assembly="NLogViewer"/> 
+    <add assembly="Sentinel.LogViewer.Wpf" /> 
   </extensions> 
 
   <targets async="true">
@@ -129,7 +129,7 @@ If you want to customize the `loggingPattern` and `LogLevel`, add the following 
 
 ### Control Buttons
 
-The NLogViewer includes control buttons that allow you to manage log viewing behavior. The control buttons are organized in a GroupBox and can be controlled programmatically.
+The LogViewer includes control buttons that allow you to manage log viewing behavior. The control buttons are organized in a GroupBox and can be controlled programmatically.
 
 ![Control Buttons - All Visible][p9]
 
@@ -159,7 +159,7 @@ nLogViewer.ShowControlButtons = false;
 **XAML Binding:**
 
 ```xaml
-<dj:NLogViewer 
+<dj:LogViewer 
     AutoScroll="{Binding IsAutoScrollEnabled}" 
     Pause="{Binding IsLoggingPaused}"
     ShowControlButtons="{Binding ShowControls}" />
@@ -175,11 +175,11 @@ nLogViewer.ShowControlButtons = false;
 
 Customize `foreground` or `background` of every `logLevel`
 
-![NLogViewer][p3]
+![LogViewer][p3]
 
 ### Multi targeting
 
-Use more than one instance of `NLogViewer` to match different `rules`.
+Use more than one instance of `LogViewer` to match different `rules`.
 
 Create 2 `targets` with their own `rules`.
 
@@ -198,13 +198,13 @@ Create 2 `targets` with their own `rules`.
 Set `TargetName` property to link them.
 
 ```xml
-<dj:NLogViewer TargetName="target1"/>
-<dj:NLogViewer TargetName="target2"/>
+<dj:LogViewer TargetName="target1"/>
+<dj:LogViewer TargetName="target2"/>
 ```
 
 ### Column Visibility
 
-Control which columns are visible in the NLogViewer. You can dynamically show or hide individual columns using the provided Dependency Properties.
+Control which columns are visible in the LogViewer. You can dynamically show or hide individual columns using the provided Dependency Properties.
 
 ![Column Visibility Properties][p6]
 
@@ -230,12 +230,12 @@ nLogViewer.ShowLevelColumn = true;
 **XAML Binding:**
 
 ```xaml
-<dj:NLogViewer ShowIdColumn="{Binding IsIdColumnVisible}" ShowLevelColumn="{Binding IsLevelColumnVisible}" />
+<dj:LogViewer ShowIdColumn="{Binding IsIdColumnVisible}" ShowLevelColumn="{Binding IsLevelColumnVisible}" />
 ```
 
 ### Filter Buttons
 
-The NLogViewer includes filter buttons that allow you to hide/show specific log levels. The filter buttons are organized in a GroupBox and can be controlled programmatically.
+The LogViewer includes filter buttons that allow you to hide/show specific log levels. The filter buttons are organized in a GroupBox and can be controlled programmatically.
 
 ![Filter Buttons - All Visible][p7]
 
@@ -269,7 +269,7 @@ nLogViewer.ShowFilterButtons = false;
 **XAML Binding:**
 
 ```xaml
-<dj:NLogViewer 
+<dj:LogViewer 
     TraceFilter="{Binding HideTraceLogs}" 
     DebugFilter="{Binding HideDebugLogs}"
     ShowFilterButtons="{Binding ShowFilters}" />
@@ -283,7 +283,7 @@ nLogViewer.ShowFilterButtons = false;
 
 ### Search Functionality
 
-The NLogViewer includes search capabilities that filter log entries based on text patterns or regular expressions. Search terms are displayed as chips/tags and can be managed through the UI or programmatically.
+The LogViewer includes search capabilities that filter log entries based on text patterns or regular expressions. Search terms are displayed as chips/tags and can be managed through the UI or programmatically.
 
 **Search Features:**
 - **Text Search** - Case-insensitive substring matching
@@ -324,7 +324,7 @@ nLogViewer.SearchHighlightBackground = Brushes.Yellow;
 **XAML Binding:**
 
 ```xaml
-<dj:NLogViewer 
+<dj:LogViewer 
     CurrentSearchText="{Binding SearchText}"
     UseRegexSearch="{Binding IsRegexMode}"
     SearchHighlightBackground="{Binding HighlightBrush}" />
@@ -340,7 +340,7 @@ nLogViewer.SearchHighlightBackground = Brushes.Yellow;
 
 ### Control Architecture
 
-NLogViewer is built as a CustomControl with theming support:
+LogViewer is built as a CustomControl with theming support:
 
 **Architecture:**
 - **CustomControl Base Class** - Enables proper theming and styling
@@ -366,15 +366,15 @@ public class FooTimeStampResolver : ILogEventInfoResolver
 ```
 
 ```csharp
-NLogViewer1.TimeStampResolver = new FooTimeStampResolver();
+LogViewer1.TimeStampResolver = new FooTimeStampResolver();
 ```
 
 ### Subscription Management (StartListen/StopListen)
 
-The `NLogViewer` provides manual control over log event subscriptions through the `StartListen()` and `StopListen()` methods. These methods are particularly useful in docking systems or scenarios where the control's lifecycle needs to be managed manually.
+The `LogViewer` provides manual control over log event subscriptions through the `StartListen()` and `StopListen()` methods. These methods are particularly useful in docking systems or scenarios where the control's lifecycle needs to be managed manually.
 
 **Purpose:**
-These methods were implemented to address [Issue #90](https://github.com/dojo90/NLogViewer/issues/90) - subscription disposal when undocking the viewer parent container. The issue occurred when NLogViewer controls were used in docking systems where the control would be moved between different parent windows, causing subscription leaks and improper disposal.
+These methods were implemented to address [Issue #90](https://github.com/dojo90/LogViewer/issues/90) - subscription disposal when undocking the viewer parent container. The issue occurred when LogViewer controls were used in docking systems where the control would be moved between different parent windows, causing subscription leaks and improper disposal.
 
 **Root Cause:**
 When undocking a control from a docking system, the `Unloaded` event is triggered, which automatically disposes the subscription. This means that after undocking, the control is no longer listening for log events. Therefore, `StartListen()` must always be called in the `DockChanged` event handler to restore the subscription after undocking.
@@ -436,12 +436,12 @@ The control automatically calls `StartListen()` when loaded and `StopListen()` w
 
 ### open on a new window
 
-![NLogViewer][p4]
+![LogViewer][p4]
 
-Create a new `Window` and add a default `NLogViewer`
+Create a new `Window` and add a default `LogViewer`
 
 ```csharp
-<dj:NLogViewer TargetName="target1"/>
+<dj:LogViewer TargetName="target1"/>
 ```
 
 Open the new `Window`
@@ -453,9 +453,9 @@ popup.Show();
 
 ### seperate logger for a task
 
-![NLogViewer][p5]
+![LogViewer][p5]
 
-Below is a sample how you could create a `NLogViewer` for a task
+Below is a sample how you could create a `LogViewer` for a task
 
 ```csharp
 // create unique target name
@@ -486,8 +486,8 @@ config.LoggingRules.Add(loggingRule);
 // reassign config back to NLog
 LogManager.Configuration = config;
 
-// create a new NLogViewer Control with the unique logger target name
-NLogViewer nLogViewer = new NLogViewer
+// create a new LogViewer Control with the unique logger target name
+LogViewer nLogViewer = new LogViewer
 {
     TargetName = targetName,
 };
@@ -510,11 +510,11 @@ var task = new Task(async () =>
 
 ## Why CacheTarget?
 
-There is already a `NLogViewerTarget`, which is used for [Sentinel][1]. See [here][3]
+There is already a `LogViewerTarget`, which is used for [Sentinel][1]. See [here][3]
 
 ```xml
 <target 
-    xsi:type="NLogViewer"
+    xsi:type="LogViewer"
     name="sentinel"
     address="udp://127.0.0.1:9999"/>
 ```

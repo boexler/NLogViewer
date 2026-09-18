@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using Sentinel.LogViewer.Services;
-using Sentinel.NLogViewer.TestLogging;
-using Sentinel.NLogViewer.Wpf;
+using Sentinel.LogViewer.TestLogging;
+using Sentinel.LogViewer.Wpf;
 
 namespace Sentinel.LogViewer.ViewModels;
 

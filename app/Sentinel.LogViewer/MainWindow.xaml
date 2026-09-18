@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:dj="clr-namespace:Sentinel.NLogViewer.Wpf;assembly=Sentinel.NLogViewer.Wpf"
+        xmlns:dj="clr-namespace:Sentinel.LogViewer.Wpf;assembly=Sentinel.LogViewer.Wpf"
         xmlns:viewModels="clr-namespace:Sentinel.LogViewer.ViewModels"
         xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
         xmlns:models="clr-namespace:Sentinel.LogViewer.Models"
@@ -18,9 +18,9 @@
         <Grid.Resources>
             <DataTemplate x:Key="TabControlContentTemplate" DataType="models:LogTabViewModel">
                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                <dj:NLogViewerBase 
-                    x:Name="NLogViewer1"
-                    Tag="{Binding ElementName=NLogViewer1}"
+                <dj:LogViewerBase 
+                    x:Name="LogViewer1"
+                    Tag="{Binding ElementName=LogViewer1}"
                     ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
             </DataTemplate>
@@ -81,7 +81,7 @@
                        FontWeight="Bold"/>
         </ToolBar>
         
-        <!-- Main Content: TabControl with NLogViewers -->
+        <!-- Main Content: TabControl with LogViewers -->
         <TabControl x:Name="LogTabsControl"
                     Grid.Row="1"
                     ItemsSource="{Binding LogTabs}"

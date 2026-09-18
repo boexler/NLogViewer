@@ -1,0 +1,557 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:dj="clr-namespace:Sentinel.LogViewer.Wpf;assembly=Sentinel.LogViewer.Wpf"
+    xmlns:nLog="clr-namespace:NLog;assembly=NLog"
+    xmlns:helper="clr-namespace:Sentinel.LogViewer.Wpf.Helper;assembly=Sentinel.LogViewer.Wpf"
+    xmlns:listViewLayoutManager="clr-namespace:Sentinel.LogViewer.Wpf.Helper.ListViewLayoutManager;assembly=Sentinel.LogViewer.Wpf"
+    xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.LogViewer.Wpf"
+    xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter;assembly=Sentinel.LogViewer.Wpf"
+    x:Class="Sentinel.LogViewer.Wpf.MaterialDesign.Themes.MaterialDesignLogViewerTheme">
+    <!-- Converter Resources -->
+    <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
+    <xamlConverter:ContextMenuHeaderConverter x:Key="ContextMenuHeaderConverter"/>
+
+    <Style TargetType="{x:Type dj:LogViewer}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type dj:LogViewer}">
+                    <Grid Background="{DynamicResource MaterialDesignPaper}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Material Controls -->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                            <materialDesign:Card Padding="4" Margin="0,0,8,0"
+                                                 Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="Controls" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <StackPanel Orientation="Horizontal" Margin="2">
+                                    <!-- Auto Scroll Toggle Button -->
+                                    <ToggleButton IsChecked="{Binding AutoScroll, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Automatically scroll to newest log entries"
+                                                  Width="40" Height="40"
+                                                  Margin="2">
+                                        <materialDesign:PackIcon Kind="ArrowDownBold" Width="20" Height="20"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignFlatButtonForegroundBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+
+                                    <!-- Clear Button -->
+                                    <Button Command="{Binding ClearCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ToolTip="Clear all log entries"
+                                            Width="40" Height="40"
+                                            Margin="2">
+                                        <materialDesign:PackIcon Kind="DeleteSweepOutline" Width="18" Height="18"/>
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignFlatButtonForegroundBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!-- Pause Toggle Button -->
+                                    <ToggleButton IsChecked="{Binding Pause, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Pause/resume log monitoring"
+                                                  Width="40" Height="40"
+                                                  Margin="2">
+                                        <materialDesign:PackIcon Kind="PauseCircleOutline" Width="20" Height="20"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignFlatButtonForegroundBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <!-- Filter Controls -->
+                            <materialDesign:Card 
+                                Margin="0,0,8,0"
+                                Padding="4"
+                                Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="Filter" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <StackPanel Orientation="Horizontal" Margin="2">
+                                    <!-- Trace Filter -->
+                                    <ToggleButton IsChecked="{Binding TraceFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Trace level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="Footprints" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconForegroundButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TraceBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    
+                                    <!-- Debug Filter -->
+                                    <ToggleButton IsChecked="{Binding DebugFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Debug level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="BugOutline" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=DebugBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    
+                                    <!-- Info Filter -->
+                                    <ToggleButton IsChecked="{Binding InfoFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Info level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="Information" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=InfoBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    
+                                    <!-- Warn Filter -->
+                                    <ToggleButton IsChecked="{Binding WarnFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Warning level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="Alert" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=WarnBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    
+                                    <!-- Error Filter -->
+                                    <ToggleButton IsChecked="{Binding ErrorFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Error level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=ErrorBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    
+                                    <!-- Fatal Filter -->
+                                    <ToggleButton IsChecked="{Binding FatalFilter, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ToolTip="Hide/show Fatal level log entries"
+                                                  Width="36" Height="36"
+                                                  Margin="1">
+                                        <materialDesign:PackIcon Kind="AlertCircleOutline" Width="18" Height="18"/>
+                                        <ToggleButton.Style>
+                                            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignIconButton}">
+                                                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=FatalBackground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+
+                            <!-- Search Controls -->
+                            <materialDesign:Card 
+                                Margin="0,0,8,0" 
+                                Padding="4"
+                                Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="Search" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <!-- Search Input -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                        <TextBox Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                                 materialDesign:HintAssist.Hint="Search... (Press Enter to add)"
+                                                 Width="250"
+                                                 Margin="0,0,16,0">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Return" Command="{Binding AddSearchTermCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                        <CheckBox Content="Use Regex"
+                                                  IsChecked="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  VerticalAlignment="Center"
+                                                  Style="{DynamicResource MaterialDesignCheckBox}"/>
+                                    </StackPanel>
+                                    
+                                    <!-- Active Search Terms -->
+                                    <ItemsControl ItemsSource="{Binding ActiveSearchTerms, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.Resources>
+                                            <!-- Plain text term chip -->
+                                            <DataTemplate DataType="{x:Type dj:TextSearchTerm}">
+                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TextSearchTermBackground}"
+                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TextSearchTermBorderBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="16"
+                                                        Margin="2"
+                                                        Padding="8,4">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Text}" 
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TextSearchTermForeground}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="0,0,8,0"/>
+                                                        <Button Content="✏" 
+                                                                Width="20" 
+                                                                Height="20" 
+                                                                FontSize="12" 
+                                                                Padding="0" 
+                                                                Margin="0,0,4,0"
+                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                                CommandParameter="{Binding}"
+                                                                ToolTip="Edit search term"
+                                                                Style="{DynamicResource MaterialDesignIconButton}"/>
+                                                        <Button Content="×" 
+                                                                Width="20" 
+                                                                Height="20" 
+                                                                FontSize="12" 
+                                                                Padding="0" 
+                                                                Margin="0"
+                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                                CommandParameter="{Binding}"
+                                                                ToolTip="Remove search term"
+                                                                Style="{DynamicResource MaterialDesignIconButton}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+
+                                            <!-- Regex term chip with visual accent/prefix -->
+                                            <DataTemplate DataType="{x:Type dj:RegexSearchTerm}">
+                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=RegexSearchTermBackground}"
+                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=RegexSearchTermBorderBrush}"
+                                                        BorderThickness="1"
+                                                        CornerRadius="16"
+                                                        Margin="2"
+                                                        Padding="8,4">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=RegexPrefixForeground}"
+                                                                   VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding Text}" 
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=RegexSearchTermForeground}"
+                                                                   VerticalAlignment="Center"
+                                                                   Margin="0,0,8,0"/>
+                                                        <Button Content="✏" 
+                                                                Width="20" 
+                                                                Height="20" 
+                                                                FontSize="12" 
+                                                                Padding="0" 
+                                                                Margin="0,0,4,0"
+                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                                CommandParameter="{Binding}"
+                                                                ToolTip="Edit search term"
+                                                                Style="{DynamicResource MaterialDesignIconButton}"/>
+                                                        <Button Content="×" 
+                                                                Width="20" 
+                                                                Height="20" 
+                                                                FontSize="12" 
+                                                                Padding="0" 
+                                                                Margin="0"
+                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                                CommandParameter="{Binding}"
+                                                                ToolTip="Remove search term"
+                                                                Style="{DynamicResource MaterialDesignIconButton}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.Resources>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </StackPanel>
+
+                        <!-- Log List -->
+                        <materialDesign:Card Grid.Row="2">
+                            <ListView x:Name="PART_ListView" 
+                                      ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}}" 
+                                      BorderThickness="0"
+                                      ScrollViewer.CanContentScroll="True"
+                                      listViewLayoutManager:ListViewLayoutManager.Enabled="true">
+                                <!-- Custom GridViewColumnHeader Style for reduced height -->
+                                <ListView.Resources>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+                                        <Setter Property="Height" Value="32"/>
+                                        <Setter Property="Padding" Value="8,4"/>
+                                        <Setter Property="Background" Value="{DynamicResource MaterialDesignPaper}"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                        <Setter Property="FontWeight" Value="Medium"/>
+                                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}"/>
+                                        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    </Style>
+                                </ListView.Resources>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignDivider}" />
+                                        <!--<Setter Property="BorderBrush" Value="Black" />-->
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                        <!--<Setter Property="BorderThickness" Value="1" />-->
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Trace}">
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TraceBackground}" />
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=TraceForeground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Debug}">
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=DebugForeground}" />
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=DebugBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Info}">
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=InfoForeground}" />
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=InfoBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Warn}">
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=WarnForeground}" />
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=WarnBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Error}">
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=ErrorForeground}" />
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=ErrorBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                     Value="{x:Static nLog:LogLevel.Fatal}">
+                                                <Setter Property="Foreground"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=FatalForeground}" />
+                                                <Setter Property="Background"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=FatalBackground}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <helper:AutoSizedGridView>
+                                        <GridViewColumn Header="ID" Width="Auto">
+                                            <GridViewColumn.DisplayMemberBinding>
+                                                <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                    <Binding Path="."/>
+                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}" Path="IdResolver"/>
+                                                </MultiBinding>
+                                            </GridViewColumn.DisplayMemberBinding>
+                                        </GridViewColumn>   
+                                        <GridViewColumn Header="Level" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <materialDesign:PackIcon x:Name="LevelIcon" 
+                                                                             Width="18" Height="18" 
+                                                                             VerticalAlignment="Center" 
+                                                                             HorizontalAlignment="Center" />
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Trace}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="Footprints"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Debug}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="BugOutline"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Info}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="Information"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Warn}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="Alert"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Error}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="AlertCircle"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Fatal}">
+                                                            <Setter TargetName="LevelIcon" Property="Kind" Value="AlertCircleOutline"/>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="TimeStamp" Width="Auto">
+                                            <GridViewColumn.DisplayMemberBinding>
+                                                <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                    <Binding Path="."/>
+                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}" Path="TimeStampResolver"/>
+                                                </MultiBinding>
+                                            </GridViewColumn.DisplayMemberBinding>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="LoggerName" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=LoggerNameResolver}"
+                                                        Background="Transparent"
+                                                        TextWrapping="Wrap"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem
+                                                                Header="{Binding LoggerName, Converter={StaticResource ContextMenuHeaderConverter}}"
+                                                                IsEnabled="False"/>
+                                                                <MenuItem
+                                                                Header="Add to Filter"
+                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                Header="Add to Filter (Exclude)"
+                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermExcludeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                Header="Copy to Clipboard"
+                                                                Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </TextBlock.ContextMenu>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Message" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=MessageResolver}"
+                                                        Background="Transparent"
+                                                        TextWrapping="Wrap"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
+                                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem
+                                                                Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
+                                                                IsEnabled="False"/>
+                                                                <MenuItem
+                                                                Header="Add to Filter"
+                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                Header="Copy to Clipboard"
+                                                                Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </TextBlock.ContextMenu>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </helper:AutoSizedGridView>
+                                </ListView.View>
+                            </ListView>
+                        </materialDesign:Card>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

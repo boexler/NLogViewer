@@ -47,13 +47,13 @@ jobs:
         Add-Content $env:GITHUB_OUTPUT "safe_version=$safeVersion"
         Add-Content $env:GITHUB_OUTPUT "chocolatey_version=$chocolateyVersion"
     - name: Build solution
-      # NLogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
+      # Sentinel.LogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
       # -m:1 serializes the build: parallel projects race on the shared WPF obj/ folder.
-      run: dotnet build NLogViewer.CI.slnf -c Release -m:1
+      run: dotnet build Sentinel.LogViewer.CI.slnf -c Release -m:1
     - name: Run tests
-      run: dotnet test NLogViewer.CI.slnf -c Release --no-build --verbosity normal
+      run: dotnet test Sentinel.LogViewer.CI.slnf -c Release --no-build --verbosity normal
     - name: Pack NuGet packages
-      run: dotnet pack NLogViewer.CI.slnf -c Release --no-build -o nuget
+      run: dotnet pack Sentinel.LogViewer.CI.slnf -c Release --no-build -o nuget
     - name: Publish Self-Contained
       run: |
         dotnet publish app/Sentinel.LogViewer/Sentinel.LogViewer.csproj `
@@ -90,7 +90,7 @@ jobs:
         }
     - name: Build installer MSI
       run: |
-        dotnet build installer/Sentinel.NLogViewer.Installer.wixproj `
+        dotnet build installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
           -p:InstallerVersion=$env:INSTALLER_VERSION

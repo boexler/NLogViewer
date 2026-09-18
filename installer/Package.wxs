@@ -30,7 +30,7 @@
     <ui:WixUI Id="WixUI_FeatureTree" />
 
     <!--
-      Windows protects the per-user default-app choice. The MSI therefore registers NLogViewer as
+      Windows protects the per-user default-app choice. The MSI therefore registers LogViewer as
       a capable handler and, when requested, opens the Windows confirmation page after setup.
     -->
     <UI>
@@ -177,7 +177,7 @@
     <ComponentGroup Id="InstallFolderComponents" Directory="COMPANYFOLDER">
       <Component Id="CmpRemoveCompanyFolder" Guid="A1B2C3D4-E5F6-4789-ABCD-EF0123456789">
         <RegistryValue Root="HKCU"
-                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Key="Software\Sentinel\LogViewer\Setup"
                        Name="CompanyFolder"
                        Type="integer"
                        Value="1"
@@ -191,7 +191,7 @@
     <ComponentGroup Id="ShortcutComponents" Directory="ApplicationProgramsFolder">
       <Component Id="CmpStartMenuShortcut" Guid="C4D5E6F7-A8B9-4012-CDE3-456789ABCDEF">
         <RegistryValue Root="HKCU"
-                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Key="Software\Sentinel\LogViewer\Setup"
                        Name="StartMenuShortcut"
                        Type="integer"
                        Value="1"
@@ -211,7 +211,7 @@
     <ComponentGroup Id="DesktopShortcutComponents" Directory="DesktopFolder">
       <Component Id="CmpDesktopShortcut" Guid="D5E6F7A8-B9C0-4123-DEF4-56789ABCDEF0">
         <RegistryValue Root="HKCU"
-                       Key="Software\Sentinel\NLogViewer\Setup"
+                       Key="Software\Sentinel\LogViewer\Setup"
                        Name="DesktopShortcut"
                        Type="integer"
                        Value="1"
@@ -229,15 +229,15 @@
   <Fragment>
     <ComponentGroup Id="FileAssocLogComponents" Directory="INSTALLFOLDER">
       <Component Id="CmpLogProgId" Guid="B9C0D1E2-F3A4-4567-89AB-CDEF01234567">
-        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.log">
           <RegistryValue Type="string" Value="Log file" />
         </RegistryKey>
-        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\DefaultIcon">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.log\DefaultIcon">
           <RegistryValue Type="string" Value="[INSTALLFOLDER]Sentinel.LogViewer.exe,0" KeyPath="yes" />
         </RegistryKey>
       </Component>
       <Component Id="CmpLogOpenCommand" Guid="C0D1E2F3-A4B5-4678-9ABC-DEF012345678">
-        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\NLogViewer.log\shell\open\command">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.log\shell\open\command">
           <RegistryValue Type="string"
                          Value="&quot;[INSTALLFOLDER]Sentinel.LogViewer.exe&quot; &quot;%1&quot;"
                          KeyPath="yes" />
@@ -245,7 +245,7 @@
       </Component>
       <Component Id="CmpLogExtension" Guid="D1E2F3A4-B5C6-4789-ABCD-EF0123456789">
         <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\.log\OpenWithProgids">
-          <RegistryValue Name="NLogViewer.log" Type="string" Value="" KeyPath="yes" />
+          <RegistryValue Name="LogViewer.log" Type="string" Value="" KeyPath="yes" />
         </RegistryKey>
       </Component>
       <Component Id="CmpLogCapabilities" Guid="E2F3A4B5-C6D7-489A-BCDE-F0123456789A">
@@ -256,7 +256,7 @@
                          Value="View and analyze NLog and log files." />
           <RegistryValue Name=".log"
                          Type="string"
-                         Value="NLogViewer.log"
+                         Value="LogViewer.log"
                          Key="FileAssociations" />
         </RegistryKey>
         <RegistryKey Root="HKLM" Key="SOFTWARE\RegisteredApplications">

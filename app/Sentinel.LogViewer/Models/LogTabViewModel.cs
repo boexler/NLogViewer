@@ -16,7 +16,7 @@ namespace Sentinel.LogViewer.Models
         private int _maxCount = 10000;
 
         /// <summary>
-        /// Backing collection bound to <see cref="Sentinel.NLogViewer.Wpf.NLogViewerBase.ItemsSource"/>.
+        /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewerBase.ItemsSource"/>.
         /// </summary>
         public ObservableCollection<LogEventInfo> LogEntries { get; } = new();
 

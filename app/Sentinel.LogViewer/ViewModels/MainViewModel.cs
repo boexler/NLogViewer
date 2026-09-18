@@ -14,8 +14,8 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Sentinel.NLogViewer.Wpf;
-using Sentinel.NLogViewer.Wpf.Models;
+using Sentinel.LogViewer.Wpf;
+using Sentinel.LogViewer.Wpf.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NLog;
@@ -120,7 +120,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			SelectedTab = tab;
 		}
 		
-		// Add all log events from the batch to the tab (Cache replays to NLogViewer when it subscribes)
+		// Add all log events from the batch to the tab (Cache replays to LogViewer when it subscribes)
 		foreach (var logEvent in logEvents)
 		{
 			tab.AddLogEvent(logEvent.LogEventInfo);
@@ -871,11 +871,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		if (dialog.ShowDialog() == true)
 		{
 			var filePath = dialog.FileName;
-			var nLogViewer = FindNLogViewerInTab();
+			var nLogViewer = FindLogViewerInTab();
 
 			if (nLogViewer == null)
 			{
-				StatusMessage = "Could not find NLogViewer instance in selected tab.";
+				StatusMessage = "Could not find LogViewer instance in selected tab.";
 				return;
 			}
 
@@ -885,7 +885,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				Format = ExportFormat.Log
 			};
 
-			// Execute the export command on the NLogViewer
+			// Execute the export command on the LogViewer
 			if (nLogViewer.ExportCommand?.CanExecute(exportParameter) == true)
 			{
 				nLogViewer.ExportCommand.Execute(exportParameter);
@@ -899,10 +899,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// Finds the NLogViewer instance in the currently selected tab's visual tree
+	/// Finds the LogViewer instance in the currently selected tab's visual tree
 	/// </summary>
-	/// <returns>The NLogViewer instance if found, null otherwise</returns>
-	private NLogViewerBase? FindNLogViewerInTab()
+	/// <returns>The LogViewer instance if found, null otherwise</returns>
+	private LogViewerBase? FindLogViewerInTab()
 	{
 		if (SelectedTab == null)
 			return null;
@@ -927,15 +927,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			var contentControl = FindVisualChild<ContentControl>(border);
 			if (contentControl != null && contentControl.DataContext == SelectedTab)
 			{
-				// Found the content control for the selected tab, now find NLogViewer
-				var nLogViewer = FindVisualChild<NLogViewerBase>(contentControl);
+				// Found the content control for the selected tab, now find LogViewer
+				var nLogViewer = FindVisualChild<LogViewerBase>(contentControl);
 				if (nLogViewer != null)
 					return nLogViewer;
 			}
 		}
 
-		// Fallback: Search directly in TabControl for NLogViewer
-		return FindVisualChild<NLogViewerBase>(tabControl);
+		// Fallback: Search directly in TabControl for LogViewer
+		return FindVisualChild<LogViewerBase>(tabControl);
 	}
 
 	/// <summary>

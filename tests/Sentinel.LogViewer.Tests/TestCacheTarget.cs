@@ -1,13 +1,13 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using NLog;
-using Sentinel.NLogViewer.Wpf.Targets;
+using Sentinel.LogViewer.Wpf.Targets;
 
 namespace Sentinel.LogViewer.Tests;
 
 /// <summary>
 /// Test double for ICacheTarget. Exposes an observable cache and allows pre-filling events
-/// so that subscribers (e.g. NLogViewer) receive them when they subscribe (ReplaySubject).
+/// so that subscribers (e.g. LogViewer) receive them when they subscribe (ReplaySubject).
 /// </summary>
 public class TestCacheTarget : ICacheTarget
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using NLog;
-using Sentinel.NLogViewer.TestLogging;
+using Sentinel.LogViewer.TestLogging;
 
 namespace Sentinel.LogViewer.TestApp;
 
@@ -12,7 +12,7 @@ internal static class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("NLogViewer Client Application Test App");
+        Console.WriteLine("LogViewer Client Application Test App");
         var nlogVersion = typeof(LogManager).Assembly.GetName().Version;
         Console.WriteLine($"NLog Version: {nlogVersion}");
 

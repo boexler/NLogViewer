@@ -75,7 +75,7 @@ public class Log4JEvent : ILogEvent
 	private static readonly Regex Log4JEventAppNameRegex = new("^(?:.*\\.)?(?<name>[A-Za-z_][A-Za-z0-9_]*)(?<id>\\(\\d+\\))?$", RegexOptions.Compiled);
 
 	/// <summary>
-	/// Converts this Log4JEvent instance to a LogEvent object for use in the NLogViewer application.
+	/// Converts this Log4JEvent instance to a LogEvent object for use in the LogViewer application.
 	/// Maps all available Log4J event properties to the corresponding LogEvent structure,
 	/// including app information, log level, timestamp, message, exception, and additional properties.
 	/// </summary>

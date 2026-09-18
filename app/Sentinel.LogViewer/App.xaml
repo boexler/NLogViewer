@@ -1,14 +1,14 @@
 <Application x:Class="Sentinel.LogViewer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:xamlConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlConverter;assembly=Sentinel.NLogViewer.Wpf"
-             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.NLogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.NLogViewer.Wpf"
+             xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter;assembly=Sentinel.LogViewer.Wpf"
+             xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter;assembly=Sentinel.LogViewer.Wpf"
              xmlns:converters="clr-namespace:Sentinel.LogViewer.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- NLogViewer Design Styles -->
-                <ResourceDictionary Source="pack://application:,,,/Sentinel.NLogViewer.Wpf;component/Themes/Generic.xaml"/>
+                <!-- LogViewer Design Styles -->
+                <ResourceDictionary Source="pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!-- Converters -->
             <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

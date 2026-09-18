@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Sentinel.LogViewer.Wpf.MaterialDesign</RootNamespace>
+    <!-- Packing runs as an explicit `dotnet pack` step; packing during build competes with WPF markup compilation for obj/. -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>Sentinel.LogViewer.Wpf.MaterialDesign</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>

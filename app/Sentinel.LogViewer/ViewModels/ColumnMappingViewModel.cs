@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Sentinel.NLogViewer.Wpf;
+using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Models;
 
 namespace Sentinel.LogViewer.ViewModels;

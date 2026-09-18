@@ -110,7 +110,7 @@ namespace Sentinel.LogViewer
                 _testLoggingService = _host.Services.GetRequiredService<TestLoggingService>();
                 if (ShouldAutoStartTestLogging())
                 {
-                    _testLoggingService.Start(new Sentinel.NLogViewer.TestLogging.TestLoggingOptions
+                    _testLoggingService.Start(new Sentinel.LogViewer.TestLogging.TestLoggingOptions
                     {
                         TargetName = "chainsaw",
                         UdpHost = "127.0.0.1",
@@ -135,16 +135,16 @@ namespace Sentinel.LogViewer
             catch (IOException ex)
             {
                 MessageBox.Show(
-                    $"The running Sentinel.NLogViewer instance could not be reached.{Environment.NewLine}{ex.Message}",
-                    "Sentinel.NLogViewer",
+                    $"The running Sentinel.LogViewer instance could not be reached.{Environment.NewLine}{ex.Message}",
+                    "Sentinel.LogViewer",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             catch (TimeoutException ex)
             {
                 MessageBox.Show(
-                    $"The running Sentinel.NLogViewer instance did not respond.{Environment.NewLine}{ex.Message}",
-                    "Sentinel.NLogViewer",
+                    $"The running Sentinel.LogViewer instance did not respond.{Environment.NewLine}{ex.Message}",
+                    "Sentinel.LogViewer",
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }

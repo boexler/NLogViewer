@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\app\Sentinel.LogViewer\Sentinel.LogViewer.csproj" />
-    <ProjectReference Include="..\..\ui\Sentinel.NLogViewer.Wpf\Sentinel.NLogViewer.Wpf.csproj" />
+    <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
   </ItemGroup>
 
 </Project>
