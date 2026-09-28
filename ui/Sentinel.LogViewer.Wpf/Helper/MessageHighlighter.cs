@@ -58,8 +58,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
         /// </summary>
         private static void TryUpdate(TextBlock textBlock)
         {
-            var nlogViewer = FindAncestor<LogViewerBase>(textBlock);
-            if (nlogViewer == null)
+            var logViewer = FindAncestor<LogViewerBase>(textBlock);
+            if (logViewer == null)
                 return;
 
             var logEventInfo = textBlock.DataContext as NLog.LogEventInfo;
@@ -71,7 +71,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 return;
 
             string message = resolver.Resolve(logEventInfo);
-            var terms = nlogViewer.ActiveSearchTerms;
+            var terms = logViewer.ActiveSearchTerms;
             if (string.IsNullOrEmpty(message) || terms == null || terms.Count == 0)
             {
                 textBlock.Text = message; // fallback
@@ -125,7 +125,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 }
                 var run = new Run(message.Substring(start, length))
                 {
-                    Background = nlogViewer.SearchHighlightBackground
+                    Background = logViewer.SearchHighlightBackground
                 };
                 textBlock.Inlines.Add(run);
                 index = start + length;

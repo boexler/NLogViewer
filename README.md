@@ -7,7 +7,7 @@
 [p3]: doc/images/colors.png "LogViewer"
 [p4]: doc/images/openpopup.gif "LogViewer"
 [p5]: doc/images/newtask.gif "LogViewer"
-[p6]: doc/images/nlogviewercolumns.png "Column Visibility Properties"
+[p6]: doc/images/logviewercolumns.png "Column Visibility Properties"
 [p7]: doc/images/filters1.png "Filter Buttons - All Visible"
 [p8]: doc/images/filters2.png "Filter Buttons - Some Hidden"
 [p9]: doc/images/controls1.png "Control Buttons - All Visible"
@@ -145,15 +145,15 @@ The LogViewer includes control buttons that allow you to manage log viewing beha
 
 ```csharp
 // Control auto-scroll behavior
-nLogViewer.AutoScroll = true;  // Enable auto-scroll
-nLogViewer.AutoScroll = false; // Disable auto-scroll
+logViewer.AutoScroll = true;  // Enable auto-scroll
+logViewer.AutoScroll = false; // Disable auto-scroll
 
 // Pause/resume logging
-nLogViewer.Pause = true;  // Pause logging
-nLogViewer.Pause = false; // Resume logging
+logViewer.Pause = true;  // Pause logging
+logViewer.Pause = false; // Resume logging
 
 // Hide the entire control button group
-nLogViewer.ShowControlButtons = false;
+logViewer.ShowControlButtons = false;
 ```
 
 **XAML Binding:**
@@ -219,12 +219,12 @@ Available column visibility properties:
 
 ```csharp
 // Hide specific columns
-nLogViewer.ShowIdColumn = false;
-nLogViewer.ShowLevelColumn = false;
+logViewer.ShowIdColumn = false;
+logViewer.ShowLevelColumn = false;
 
 // Show columns again
-nLogViewer.ShowIdColumn = true;
-nLogViewer.ShowLevelColumn = true;
+logViewer.ShowIdColumn = true;
+logViewer.ShowLevelColumn = true;
 ```
 
 **XAML Binding:**
@@ -254,16 +254,16 @@ The LogViewer includes filter buttons that allow you to hide/show specific log l
 
 ```csharp
 // Hide specific log levels
-nLogViewer.TraceFilter = true;  // Hide Trace entries
-nLogViewer.DebugFilter = true;  // Hide Debug entries
-nLogViewer.InfoFilter = true;   // Hide Info entries
+logViewer.TraceFilter = true;  // Hide Trace entries
+logViewer.DebugFilter = true;  // Hide Debug entries
+logViewer.InfoFilter = true;   // Hide Info entries
 
 // Show log levels again
-nLogViewer.TraceFilter = false; // Show Trace entries
-nLogViewer.DebugFilter = false; // Show Debug entries
+logViewer.TraceFilter = false; // Show Trace entries
+logViewer.DebugFilter = false; // Show Debug entries
 
 // Hide the entire filter button group
-nLogViewer.ShowFilterButtons = false;
+logViewer.ShowFilterButtons = false;
 ```
 
 **XAML Binding:**
@@ -302,23 +302,23 @@ The LogViewer includes search capabilities that filter log entries based on text
 
 ```csharp
 // Programmatically add search terms
-nLogViewer.CurrentSearchText = "error";
-nLogViewer.AddSearchTerm(); // Adds as text search
+logViewer.CurrentSearchText = "error";
+logViewer.AddSearchTerm(); // Adds as text search
 
 // Enable regex mode and add regex pattern
-nLogViewer.UseRegexSearch = true;
-nLogViewer.CurrentSearchText = @"\d{4}-\d{2}-\d{2}";
-nLogViewer.AddSearchTerm(); // Adds as regex search
+logViewer.UseRegexSearch = true;
+logViewer.CurrentSearchText = @"\d{4}-\d{2}-\d{2}";
+logViewer.AddSearchTerm(); // Adds as regex search
 
 // Remove specific search term
-var searchTerm = nLogViewer.ActiveSearchTerms.First();
-nLogViewer.RemoveSearchTerm(searchTerm);
+var searchTerm = logViewer.ActiveSearchTerms.First();
+logViewer.RemoveSearchTerm(searchTerm);
 
 // Clear all search terms
-nLogViewer.ClearAllSearchTerms();
+logViewer.ClearAllSearchTerms();
 
 // Customize search highlight color
-nLogViewer.SearchHighlightBackground = Brushes.Yellow;
+logViewer.SearchHighlightBackground = Brushes.Yellow;
 ```
 
 **XAML Binding:**
@@ -412,19 +412,19 @@ private void OnDockChanged(object sender, DockChangedEventArgs e)
 {
     // Control is being undocked - MUST call StartListen() because 
     // the Unloaded event was triggered and disposed the subscription
-    nLogViewer.StartListen();
+    logViewer.StartListen();
 }
 
 // Pause/Resume functionality
 private void ToggleLogging()
 {
-    if (nLogViewer.IsListening)
+    if (logViewer.IsListening)
     {
-        nLogViewer.StopListen();
+        logViewer.StopListen();
     }
     else
     {
-        nLogViewer.StartListen();
+        logViewer.StartListen();
     }
 }
 ```
@@ -487,13 +487,13 @@ config.LoggingRules.Add(loggingRule);
 LogManager.Configuration = config;
 
 // create a new LogViewer Control with the unique logger target name
-LogViewer nLogViewer = new LogViewer
+LogViewer logViewer = new LogViewer
 {
     TargetName = targetName,
 };
 
 // add it to the tab control
-var tabItem = new TabItem { Header = $"Task {taskNumber}", Content = nLogViewer };
+var tabItem = new TabItem { Header = $"Task {taskNumber}", Content = logViewer };
 TabControl1.Items.Add(tabItem);
 TabControl1.SelectedItem = tabItem;
 

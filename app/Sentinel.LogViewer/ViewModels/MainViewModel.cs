@@ -871,9 +871,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		if (dialog.ShowDialog() == true)
 		{
 			var filePath = dialog.FileName;
-			var nLogViewer = FindLogViewerInTab();
+			var logViewer = FindLogViewerInTab();
 
-			if (nLogViewer == null)
+			if (logViewer == null)
 			{
 				StatusMessage = "Could not find LogViewer instance in selected tab.";
 				return;
@@ -886,9 +886,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			};
 
 			// Execute the export command on the LogViewer
-			if (nLogViewer.ExportCommand?.CanExecute(exportParameter) == true)
+			if (logViewer.ExportCommand?.CanExecute(exportParameter) == true)
 			{
-				nLogViewer.ExportCommand.Execute(exportParameter);
+				logViewer.ExportCommand.Execute(exportParameter);
 				StatusMessage = $"Exported logs to {Path.GetFileName(filePath)}";
 			}
 			else
@@ -928,9 +928,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			if (contentControl != null && contentControl.DataContext == SelectedTab)
 			{
 				// Found the content control for the selected tab, now find LogViewer
-				var nLogViewer = FindVisualChild<LogViewerBase>(contentControl);
-				if (nLogViewer != null)
-					return nLogViewer;
+				var logViewer = FindVisualChild<LogViewerBase>(contentControl);
+				if (logViewer != null)
+					return logViewer;
 			}
 		}
 

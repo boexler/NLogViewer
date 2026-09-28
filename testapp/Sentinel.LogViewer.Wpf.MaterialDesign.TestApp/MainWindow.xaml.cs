@@ -137,13 +137,13 @@ namespace Sentinel.LogViewer.Wpf.MaterialDesign.TestApp
             LogManager.Configuration = config;
 
             // create a new LogViewer Control with the unique logger target name
-            Sentinel.LogViewer.Wpf.LogViewer nLogViewer = new Sentinel.LogViewer.Wpf.LogViewer
+            Sentinel.LogViewer.Wpf.LogViewer logViewer = new Sentinel.LogViewer.Wpf.LogViewer
             {
                 TargetName = targetName,
             };
 
             // add it to the tab control
-            var tabItem = new TabItem { Header = $"Task {taskNumber}", Content = nLogViewer };
+            var tabItem = new TabItem { Header = $"Task {taskNumber}", Content = logViewer };
             TabControl1.Items.Add(tabItem);
             TabControl1.SelectedItem = tabItem;
 

@@ -123,14 +123,14 @@ The Material Design theme provides enhanced search experience:
 
 ```csharp
 // Enable regex search mode
-nLogViewer.UseRegexSearch = true;
+logViewer.UseRegexSearch = true;
 
 // Add search terms programmatically
-nLogViewer.CurrentSearchText = "error";
-nLogViewer.AddSearchTerm();
+logViewer.CurrentSearchText = "error";
+logViewer.AddSearchTerm();
 
 // Customize search highlight color
-nLogViewer.SearchHighlightBackground = new SolidColorBrush(Colors.Yellow);
+logViewer.SearchHighlightBackground = new SolidColorBrush(Colors.Yellow);
 ```
 
 ## Test Applications
