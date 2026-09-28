@@ -95,7 +95,7 @@ function ConvertFrom-Template {
 function Get-IconRef {
     <#
     .SYNOPSIS
-      Picks a git ref that raw.githubusercontent.com can resolve for iconUrl.
+      Picks a git ref pinned in iconUrl (jsDelivr GitHub CDN).
     #>
     param([string] $BranchName)
 
@@ -115,7 +115,8 @@ $msiFile = Get-Item -LiteralPath $MsiPath
 $repositorySlug = Get-RepositorySlug -RepositoryName $Repository
 $branchName = Get-DefaultBranchName -BranchName $DefaultBranch
 $repoUrl = "$($ServerUrl.TrimEnd('/'))/$repositorySlug"
-$iconUrl = "https://raw.githubusercontent.com/$repositorySlug/$(Get-IconRef -BranchName $branchName)/chocolatey/icon.png"
+$iconRef = Get-IconRef -BranchName $branchName
+$iconUrl = "https://cdn.jsdelivr.net/gh/$repositorySlug@$iconRef/chocolatey/icon.png"
 $tokens = @{
     REPO_URL             = $repoUrl
     PACKAGE_SOURCE_URL   = "$repoUrl/tree/$branchName/chocolatey"

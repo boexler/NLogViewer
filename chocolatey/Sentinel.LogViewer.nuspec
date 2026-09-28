@@ -5,6 +5,7 @@
     <version>0.0.0</version>
     <title>Sentinel.LogViewer</title>
     <authors>Dominic Böxler</authors>
+    <copyright>Copyright (c) 2026 Dominic Böxler</copyright>
     <projectUrl>__REPO_URL__</projectUrl>
     <projectSourceUrl>__REPO_URL__</projectSourceUrl>
     <packageSourceUrl>__PACKAGE_SOURCE_URL__</packageSourceUrl>
