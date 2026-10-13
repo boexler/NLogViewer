@@ -36,4 +36,9 @@ public sealed class LogFileImportBatchContext
 	/// Lazily assigned when the first parsed file is applied in <see cref="DestinationMode.SingleNewTab"/>.
 	/// </summary>
 	public LogTabViewModel? SharedNewTab { get; set; }
+
+	/// <summary>
+	/// Whether the column mapping dialog is shown for each text file before it is parsed.
+	/// </summary>
+	public bool AskColumnMapping { get; set; }
 }

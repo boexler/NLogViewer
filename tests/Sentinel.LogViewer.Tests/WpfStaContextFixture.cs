@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Threading;
+using Xunit;
 
 namespace Sentinel.LogViewer.Tests
 {
@@ -78,5 +79,14 @@ namespace Sentinel.LogViewer.Tests
             }
             _thread.Join(TimeSpan.FromSeconds(5));
         }
+    }
+
+    /// <summary>
+    /// Test collection for all WPF tests: only one Application may exist per process, so they share the fixture.
+    /// </summary>
+    [CollectionDefinition(Name)]
+    public class WpfCollection : ICollectionFixture<WpfStaContextFixture>
+    {
+        public const string Name = "Wpf";
     }
 }

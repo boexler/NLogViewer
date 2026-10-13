@@ -390,7 +390,6 @@
                                                 <TextBlock
                                                     helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=LoggerNameResolver}"
                                                     Background="Transparent"
-                                                    TextWrapping="Wrap"
                                                     Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                     Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                     <TextBlock.ContextMenu>
@@ -441,7 +440,6 @@
                                                     x:Name="TextBlock1"
                                                     helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=MessageResolver}"
                                                     Background="Transparent"
-                                                    TextWrapping="Wrap"
                                                     Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                     Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                     <TextBlock.ContextMenu>

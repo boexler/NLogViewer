@@ -14,6 +14,12 @@ public class TextFileFormat
 	public string Separator { get; set; } = string.Empty;
 
 	/// <summary>
+	/// Gets or sets whether fields may be wrapped in double quotes (CSV style), which allows them to
+	/// contain the separator and line breaks
+	/// </summary>
+	public bool QuotedFields { get; set; }
+
+	/// <summary>
 	/// Gets or sets whether the first line is a header/info line that should be skipped
 	/// </summary>
 	public bool HasHeaderLine { get; set; }

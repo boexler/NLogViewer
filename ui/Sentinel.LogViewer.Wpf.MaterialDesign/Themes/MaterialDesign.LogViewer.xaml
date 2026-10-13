@@ -461,7 +461,6 @@
                                                     <TextBlock
                                                         helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=LoggerNameResolver}"
                                                         Background="Transparent"
-                                                        TextWrapping="Wrap"
                                                         Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>
@@ -511,7 +510,6 @@
                                                     <TextBlock
                                                         helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}, Path=MessageResolver}"
                                                         Background="Transparent"
-                                                        TextWrapping="Wrap"
                                                         Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>

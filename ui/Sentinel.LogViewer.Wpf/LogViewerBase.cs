@@ -1079,6 +1079,9 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 	        UpdateColumnVisibility(gridView, _originalLoggerNameColumn, ShowLoggerNameColumn, _originalLoggerNameColumnWidth, 3);
 
 	        // Message column is always visible (no visibility control)
+
+	        // A column that is shown again starts with its original width.
+	        _columnWidthFitter?.Apply();
         }
 
         /// <summary>
@@ -1672,6 +1675,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         private double _originalLevelColumnWidth = double.NaN; // Auto
         private double _originalTimeStampColumnWidth = double.NaN; // Auto
         private double _originalLoggerNameColumnWidth = double.NaN; // Auto
+        private ColumnWidthFitter? _columnWidthFitter;
 
         /// <summary>
         /// Reference to the ListView template part for programmatic access
@@ -1718,6 +1722,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             AttachEffectiveCollectionChangedHandler();
             LogEvents?.View?.Refresh();
             UpdateFilter();
+            _columnWidthFitter?.Reset(GetEffectiveEntries());
         }
 
         private void AttachEffectiveCollectionChangedHandler()
@@ -1740,6 +1745,11 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
                 ApplyMaxCountTrim(coll);
+
+            if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+                _columnWidthFitter?.Include(e.NewItems);
+            else if (e.Action is NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
+                _columnWidthFitter?.Reset(coll);
 
             if (AutoScroll)
                 PART_ListView?.ScrollToEnd();
@@ -1865,10 +1875,23 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                     _originalLoggerNameColumnWidth = gridView.Columns[3].Width;
                 }
 
+                _columnWidthFitter = new ColumnWidthFitter(PART_ListView);
+                AddFittedColumn(gridView, 0, () => IdResolver);
+                AddFittedColumn(gridView, 2, () => TimeStampResolver);
+                AddFittedColumn(gridView, 3, () => LoggerNameResolver);
+                AddFittedColumn(gridView, 4, () => MessageResolver);
+
                 UpdateColumnVisibility();
+                _columnWidthFitter.Include(GetEffectiveEntries());
             }
 
             OnViewerLoaded();
+        }
+
+        private void AddFittedColumn(GridView gridView, int index, Func<ILogEventInfoResolver?> getResolver)
+        {
+            if (gridView.Columns.Count > index)
+                _columnWidthFitter?.AddColumn(gridView.Columns[index], logEvent => getResolver()?.Resolve(logEvent));
         }
 
         /// <summary>

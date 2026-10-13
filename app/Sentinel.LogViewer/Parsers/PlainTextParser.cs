@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using NLog;
 using Sentinel.LogViewer.Models;
@@ -23,13 +24,16 @@ public class PlainTextParser : IDisposable
 
 	private bool _disposed;
 
+	/// <summary>Name of the event property that holds the 1-based line number of the entry in its file.</summary>
+	public const string FileLinePropertyName = "FileLine";
+
 	/// <summary>
 	/// Parses lines using the specified format configuration
 	/// </summary>
-	/// <param name="lines">Lines to parse</param>
+	/// <param name="lines">All lines of the file, in order</param>
 	/// <param name="format">Format configuration to use</param>
 	/// <returns>List of parsed log events</returns>
-	public List<LogEventInfo> Parse(string[] lines, TextFileFormat? format)
+	public List<LogEventInfo> Parse(IEnumerable<string> lines, TextFileFormat? format)
 	{
 		if (format != null && format.ColumnMapping.IsValid())
 		{
@@ -43,17 +47,26 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses lines using regex-based detection (legacy method)
 	/// </summary>
-	public List<LogEventInfo> Parse(string[] lines)
+	public List<LogEventInfo> Parse(IEnumerable<string> lines)
+	{
+		var numberedLines = lines.Select((line, index) => (line, index + 1));
+		return ParseEntries(numberedLines, IsNewLogEntry, ParseLine);
+	}
+
+	/// <summary>
+	/// Turns records into log events; a record that does not start a new entry continues the previous message
+	/// </summary>
+	private static List<LogEventInfo> ParseEntries(
+		IEnumerable<(string Text, int LineNumber)> records,
+		Func<string, bool> isNewEntry,
+		Func<string, LogEventInfo?> parseEntry)
 	{
 		var results = new List<LogEventInfo>();
 		LogEventInfo? currentEvent = null;
 
-		foreach (var line in lines)
+		foreach (var (text, lineNumber) in records)
 		{
-			// Check if this line starts a new log entry (has a timestamp at the beginning)
-			var isNewEntry = IsNewLogEntry(line);
-
-			if (isNewEntry)
+			if (isNewEntry(text))
 			{
 				// Save previous event if exists
 				if (currentEvent != null)
@@ -62,19 +75,23 @@ public class PlainTextParser : IDisposable
 				}
 
 				// Parse new log entry
-				currentEvent = ParseLine(line);
+				currentEvent = parseEntry(text);
+				if (currentEvent != null)
+				{
+					currentEvent.Properties[FileLinePropertyName] = lineNumber;
+				}
 			}
 			else if (currentEvent != null)
 			{
 				// This is a continuation line - append to current message
-				if (string.IsNullOrWhiteSpace(line))
+				if (string.IsNullOrWhiteSpace(text))
 				{
 					// Preserve empty lines in multi-line messages (e.g., stack traces)
 					currentEvent.Message += Environment.NewLine;
 				}
 				else
 				{
-					currentEvent.Message += Environment.NewLine + line;
+					currentEvent.Message += Environment.NewLine + text;
 				}
 			}
 			// If no current event and line doesn't start new entry, skip it (orphaned continuation line)
@@ -108,51 +125,59 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses lines using the format configuration
 	/// </summary>
-	private List<LogEventInfo> ParseWithFormat(string[] lines, TextFileFormat format)
+	private List<LogEventInfo> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format)
 	{
-		var results = new List<LogEventInfo>();
-		var dataLines = lines.Skip(format.StartLineIndex).ToList();
-		LogEventInfo? currentEvent = null;
+		return ParseEntries(
+			ReadRecords(lines, format),
+			record => IsNewLogEntryWithFormat(record, format),
+			record => ParseLineWithFormat(record, format));
+	}
 
-		foreach (var line in dataLines)
+	/// <summary>
+	/// Skips the header lines and joins the lines of a quoted multi-line field into one record
+	/// </summary>
+	private IEnumerable<(string Text, int LineNumber)> ReadRecords(IEnumerable<string> lines, TextFileFormat format)
+	{
+		StringBuilder? openRecord = null;
+		var openRecordLine = 0;
+		var lineNumber = 0;
+
+		foreach (var line in lines)
 		{
-			// Check if this line starts a new log entry
-			var isNewEntry = IsNewLogEntryWithFormat(line, format);
+			lineNumber++;
+			if (lineNumber <= format.StartLineIndex)
+				continue;
 
-			if (isNewEntry)
+			if (openRecord != null)
 			{
-				// Save previous event if exists
-				if (currentEvent != null)
+				// An unterminated quote must not swallow the entries that follow it.
+				var startsNewEntry = IsNewLogEntryWithFormat(line, format);
+				if (!startsNewEntry)
 				{
-					results.Add(currentEvent);
+					openRecord.Append(Environment.NewLine).Append(line);
+					if (TextLineSplitter.EndsInsideQuotedField(line, format.Separator, true))
+						continue;
 				}
 
-				// Parse new log entry
-				currentEvent = ParseLineWithFormat(line, format);
+				yield return (openRecord.ToString(), openRecordLine);
+				openRecord = null;
+				if (!startsNewEntry)
+					continue;
 			}
-			else if (currentEvent != null)
+
+			if (format.QuotedFields && TextLineSplitter.EndsInsideQuotedField(line, format.Separator, false))
 			{
-				// This is a continuation line - append to current message
-				if (string.IsNullOrWhiteSpace(line))
-				{
-					// Preserve empty lines in multi-line messages (e.g., stack traces)
-					currentEvent.Message += Environment.NewLine;
-				}
-				else
-				{
-					currentEvent.Message += Environment.NewLine + line;
-				}
+				openRecord = new StringBuilder(line);
+				openRecordLine = lineNumber;
 			}
-			// If no current event and line doesn't start new entry, skip it (orphaned continuation line)
+			else
+			{
+				yield return (line, lineNumber);
+			}
 		}
 
-		// Add the last event if exists
-		if (currentEvent != null)
-		{
-			results.Add(currentEvent);
-		}
-
-		return results;
+		if (openRecord != null)
+			yield return (openRecord.ToString(), openRecordLine);
 	}
 
 	/// <summary>
@@ -163,19 +188,15 @@ public class PlainTextParser : IDisposable
 		if (string.IsNullOrWhiteSpace(line))
 			return false;
 
-		// If timestamp column is mapped, check if first column matches timestamp pattern
-		if (format.ColumnMapping.TimestampColumn >= 0)
+		var parts = SplitLine(line, format);
+		var timestampColumn = format.ColumnMapping.TimestampColumn;
+		if (timestampColumn >= 0)
 		{
-			var parts = SplitLine(line, format.Separator);
-			if (format.ColumnMapping.TimestampColumn < parts.Length)
-			{
-				var timestampStr = parts[format.ColumnMapping.TimestampColumn].Trim();
-				return TryParseTimestamp(timestampStr, out _);
-			}
+			return timestampColumn < parts.Length && TryParseTimestamp(parts[timestampColumn].Trim(), out _);
 		}
 
-		// Fallback to general timestamp detection
-		return IsNewLogEntry(line);
+		// Without a timestamp column, having all mapped columns is the only hint for a new entry.
+		return parts.Length > format.ColumnMapping.GetMappedColumns().Max();
 	}
 
 	/// <summary>
@@ -185,7 +206,7 @@ public class PlainTextParser : IDisposable
 	{
 		try
 		{
-			var parts = SplitLine(line, format.Separator);
+			var parts = SplitLine(line, format);
 			if (parts.Length == 0)
 				return null;
 
@@ -243,16 +264,17 @@ public class PlainTextParser : IDisposable
 	}
 
 	/// <summary>
-	/// Splits a line by the separator
+	/// Splits a line into the columns of the format
 	/// </summary>
-	private string[] SplitLine(string line, string separator)
+	public static string[] SplitLine(string line, TextFileFormat format)
 	{
-		if (separator == "  ") // Multiple spaces
-		{
-			return line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-		}
-
-		return line.Split(new[] { separator }, StringSplitOptions.None);
+		// The message is free text: when no mapped column follows it, the rest of the line belongs to it.
+		// Quoted fields already protect separators inside the message.
+		var mapping = format.ColumnMapping;
+		var messageTakesRest = !format.QuotedFields && mapping.MessageColumn >= 0 &&
+		                       mapping.MessageColumn == mapping.GetMappedColumns().Max();
+		return TextLineSplitter.Split(line, format.Separator, format.QuotedFields,
+			messageTakesRest ? mapping.MessageColumn + 1 : 0);
 	}
 
 	private LogEventInfo? ParseLine(string line)
@@ -349,11 +371,13 @@ public class PlainTextParser : IDisposable
 	/// <param name="timestampStr">The timestamp string to parse</param>
 	/// <param name="result">The parsed DateTime if successful</param>
 	/// <returns>True if parsing was successful</returns>
-	private bool TryParseTimestamp(string timestampStr, out DateTime result)
+	public static bool TryParseTimestamp(string timestampStr, out DateTime result)
 	{
 		// Common timestamp formats
 		var formats = new[]
 		{
+			"dd.MM.yyyy HH:mm:ss.fff",       // 27.11.2025 14:53:05.260
+			"dd.MM.yyyy HH:mm:ss",           // 27.11.2025 14:53:05
 			"yyyy-MM-dd HH:mm:ss.ffff",      // 2025-11-27 14:53:05.2609
 			"yyyy-MM-dd HH:mm:ss.fff",       // 2025-11-27 14:53:05.260
 			"yyyy-MM-dd HH:mm:ss.ff",        // 2025-11-27 14:53:05.26

@@ -70,6 +70,9 @@
   <data name="Menu_OpenFile" xml:space="preserve">
     <value>_Abrir archivo...</value>
   </data>
+  <data name="Menu_OpenFileWithMapping" xml:space="preserve">
+    <value>Abrir archivo con asignación de _columnas...</value>
+  </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>_Salir</value>
   </data>
