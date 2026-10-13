@@ -11,7 +11,8 @@ namespace Sentinel.LogViewer.Tests
 	/// <summary>
 	/// Unit tests for LogViewer filter commands (AddRegexSearchTerm and AddRegexSearchTermExclude)
 	/// </summary>
-	public class LogViewerFilterTests : IClassFixture<WpfStaContextFixture>, IDisposable
+	[Collection(WpfCollection.Name)]
+	public class LogViewerFilterTests : IDisposable
 	{
 		private readonly WpfStaContextFixture _context;
 
