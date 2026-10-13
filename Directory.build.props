@@ -3,12 +3,12 @@
     <LangVersion>latest</LangVersion>
     <Authors>Dominic Böxler</Authors>
     <Company>Dominic Böxler</Company>
-    <Product>Sentinel.NLogViewer</Product>
+    <Product>Sentinel.LogViewer</Product>
     <PackageProjectUrl>https://github.com/boexler/NLogViewer</PackageProjectUrl>
     <RepositoryUrl>git@github.com:boexler/NLogViewer.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>sentinel nlog</PackageTags>
-    <Description>NLogViewer is a ui control library to visualize NLog logs</Description>
+    <PackageTags>sentinel logviewer nlog wpf</PackageTags>
+    <Description>Sentinel.LogViewer.Wpf is a UI control library to visualize NLog logs</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

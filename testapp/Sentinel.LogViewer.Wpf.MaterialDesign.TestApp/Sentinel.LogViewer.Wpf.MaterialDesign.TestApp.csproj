@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <StartupObject>Sentinel.LogViewer.Wpf.MaterialDesign.TestApp.App</StartupObject>
+    <RootNamespace>Sentinel.LogViewer.Wpf.MaterialDesign.TestApp</RootNamespace>
+    <AssemblyName>Sentinel.LogViewer.Wpf.MaterialDesign.TestApp</AssemblyName>
+    <!-- Demo application; never published to a package feed. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="nlog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="5.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
+    <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf.MaterialDesign\Sentinel.LogViewer.Wpf.MaterialDesign.csproj" />
+  </ItemGroup>
+  
+</Project>

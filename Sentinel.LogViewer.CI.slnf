@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "Sentinel.LogViewer.sln",
+    "projects": [
+      "app\\Sentinel.LogViewer\\Sentinel.LogViewer.csproj",
+      "app\\Sentinel.LogViewer.TestLogging\\Sentinel.LogViewer.TestLogging.csproj",
+      "ui\\Sentinel.LogViewer.Wpf\\Sentinel.LogViewer.Wpf.csproj",
+      "ui\\Sentinel.LogViewer.Wpf.MaterialDesign\\Sentinel.LogViewer.Wpf.MaterialDesign.csproj",
+      "testapp\\Sentinel.LogViewer.TestApp\\Sentinel.LogViewer.TestApp.csproj",
+      "testapp\\Sentinel.LogViewer.Wpf.TestApp\\Sentinel.LogViewer.Wpf.TestApp.csproj",
+      "testapp\\Sentinel.LogViewer.Wpf.MaterialDesign.TestApp\\Sentinel.LogViewer.Wpf.MaterialDesign.TestApp.csproj",
+      "tests\\Sentinel.LogViewer.Tests\\Sentinel.LogViewer.Tests.csproj"
+    ]
+  }
+}

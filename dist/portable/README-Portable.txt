@@ -1,8 +1,8 @@
-NLogViewer – portable distribution
+LogViewer – portable distribution
 ==================================
 
 These ZIP packages are portable: unpack anywhere (including a USB drive) and run
-Sentinel.NLogViewer.App.exe from this folder.
+Sentinel.LogViewer.exe from this folder.
 
 Configuration (ports, language, etc.) is stored in appsettings.json in this same
 folder as the executable — not in AppData. A marker file (NLogViewer.portable or

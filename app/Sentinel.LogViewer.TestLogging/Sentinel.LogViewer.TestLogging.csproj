@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Sentinel.LogViewer.TestLogging</RootNamespace>
+    <AssemblyName>Sentinel.LogViewer.TestLogging</AssemblyName>
+    <!-- Internal log generator for demos and manual testing; not a published library. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="6.0.0" />
+    <PackageReference Include="NLog.Targets.Network" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>
