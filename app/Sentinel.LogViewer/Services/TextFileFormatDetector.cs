@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Sentinel.LogViewer.Models;
+using Sentinel.LogViewer.Parsers;
 
 namespace Sentinel.LogViewer.Services;
 
@@ -40,6 +40,11 @@ public class TextFileFormatDetector
 		var startLineIndex = hasHeaderLine ? 1 : 0;
 		var dataLines = lines.Skip(startLineIndex).Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
 
+		// Continuation lines (stack traces, quoted multi-line fields) must not count against a separator.
+		var entryLines = dataLines.Where(StartsWithTimestamp).ToList();
+		if (entryLines.Count > 0)
+			dataLines = entryLines;
+
 		if (dataLines.Count == 0)
 			return null;
 
@@ -59,6 +64,7 @@ public class TextFileFormatDetector
 		return new TextFileFormat
 		{
 			Separator = separator,
+			QuotedFields = DetectQuotedFields(dataLines, separator),
 			HasHeaderLine = hasHeaderLine,
 			StartLineIndex = startLineIndex,
 			ColumnCount = columnCount,
@@ -128,7 +134,7 @@ public class TextFileFormatDetector
 		foreach (var (separator, _) in separators)
 		{
 			var columnCounts = dataLines
-				.Select(line => SplitLine(line, separator).Length)
+				.Select(line => TextLineSplitter.Split(line, separator).Length)
 				.Where(count => count > 1)
 				.ToList();
 
@@ -157,13 +163,29 @@ public class TextFileFormatDetector
 		return string.Empty;
 	}
 
+	private bool StartsWithTimestamp(string line)
+	{
+		var match = _timestampRegex.Match(line);
+		return match.Success && match.Index == 0;
+	}
+
+	/// <summary>
+	/// Detects whether fields are wrapped in double quotes (CSV style)
+	/// </summary>
+	public static bool DetectQuotedFields(IEnumerable<string> dataLines, string separator)
+	{
+		// Only single-character separators are written by CSV-style layouts.
+		return separator.Length == 1 &&
+		       dataLines.Any(line => line.StartsWith('"') || line.Contains(separator + "\""));
+	}
+
 	/// <summary>
 	/// Gets the column count for the detected separator
 	/// </summary>
 	private int GetColumnCount(List<string> dataLines, string separator)
 	{
 		var columnCounts = dataLines
-			.Select(line => SplitLine(line, separator).Length)
+			.Select(line => TextLineSplitter.Split(line, separator).Length)
 			.Where(count => count > 1)
 			.ToList();
 
@@ -192,7 +214,7 @@ public class TextFileFormatDetector
 		for (int col = 0; col < columnCount; col++)
 		{
 			var columnData = sampleLines
-				.Select(line => SplitLine(line, separator))
+				.Select(line => TextLineSplitter.Split(line, separator))
 				.Where(parts => parts.Length > col)
 				.Select(parts => parts[col].Trim())
 				.ToList();
@@ -204,7 +226,7 @@ public class TextFileFormatDetector
 		for (int col = 0; col < columnSamples.Count; col++)
 		{
 			var timestampMatches = columnSamples[col].Count(sample =>
-				_timestampRegex.IsMatch(sample) && TryParseTimestamp(sample, out _));
+				sample.Contains(':') && PlainTextParser.TryParseTimestamp(sample, out _));
 
 			if (timestampMatches >= columnSamples[col].Count * 0.8) // 80% match rate
 			{
@@ -275,67 +297,4 @@ public class TextFileFormatDetector
 
 		return mapping;
 	}
-
-	/// <summary>
-	/// Splits a line by the separator, handling edge cases
-	/// </summary>
-	private string[] SplitLine(string line, string separator)
-	{
-		if (separator == "  ") // Multiple spaces
-		{
-			return line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-		}
-
-		return line.Split(new[] { separator }, StringSplitOptions.None);
-	}
-
-	/// <summary>
-	/// Attempts to parse a timestamp string using various common formats
-	/// </summary>
-	/// <param name="timestampStr">The timestamp string to parse</param>
-	/// <param name="result">The parsed DateTime if successful</param>
-	/// <returns>True if parsing was successful</returns>
-	private bool TryParseTimestamp(string timestampStr, out DateTime result)
-	{
-		// Common timestamp formats
-		var formats = new[]
-		{
-			"yyyy-MM-dd HH:mm:ss.ffff",      // 2025-11-27 14:53:05.2609
-			"yyyy-MM-dd HH:mm:ss.fff",       // 2025-11-27 14:53:05.260
-			"yyyy-MM-dd HH:mm:ss.ff",        // 2025-11-27 14:53:05.26
-			"yyyy-MM-dd HH:mm:ss.f",         // 2025-11-27 14:53:05.2
-			"yyyy-MM-dd HH:mm:ss",           // 2025-11-27 14:53:05
-			"yyyy-MM-ddTHH:mm:ss.ffff",     // ISO 8601 with microseconds
-			"yyyy-MM-ddTHH:mm:ss.fff",       // ISO 8601 with milliseconds
-			"yyyy-MM-ddTHH:mm:ss",           // ISO 8601
-			"yyyy-MM-dd HH:mm:ss.ffffK",     // With timezone
-			"yyyy-MM-dd HH:mm:ss.fffK",      // With timezone
-			"yyyy-MM-dd HH:mm:ssK"           // With timezone
-		};
-
-		// Try parsing with exact formats first (using InvariantCulture to avoid locale issues)
-		foreach (var format in formats)
-		{
-			if (DateTime.TryParseExact(timestampStr, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-			{
-				return true;
-			}
-		}
-
-		// Fallback: Try parsing with InvariantCulture (handles ISO formats better)
-		if (DateTime.TryParse(timestampStr, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-		{
-			return true;
-		}
-
-		// Last resort: Try with current culture (but this may cause issues)
-		if (DateTime.TryParse(timestampStr, out result))
-		{
-			return true;
-		}
-
-		result = DateTime.Now;
-		return false;
-	}
 }
-

@@ -22,7 +22,11 @@
                     x:Name="LogViewer1"
                     Tag="{Binding ElementName=LogViewer1}"
                     ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
-                    MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"/>
+                    MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
+                    <dj:LogViewerBase.IdResolver>
+                        <helpers:FileLineIdResolver />
+                    </dj:LogViewerBase.IdResolver>
+                </dj:LogViewerBase>
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -37,6 +41,8 @@
                 <MenuItem Header="{helpers:Resource Key=Menu_OpenFile, DefaultValue=_Open File...}" 
                           Command="{Binding OpenFileCommand}" 
                           InputGestureText="Ctrl+O"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_OpenFileWithMapping, DefaultValue=Open File with Column _Mapping...}"
+                          Command="{Binding OpenFileWithMappingCommand}"/>
                 <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_Exit, DefaultValue=E_xit}" 
                           Command="{Binding ExitCommand}" 

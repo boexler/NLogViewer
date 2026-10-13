@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Models;
+using Sentinel.LogViewer.Parsers;
+using Sentinel.LogViewer.Services;
 
 namespace Sentinel.LogViewer.ViewModels;
 
@@ -18,6 +20,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	private readonly TextFileFormat _format;
 	private readonly List<string> _sampleLines;
 	private readonly string _filePath;
+	private string _separator;
 	private bool _hasHeaderLine;
 	private bool _saveForPattern;
 	private string _filePattern = string.Empty;
@@ -30,6 +33,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		_sampleLines = sampleLines ?? throw new ArgumentNullException(nameof(sampleLines));
 		_filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
 
+		_separator = format.Separator;
 		_hasHeaderLine = format.HasHeaderLine;
 		_filePattern = System.IO.Path.GetFileName(filePath);
 
@@ -127,9 +131,35 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	public List<string> FieldTypes { get; } = new() { "None", "Timestamp", "Level", "Logger", "Message" };
 
 	/// <summary>
-	/// Gets the detected separator
+	/// Gets the selectable separators by display name
 	/// </summary>
-	public string Separator => _format.Separator;
+	public Dictionary<string, string> Separators { get; } = new()
+	{
+		{ "Tab", "\t" },
+		{ "Pipe with spaces ( | )", " | " },
+		{ "Pipe (|)", "|" },
+		{ "Comma (,)", "," },
+		{ "Semicolon (;)", ";" },
+		{ "Spaces", TextLineSplitter.SpacesSeparator }
+	};
+
+	/// <summary>
+	/// Gets or sets the separator; changing it re-splits the columns and clears their mapping
+	/// </summary>
+	public string Separator
+	{
+		get => _separator;
+		set
+		{
+			if (_separator != value)
+			{
+				_separator = value;
+				OnPropertyChanged();
+				InitializeColumns();
+				UpdatePreview();
+			}
+		}
+	}
 
 	/// <summary>
 	/// Gets the final format configuration
@@ -160,10 +190,11 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 
 			return new TextFileFormat
 			{
-				Separator = _format.Separator,
+				Separator = Separator,
+				QuotedFields = TextFileFormatDetector.DetectQuotedFields(DataLines(), Separator),
 				HasHeaderLine = HasHeaderLine,
 				StartLineIndex = HasHeaderLine ? 1 : 0,
-				ColumnCount = _format.ColumnCount,
+				ColumnCount = Columns.Count,
 				ColumnMapping = mapping
 			};
 		}
@@ -177,23 +208,25 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		var columns = new ObservableCollection<ColumnMappingItem>();
 
 		// Get sample data line
-		var dataLines = _sampleLines.Skip(_format.StartLineIndex).Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
-		if (dataLines.Count == 0)
+		var sampleLine = DataLines().FirstOrDefault();
+		if (sampleLine == null)
 			return;
 
-		var sampleLine = dataLines[0];
-		var parts = SplitLine(sampleLine, _format.Separator);
+		// The detected column count and mapping only fit the detected separator.
+		var isDetectedSeparator = Separator == _format.Separator;
+		var parts = TextLineSplitter.Split(sampleLine, Separator, maxColumns: isDetectedSeparator ? _format.ColumnCount : 0);
+		var mapping = isDetectedSeparator ? _format.ColumnMapping : new ColumnMapping();
 
 		for (int i = 0; i < parts.Length; i++)
 		{
 			var mappedField = "None";
-			if (i == _format.ColumnMapping.TimestampColumn)
+			if (i == mapping.TimestampColumn)
 				mappedField = "Timestamp";
-			else if (i == _format.ColumnMapping.LevelColumn)
+			else if (i == mapping.LevelColumn)
 				mappedField = "Level";
-			else if (i == _format.ColumnMapping.LoggerColumn)
+			else if (i == mapping.LoggerColumn)
 				mappedField = "Logger";
-			else if (i == _format.ColumnMapping.MessageColumn)
+			else if (i == mapping.MessageColumn)
 				mappedField = "Message";
 
 			var column = new ColumnMappingItem
@@ -222,14 +255,10 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	{
 		var preview = new ObservableCollection<ColumnMappingItem>();
 
-		var dataLines = _sampleLines.Skip(HasHeaderLine ? 1 : 0)
-			.Where(l => !string.IsNullOrWhiteSpace(l))
-			.Take(5)
-			.ToList();
-
-		foreach (var line in dataLines)
+		var format = FinalFormat;
+		foreach (var line in DataLines().Take(5))
 		{
-			var parts = SplitLine(line, _format.Separator);
+			var parts = PlainTextParser.SplitLine(line, format);
 			var timestamp = GetColumnValue(parts, "Timestamp");
 			var level = GetColumnValue(parts, "Level");
 			var logger = GetColumnValue(parts, "Logger");
@@ -254,14 +283,9 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		return parts[column.Index].Trim();
 	}
 
-	private string[] SplitLine(string line, string separator)
+	private IEnumerable<string> DataLines()
 	{
-		if (separator == "  ") // Multiple spaces
-		{
-			return line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-		}
-
-		return line.Split(new[] { separator }, StringSplitOptions.None);
+		return _sampleLines.Skip(HasHeaderLine ? 1 : 0).Where(l => !string.IsNullOrWhiteSpace(l));
 	}
 
 	private bool CanSave()

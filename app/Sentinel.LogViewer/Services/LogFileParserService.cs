@@ -33,8 +33,10 @@ public class LogFileParserService(
 	/// </summary>
 	/// <param name="filePath">Path to the log file</param>
 	/// <param name="progress">Progress reporter for parsing status</param>
+	/// <param name="textFormat">Format for text files; when null the saved or detected format is used</param>
 	/// <returns>List of parsed log events</returns>
-	public async Task<List<LogEventInfo>> ParseFileAsync(string filePath, IProgress<(int current, int total)>? progress = null)
+	public async Task<List<LogEventInfo>> ParseFileAsync(string filePath, IProgress<(int current, int total)>? progress = null,
+		TextFileFormat? textFormat = null)
 	{
 		var extension = Path.GetExtension(filePath).ToLowerInvariant();
 		var fileName = Path.GetFileName(filePath);
@@ -52,7 +54,7 @@ public class LogFileParserService(
 					case ".txt":
 					case ".log":
 					default:
-						return ParseTextFile(filePath, fileName, progress);
+						return ParseTextFile(filePath, textFormat ?? GetTextFileFormat(filePath), progress);
 				}
 			}
 			catch (Exception ex)
@@ -197,40 +199,23 @@ public class LogFileParserService(
 	/// <summary>
 	/// Parses a text file line by line with progress reporting
 	/// </summary>
-	private List<LogEventInfo> ParseTextFile(string filePath, string fileName, IProgress<(int current, int total)>? progress)
+	private List<LogEventInfo> ParseTextFile(string filePath, TextFileFormat? format, IProgress<(int current, int total)>? progress)
 	{
-		// Get format configuration
-		var format = GetTextFileFormat(filePath);
+		const int progressInterval = 1000;
 
-		var results = new List<LogEventInfo>();
-		const int batchSize = 1000; // Process in batches for progress updates
-		
 		// Get total line count for progress calculation
 		var totalLines = File.ReadLines(filePath).Count();
-		
-		using var reader = new StreamReader(filePath);
-		string? line;
-		int currentLine = 0;
-		var batch = new List<string>(batchSize);
-		
-		while ((line = reader.ReadLine()) != null)
+
+		// The parser needs the file as one sequence: entries may span any number of lines.
+		var lines = File.ReadLines(filePath).Select((line, index) =>
 		{
-			currentLine++;
-			batch.Add(line);
-			
-			// Process batch when full or at end
-			if (batch.Count >= batchSize || currentLine == totalLines)
-			{
-				var logEvents = _textParser.Parse(batch.ToArray(), format);
-				results.AddRange(logEvents);
-				batch.Clear();
-				
-				// Report progress
+			var currentLine = index + 1;
+			if (currentLine % progressInterval == 0 || currentLine == totalLines)
 				progress?.Report((currentLine, totalLines));
-			}
-		}
-		
-		return results;
+			return line;
+		});
+
+		return _textParser.Parse(lines, format);
 	}
 
 	public void Dispose()

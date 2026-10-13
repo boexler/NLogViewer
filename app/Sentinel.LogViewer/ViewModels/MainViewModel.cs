@@ -63,7 +63,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Initialize commands
 		StartListeningCommand = new AsyncRelayCommand(StartListeningAsync, () => !_isListening);
 		StopListeningCommand = new RelayCommand(StopListening, () => _isListening);
-		OpenFileCommand = new RelayCommand(OpenFile);
+		OpenFileCommand = new RelayCommand(() => OpenFile(askColumnMapping: false));
+		OpenFileWithMappingCommand = new RelayCommand(() => OpenFile(askColumnMapping: true));
 		OpenSettingsCommand = new RelayCommand(OpenSettings);
 		ExitCommand = new RelayCommand(() => System.Windows.Application.Current.Shutdown());
 		AboutCommand = new RelayCommand(ShowAbout);
@@ -287,6 +288,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand StartListeningCommand { get; }
 	public ICommand StopListeningCommand { get; }
 	public ICommand OpenFileCommand { get; }
+	public ICommand OpenFileWithMappingCommand { get; }
 	public ICommand OpenSettingsCommand { get; }
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
@@ -417,7 +419,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
-	private void OpenFile()
+	private void OpenFile(bool askColumnMapping)
 	{
 		var dialog = new OpenFileDialog
 		{
@@ -427,13 +429,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		};
 
 		if (dialog.ShowDialog() == true && dialog.FileNames.Length > 0)
-			BeginImportPathsFromUi(dialog.FileNames);
+			BeginImportPathsFromUi(dialog.FileNames, askColumnMapping);
 	}
 
 	/// <summary>
 	/// Starts unified import for paths given by the open-file dialog or drag-drop (filters and asks destination).
 	/// </summary>
-	public void BeginImportPathsFromUi(IEnumerable<string> rawPaths)
+	/// <param name="rawPaths">Paths to import</param>
+	/// <param name="askColumnMapping">Whether to show the column mapping dialog for text files</param>
+	public void BeginImportPathsFromUi(IEnumerable<string> rawPaths, bool askColumnMapping = false)
 	{
 		var filtered = (rawPaths ?? Enumerable.Empty<string>())
 			.Where(IsSupportedImportPath)
@@ -452,6 +456,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		if (!TryResolveImportBatchContext(filtered, out var ctx) || ctx == null)
 			return;
 
+		ctx.AskColumnMapping = askColumnMapping;
 		_ = RunImportBatchAsync(filtered, ctx);
 	}
 
@@ -581,24 +586,27 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// Runs format detection (if needed) and parsing for a single path in a batch.
+	/// Parses a single path in a batch, asking for the column mapping first when requested.
 	/// </summary>
 	private async Task ImportSinglePathAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
 	{
 		var extension = Path.GetExtension(filePath).ToLowerInvariant();
-		if (extension == ".txt" || extension == ".log" || extension == "")
-			await ImportTextFormatFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
-		else
-			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
+		var isTextFile = extension == ".txt" || extension == ".log" || extension == "";
+		var format = ctx.AskColumnMapping && isTextFile
+			? await AskColumnMappingAsync(filePath).ConfigureAwait(true)
+			: null;
+
+		await ImportParseFlowAsync(filePath, ctx, index, total, format).ConfigureAwait(true);
 	}
 
 	/// <summary>
-	/// Text / extensionless log paths: detect format, optionally show column-mapping, then parse.
+	/// Shows the column-mapping dialog, preset with the saved or detected format.
 	/// </summary>
-	private async Task ImportTextFormatFlowAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
+	/// <returns>The format chosen by the user, or null when the dialog was cancelled</returns>
+	private async Task<TextFileFormat?> AskColumnMappingAsync(string filePath)
 	{
 		var dispatcher = System.Windows.Application.Current.Dispatcher;
-		TextFileFormat? format;
+		TextFileFormat? format = null;
 		try
 		{
 			format = await Task.Run(() => _fileParserService.GetTextFileFormat(filePath)).ConfigureAwait(false);
@@ -610,30 +618,16 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				StatusMessage = _localizationService.GetString("Import_FormatDetectError", "Error detecting file format") +
 				                $": {ex.Message}";
 			}).Task.ConfigureAwait(false);
-			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
-			return;
 		}
 
-		if (format != null && format.ColumnMapping.IsValid())
-		{
-			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
-			return;
-		}
+		// Nothing detected: start with a tab separator and let the user pick the right one.
+		format ??= new TextFileFormat { Separator = "\t" };
 
 		var sampleLines =
 			await Task.Run(() => File.ReadLines(filePath).Take(20).ToList()).ConfigureAwait(false);
 
-		if (format == null)
+		return await dispatcher.InvokeAsync(() =>
 		{
-			var detector = App.ServiceProvider?.GetRequiredService<TextFileFormatDetector>();
-			format = detector?.DetectFormat(filePath);
-		}
-
-		TextFileFormat? mappedFormat = await dispatcher.InvokeAsync(() =>
-		{
-			if (format == null)
-				return null;
-
 			var viewModel = new ColumnMappingViewModel(format, sampleLines, filePath);
 			var mappingWindow = new ColumnMappingWindow(viewModel);
 			var mainWindow = System.Windows.Application.Current.MainWindow;
@@ -648,55 +642,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 			return userFormat;
 		}).Task.ConfigureAwait(false);
-
-		if (mappedFormat != null)
-			await ParseAndApplyWithFormatAsync(filePath, mappedFormat, ctx, index, total).ConfigureAwait(true);
-		else
-			await ImportDirectParseFlowAsync(filePath, ctx, index, total).ConfigureAwait(true);
 	}
 
 	/// <summary>
-	/// Parses using an explicit text format and applies to the tab batch target.
+	/// Parses the file and applies the result to the batch target.
 	/// </summary>
-	private async Task ParseAndApplyWithFormatAsync(string filePath, TextFileFormat format,
-		LogFileImportBatchContext ctx, int index, int total)
-	{
-		var dispatcher = System.Windows.Application.Current.Dispatcher;
-
-		var progress = new Progress<(int current, int total)>(p =>
-		{
-			var percentage = p.total > 0 ? p.current * 100 / p.total : 0;
-			dispatcher.Invoke(() => { LoadingProgress = FormatParseProgress(filePath, index, total, p.current, p.total, percentage); });
-		});
-
-		await Task.Run(() => _fileParserService.SaveTextFileFormat(Path.GetFileName(filePath), format)).ConfigureAwait(false);
-
-		List<LogEventInfo> logEvents;
-		try
-		{
-			logEvents = await _fileParserService.ParseFileAsync(filePath, progress).ConfigureAwait(false);
-		}
-		catch (Exception ex)
-		{
-			await dispatcher.InvokeAsync(() =>
-			{
-				StatusMessage = _localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}";
-			}).Task.ConfigureAwait(false);
-			return;
-		}
-
-		await dispatcher.InvokeAsync(() =>
-		{
-			ApplyParsedLogs(logEvents, filePath, ctx);
-			StatusMessage = FormatLoadedStatus(filePath, logEvents.Count);
-			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
-		}).Task.ConfigureAwait(false);
-	}
-
-	/// <summary>
-	/// Parses without injecting a new text format and applies to the batch target.
-	/// </summary>
-	private async Task ImportDirectParseFlowAsync(string filePath, LogFileImportBatchContext ctx, int index, int total)
+	/// <param name="textFormat">Format for text files; when null the saved or detected format is used</param>
+	private async Task ImportParseFlowAsync(string filePath, LogFileImportBatchContext ctx, int index, int total,
+		TextFileFormat? textFormat)
 	{
 		var dispatcher = System.Windows.Application.Current.Dispatcher;
 
@@ -709,7 +662,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		List<LogEventInfo> logEvents;
 		try
 		{
-			logEvents = await _fileParserService.ParseFileAsync(filePath, progress).ConfigureAwait(false);
+			logEvents = await _fileParserService.ParseFileAsync(filePath, progress, textFormat).ConfigureAwait(false);
 		}
 		catch (Exception ex)
 		{
