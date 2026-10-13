@@ -17,11 +17,11 @@ public class TextFileFormatConfigService
 
 	public TextFileFormatConfigService()
 	{
-		var appDataPath = Path.Combine(
-			Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-			ProductNames.Technical);
+		var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+		var appDataPath = Path.Combine(localAppData, ProductNames.Technical);
 		Directory.CreateDirectory(appDataPath);
 		_configPath = Path.Combine(appDataPath, "textfileformats.json");
+		ConfigurationService.MigrateLegacyAppDataFile(localAppData, _configPath);
 	}
 
 	/// <summary>

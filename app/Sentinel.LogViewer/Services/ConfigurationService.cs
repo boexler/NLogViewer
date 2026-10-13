@@ -68,25 +68,26 @@ namespace Sentinel.LogViewer.Services
             var appDataPath = Path.Combine(localAppData, ProductNames.Technical);
             Directory.CreateDirectory(appDataPath);
             var configPath = Path.Combine(appDataPath, "appsettings.json");
-            MigrateLegacyAppDataSettings(localAppData, configPath);
+            MigrateLegacyAppDataFile(localAppData, configPath);
             return configPath;
         }
 
         /// <summary>
-        /// Copies <c>appsettings.json</c> from the pre-rename AppData folder once when the new folder has none.
+        /// Copies the file named like <paramref name="newFilePath"/> from the pre-rename AppData folder once
+        /// when the new folder has none.
         /// </summary>
-        private static void MigrateLegacyAppDataSettings(string localAppData, string newConfigPath)
+        internal static void MigrateLegacyAppDataFile(string localAppData, string newFilePath)
         {
-            if (File.Exists(newConfigPath))
+            if (File.Exists(newFilePath))
                 return;
 
-            var legacyConfigPath = Path.Combine(localAppData, ProductNames.LegacyAppDataFolder, "appsettings.json");
-            if (!File.Exists(legacyConfigPath))
+            var legacyFilePath = Path.Combine(localAppData, ProductNames.LegacyAppDataFolder, Path.GetFileName(newFilePath));
+            if (!File.Exists(legacyFilePath))
                 return;
 
             try
             {
-                File.Copy(legacyConfigPath, newConfigPath);
+                File.Copy(legacyFilePath, newFilePath);
             }
             catch (Exception)
             {

@@ -108,6 +108,35 @@ namespace Sentinel.LogViewer.Tests.Services
             }
         }
 
+        [Theory]
+        [InlineData("appsettings.json")]
+        [InlineData("textfileformats.json")]
+        public void MigrateLegacyAppDataFile_CopiesFromLegacyFolderOnce(string fileName)
+        {
+            var localAppData = Path.Combine(Path.GetTempPath(), "nlv_cfg_" + Guid.NewGuid().ToString("N"));
+            var legacyDir = Path.Combine(localAppData, ProductNames.LegacyAppDataFolder);
+            var newDir = Path.Combine(localAppData, ProductNames.Technical);
+            Directory.CreateDirectory(legacyDir);
+            Directory.CreateDirectory(newDir);
+            var legacyPath = Path.Combine(legacyDir, fileName);
+            var newPath = Path.Combine(newDir, fileName);
+            try
+            {
+                File.WriteAllText(legacyPath, "legacy");
+                ConfigurationService.MigrateLegacyAppDataFile(localAppData, newPath);
+                Assert.Equal("legacy", File.ReadAllText(newPath));
+
+                // An existing file in the new folder must never be overwritten.
+                File.WriteAllText(newPath, "current");
+                ConfigurationService.MigrateLegacyAppDataFile(localAppData, newPath);
+                Assert.Equal("current", File.ReadAllText(newPath));
+            }
+            finally
+            {
+                TryDeleteDir(localAppData);
+            }
+        }
+
         private static void TryDeleteDir(string dir)
         {
             try
