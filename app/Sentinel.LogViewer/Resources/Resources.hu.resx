@@ -259,6 +259,21 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Frissítés elérhető: {0}</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Lap bezárása</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Az összes többi lap bezárása</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Szűrt lista mentése...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Az összes többi lap bezárása</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>Biztosan bezárja az összes többi lapot?</value>
+  </data>
 </root>
 
 

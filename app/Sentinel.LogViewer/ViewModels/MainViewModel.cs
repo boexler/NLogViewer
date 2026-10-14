@@ -74,7 +74,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		ExitCommand = new RelayCommand(() => System.Windows.Application.Current.Shutdown());
 		AboutCommand = new RelayCommand(ShowAbout);
 		ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
-		ExportLogsCommand = new RelayCommand(ExportLogs, () => SelectedTab != null);
+		ExportLogsCommand = new RelayCommand(() => ExportLogs(SelectedTab), () => SelectedTab != null);
+		CloseTabCommand = new RelayCommand<LogTabViewModel>(CloseTab);
+		CloseOtherTabsCommand = new RelayCommand<LogTabViewModel>(CloseOtherTabs, _ => LogTabs.Count > 1);
+		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
 
@@ -158,6 +161,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
 		((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
+		((RelayCommand<LogTabViewModel>)CloseOtherTabsCommand).RaiseCanExecuteChanged();
 	}
 
 	/// <summary>
@@ -177,16 +181,67 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		    MessageBoxResult.Yes)
 			return;
 
-		var index = LogTabs.IndexOf(SelectedTab);
+		CloseTab(SelectedTab);
+	}
+
+	/// <summary>
+	/// Removes a tab without asking (tab header close button and context menu).
+	/// </summary>
+	private void CloseTab(LogTabViewModel? tab)
+	{
+		var index = tab == null ? -1 : LogTabs.IndexOf(tab);
 		if (index < 0)
 			return;
 
+		var wasSelected = ReferenceEquals(tab, SelectedTab);
 		LogTabs.RemoveAt(index);
 
 		if (LogTabs.Count == 0)
 			SelectedTab = null;
-		else
+		else if (wasSelected)
 			SelectedTab = LogTabs[Math.Min(index, LogTabs.Count - 1)];
+	}
+
+	/// <summary>
+	/// Removes every tab except the given one after the user confirms.
+	/// </summary>
+	private void CloseOtherTabs(LogTabViewModel? tab)
+	{
+		if (tab == null || !LogTabs.Contains(tab) || LogTabs.Count < 2)
+			return;
+
+		var caption = _localizationService.GetString("Confirm_CloseOtherTabs_Caption", "Close all other tabs");
+		var message = _localizationService.GetString(
+			"Confirm_CloseOtherTabs_Message",
+			"Do you really want to close all other tabs?");
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		    MessageBoxResult.Yes)
+			return;
+
+		foreach (var other in LogTabs.Where(t => !ReferenceEquals(t, tab)).ToList())
+			LogTabs.Remove(other);
+
+		SelectedTab = tab;
+	}
+
+	/// <summary>
+	/// Saves the entries the tab currently shows (filters applied).
+	/// </summary>
+	private void SaveFilteredList(LogTabViewModel? tab)
+	{
+		if (tab == null)
+			return;
+
+		if (ReferenceEquals(tab, SelectedTab))
+		{
+			ExportLogs(tab);
+			return;
+		}
+
+		// The viewer of a tab exists once the tab has been shown, so select it before exporting.
+		SelectedTab = tab;
+		System.Windows.Application.Current.Dispatcher.InvokeAsync(() => ExportLogs(tab), DispatcherPriority.Loaded);
 	}
 
 	/// <summary>
@@ -315,6 +370,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 	public ICommand ChangeLanguageCommand { get; }
 	public ICommand ExportLogsCommand { get; }
+	public ICommand CloseTabCommand { get; }
+	public ICommand CloseOtherTabsCommand { get; }
+	public ICommand SaveFilteredListCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
 	public ICommand CloseAllTabsCommand { get; }
 
@@ -848,13 +906,13 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Exports filtered log entries from the currently selected tab to a file
 	/// </summary>
-	private void ExportLogs()
+	private void ExportLogs(LogTabViewModel? tab)
 	{
-		if (SelectedTab == null)
+		if (tab == null)
 			return;
 
 		// Generate default filename from tab header (remove whitespaces) + timestamp
-		var headerWithoutSpaces = SelectedTab.Header?.Replace(" ", string.Empty) ?? "Logs";
+		var headerWithoutSpaces = tab.Header?.Replace(" ", string.Empty) ?? "Logs";
 		var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
 		var defaultFileName = $"{headerWithoutSpaces}-{timestamp}.log";
 
@@ -869,7 +927,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		if (dialog.ShowDialog() == true)
 		{
 			var filePath = dialog.FileName;
-			var logViewer = FindLogViewerInTab();
+			var logViewer = FindLogViewerInTab(tab);
 
 			if (logViewer == null)
 			{
@@ -900,11 +958,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// Finds the LogViewer instance in the currently selected tab's visual tree
 	/// </summary>
 	/// <returns>The LogViewer instance if found, null otherwise</returns>
-	private LogViewerBase? FindLogViewerInTab()
+	private LogViewerBase? FindLogViewerInTab(LogTabViewModel tab)
 	{
-		if (SelectedTab == null)
-			return null;
-
 		// Get the main window to access the TabControl
 		var mainWindow = System.Windows.Application.Current.MainWindow;
 		if (mainWindow == null)
@@ -923,7 +978,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			// Check if this border contains a ContentControl (which is used by TabContent)
 			var contentControl = FindVisualChild<ContentControl>(border);
-			if (contentControl != null && contentControl.DataContext == SelectedTab)
+			if (contentControl != null && contentControl.DataContext == tab)
 			{
 				// Found the content control for the selected tab, now find LogViewer
 				var logViewer = FindVisualChild<LogViewerBase>(contentControl);
@@ -932,8 +987,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			}
 		}
 
-		// Fallback: Search directly in TabControl for LogViewer
-		return FindVisualChild<LogViewerBase>(tabControl);
+		// Fallback: Search directly in TabControl for LogViewer; only the selected tab's viewer is certain to be there
+		return ReferenceEquals(tab, SelectedTab) ? FindVisualChild<LogViewerBase>(tabControl) : null;
 	}
 
 	/// <summary>

@@ -16,6 +16,44 @@
         d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
     <Grid>
         <Grid.Resources>
+            <!-- Small close button in the tab header; only highlighted on hover -->
+            <Style x:Key="TabCloseButtonStyle" TargetType="Button">
+                <Setter Property="Content" Value="✕"/>
+                <Setter Property="Width" Value="16"/>
+                <Setter Property="Height" Value="16"/>
+                <Setter Property="Margin" Value="6,0,-2,0"/>
+                <Setter Property="FontSize" Value="9"/>
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="Chrome" Background="Transparent" CornerRadius="3">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Chrome" Property="Background" Value="#33000000"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!-- Tab context menu; the TabItem's Tag holds the MainViewModel -->
+            <ContextMenu x:Key="TabContextMenu" x:Shared="False">
+                <MenuItem Header="{helpers:Resource Key=Tab_Close, DefaultValue=Close tab}"
+                          Command="{Binding PlacementTarget.Tag.CloseTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_CloseOthers, DefaultValue=Close all other tabs}"
+                          Command="{Binding PlacementTarget.Tag.CloseOtherTabsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <Separator/>
+                <MenuItem Header="{helpers:Resource Key=Tab_SaveFilteredList, DefaultValue=Save filtered list...}"
+                          Command="{Binding PlacementTarget.Tag.SaveFilteredListCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+            </ContextMenu>
             <DataTemplate x:Key="TabControlContentTemplate" DataType="models:LogTabViewModel">
                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                 <dj:LogViewerBase 
@@ -100,6 +138,8 @@
             <TabControl.ItemContainerStyle>
                 <Style TargetType="TabItem">
                     <Setter Property="AllowDrop" Value="True"/>
+                    <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TabControl}}"/>
+                    <Setter Property="ContextMenu" Value="{StaticResource TabContextMenu}"/>
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LogTabItem_PreviewMouseLeftButtonDown"/>
                     <EventSetter Event="PreviewMouseLeftButtonUp" Handler="LogTabItem_PreviewMouseLeftButtonUp"/>
                     <EventSetter Event="PreviewMouseMove" Handler="LogTabItem_PreviewMouseMove"/>
@@ -116,6 +156,10 @@
                         <TextBlock Text="{Binding LogCount}" 
                                    FontWeight="Bold"/>
                         <TextBlock Text=")" />
+                        <Button Style="{StaticResource TabCloseButtonStyle}"
+                                Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
+                                CommandParameter="{Binding}"
+                                ToolTip="{helpers:Resource Key=Tab_Close, DefaultValue=Close tab}"/>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

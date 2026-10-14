@@ -259,6 +259,21 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Dostępna aktualizacja do wersji {0}</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Zamknij kartę</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Zamknij wszystkie inne karty</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Zapisz przefiltrowaną listę...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Zamknij wszystkie inne karty</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>Czy na pewno chcesz zamknąć wszystkie inne karty?</value>
+  </data>
 </root>
 
 

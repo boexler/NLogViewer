@@ -259,5 +259,20 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Actualización a {0} disponible</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Cerrar pestaña</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Cerrar las demás pestañas</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Guardar lista filtrada...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Cerrar las demás pestañas</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>¿Realmente desea cerrar las demás pestañas?</value>
+  </data>
 </root>
 
