@@ -21,6 +21,7 @@ using Microsoft.Win32;
 using NLog;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer;
 
 namespace Sentinel.LogViewer.ViewModels;
@@ -34,6 +35,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private readonly LogFileParserService _fileParserService;
 	private readonly ConfigurationService _configService;
 	private readonly LocalizationService _localizationService;
+	private readonly UpdateService _updateService;
+	private string? _updateNotice;
 	private bool _isListening;
 	private string _listeningStatus = string.Empty;
 	private string _statusMessage = "Ready";
@@ -50,12 +53,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		UdpLogReceiverService udpReceiverService,
 		LogFileParserService fileParserService,
 		ConfigurationService configService,
-		LocalizationService localizationService)
+		LocalizationService localizationService,
+		UpdateService updateService)
 	{
 		_udpReceiverService = udpReceiverService ?? throw new ArgumentNullException(nameof(udpReceiverService));
 		_fileParserService = fileParserService ?? throw new ArgumentNullException(nameof(fileParserService));
 		_configService = configService ?? throw new ArgumentNullException(nameof(configService));
 		_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
+		_updateService = updateService ?? throw new ArgumentNullException(nameof(updateService));
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
@@ -292,6 +297,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand OpenSettingsCommand { get; }
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
+
+	/// <summary>
+	/// Status bar text announcing an available update, or null
+	/// </summary>
+	public string? UpdateNotice
+	{
+		get => _updateNotice;
+		private set
+		{
+			if (_updateNotice != value)
+			{
+				_updateNotice = value;
+				OnPropertyChanged();
+			}
+		}
+	}
 	public ICommand ChangeLanguageCommand { get; }
 	public ICommand ExportLogsCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
@@ -353,6 +374,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private void LoadConfiguration()
 	{
 		var config = _configService.LoadConfiguration();
+
+		if (config.CheckForUpdates && UpdateNotice == null)
+			_ = CheckForUpdatesInBackgroundAsync(UpdateService.IncludesPrereleases(config));
             
 		if (config.AutoStartListening)
 		{
@@ -777,8 +801,29 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	private void ShowAbout()
 	{
-		// TODO: Show about dialog
-		StatusMessage = "About dialog not yet implemented";
+		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
+		var aboutWindow = provider.GetRequiredService<AboutWindow>();
+		aboutWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
+	}
+
+	/// <summary>
+	/// Shows a status bar notice when GitHub has a newer release. Failures are ignored; the About dialog reports them.
+	/// </summary>
+	private async Task CheckForUpdatesInBackgroundAsync(bool includePrereleases)
+	{
+		try
+		{
+			var update = await _updateService.CheckForUpdateAsync(includePrereleases);
+			if (update != null)
+			{
+				UpdateNotice = string.Format(System.Globalization.CultureInfo.CurrentCulture,
+					_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
+			}
+		}
+		catch (Exception)
+		{
+			// Offline or rate limited: no notice.
+		}
 	}
 
 	private void ChangeLanguage(string? languageCode)

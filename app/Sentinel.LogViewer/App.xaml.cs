@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels;
 
 namespace Sentinel.LogViewer
@@ -49,6 +50,7 @@ namespace Sentinel.LogViewer
             services.AddSingleton<LocalizationService>();
             services.AddSingleton<TextFileFormatDetector>();
             services.AddSingleton<TextFileFormatConfigService>();
+            services.AddSingleton<UpdateService>();
 
             // Register services as scoped (one per window/view)
             services.AddScoped<UdpLogReceiverService>();
@@ -63,11 +65,13 @@ namespace Sentinel.LogViewer
             services.AddScoped<MainViewModel>();
             services.AddScoped<SettingsViewModel>();
             services.AddScoped<LanguageSelectionViewModel>();
+            services.AddTransient<AboutViewModel>();
 
             // Register Windows as transient (new window each time)
             services.AddTransient<MainWindow>();
             services.AddTransient<SettingsWindow>();
             services.AddTransient<LanguageSelectionWindow>();
+            services.AddTransient<AboutWindow>();
 
 #if DEBUG
             services.AddSingleton<TestLoggingService>();

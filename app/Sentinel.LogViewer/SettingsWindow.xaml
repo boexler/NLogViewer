@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
         mc:Ignorable="d"
         Title="Settings" 
-        Height="450" 
+        Height="520" 
         Width="600"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize">
@@ -86,6 +87,14 @@
                 <CheckBox Content="Auto-start listening on application start" 
                           IsChecked="{Binding AutoStartListening}"
                           Margin="0,10,0,0" />
+
+                <CheckBox Content="{helpers:Resource Key=Settings_CheckForUpdates, DefaultValue=Automatically check for updates}"
+                          IsChecked="{Binding CheckForUpdates}"
+                          Margin="0,10,0,0" />
+
+                <CheckBox Content="{helpers:Resource Key=Settings_IncludePrereleaseUpdates, DefaultValue=Also offer prerelease versions}"
+                          IsChecked="{Binding IncludePrereleaseUpdates}"
+                          Margin="0,5,0,0" />
             </StackPanel>
         </GroupBox>
 

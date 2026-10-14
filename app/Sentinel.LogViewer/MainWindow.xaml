@@ -144,6 +144,23 @@
                 <TextBlock Text="{Binding StatusMessage}" />
             </StatusBarItem>
             <Separator />
+            <!-- Update notice -->
+            <StatusBarItem>
+                <StatusBarItem.Style>
+                    <Style TargetType="StatusBarItem">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding UpdateNotice}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StatusBarItem.Style>
+                <TextBlock>
+                    <Hyperlink Command="{Binding AboutCommand}">
+                        <Run Text="{Binding UpdateNotice, Mode=OneWay}" />
+                    </Hyperlink>
+                </TextBlock>
+            </StatusBarItem>
             <!-- Timestamp (Right) -->
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="{Binding LastLogTimestamp}" />
