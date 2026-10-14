@@ -21,42 +21,41 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v7
-      with:
-        fetch-depth: 0
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: '8.x'
 
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v4.7.0
-      with:
-        versionSpec: '6.x'
-
-    - name: Run GitVersion
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v4.7.0
-
     - name: Set version
       id: version
       shell: pwsh
+      # The tag is the version. GitVersion would not take a prerelease tag such as v5.0.0-beta.1
+      # as-is on master, so it is switched off for all builds below (DisableGitVersionTask).
+      # Only Chocolatey flattens beta.1 to beta1 (community feed does not accept SemVer 2 dots).
       run: |
-        $version = "${{ steps.gitversion.outputs.fullSemVer }}"
-        $mp = "${{ steps.gitversion.outputs.majorMinorPatch }}"
+        $tag = "${{ github.ref_name }}"
+        $version = $tag -replace '^[vV]', ''
+        if ($version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$') {
+          throw "Tag '$tag' is not a version like v1.2.3 or v1.2.3-beta.1."
+        }
+        $mp, $prerelease = $version -split '-', 2
+        $chocolateyVersion = if ($prerelease) { "$mp-$($prerelease -replace '\.', '')" } else { $version }
         Add-Content $env:GITHUB_ENV "VERSION=$version"
+        Add-Content $env:GITHUB_ENV "CHOCO_VERSION=$chocolateyVersion"
         Add-Content $env:GITHUB_ENV "INSTALLER_VERSION=$mp.0"
         Add-Content $env:GITHUB_OUTPUT "version=$version"
+        Add-Content $env:GITHUB_OUTPUT "chocolatey_version=$chocolateyVersion"
 
     - name: Build solution
       # Sentinel.LogViewer.CI.slnf omits WiX so compile/test does not harvest a 1.0.0.0 MSI.
-      run: dotnet build Sentinel.LogViewer.CI.slnf -c Release -m:1
+      run: dotnet build Sentinel.LogViewer.CI.slnf -c Release -m:1 -p:DisableGitVersionTask=true -p:Version=$env:VERSION
 
     - name: Run tests
       run: dotnet test Sentinel.LogViewer.CI.slnf -c Release --no-build --verbosity normal
 
     - name: Pack NuGet packages
-      run: dotnet pack Sentinel.LogViewer.CI.slnf -c Release --no-build -o nuget
+      run: dotnet pack Sentinel.LogViewer.CI.slnf -c Release --no-build -o nuget -p:DisableGitVersionTask=true -p:Version=$env:VERSION
 
     - name: Publish self-contained application
       run: |
@@ -65,6 +64,7 @@ jobs:
           -p:SelfContained=true `
           -p:PublishSingleFile=true `
           -p:RuntimeIdentifier=win-x64 `
+          -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
           -p:IncludeNativeLibrariesForSelfExtract=true `
           -o publish/self-contained
@@ -75,6 +75,7 @@ jobs:
           -c Release `
           -p:SelfContained=false `
           -p:RuntimeIdentifier=win-x64 `
+          -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
           -o publish/framework-dependent
 
@@ -96,6 +97,8 @@ jobs:
         dotnet build installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
+          -p:DisableGitVersionTask=true `
+          -p:Version=$env:VERSION `
           -p:InstallerVersion=$env:INSTALLER_VERSION
         Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
@@ -105,7 +108,7 @@ jobs:
         GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       run: |
         ./chocolatey/pack.ps1 `
-          -Version $env:VERSION `
+          -Version $env:CHOCO_VERSION `
           -MsiPath "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi" `
           -OutputDirectory chocolatey-packages
 
@@ -140,7 +143,7 @@ jobs:
     - name: Upload Chocolatey package
       uses: actions/upload-artifact@v7
       with:
-        name: Chocolatey-Sentinel.LogViewer-${{ steps.version.outputs.version }}
+        name: Chocolatey-Sentinel.LogViewer-${{ steps.version.outputs.chocolatey_version }}
         path: chocolatey-packages
         if-no-files-found: error
 
@@ -171,10 +174,13 @@ jobs:
         if ($LASTEXITCODE -eq 0) {
           gh release upload $tag @assets --clobber
         } else {
+          # A version with a prerelease label (e.g. 5.0.0-beta.1) must not become the latest release.
+          $prereleaseFlag = if ($env:VERSION.Contains('-')) { '--prerelease' } else { $null }
           gh release create $tag @assets `
             --title $title `
             --generate-notes `
-            --target ${{ github.sha }}
+            --target ${{ github.sha }} `
+            $prereleaseFlag
         }
 
     - name: Push NuGet packages
