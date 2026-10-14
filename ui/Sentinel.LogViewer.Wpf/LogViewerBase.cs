@@ -586,6 +586,10 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         {
             if (LogEvents?.View is not CollectionView collectionView) return;
 
+            var listView = PART_ListView;
+            if (listView != null)
+                _scrollAnchorKeeper.Capture(listView);
+
             collectionView.Filter = item =>
             {
                 if (item is not LogEventInfo logEvent) return true;
@@ -648,6 +652,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             
             // Refresh the view to apply the filter
             collectionView.Refresh();
+            if (listView != null)
+                _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter);
         }
         
         /// <summary>
@@ -1676,6 +1682,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         private double _originalTimeStampColumnWidth = double.NaN; // Auto
         private double _originalLoggerNameColumnWidth = double.NaN; // Auto
         private ColumnWidthFitter? _columnWidthFitter;
+        private readonly ScrollAnchorKeeper _scrollAnchorKeeper = new();
 
         /// <summary>
         /// Reference to the ListView template part for programmatic access
