@@ -259,6 +259,21 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Actualizare la {0} disponibilă</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Închide fila</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Închide toate celelalte file</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Salvează lista filtrată...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Închide toate celelalte file</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>Sigur doriți să închideți toate celelalte file?</value>
+  </data>
 </root>
 
 

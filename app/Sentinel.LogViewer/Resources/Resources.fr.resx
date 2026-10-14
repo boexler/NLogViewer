@@ -259,5 +259,20 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Mise à jour vers {0} disponible</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Fermer l'onglet</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Fermer les autres onglets</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Enregistrer la liste filtrée...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Fermer les autres onglets</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>Voulez-vous vraiment fermer les autres onglets ?</value>
+  </data>
 </root>
 

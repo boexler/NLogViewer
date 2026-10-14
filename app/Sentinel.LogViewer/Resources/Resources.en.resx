@@ -259,5 +259,20 @@
   <data name="Status_UpdateAvailable" xml:space="preserve">
     <value>Update to {0} available</value>
   </data>
+  <data name="Tab_Close" xml:space="preserve">
+    <value>Close tab</value>
+  </data>
+  <data name="Tab_CloseOthers" xml:space="preserve">
+    <value>Close all other tabs</value>
+  </data>
+  <data name="Tab_SaveFilteredList" xml:space="preserve">
+    <value>Save filtered list...</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Caption" xml:space="preserve">
+    <value>Close all other tabs</value>
+  </data>
+  <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
+    <value>Do you really want to close all other tabs?</value>
+  </data>
 </root>
 
