@@ -25,8 +25,8 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Material Controls -->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
+                        <!-- Material Controls; wrap into a second line when the control is narrow -->
+                        <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8">
                             <materialDesign:Card Padding="4" Margin="0,0,8,0"
                                                  Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel>
@@ -96,13 +96,13 @@
                                 </StackPanel>
                             </materialDesign:Card>
 
-                            <!-- Filter Controls -->
+                            <!-- Level Controls -->
                             <materialDesign:Card 
                                 Margin="0,0,8,0"
                                 Padding="4"
                                 Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel>
-                                    <TextBlock Text="Filter" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Level" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
                                     <StackPanel Orientation="Horizontal" Margin="2">
                                     <!-- Trace Filter -->
                                     <ToggleButton IsChecked="{Binding TraceFilter, RelativeSource={RelativeSource TemplatedParent}}"
@@ -215,17 +215,17 @@
                                 </StackPanel>
                             </materialDesign:Card>
 
-                            <!-- Search Controls -->
+                            <!-- Filter: hides entries that do not match the terms -->
                             <materialDesign:Card 
                                 Margin="0,0,8,0" 
                                 Padding="4"
                                 Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel>
-                                    <TextBlock Text="Search" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
-                                    <!-- Search Input -->
+                                    <TextBlock Text="Filter" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <!-- Filter Input -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                         <TextBox Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
-                                                 materialDesign:HintAssist.Hint="Search... (Press Enter to add)"
+                                                 materialDesign:HintAssist.Hint="Filter... (Press Enter to add)"
                                                  Width="250"
                                                  Margin="0,0,16,0">
                                             <TextBox.InputBindings>
@@ -238,7 +238,7 @@
                                                   Style="{DynamicResource MaterialDesignCheckBox}"/>
                                     </StackPanel>
                                     
-                                    <!-- Active Search Terms -->
+                                    <!-- Active Filter Terms -->
                                     <ItemsControl ItemsSource="{Binding ActiveSearchTerms, RelativeSource={RelativeSource TemplatedParent}}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -267,7 +267,7 @@
                                                                 Margin="0,0,4,0"
                                                                 Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Edit search term"
+                                                                ToolTip="Edit filter term"
                                                                 Style="{DynamicResource MaterialDesignIconButton}"/>
                                                         <Button Content="×" 
                                                                 Width="20" 
@@ -277,7 +277,7 @@
                                                                 Margin="0"
                                                                 Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Remove search term"
+                                                                ToolTip="Remove filter term"
                                                                 Style="{DynamicResource MaterialDesignIconButton}"/>
                                                     </StackPanel>
                                                 </Border>
@@ -307,7 +307,7 @@
                                                                 Margin="0,0,4,0"
                                                                 Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Edit search term"
+                                                                ToolTip="Edit filter term"
                                                                 Style="{DynamicResource MaterialDesignIconButton}"/>
                                                         <Button Content="×" 
                                                                 Width="20" 
@@ -317,7 +317,7 @@
                                                                 Margin="0"
                                                                 Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=dj:LogViewer}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Remove search term"
+                                                                ToolTip="Remove filter term"
                                                                 Style="{DynamicResource MaterialDesignIconButton}"/>
                                                     </StackPanel>
                                                 </Border>
@@ -326,7 +326,41 @@
                                     </ItemsControl>
                                 </StackPanel>
                             </materialDesign:Card>
-                        </StackPanel>
+
+                            <!-- Search: finds entries without hiding any -->
+                            <materialDesign:Card
+                                Margin="0,0,8,0"
+                                Padding="4"
+                                Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="Search" Style="{DynamicResource MaterialDesignSubtitle2TextBlock}" Margin="0,0,0,8"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Text="{Binding FindText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                                 materialDesign:HintAssist.Hint="Find... (Enter: next hit)"
+                                                 Width="200"
+                                                 Margin="0,0,8,0">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Return" Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                <KeyBinding Key="Return" Modifiers="Shift" Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                        <Button Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                                ToolTip="Previous hit (Shift+F3)"
+                                                Style="{DynamicResource MaterialDesignIconButton}"
+                                                Width="32" Height="32">
+                                            <materialDesign:PackIcon Kind="ChevronUp" Width="18" Height="18"/>
+                                        </Button>
+                                        <Button Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                                ToolTip="Next hit (F3)"
+                                                Style="{DynamicResource MaterialDesignIconButton}"
+                                                Width="32" Height="32">
+                                            <materialDesign:PackIcon Kind="ChevronDown" Width="18" Height="18"/>
+                                        </Button>
+                                        <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="60" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </materialDesign:Card>
+                        </WrapPanel>
 
                         <!-- Log List -->
                         <materialDesign:Card Grid.Row="2">

@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using NLog;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
@@ -31,31 +30,11 @@ public class LogViewerScrollPositionTests
 	{
 		var entries = new ObservableCollection<LogEventInfo>(Enumerable.Range(0, EntryCount).Select(i =>
 			new LogEventInfo(i % 2 == 0 ? LogLevel.Info : LogLevel.Debug, "Logger", $"Entry {i}")));
-		var viewer = new LogViewerBase { ItemsSource = entries, AutoScroll = false };
-		var window = new Window
-		{
-			Width = 900,
-			Height = 500,
-			Left = -10000,
-			Top = -10000,
-			ShowActivated = false,
-			ShowInTaskbar = false,
-			Content = viewer
-		};
-		window.Resources.MergedDictionaries.Add(new ResourceDictionary
-		{
-			Source = new Uri("pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml")
-		});
-		window.Show();
-		Settle();
+		var (window, viewer) = WpfTestHelper.ShowInWindow(entries);
 		return (window, viewer, entries);
 	}
 
-	private static void Settle()
-	{
-		for (var i = 0; i < 3; i++)
-			Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => { });
-	}
+	private static void Settle() => WpfTestHelper.Settle();
 
 	private static ScrollViewer ScrollViewerOf(LogViewerBase viewer)
 	{

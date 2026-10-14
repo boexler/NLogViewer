@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,7 +55,22 @@ namespace Sentinel.LogViewer.Wpf.Helper
         }
 
         /// <summary>
-        /// Rebuilds the Inlines of the TextBlock, highlighting matches for any ActiveSearchTerms.
+        /// Updates the highlighting of all realized text blocks below <paramref name="root"/>, e.g. after the search text changed
+        /// </summary>
+        internal static void Refresh(DependencyObject root)
+        {
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+            {
+                var child = VisualTreeHelper.GetChild(root, i);
+                if (child is TextBlock textBlock && GetResolver(textBlock) != null)
+                    TryUpdate(textBlock);
+                else
+                    Refresh(child);
+            }
+        }
+
+        /// <summary>
+        /// Rebuilds the Inlines of the TextBlock, highlighting matches of the ActiveSearchTerms and of the search text.
         /// </summary>
         private static void TryUpdate(TextBlock textBlock)
         {
@@ -72,71 +88,51 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             string message = resolver.Resolve(logEventInfo);
             var terms = logViewer.ActiveSearchTerms;
-            if (string.IsNullOrEmpty(message) || terms == null || terms.Count == 0)
+            var findText = logViewer.FindText;
+            if (string.IsNullOrEmpty(message) || ((terms == null || terms.Count == 0) && string.IsNullOrEmpty(findText)))
             {
                 textBlock.Text = message; // fallback
                 return;
             }
 
-            // Build match ranges for all terms (OR). Merge overlapping.
-            var ranges = new List<(int start, int length)>();
-            foreach (var term in terms)
+            // Highlight per character; search hits are painted over filter matches.
+            var highlights = new Brush?[message.Length];
+            var highlighted = false;
+            foreach (var term in terms ?? Enumerable.Empty<SearchTerm>())
             {
-                foreach (var r in FindMatches(message, term))
-                    ranges.Add(r);
+                foreach (var (start, length) in FindMatches(message, term))
+                {
+                    Array.Fill(highlights, logViewer.SearchHighlightBackground, start, length);
+                    highlighted = true;
+                }
             }
-            if (ranges.Count == 0)
+
+            if (!string.IsNullOrEmpty(findText))
+            {
+                foreach (var (start, length) in FindMatches(message, new TextSearchTerm(findText)))
+                {
+                    Array.Fill(highlights, logViewer.FindHighlightBackground, start, length);
+                    highlighted = true;
+                }
+            }
+
+            if (!highlighted)
             {
                 textBlock.Text = message;
                 return;
             }
 
-            ranges.Sort((a,b) => a.start.CompareTo(b.start));
-            var merged = new List<(int start, int length)>();
-            foreach (var r in ranges)
-            {
-                if (merged.Count == 0)
-                {
-                    merged.Add(r);
-                }
-                else
-                {
-                    var last = merged[merged.Count - 1];
-                    if (r.start <= last.start + last.length)
-                    {
-                        int end = Math.Max(last.start + last.length, r.start + r.length);
-                        merged[merged.Count - 1] = (last.start, end - last.start);
-                    }
-                    else
-                    {
-                        merged.Add(r);
-                    }
-                }
-            }
-
-            // Rebuild inlines
+            // Rebuild inlines, one run per stretch of equal highlighting
             textBlock.Inlines.Clear();
-            int index = 0;
-            foreach (var (start, length) in merged)
+            var runStart = 0;
+            for (var i = 1; i <= message.Length; i++)
             {
-                if (start > index)
-                {
-                    textBlock.Inlines.Add(new Run(message.Substring(index, start - index)));
-                }
-                var run = new Run(message.Substring(start, length))
-                {
-                    Background = logViewer.SearchHighlightBackground
-                };
-                textBlock.Inlines.Add(run);
-                index = start + length;
-            }
-            if (index < message.Length)
-            {
-                textBlock.Inlines.Add(new Run(message.Substring(index)));
-            }
+                if (i < message.Length && ReferenceEquals(highlights[i], highlights[runStart]))
+                    continue;
 
-            // store raw text in tag property
-            textBlock.Tag = new TextRange(textBlock.ContentStart, textBlock.ContentEnd).Text;
+                textBlock.Inlines.Add(new Run(message.Substring(runStart, i - runStart)) { Background = highlights[runStart] });
+                runStart = i;
+            }
         }
 
         private static IEnumerable<(int start, int length)> FindMatches(string text, SearchTerm term)
