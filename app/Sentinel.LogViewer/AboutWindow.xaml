@@ -1,0 +1,124 @@
+<Window x:Class="Sentinel.LogViewer.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
+        xmlns:viewModels="clr-namespace:Sentinel.LogViewer.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:AboutViewModel}"
+        Title="{helpers:Resource Key=About_Title, DefaultValue=About Sentinel LogViewer}"
+        Width="680"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#20123A"
+        Foreground="#FBFBFE">
+    <Window.Resources>
+        <SolidColorBrush x:Key="LinkBrush" Color="#C9A8FF" />
+        <Style TargetType="Hyperlink">
+            <Setter Property="Foreground" Value="{StaticResource LinkBrush}" />
+        </Style>
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Padding" Value="14,4" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="24,24,24,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- The icon is drawn in dark lines, so it sits on a light disc. -->
+            <Grid Grid.Column="0" Width="170" Height="170" VerticalAlignment="Top">
+                <Ellipse Fill="#FBFBFE" />
+                <Image Source="pack://application:,,,/Resources/icons/icons8-analysieren-256.png"
+                       Width="124" Height="124"
+                       RenderOptions.BitmapScalingMode="HighQuality" />
+            </Grid>
+
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                <TextBlock Text="{Binding ProductName}" FontSize="40" FontWeight="SemiBold" Margin="0,0,0,12" />
+
+                <!-- Update status -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="✓" Foreground="#54FFBD" FontWeight="Bold" Margin="0,0,8,0"
+                               Visibility="{Binding IsUpToDate, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MaxWidth="400" />
+                </StackPanel>
+                <ProgressBar Height="6" Margin="0,8,0,0" Maximum="100" Value="{Binding DownloadPercentage, Mode=OneWay}"
+                             Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <Button Style="{StaticResource ActionButton}" Command="{Binding DownloadCommand}"
+                        Content="{helpers:Resource Key=About_Download, DefaultValue=Download update}"
+                        Visibility="{Binding CanDownload, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <Button Style="{StaticResource ActionButton}" Command="{Binding RestartCommand}"
+                        Content="{helpers:Resource Key=About_Restart, DefaultValue=Restart to update}"
+                        Visibility="{Binding CanRestart, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <Button Style="{StaticResource ActionButton}" Command="{Binding CheckCommand}"
+                        Content="{helpers:Resource Key=About_Retry, DefaultValue=Try again}"
+                        Visibility="{Binding CanRetry, Converter={StaticResource BoolToVisibilityConverter}}" />
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
+                            Visibility="{Binding ShowChocolateyCommand, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBox Text="{Binding ChocolateyCommand, Mode=OneWay}" IsReadOnly="True" FontFamily="Consolas"
+                             Padding="4,2" VerticalContentAlignment="Center" />
+                    <Button Command="{Binding CopyChocolateyCommand}" Padding="10,2" Margin="6,0,0,0"
+                            Content="{helpers:Resource Key=About_Copy, DefaultValue=Copy}" />
+                </StackPanel>
+                <TextBlock Margin="0,8,0,0"
+                           Visibility="{Binding ShowReleaseLink, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Hyperlink NavigateUri="{Binding ReleasesUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_OpenRelease, DefaultValue=Open the release page}" />
+                    </Hyperlink>
+                </TextBlock>
+
+                <!-- Version -->
+                <TextBlock Margin="0,16,0,0" TextWrapping="Wrap">
+                    <Run Text="{Binding VersionText, Mode=OneWay}" />
+                    <Run Text="  " />
+                    <Hyperlink NavigateUri="{Binding WhatsNewUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_WhatsNew, DefaultValue=What’s new}" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="0,8,0,0">
+                    <Hyperlink NavigateUri="{Binding ProjectUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_ProjectPage, DefaultValue=Project page}" />
+                    </Hyperlink>
+                    <Run Text="  " />
+                    <Hyperlink NavigateUri="{Binding IssuesUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_ReportIssue, DefaultValue=Report an issue}" />
+                    </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0,16,0,0" TextWrapping="Wrap"
+                           Text="{helpers:Resource Key=About_DevelopedBy, DefaultValue=Sentinel LogViewer is developed by Dominic Böxler and published as open source under the MIT License.}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="1" Background="#1D1133" Padding="24,14">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left">
+                    <Hyperlink NavigateUri="{Binding LicenseUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_License, DefaultValue=License (MIT)}" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock HorizontalAlignment="Center">
+                    <Hyperlink NavigateUri="{Binding ReleasesUrl}" RequestNavigate="Hyperlink_RequestNavigate">
+                        <Run Text="{helpers:Resource Key=About_Releases, DefaultValue=All releases}" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock HorizontalAlignment="Right" Text="© Dominic Böxler" Foreground="#BFBFC9" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

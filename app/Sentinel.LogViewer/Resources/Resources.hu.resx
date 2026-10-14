@@ -187,6 +187,78 @@
   <data name="Import_ParseError" xml:space="preserve">
     <value>Error parsing file</value>
   </data>
+  <data name="Settings_CheckForUpdates" xml:space="preserve">
+    <value>Frissítések automatikus keresése</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates" xml:space="preserve">
+    <value>Előzetes verziók felajánlása is</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>A Sentinel LogViewer névjegye</value>
+  </data>
+  <data name="About_Bit" xml:space="preserve">
+    <value>bites</value>
+  </data>
+  <data name="About_Checking" xml:space="preserve">
+    <value>Frissítések keresése…</value>
+  </data>
+  <data name="About_UpToDate" xml:space="preserve">
+    <value>A(z) {0} naprakész</value>
+  </data>
+  <data name="About_UpdateAvailable" xml:space="preserve">
+    <value>Frissítés elérhető: {0}</value>
+  </data>
+  <data name="About_ChocolateyUpdate" xml:space="preserve">
+    <value>Frissítés elérhető: {0}. Telepítse Chocolatey segítségével:</value>
+  </data>
+  <data name="About_ManualUpdate" xml:space="preserve">
+    <value>Frissítés elérhető: {0}. Ez a példány nem tudja önmagát frissíteni.</value>
+  </data>
+  <data name="About_ReadyToInstall" xml:space="preserve">
+    <value>A(z) {0} frissítés letöltve</value>
+  </data>
+  <data name="About_UpdateFailed" xml:space="preserve">
+    <value>A frissítés sikertelen: {0}</value>
+  </data>
+  <data name="About_Downloading" xml:space="preserve">
+    <value>Frissítés letöltése – {0} / {1} MB</value>
+  </data>
+  <data name="About_Download" xml:space="preserve">
+    <value>Frissítés letöltése</value>
+  </data>
+  <data name="About_Restart" xml:space="preserve">
+    <value>Újraindítás a frissítéshez</value>
+  </data>
+  <data name="About_Retry" xml:space="preserve">
+    <value>Újra</value>
+  </data>
+  <data name="About_Copy" xml:space="preserve">
+    <value>Másolás</value>
+  </data>
+  <data name="About_OpenRelease" xml:space="preserve">
+    <value>Kiadási oldal megnyitása</value>
+  </data>
+  <data name="About_WhatsNew" xml:space="preserve">
+    <value>Újdonságok</value>
+  </data>
+  <data name="About_ProjectPage" xml:space="preserve">
+    <value>Projektoldal</value>
+  </data>
+  <data name="About_ReportIssue" xml:space="preserve">
+    <value>Hiba bejelentése</value>
+  </data>
+  <data name="About_DevelopedBy" xml:space="preserve">
+    <value>A Sentinel LogViewert Dominic Böxler fejleszti, és nyílt forráskódként, MIT-licenc alatt teszi közzé.</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>Licenc (MIT)</value>
+  </data>
+  <data name="About_Releases" xml:space="preserve">
+    <value>Összes kiadás</value>
+  </data>
+  <data name="Status_UpdateAvailable" xml:space="preserve">
+    <value>Frissítés elérhető: {0}</value>
+  </data>
 </root>
 
 

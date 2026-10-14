@@ -187,6 +187,78 @@
   <data name="Import_ParseError" xml:space="preserve">
     <value>Error parsing file</value>
   </data>
+  <data name="Settings_CheckForUpdates" xml:space="preserve">
+    <value>Caută automat actualizări</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates" xml:space="preserve">
+    <value>Oferă și versiuni preliminare</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Despre Sentinel LogViewer</value>
+  </data>
+  <data name="About_Bit" xml:space="preserve">
+    <value>biți</value>
+  </data>
+  <data name="About_Checking" xml:space="preserve">
+    <value>Se caută actualizări…</value>
+  </data>
+  <data name="About_UpToDate" xml:space="preserve">
+    <value>{0} este actualizat</value>
+  </data>
+  <data name="About_UpdateAvailable" xml:space="preserve">
+    <value>Actualizare la {0} disponibilă</value>
+  </data>
+  <data name="About_ChocolateyUpdate" xml:space="preserve">
+    <value>Actualizare la {0} disponibilă. Instalați-o cu Chocolatey:</value>
+  </data>
+  <data name="About_ManualUpdate" xml:space="preserve">
+    <value>Actualizare la {0} disponibilă. Această copie nu se poate actualiza singură.</value>
+  </data>
+  <data name="About_ReadyToInstall" xml:space="preserve">
+    <value>Actualizarea la {0} a fost descărcată</value>
+  </data>
+  <data name="About_UpdateFailed" xml:space="preserve">
+    <value>Actualizarea a eșuat: {0}</value>
+  </data>
+  <data name="About_Downloading" xml:space="preserve">
+    <value>Se descarcă actualizarea – {0} din {1} MB</value>
+  </data>
+  <data name="About_Download" xml:space="preserve">
+    <value>Descarcă actualizarea</value>
+  </data>
+  <data name="About_Restart" xml:space="preserve">
+    <value>Repornește pentru actualizare</value>
+  </data>
+  <data name="About_Retry" xml:space="preserve">
+    <value>Încearcă din nou</value>
+  </data>
+  <data name="About_Copy" xml:space="preserve">
+    <value>Copiază</value>
+  </data>
+  <data name="About_OpenRelease" xml:space="preserve">
+    <value>Deschide pagina versiunii</value>
+  </data>
+  <data name="About_WhatsNew" xml:space="preserve">
+    <value>Noutăți</value>
+  </data>
+  <data name="About_ProjectPage" xml:space="preserve">
+    <value>Pagina proiectului</value>
+  </data>
+  <data name="About_ReportIssue" xml:space="preserve">
+    <value>Raportează o problemă</value>
+  </data>
+  <data name="About_DevelopedBy" xml:space="preserve">
+    <value>Sentinel LogViewer este dezvoltat de Dominic Böxler și publicat ca open source sub licența MIT.</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>Licență (MIT)</value>
+  </data>
+  <data name="About_Releases" xml:space="preserve">
+    <value>Toate versiunile</value>
+  </data>
+  <data name="Status_UpdateAvailable" xml:space="preserve">
+    <value>Actualizare la {0} disponibilă</value>
+  </data>
 </root>
 
 

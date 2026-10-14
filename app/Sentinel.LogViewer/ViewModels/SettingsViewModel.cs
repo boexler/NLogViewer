@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Updates;
 
 namespace Sentinel.LogViewer.ViewModels
 {
@@ -99,6 +100,32 @@ namespace Sentinel.LogViewer.ViewModels
                 if (_configuration.AutoStartListening != value)
                 {
                     _configuration.AutoStartListening = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool CheckForUpdates
+        {
+            get => _configuration.CheckForUpdates;
+            set
+            {
+                if (_configuration.CheckForUpdates != value)
+                {
+                    _configuration.CheckForUpdates = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool IncludePrereleaseUpdates
+        {
+            get => UpdateService.IncludesPrereleases(_configuration);
+            set
+            {
+                if (IncludePrereleaseUpdates != value)
+                {
+                    _configuration.IncludePrereleaseUpdates = value;
                     OnPropertyChanged();
                 }
             }

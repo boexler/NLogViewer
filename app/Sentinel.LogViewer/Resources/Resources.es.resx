@@ -187,5 +187,77 @@
   <data name="Import_ParseError" xml:space="preserve">
     <value>Error parsing file</value>
   </data>
+  <data name="Settings_CheckForUpdates" xml:space="preserve">
+    <value>Buscar actualizaciones automáticamente</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates" xml:space="preserve">
+    <value>Ofrecer también versiones preliminares</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>Acerca de Sentinel LogViewer</value>
+  </data>
+  <data name="About_Bit" xml:space="preserve">
+    <value>bits</value>
+  </data>
+  <data name="About_Checking" xml:space="preserve">
+    <value>Buscando actualizaciones…</value>
+  </data>
+  <data name="About_UpToDate" xml:space="preserve">
+    <value>{0} está actualizado</value>
+  </data>
+  <data name="About_UpdateAvailable" xml:space="preserve">
+    <value>Actualización a {0} disponible</value>
+  </data>
+  <data name="About_ChocolateyUpdate" xml:space="preserve">
+    <value>Actualización a {0} disponible. Instálela con Chocolatey:</value>
+  </data>
+  <data name="About_ManualUpdate" xml:space="preserve">
+    <value>Actualización a {0} disponible. Esta copia no puede actualizarse por sí misma.</value>
+  </data>
+  <data name="About_ReadyToInstall" xml:space="preserve">
+    <value>Actualización a {0} descargada</value>
+  </data>
+  <data name="About_UpdateFailed" xml:space="preserve">
+    <value>Error en la actualización: {0}</value>
+  </data>
+  <data name="About_Downloading" xml:space="preserve">
+    <value>Descargando actualización – {0} de {1} MB</value>
+  </data>
+  <data name="About_Download" xml:space="preserve">
+    <value>Descargar actualización</value>
+  </data>
+  <data name="About_Restart" xml:space="preserve">
+    <value>Reiniciar para actualizar</value>
+  </data>
+  <data name="About_Retry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="About_Copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="About_OpenRelease" xml:space="preserve">
+    <value>Abrir la página de la versión</value>
+  </data>
+  <data name="About_WhatsNew" xml:space="preserve">
+    <value>Novedades</value>
+  </data>
+  <data name="About_ProjectPage" xml:space="preserve">
+    <value>Página del proyecto</value>
+  </data>
+  <data name="About_ReportIssue" xml:space="preserve">
+    <value>Informar de un problema</value>
+  </data>
+  <data name="About_DevelopedBy" xml:space="preserve">
+    <value>Sentinel LogViewer es desarrollado por Dominic Böxler y publicado como código abierto bajo la licencia MIT.</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>Licencia (MIT)</value>
+  </data>
+  <data name="About_Releases" xml:space="preserve">
+    <value>Todas las versiones</value>
+  </data>
+  <data name="Status_UpdateAvailable" xml:space="preserve">
+    <value>Actualización a {0} disponible</value>
+  </data>
 </root>
 
