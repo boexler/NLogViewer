@@ -24,8 +24,8 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Standard Control Group -->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,5">
+                        <!-- Standard Control Group; wraps into a second line when the control is narrow -->
+                        <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,5">
                             <GroupBox Header="Controls" Padding="5"
                                       Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel Orientation="Horizontal">
@@ -73,7 +73,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Filter" Margin="10,0,0,0" Padding="5"
+                            <GroupBox Header="Level" Margin="10,0,0,0" Padding="5"
                                       Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel Orientation="Horizontal">
                                     <ToggleButton
@@ -168,16 +168,16 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <!-- Search Controls -->
-                            <GroupBox Header="Search" Margin="10,0,0,0" Padding="5"
+                            <!-- Filter: hides entries that do not match the terms -->
+                            <GroupBox Header="Filter" Margin="10,0,0,0" Padding="5"
                                       Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <StackPanel>
-                                    <!-- Search Input -->
+                                    <!-- Filter Input -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                         <TextBox Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
                                                  Width="200" 
                                                  Margin="0,0,10,0"
-                                                 ToolTip="Search in logger name and message content (Press Enter to add)">
+                                                 ToolTip="Filter by logger name and message content (Press Enter to add)">
                                             <TextBox.InputBindings>
                                                 <KeyBinding Key="Return" Command="{Binding AddSearchTermCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                             </TextBox.InputBindings>
@@ -188,7 +188,7 @@
                                                   ToolTip="Use regex pattern matching"/>
                                     </StackPanel>
                                     
-                                    <!-- Active Search Terms -->
+                                    <!-- Active Filter Terms -->
                                     <ItemsControl ItemsSource="{Binding ActiveSearchTerms, RelativeSource={RelativeSource TemplatedParent}}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -215,7 +215,7 @@
                                                                 Margin="0,0,2,0"
                                                                 Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Edit search term"/>
+                                                                ToolTip="Edit filter term"/>
                                                         <Button Content="×" 
                                                                 Width="16" 
                                                                 Height="16" 
@@ -224,7 +224,7 @@
                                                                 Margin="0"
                                                                 Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Remove search term"/>
+                                                                ToolTip="Remove filter term"/>
                                                     </StackPanel>
                                                 </Border>
                                             </DataTemplate>
@@ -250,7 +250,7 @@
                                                                 Margin="0,0,2,0"
                                                                 Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Edit search term"/>
+                                                                ToolTip="Edit filter term"/>
                                                         <Button Content="×" 
                                                                 Width="16" 
                                                                 Height="16" 
@@ -259,7 +259,7 @@
                                                                 Margin="0"
                                                                 Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
                                                                 CommandParameter="{Binding}"
-                                                                ToolTip="Remove search term"/>
+                                                                ToolTip="Remove filter term"/>
                                                     </StackPanel>
                                                 </Border>
                                             </DataTemplate>
@@ -267,7 +267,30 @@
                                     </ItemsControl>
                                 </StackPanel>
                             </GroupBox>
-                        </StackPanel>
+
+                            <!-- Search: finds entries without hiding any -->
+                            <GroupBox Header="Search" Margin="10,0,0,0" Padding="5"
+                                      Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                    <TextBox Text="{Binding FindText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                             Width="200"
+                                             Margin="0,0,6,0"
+                                             ToolTip="Find in logger name and message without hiding entries (Enter / Shift+Enter or F3 / Shift+F3: next / previous hit)">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Return" Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            <KeyBinding Key="Return" Modifiers="Shift" Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                    <Button Content="▲" Width="22" Margin="0,0,2,0"
+                                            Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ToolTip="Previous hit (Shift+F3)"/>
+                                    <Button Content="▼" Width="22" Margin="0,0,6,0"
+                                            Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ToolTip="Next hit (F3)"/>
+                                    <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="60" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </WrapPanel>
 
                         <ListView
                             x:Name="PART_ListView"

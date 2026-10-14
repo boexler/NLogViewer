@@ -116,7 +116,7 @@ namespace Sentinel.LogViewer.Wpf
     /// Base log viewer control: filtering, styling, and optional external <see cref="ItemsSource"/>.
     /// Use <see cref="LogViewer"/> to subscribe to NLog <see cref="Targets.CacheTarget"/>.
     /// </summary>
-    public class LogViewerBase : Control
+    public partial class LogViewerBase : Control
     {
         /// <summary>
         /// Parses a brush for dependency-property default metadata (hex string).
@@ -654,6 +654,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             collectionView.Refresh();
             if (listView != null)
                 _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter);
+            ScheduleFindUpdate();
         }
         
         /// <summary>
@@ -1758,6 +1759,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             else if (e.Action is NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
                 _columnWidthFitter?.Reset(coll);
 
+            ScheduleFindUpdate();
+
             if (AutoScroll)
                 PART_ListView?.ScrollToEnd();
         }
@@ -1818,6 +1821,10 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             EditSearchTermCommand = new RelayCommand<SearchTerm>(EditSearchTerm);
             CopyToClipboardCommand = new RelayCommand<string>(CopyToClipboard);
             ExportCommand = new RelayCommand<ExportParameter>(ExportLogs);
+            FindNextCommand = new RelayCommand(() => FindNext());
+            FindPreviousCommand = new RelayCommand(() => FindNext(forward: false));
+            InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
+            InputBindings.Add(new KeyBinding(FindPreviousCommand, Key.F3, ModifierKeys.Shift));
             ScrollToEndCommand = new RelayCommand(() =>
             {
                 PART_ListView?.ScrollToEnd();

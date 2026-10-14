@@ -1,5 +1,8 @@
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Threading;
 using NLog;
+using Sentinel.LogViewer.Wpf;
 using WpfLogViewer = Sentinel.LogViewer.Wpf.LogViewer;
 
 namespace Sentinel.LogViewer.Tests;
@@ -43,5 +46,40 @@ public static class WpfTestHelper
 			if (count >= expectedCount) return;
 			Thread.Sleep(50);
 		}
+	}
+
+	/// <summary>
+	/// Shows a <see cref="LogViewerBase"/> for the given entries in an off-screen window, with the default theme applied.
+	/// Call from within RunOnSta and close the window afterwards.
+	/// </summary>
+	public static (Window Window, LogViewerBase Viewer) ShowInWindow(ObservableCollection<LogEventInfo> entries)
+	{
+		var viewer = new LogViewerBase { ItemsSource = entries, AutoScroll = false };
+		var window = new Window
+		{
+			Width = 900,
+			Height = 500,
+			Left = -10000,
+			Top = -10000,
+			ShowActivated = false,
+			ShowInTaskbar = false,
+			Content = viewer
+		};
+		window.Resources.MergedDictionaries.Add(new ResourceDictionary
+		{
+			Source = new Uri("pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml")
+		});
+		window.Show();
+		Settle();
+		return (window, viewer);
+	}
+
+	/// <summary>
+	/// Lets the dispatcher finish layout, rendering and queued background work.
+	/// </summary>
+	public static void Settle()
+	{
+		for (var i = 0; i < 3; i++)
+			Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => { });
 	}
 }
