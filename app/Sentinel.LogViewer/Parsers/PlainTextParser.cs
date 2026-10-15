@@ -33,24 +33,27 @@ public class PlainTextParser : IDisposable
 	/// <param name="lines">All lines of the file, in order</param>
 	/// <param name="format">Format configuration to use</param>
 	/// <returns>List of parsed log events</returns>
-	public List<LogEventInfo> Parse(IEnumerable<string> lines, TextFileFormat? format)
+	/// <param name="referenceTime">The time that dates without a year belong to, e.g. when the file was written</param>
+	public List<LogEventInfo> Parse(IEnumerable<string> lines, TextFileFormat? format, DateTime? referenceTime = null)
 	{
 		if (format != null && format.ColumnMapping.IsValid())
 		{
-			return ParseWithFormat(lines, format);
+			return ParseWithFormat(lines, format, referenceTime);
 		}
 
 		// Fallback to regex-based parsing
-		return Parse(lines);
+		return ParseWithoutFormat(lines, referenceTime);
 	}
 
 	/// <summary>
 	/// Parses lines using regex-based detection (legacy method)
 	/// </summary>
-	public List<LogEventInfo> Parse(IEnumerable<string> lines)
+	public List<LogEventInfo> Parse(IEnumerable<string> lines) => ParseWithoutFormat(lines, null);
+
+	private List<LogEventInfo> ParseWithoutFormat(IEnumerable<string> lines, DateTime? referenceTime)
 	{
 		var numberedLines = lines.Select((line, index) => (line, index + 1));
-		return ParseEntries(numberedLines, IsNewLogEntry, ParseLine);
+		return ParseEntries(numberedLines, IsNewLogEntry, line => ParseLine(line, referenceTime));
 	}
 
 	/// <summary>
@@ -114,23 +117,20 @@ public class PlainTextParser : IDisposable
 		if (string.IsNullOrWhiteSpace(line))
 			return false;
 
-		// Check if line starts with a timestamp pattern
-		var trimmedLine = line.TrimStart();
-		var timestampMatch = _timestampRegex.Match(trimmedLine);
-		
 		// Timestamp must be at the start of the line (after trimming whitespace)
-		return timestampMatch.Success && timestampMatch.Index == 0;
+		var trimmedLine = line.TrimStart();
+		return TimestampParser.TryMatchAtStart(trimmedLine, out _);
 	}
 
 	/// <summary>
 	/// Parses lines using the format configuration
 	/// </summary>
-	private List<LogEventInfo> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format)
+	private List<LogEventInfo> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format, DateTime? referenceTime)
 	{
 		return ParseEntries(
 			ReadRecords(lines, format),
 			record => IsNewLogEntryWithFormat(record, format),
-			record => ParseLineWithFormat(record, format));
+			record => ParseLineWithFormat(record, format, referenceTime));
 	}
 
 	/// <summary>
@@ -189,10 +189,10 @@ public class PlainTextParser : IDisposable
 			return false;
 
 		var parts = SplitLine(line, format);
-		var timestampColumn = format.ColumnMapping.TimestampColumn;
-		if (timestampColumn >= 0)
+		if (format.ColumnMapping.TimestampColumn >= 0)
 		{
-			return timestampColumn < parts.Length && TryParseTimestamp(parts[timestampColumn].Trim(), out _);
+			var timestampText = GetTimestampText(parts, format.ColumnMapping);
+			return timestampText != null && TryParseTimestamp(timestampText, format.DateOrder, null, out _);
 		}
 
 		// Without a timestamp column, having all mapped columns is the only hint for a new entry.
@@ -202,7 +202,7 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses a single line using the format configuration
 	/// </summary>
-	private LogEventInfo? ParseLineWithFormat(string line, TextFileFormat format)
+	private LogEventInfo? ParseLineWithFormat(string line, TextFileFormat format, DateTime? referenceTime)
 	{
 		try
 		{
@@ -212,14 +212,10 @@ public class PlainTextParser : IDisposable
 
 			// Extract timestamp
 			var timestamp = DateTime.Now;
-			if (format.ColumnMapping.TimestampColumn >= 0 && 
-			    format.ColumnMapping.TimestampColumn < parts.Length)
+			var timestampText = GetTimestampText(parts, format.ColumnMapping);
+			if (timestampText != null && TryParseTimestamp(timestampText, format.DateOrder, referenceTime, out var dt))
 			{
-				var timestampStr = parts[format.ColumnMapping.TimestampColumn].Trim();
-				if (TryParseTimestamp(timestampStr, out var dt))
-				{
-					timestamp = dt;
-				}
+				timestamp = dt;
 			}
 
 			// Extract level
@@ -264,6 +260,20 @@ public class PlainTextParser : IDisposable
 	}
 
 	/// <summary>
+	/// Returns the text of the timestamp of a split line: the timestamp column and the columns that belong to it, joined with a space.
+	/// Null when the format has no timestamp column or the line has too few columns.
+	/// </summary>
+	public static string? GetTimestampText(string[] parts, ColumnMapping mapping)
+	{
+		var first = mapping.TimestampColumn;
+		var count = Math.Max(1, mapping.TimestampColumnCount);
+		if (first < 0 || first + count > parts.Length)
+			return null;
+
+		return string.Join(" ", parts.Skip(first).Take(count).Select(part => part.Trim()));
+	}
+
+	/// <summary>
 	/// Splits a line into the columns of the format
 	/// </summary>
 	public static string[] SplitLine(string line, TextFileFormat format)
@@ -277,7 +287,7 @@ public class PlainTextParser : IDisposable
 			messageTakesRest ? mapping.MessageColumn + 1 : 0);
 	}
 
-	private LogEventInfo? ParseLine(string line)
+	private LogEventInfo? ParseLine(string line, DateTime? referenceTime)
 	{
 		try
 		{
@@ -288,8 +298,9 @@ public class PlainTextParser : IDisposable
 			}
 
 			// Try to extract timestamp
-			var timestampMatch = _timestampRegex.Match(line);
-			var timestamp = timestampMatch.Success && TryParseTimestamp(timestampMatch.Value, out var dt)
+			var trimmedLine = line.TrimStart();
+			var timestamp = TimestampParser.TryMatchAtStart(trimmedLine, out var length) &&
+			                TryParseTimestamp(trimmedLine[..length], DateOrder.Auto, referenceTime, out var dt)
 				? dt
 				: DateTime.Now;
 
@@ -366,12 +377,21 @@ public class PlainTextParser : IDisposable
 	}
 
 	/// <summary>
-	/// Attempts to parse a timestamp string using various common formats
+	/// Attempts to parse a timestamp string using various common formats; a date like 01/02/2025 is read as the culture of the computer reads it
 	/// </summary>
 	/// <param name="timestampStr">The timestamp string to parse</param>
 	/// <param name="result">The parsed DateTime if successful</param>
-	/// <returns>True if parsing was successful</returns>
-	public static bool TryParseTimestamp(string timestampStr, out DateTime result)
+	public static bool TryParseTimestamp(string timestampStr, out DateTime result) =>
+		TryParseTimestamp(timestampStr, DateOrder.Auto, null, out result);
+
+	/// <summary>
+	/// Attempts to parse a timestamp string using various common formats
+	/// </summary>
+	/// <param name="timestampStr">The timestamp string to parse</param>
+	/// <param name="order">How day and month are ordered in a date like 01/02/2025</param>
+	/// <param name="referenceTime">The time that a date without a year belongs to</param>
+	/// <param name="result">The parsed DateTime if successful</param>
+	public static bool TryParseTimestamp(string timestampStr, DateOrder order, DateTime? referenceTime, out DateTime result)
 	{
 		// Common timestamp formats
 		var formats = new[]
@@ -398,14 +418,21 @@ public class PlainTextParser : IDisposable
 		foreach (var format in formats)
 		{
 			// Use RoundtripKind for formats with 'Z' to preserve UTC
-			var styles = format.EndsWith("Z") 
+			var styles = format.EndsWith("Z")
 				? DateTimeStyles.RoundtripKind
 				: DateTimeStyles.None;
-			
+
 			if (DateTime.TryParseExact(timestampStr, format, CultureInfo.InvariantCulture, styles, out result))
 			{
 				return true;
 			}
+		}
+
+		// Dates with the day or the month first, month names, AM / PM, ctime and syslog
+		if (TimestampParser.TryParse(timestampStr, order, referenceTime, out var parsed))
+		{
+			result = parsed.Value;
+			return true;
 		}
 
 		// Fallback: Try parsing with InvariantCulture (handles ISO formats better)
@@ -413,7 +440,7 @@ public class PlainTextParser : IDisposable
 		var fallbackStyles = timestampStr.EndsWith("Z", StringComparison.OrdinalIgnoreCase)
 			? DateTimeStyles.RoundtripKind
 			: DateTimeStyles.None;
-		
+
 		if (DateTime.TryParse(timestampStr, CultureInfo.InvariantCulture, fallbackStyles, out result))
 		{
 			return true;

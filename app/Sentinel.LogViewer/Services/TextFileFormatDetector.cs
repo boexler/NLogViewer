@@ -68,7 +68,8 @@ public class TextFileFormatDetector
 			HasHeaderLine = hasHeaderLine,
 			StartLineIndex = startLineIndex,
 			ColumnCount = columnCount,
-			ColumnMapping = columnMapping
+			ColumnMapping = columnMapping,
+			DateOrder = DetectDateOrder(dataLines, separator, columnMapping)
 		};
 	}
 
@@ -91,7 +92,7 @@ public class TextFileFormatDetector
 			return true;
 
 		// Check if first line doesn't match data pattern (no timestamp, no level)
-		var hasTimestamp = _timestampRegex.IsMatch(firstLine);
+		var hasTimestamp = HasTimestamp(firstLine);
 		var hasLevel = _levelRegex.IsMatch(firstLine);
 
 		// If first line has neither timestamp nor level, it's likely a header
@@ -99,7 +100,7 @@ public class TextFileFormatDetector
 		{
 			// But check if any other line has these patterns
 			var hasDataPattern = lines.Skip(1).Any(line =>
-				_timestampRegex.IsMatch(line) || _levelRegex.IsMatch(line));
+				HasTimestamp(line) || _levelRegex.IsMatch(line));
 
 			if (hasDataPattern)
 				return true;
@@ -163,10 +164,12 @@ public class TextFileFormatDetector
 		return string.Empty;
 	}
 
+	private bool HasTimestamp(string line) =>
+		_timestampRegex.IsMatch(line) || TimestampParser.TryMatchAtStart(line.TrimStart(), out _);
+
 	private bool StartsWithTimestamp(string line)
 	{
-		var match = _timestampRegex.Match(line);
-		return match.Success && match.Index == 0;
+		return TimestampParser.TryMatchAtStart(line, out _);
 	}
 
 	/// <summary>
@@ -201,6 +204,24 @@ public class TextFileFormatDetector
 	}
 
 	/// <summary>
+	/// Finds out from the dates of the sample lines whether the day or the month comes first; Auto when they do not tell
+	/// </summary>
+	private static DateOrder DetectDateOrder(List<string> dataLines, string separator, ColumnMapping mapping)
+	{
+		if (mapping.TimestampColumn < 0)
+			return DateOrder.Auto;
+
+		var timestamps = dataLines
+			.Select(line => PlainTextParser.GetTimestampText(TextLineSplitter.Split(line, separator), mapping))
+			.Where(text => text != null)
+			.Select(text => text!);
+		return TimestampParser.DetectOrder(timestamps);
+	}
+
+	private static bool IsTimestampColumn(ColumnMapping mapping, int column) =>
+		mapping.TimestampColumn >= 0 && column >= mapping.TimestampColumn && column < mapping.TimestampColumn + mapping.TimestampColumnCount;
+
+	/// <summary>
 	/// Automatically maps columns to LogEventInfo fields
 	/// </summary>
 	private ColumnMapping AutoMapColumns(List<string> dataLines, string separator, int columnCount)
@@ -222,8 +243,27 @@ public class TextFileFormatDetector
 			columnSamples.Add(columnData);
 		}
 
-		// Find timestamp column
-		for (int col = 0; col < columnSamples.Count; col++)
+		// Find timestamp column: the first columns that together are a date and a time. The longest such run wins,
+		// so that "2025-12-18 15:11:48 PM" is not cut off after the time, and a time alone is the last resort.
+		var rows = sampleLines.Select(line => TextLineSplitter.Split(line, separator)).ToList();
+		for (int col = 0; col < columnSamples.Count && mapping.TimestampColumn < 0; col++)
+		{
+			for (var count = Math.Min(TimestampParser.MaxColumns, columnSamples.Count - col); count >= 1; count--)
+			{
+				var complete = rows.Count(parts => parts.Length >= col + count &&
+				                                   TimestampParser.TryParse(string.Join(" ", parts.Skip(col).Take(count).Select(part => part.Trim())),
+					                                   DateOrder.Auto, null, out var parsed) &&
+				                                   parsed.HasDate && parsed.HasTime);
+				if (complete >= columnSamples[col].Count * 0.8) // 80% match rate
+				{
+					mapping.TimestampColumn = col;
+					mapping.TimestampColumnCount = count;
+					break;
+				}
+			}
+		}
+
+		for (int col = 0; col < columnSamples.Count && mapping.TimestampColumn < 0; col++)
 		{
 			var timestampMatches = columnSamples[col].Count(sample =>
 				sample.Contains(':') && PlainTextParser.TryParseTimestamp(sample, out _));
@@ -231,14 +271,13 @@ public class TextFileFormatDetector
 			if (timestampMatches >= columnSamples[col].Count * 0.8) // 80% match rate
 			{
 				mapping.TimestampColumn = col;
-				break;
 			}
 		}
 
 		// Find level column
 		for (int col = 0; col < columnSamples.Count; col++)
 		{
-			if (col == mapping.TimestampColumn)
+			if (IsTimestampColumn(mapping, col))
 				continue;
 
 			var levelMatches = columnSamples[col].Count(sample =>
@@ -254,7 +293,7 @@ public class TextFileFormatDetector
 		// Find logger column (typically contains dots, namespaces, longer strings)
 		for (int col = 0; col < columnSamples.Count; col++)
 		{
-			if (col == mapping.TimestampColumn || col == mapping.LevelColumn)
+			if (IsTimestampColumn(mapping, col) || col == mapping.LevelColumn)
 				continue;
 
 			var loggerMatches = columnSamples[col].Count(sample =>
@@ -267,11 +306,21 @@ public class TextFileFormatDetector
 			}
 		}
 
+		// With spaces as the separator the words of the message are columns of their own: the message begins
+		// right after the other fields and takes the rest of the line.
+		if (separator == TextLineSplitter.SpacesSeparator)
+		{
+			var timestampEnd = mapping.TimestampColumn >= 0 ? mapping.TimestampColumn + mapping.TimestampColumnCount - 1 : -1;
+			var firstMessageColumn = Math.Max(timestampEnd, Math.Max(mapping.LevelColumn, mapping.LoggerColumn)) + 1;
+			if (firstMessageColumn < columnCount)
+				mapping.MessageColumn = firstMessageColumn;
+		}
+
 		// Message column is typically the last column or the remaining one
 		// Try to find a column that's not mapped and contains longer text
-		for (int col = columnSamples.Count - 1; col >= 0; col--)
+		for (int col = columnSamples.Count - 1; col >= 0 && mapping.MessageColumn < 0; col--)
 		{
-			if (col == mapping.TimestampColumn || col == mapping.LevelColumn || col == mapping.LoggerColumn)
+			if (IsTimestampColumn(mapping, col) || col == mapping.LevelColumn || col == mapping.LoggerColumn)
 				continue;
 
 			var avgLength = columnSamples[col].Average(s => s.Length);
@@ -287,7 +336,7 @@ public class TextFileFormatDetector
 		{
 			for (int col = columnSamples.Count - 1; col >= 0; col--)
 			{
-				if (col != mapping.TimestampColumn && col != mapping.LevelColumn && col != mapping.LoggerColumn)
+				if (!IsTimestampColumn(mapping, col) && col != mapping.LevelColumn && col != mapping.LoggerColumn)
 				{
 					mapping.MessageColumn = col;
 					break;

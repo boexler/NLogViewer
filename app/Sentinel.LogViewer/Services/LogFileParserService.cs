@@ -215,7 +215,8 @@ public class LogFileParserService(
 			return line;
 		});
 
-		return _textParser.Parse(lines, format);
+		// Dates without a year, as syslog writes them, belong to the year in which the file was written.
+		return _textParser.Parse(lines, format, File.GetLastWriteTime(filePath));
 	}
 
 	public void Dispose()
