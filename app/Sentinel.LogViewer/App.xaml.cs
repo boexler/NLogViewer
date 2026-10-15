@@ -98,8 +98,9 @@ namespace Sentinel.LogViewer
             if (_host != null)
             {
                 // The colours are resources, so they must be set before the first window loads.
-                _host.Services.GetRequiredService<ThemeService>()
-                    .Apply(_host.Services.GetRequiredService<ConfigurationService>().LoadConfiguration());
+                var themeService = _host.Services.GetRequiredService<ThemeService>();
+                themeService.Apply(_host.Services.GetRequiredService<ConfigurationService>().LoadConfiguration());
+                themeService.StartWatching();
 
                 var scope = _host.Services.CreateScope();
                 var mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();

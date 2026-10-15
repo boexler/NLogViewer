@@ -70,7 +70,8 @@ public class SettingsTransferServiceTests : IDisposable
 			{
 			  "Version": 1,
 			  "Settings": {
-			    "Theme": "oldschool",
+			    "ThemeMode": "dark",
+			    "LightTheme": "oldschool",
 			    "ThemeColors": {
 			      "oldschool": { "ThemeAccent": "#abc", "ThemeBorder": "nonsense", "NoSuchToken": "#000000" },
 			      "gone": { "ThemeAccent": "#000000" }
@@ -82,7 +83,8 @@ public class SettingsTransferServiceTests : IDisposable
 		_environment.Transfer.Import(file);
 
 		var saved = _environment.Saved;
-		Assert.Equal("oldschool", saved.Theme);
+		Assert.Equal("dark", saved.ThemeMode);
+		Assert.Equal("oldschool", saved.LightTheme);
 		var colors = Assert.Single(saved.ThemeColors);
 		Assert.Equal("oldschool", colors.Key);
 		Assert.Equal(new System.Collections.Generic.Dictionary<string, string> { ["ThemeAccent"] = "#AABBCC" }, colors.Value);

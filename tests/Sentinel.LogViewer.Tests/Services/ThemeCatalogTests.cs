@@ -86,7 +86,8 @@ public class ThemeCatalogTests
 	{
 		var configuration = new AppConfiguration
 		{
-			Theme = "nonsense",
+			ThemeMode = "nonsense",
+			LightTheme = ThemeCatalog.DarkId,
 			ThemeColors = new()
 			{
 				["OldSchool"] = new() { ["ThemeAccent"] = "#abc", ["ThemeBorder"] = "nonsense", ["NoSuchToken"] = "#000000" },
@@ -97,7 +98,8 @@ public class ThemeCatalogTests
 
 		ThemeCatalog.Sanitize(configuration);
 
-		Assert.Equal(ThemeCatalog.DefaultThemeId, configuration.Theme);
+		Assert.Equal(ThemeCatalog.ModeSystem, configuration.ThemeMode);
+		Assert.Equal(ThemeCatalog.DefaultThemeId, configuration.LightTheme);
 		var colors = Assert.Single(configuration.ThemeColors);
 		Assert.Equal(ThemeCatalog.OldschoolId, colors.Key);
 		Assert.Equal(new Dictionary<string, string> { ["ThemeAccent"] = "#AABBCC" }, colors.Value);
@@ -110,5 +112,37 @@ public class ThemeCatalogTests
 
 		var sections = ThemeCatalog.Tokens.Select(token => token.Section).ToList();
 		Assert.Equal(sections.OrderBy(section => section), sections);
+	}
+
+	[Theory]
+	[InlineData("light", true, "newschool")]
+	[InlineData("light", false, "newschool")]
+	[InlineData("dark", true, "dark")]
+	[InlineData("dark", false, "dark")]
+	[InlineData("system", true, "newschool")]
+	[InlineData("system", false, "dark")]
+	[InlineData("nonsense", false, "dark")]
+	public void ResolveThemeId_FollowsTheModeAndTheSystem(string mode, bool systemUsesLightTheme, string expected)
+	{
+		var configuration = new AppConfiguration { ThemeMode = mode };
+
+		Assert.Equal(expected, ThemeCatalog.ResolveThemeId(configuration, systemUsesLightTheme));
+	}
+
+	[Fact]
+	public void ResolveThemeId_InLightMode_UsesTheChosenLightTheme_NeverTheDarkOne()
+	{
+		var oldschool = new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight, LightTheme = ThemeCatalog.OldschoolId };
+		var broken = new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight, LightTheme = ThemeCatalog.DarkId };
+
+		Assert.Equal(ThemeCatalog.OldschoolId, ThemeCatalog.ResolveThemeId(oldschool, true));
+		Assert.Equal(ThemeCatalog.DefaultThemeId, ThemeCatalog.ResolveThemeId(broken, true));
+	}
+
+	[Fact]
+	public void OnlyTheDarkThemeIsDark()
+	{
+		Assert.Equal(new[] { ThemeCatalog.DarkId }, ThemeCatalog.Themes.Where(theme => theme.IsDark).Select(theme => theme.Id));
+		Assert.DoesNotContain(ThemeCatalog.LightThemes, theme => theme.IsDark);
 	}
 }

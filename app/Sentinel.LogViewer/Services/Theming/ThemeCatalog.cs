@@ -29,7 +29,8 @@ public sealed record ThemeToken(string Key, ThemeSection Section, string Name, s
 /// <summary>
 /// A set of colours with a name
 /// </summary>
-public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary<string, string> Colors);
+/// <param name="IsDark">Whether the theme is for dark mode; the title bars of the windows follow it</param>
+public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary<string, string> Colors, bool IsDark = false);
 
 /// <summary>
 /// The colours of the application: the tokens that exist, the built-in themes and the rules for custom colours.
@@ -40,7 +41,15 @@ public static class ThemeCatalog
 {
 	public const string NewschoolId = "newschool";
 	public const string OldschoolId = "oldschool";
+	public const string DarkId = "dark";
 	public const string DefaultThemeId = NewschoolId;
+
+	/// <summary>
+	/// The values of <see cref="AppConfiguration.ThemeMode"/>
+	/// </summary>
+	public const string ModeSystem = "system";
+	public const string ModeLight = "light";
+	public const string ModeDark = "dark";
 
 	private const string LogPrefix = "Log";
 
@@ -63,6 +72,31 @@ public static class ThemeCatalog
 	public static IReadOnlyList<ThemeToken> Tokens { get; } = CreateTokens();
 
 	public static IReadOnlyList<ThemeDefinition> Themes { get; } = CreateThemes();
+
+	/// <summary>
+	/// The themes that can be used in light mode
+	/// </summary>
+	public static IEnumerable<ThemeDefinition> LightThemes => Themes.Where(theme => !theme.IsDark);
+
+	/// <summary>
+	/// Returns the id of the theme that is in effect: the dark theme in dark mode, the chosen light theme in light mode,
+	/// and in the mode that follows Windows the one that fits the system setting
+	/// </summary>
+	public static string ResolveThemeId(AppConfiguration configuration, bool systemUsesLightTheme)
+	{
+		var dark = configuration.ThemeMode switch
+		{
+			ModeDark => true,
+			ModeLight => false,
+			_ => !systemUsesLightTheme
+		};
+
+		if (dark)
+			return DarkId;
+
+		var light = Find(configuration.LightTheme);
+		return light.IsDark ? DefaultThemeId : light.Id;
+	}
 
 	/// <summary>
 	/// Returns the theme with the id, or the default theme when there is none
@@ -120,7 +154,9 @@ public static class ThemeCatalog
 	/// </summary>
 	public static void Sanitize(AppConfiguration configuration)
 	{
-		configuration.Theme = Find(configuration.Theme).Id;
+		configuration.ThemeMode = configuration.ThemeMode is ModeLight or ModeDark ? configuration.ThemeMode : ModeSystem;
+		var lightTheme = Find(configuration.LightTheme);
+		configuration.LightTheme = lightTheme.IsDark ? DefaultThemeId : lightTheme.Id;
 
 		var knownKeys = Tokens.Select(token => token.Key).ToHashSet();
 		var cleaned = new Dictionary<string, Dictionary<string, string>>();
@@ -204,7 +240,49 @@ public static class ThemeCatalog
 			["LogSearchHighlightBackground"] = "#FFD54F",
 			["LogFindHighlightBackground"] = "#F58CC0"
 		}),
-		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors())
+		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors()),
+		new ThemeDefinition(DarkId, "Dark", new Dictionary<string, string>
+		{
+			["ThemePageBackground"] = "#1E2024",
+			["ThemeSurface"] = "#2A2D33",
+			["ThemeSurfaceAlt"] = "#17191C",
+			["ThemeBorder"] = "#3A3F47",
+			["ThemeBorderStrong"] = "#6A727E",
+			["ThemeTextPrimary"] = "#ECEFF3",
+			["ThemeTextSecondary"] = "#B6BDC8",
+			["ThemeTextMuted"] = "#8A929E",
+			["ThemeAccent"] = "#5AA2F0",
+			["ThemeAccentSoft"] = "#1F3A5C",
+			["ThemeOnAccent"] = "#0B1220",
+			["ThemeHover"] = "#353A42",
+			["ThemeSuccess"] = "#5FD068",
+			["ThemeError"] = "#FF6B5E",
+			["ThemeWarningBackground"] = "#4A3B10",
+			["ThemeWarningText"] = "#FFD97A",
+
+			["LogTraceBackground"] = "#2B2E34",
+			["LogTraceForeground"] = "#A0A8B4",
+			["LogDebugBackground"] = "#1F3B28",
+			["LogDebugForeground"] = "#8FE0A0",
+			["LogInfoBackground"] = "#1C3552",
+			["LogInfoForeground"] = "#9CC9F8",
+			["LogWarnBackground"] = "#4A3B10",
+			["LogWarnForeground"] = "#FFD97A",
+			["LogErrorBackground"] = "#4F2226",
+			["LogErrorForeground"] = "#FF9EA3",
+			["LogFatalBackground"] = "#B3262E",
+			["LogFatalForeground"] = "#FFFFFF",
+
+			["LogTextSearchTermBackground"] = "#4A3B10",
+			["LogTextSearchTermBorderBrush"] = "#B38A00",
+			["LogTextSearchTermForeground"] = "#ECEFF3",
+			["LogRegexSearchTermBackground"] = "#1F3A5C",
+			["LogRegexSearchTermBorderBrush"] = "#3F78B8",
+			["LogRegexSearchTermForeground"] = "#ECEFF3",
+			["LogRegexPrefixForeground"] = "#5AA2F0",
+			["LogSearchHighlightBackground"] = "#8A6A00",
+			["LogFindHighlightBackground"] = "#A63D7B"
+		}, IsDark: true)
 	};
 
 	/// <summary>

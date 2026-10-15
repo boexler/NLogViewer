@@ -409,12 +409,6 @@
   <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
     <value>Thème et couleurs de l’interface et de la liste des journaux.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Thème</value>
-  </data>
-  <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Jeu de couleurs de toute l’application. Newschool est clair et épuré, Oldschool conserve les couleurs classiques de la liste des journaux. Chaque couleur ci-dessous peut être modifiée pour chaque thème.</value>
-  </data>
   <data name="Settings_Section_Interface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -609,6 +603,27 @@
   </data>
   <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
     <value>Arrière-plan du texte d’un message qui correspond à la recherche.</value>
+  </data>
+  <data name="Settings_ThemeMode" xml:space="preserve">
+    <value>Mode de couleur</value>
+  </data>
+  <data name="Settings_ThemeMode_Description" xml:space="preserve">
+    <value>Clair ou sombre, ou comme Windows. Les couleurs ci-dessous appartiennent au thème utilisé.</value>
+  </data>
+  <data name="Settings_ThemeMode_System" xml:space="preserve">
+    <value>Comme Windows</value>
+  </data>
+  <data name="Settings_ThemeMode_Light" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Settings_ThemeMode_Dark" xml:space="preserve">
+    <value>Sombre</value>
+  </data>
+  <data name="Settings_LightTheme" xml:space="preserve">
+    <value>Thème clair</value>
+  </data>
+  <data name="Settings_LightTheme_Description" xml:space="preserve">
+    <value>Newschool est clair et épuré, Oldschool conserve les couleurs classiques de la liste des journaux. Utilisé chaque fois que l’application est claire.</value>
   </data>
 </root>
 

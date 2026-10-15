@@ -409,12 +409,6 @@
   <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
     <value>Motyw i kolory interfejsu oraz listy logów.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Motyw</value>
-  </data>
-  <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Schemat kolorów całej aplikacji. Newschool jest jasny i płaski, Oldschool zachowuje klasyczne kolory listy logów. Każdy z poniższych kolorów można zmienić osobno dla każdego motywu.</value>
-  </data>
   <data name="Settings_Section_Interface" xml:space="preserve">
     <value>Interfejs</value>
   </data>
@@ -609,6 +603,27 @@
   </data>
   <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
     <value>Tło tekstu w komunikacie pasującego do wyszukiwania.</value>
+  </data>
+  <data name="Settings_ThemeMode" xml:space="preserve">
+    <value>Tryb kolorów</value>
+  </data>
+  <data name="Settings_ThemeMode_Description" xml:space="preserve">
+    <value>Jasny lub ciemny albo taki jak w systemie Windows. Poniższe kolory należą do aktualnie używanego motywu.</value>
+  </data>
+  <data name="Settings_ThemeMode_System" xml:space="preserve">
+    <value>Jak w systemie Windows</value>
+  </data>
+  <data name="Settings_ThemeMode_Light" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="Settings_ThemeMode_Dark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="Settings_LightTheme" xml:space="preserve">
+    <value>Jasny motyw</value>
+  </data>
+  <data name="Settings_LightTheme_Description" xml:space="preserve">
+    <value>Newschool jest jasny i płaski, Oldschool zachowuje klasyczne kolory listy logów. Używany zawsze, gdy aplikacja jest jasna.</value>
   </data>
 </root>
 
