@@ -13,26 +13,21 @@
         Width="900" Height="640" MinWidth="720" MinHeight="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
-        Background="{DynamicResource SettingsPageBackground}"
         TextOptions.TextFormattingMode="Display">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/SettingsStyles.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <!-- Page header and section labels -->
             <DataTemplate DataType="{x:Type settings:SettingsPageHeader}">
                 <StackPanel Margin="0,0,0,14">
                     <TextBlock Text="{Binding Title}" FontSize="22" FontWeight="SemiBold"
-                               Foreground="{StaticResource SettingsTextPrimary}"/>
+                               Foreground="{DynamicResource ThemeTextPrimary}"/>
                     <TextBlock Text="{Binding Subtitle}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"
-                               Foreground="{StaticResource SettingsTextSecondary}"/>
+                               Foreground="{DynamicResource ThemeTextSecondary}"/>
                 </StackPanel>
             </DataTemplate>
             <DataTemplate DataType="{x:Type settings:SettingsSectionLabel}">
                 <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold" Margin="2,10,0,6"
-                           Foreground="{StaticResource SettingsTextSecondary}"/>
+                           Foreground="{DynamicResource ThemeTextSecondary}"/>
             </DataTemplate>
 
             <!-- On / off -->
@@ -58,7 +53,7 @@
             <DataTemplate DataType="{x:Type settings:IntSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">
                     <StackPanel>
-                        <TextBox Style="{StaticResource SettingsInput}" Width="110" HorizontalContentAlignment="Right"
+                        <TextBox Style="{StaticResource ThemeValidatedTextBox}" Width="110" HorizontalContentAlignment="Right"
                                  Text="{Binding Text, UpdateSourceTrigger=LostFocus}"
                                  AutomationProperties.Name="{Binding Title}"/>
                         <TextBlock Style="{StaticResource SettingsErrorText}" MaxWidth="220" TextAlignment="Right"
@@ -70,9 +65,9 @@
             <!-- List of ports -->
             <DataTemplate DataType="{x:Type settings:PortListSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">
-                    <Button Style="{StaticResource SettingsButton}" Command="{Binding AddCommand}">
+                    <Button  Command="{Binding AddCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE710;" FontFamily="{StaticResource SettingsIconFont}" FontSize="11"
+                            <TextBlock Text="&#xE710;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="11"
                                        VerticalAlignment="Center" Margin="0,1,8,0"/>
                             <TextBlock Text="{helpers:Resource Key=Settings_AddPort, DefaultValue=Add port}"/>
                         </StackPanel>
@@ -81,18 +76,18 @@
                         <ItemsControl ItemsSource="{Binding Items}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="{StaticResource SettingsBorder}" BorderThickness="0,1,0,0" Padding="0,8">
+                                    <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="0,8">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBox Style="{StaticResource SettingsInput}"
+                                                <TextBox Style="{StaticResource ThemeValidatedTextBox}"
                                                          Text="{Binding Address, UpdateSourceTrigger=LostFocus}"/>
                                                 <TextBlock Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
                                             </StackPanel>
-                                            <Button Grid.Column="1" Style="{StaticResource SettingsIconButton}"
+                                            <Button Grid.Column="1" Style="{StaticResource ThemeIconButton}"
                                                     Content="&#xE74D;" Width="32" Height="30" Margin="8,0,0,0"
                                                     VerticalAlignment="Top"
                                                     Command="{Binding RemoveCommand}"
@@ -116,7 +111,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Navigation -->
-        <Border Background="{StaticResource SettingsNavBackground}" BorderBrush="{StaticResource SettingsBorder}"
+        <Border Background="{DynamicResource ThemeSurfaceAlt}" BorderBrush="{DynamicResource ThemeBorder}"
                 BorderThickness="0,0,1,0">
             <DockPanel Margin="12">
                 <TextBox x:Name="SearchBox" DockPanel.Dock="Top" Style="{StaticResource SettingsSearchBox}"
@@ -128,14 +123,14 @@
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
                     <Button Style="{StaticResource SettingsNavButton}" Command="{Binding ExportCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE898;" FontFamily="{StaticResource SettingsIconFont}" FontSize="14"
+                            <TextBlock Text="&#xE898;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="14"
                                        Width="22" VerticalAlignment="Center"/>
                             <TextBlock Text="{helpers:Resource Key=Settings_Export, DefaultValue=Export…}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource SettingsNavButton}" Command="{Binding ImportCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE896;" FontFamily="{StaticResource SettingsIconFont}" FontSize="14"
+                            <TextBlock Text="&#xE896;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="14"
                                        Width="22" VerticalAlignment="Center"/>
                             <TextBlock Text="{helpers:Resource Key=Settings_Import, DefaultValue=Import…}"/>
                         </StackPanel>
@@ -149,7 +144,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Icon}" FontFamily="{StaticResource SettingsIconFont}" FontSize="15"
+                                <TextBlock Text="{Binding Icon}" FontFamily="{DynamicResource ThemeIconFont}" FontSize="15"
                                            Width="26" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding Title}" FontSize="13" VerticalAlignment="Center"/>
                             </StackPanel>
@@ -170,21 +165,21 @@
                 <StackPanel Margin="32,26,32,16">
                     <ItemsControl ItemsSource="{Binding PageItems}" Focusable="False"/>
                     <TextBlock Text="{Binding NoResultsText}" FontSize="13" Margin="2,8,0,0"
-                               Foreground="{StaticResource SettingsTextSecondary}"
-                               Visibility="{Binding HasNoResults, Converter={StaticResource SettingsBoolToVisibility}}"/>
+                               Foreground="{DynamicResource ThemeTextSecondary}"
+                               Visibility="{Binding HasNoResults, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 </StackPanel>
             </ScrollViewer>
 
-            <Border Grid.Row="1" BorderBrush="{StaticResource SettingsBorder}" BorderThickness="0,1,0,0" Padding="32,10">
+            <Border Grid.Row="1" BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="32,10">
                 <Grid>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="&#xE73E;" FontFamily="{StaticResource SettingsIconFont}" FontSize="12"
-                                   Foreground="{StaticResource SettingsTextMuted}" Margin="0,1,8,0"/>
-                        <TextBlock Text="{Binding FooterText}" FontSize="12" Foreground="{StaticResource SettingsTextMuted}"/>
+                        <TextBlock Text="&#xE73E;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="12"
+                                   Foreground="{DynamicResource ThemeTextMuted}" Margin="0,1,8,0"/>
+                        <TextBlock Text="{Binding FooterText}" FontSize="12" Foreground="{DynamicResource ThemeTextMuted}"/>
                     </StackPanel>
-                    <Button HorizontalAlignment="Right" Style="{StaticResource SettingsButton}"
+                    <Button HorizontalAlignment="Right" 
                             Command="{Binding ResetCategoryCommand}" Content="{Binding ResetButtonText}"
-                            Visibility="{Binding CanResetCategory, Converter={StaticResource SettingsBoolToVisibility}}"/>
+                            Visibility="{Binding CanResetCategory, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 </Grid>
             </Border>
         </Grid>

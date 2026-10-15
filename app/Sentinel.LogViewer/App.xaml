@@ -9,15 +9,16 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- LogViewer Design Styles -->
                 <ResourceDictionary Source="pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml"/>
+                <!-- Look of the application: colours first, then the styles that use them -->
+                <ResourceDictionary Source="Styles/Theme.xaml"/>
+                <ResourceDictionary Source="Styles/AppStyles.xaml"/>
+                <ResourceDictionary Source="Styles/ShellStyles.xaml"/>
+                <ResourceDictionary Source="Styles/SettingsStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!-- Converters -->
             <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
             <converters:SvgImageSourceConverter x:Key="SvgImageSourceConverter"/>
-            <!-- Title-bar / Alt-Tab icon for every Window; the EXE icon comes from ApplicationIcon. -->
-            <Style TargetType="Window">
-                <Setter Property="Icon" Value="pack://application:,,,/Resources/icons/icons8-analysieren-64.ico"/>
-            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

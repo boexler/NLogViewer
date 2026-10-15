@@ -3,24 +3,7 @@
                     xmlns:controls="clr-namespace:Sentinel.LogViewer.Controls"
                     xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers">
 
-    <!-- Colours of the settings window; named so that a dark theme can replace them -->
-    <SolidColorBrush x:Key="SettingsNavBackground" Color="#F6F6F6"/>
-    <SolidColorBrush x:Key="SettingsPageBackground" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="SettingsCardBackground" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="SettingsBorder" Color="#E3E3E3"/>
-    <SolidColorBrush x:Key="SettingsBorderStrong" Color="#B8B8B8"/>
-    <SolidColorBrush x:Key="SettingsTextPrimary" Color="#1B1B1B"/>
-    <SolidColorBrush x:Key="SettingsTextSecondary" Color="#5F5F5F"/>
-    <SolidColorBrush x:Key="SettingsTextMuted" Color="#8A8A8A"/>
-    <SolidColorBrush x:Key="SettingsAccent" Color="#0067C0"/>
-    <SolidColorBrush x:Key="SettingsAccentSoft" Color="#E3EFFA"/>
-    <SolidColorBrush x:Key="SettingsHover" Color="#EBEBEB"/>
-    <SolidColorBrush x:Key="SettingsWarningBackground" Color="#FFF4CE"/>
-    <SolidColorBrush x:Key="SettingsWarningText" Color="#6D5200"/>
-    <SolidColorBrush x:Key="SettingsError" Color="#C42B1C"/>
-    <FontFamily x:Key="SettingsIconFont">Segoe MDL2 Assets</FontFamily>
-
-    <BooleanToVisibilityConverter x:Key="SettingsBoolToVisibility"/>
+    <!-- Styles of the settings window; the colours come from Theme.xaml -->
 
     <!-- Card for one setting -->
     <Style TargetType="controls:SettingCard">
@@ -29,8 +12,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:SettingCard">
-                    <Border Background="{StaticResource SettingsCardBackground}"
-                            BorderBrush="{StaticResource SettingsBorder}"
+                    <Border Background="{DynamicResource ThemeSurface}" BorderBrush="{DynamicResource ThemeBorder}"
                             BorderThickness="1" CornerRadius="8" Padding="16,12">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -43,24 +25,24 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="{Binding Setting.Icon, RelativeSource={RelativeSource TemplatedParent}}"
-                                       FontFamily="{StaticResource SettingsIconFont}" FontSize="18"
-                                       Foreground="{StaticResource SettingsTextSecondary}"
+                                       FontFamily="{DynamicResource ThemeIconFont}" FontSize="18"
+                                       Foreground="{DynamicResource ThemeTextSecondary}"
                                        VerticalAlignment="Center" Margin="0,0,16,0"/>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Setting.Title, RelativeSource={RelativeSource TemplatedParent}}"
                                                FontSize="13" FontWeight="SemiBold"
-                                               Foreground="{StaticResource SettingsTextPrimary}"/>
-                                    <Border Background="{StaticResource SettingsWarningBackground}" CornerRadius="4"
+                                               Foreground="{DynamicResource ThemeTextPrimary}"/>
+                                    <Border Background="{DynamicResource ThemeWarningBackground}" CornerRadius="4"
                                             Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
-                                            Visibility="{Binding Setting.NeedsRestart, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource SettingsBoolToVisibility}}">
+                                            Visibility="{Binding Setting.NeedsRestart, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ThemeBoolToVisibility}}">
                                         <TextBlock Text="{helpers:Resource Key=Settings_RestartRequired, DefaultValue=Restart required}"
-                                                   FontSize="11" Foreground="{StaticResource SettingsWarningText}"/>
+                                                   FontSize="11" Foreground="{DynamicResource ThemeWarningText}"/>
                                     </Border>
                                 </StackPanel>
                                 <TextBlock Text="{Binding Setting.Description, RelativeSource={RelativeSource TemplatedParent}}"
                                            FontSize="12" TextWrapping="Wrap" Margin="0,3,0,0"
-                                           Foreground="{StaticResource SettingsTextSecondary}"/>
+                                           Foreground="{DynamicResource ThemeTextSecondary}"/>
                             </StackPanel>
                             <ContentPresenter Grid.Column="2" VerticalAlignment="Center" Margin="20,0,0,0"/>
                             <ContentPresenter Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,0"
@@ -82,15 +64,15 @@
                 <ControlTemplate TargetType="ToggleButton">
                     <Grid Background="Transparent">
                         <Border x:Name="Track" CornerRadius="10" Background="Transparent"
-                                BorderBrush="{StaticResource SettingsTextSecondary}" BorderThickness="1"/>
-                        <Ellipse x:Name="Knob" Width="12" Height="12" Fill="{StaticResource SettingsTextSecondary}"
+                                BorderBrush="{DynamicResource ThemeTextSecondary}" BorderThickness="1"/>
+                        <Ellipse x:Name="Knob" Width="12" Height="12" Fill="{DynamicResource ThemeTextSecondary}"
                                  HorizontalAlignment="Left" Margin="4,0,0,0"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Track" Property="Background" Value="{StaticResource SettingsAccent}"/>
-                            <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource SettingsAccent}"/>
-                            <Setter TargetName="Knob" Property="Fill" Value="White"/>
+                            <Setter TargetName="Track" Property="Background" Value="{DynamicResource ThemeAccent}"/>
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource ThemeAccent}"/>
+                            <Setter TargetName="Knob" Property="Fill" Value="{DynamicResource ThemeOnAccent}"/>
                             <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right"/>
                             <Setter TargetName="Knob" Property="Margin" Value="0,0,4,0"/>
                         </Trigger>
@@ -103,42 +85,11 @@
         </Setter>
     </Style>
 
-    <!-- Text input; red frame while the input is not valid (the view model sets HasError) -->
-    <Style x:Key="SettingsInput" TargetType="TextBox">
-        <Setter Property="Padding" Value="6,4"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="{StaticResource SettingsBorderStrong}"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="Frame" Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
-                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
-                                      VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource SettingsAccent}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding HasError}" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource SettingsError}"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <Style x:Key="SettingsErrorText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="11"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="Margin" Value="0,4,0,0"/>
-        <Setter Property="Foreground" Value="{StaticResource SettingsError}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeError}"/>
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding HasError}" Value="True">
@@ -152,7 +103,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="Frame" Background="White" BorderBrush="{StaticResource SettingsBorderStrong}"
+                    <Border x:Name="Frame" Background="{DynamicResource ThemeSurface}"
+                            BorderBrush="{DynamicResource ThemeBorderStrong}"
                             BorderThickness="1" CornerRadius="6" Padding="10,0,4,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -160,18 +112,18 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="&#xE721;" FontFamily="{StaticResource SettingsIconFont}" FontSize="13"
-                                       Foreground="{StaticResource SettingsTextMuted}"
+                            <TextBlock Text="&#xE721;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="13"
+                                       Foreground="{DynamicResource ThemeTextMuted}"
                                        VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <Grid Grid.Column="1">
                                 <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0,6"/>
                                 <TextBlock x:Name="Placeholder" Text="{TemplateBinding Tag}" IsHitTestVisible="False"
-                                           Foreground="{StaticResource SettingsTextMuted}" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource ThemeTextMuted}" VerticalAlignment="Center"
                                            Visibility="Collapsed"/>
                             </Grid>
                             <Button x:Name="Clear" Grid.Column="2" Content="&#xE711;"
                                     Command="{Binding DataContext.ClearSearchCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    Style="{DynamicResource SettingsIconButton}" Width="26" Height="26" FontSize="10"
+                                    Style="{DynamicResource ThemeIconButton}" Width="26" Height="26" FontSize="10"
                                     Focusable="False"/>
                         </Grid>
                     </Border>
@@ -181,55 +133,7 @@
                             <Setter TargetName="Clear" Property="Visibility" Value="Collapsed"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource SettingsAccent}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Small borderless button with a glyph -->
-    <Style x:Key="SettingsIconButton" TargetType="Button">
-        <Setter Property="FontFamily" Value="{StaticResource SettingsIconFont}"/>
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Foreground" Value="{StaticResource SettingsTextSecondary}"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" Background="Transparent" CornerRadius="4">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource SettingsHover}"/>
-                            <Setter Property="Foreground" Value="{StaticResource SettingsTextPrimary}"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Outlined button -->
-    <Style x:Key="SettingsButton" TargetType="Button">
-        <Setter Property="Padding" Value="12,5"/>
-        <Setter Property="Foreground" Value="{StaticResource SettingsTextPrimary}"/>
-        <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" Background="White" BorderBrush="{StaticResource SettingsBorderStrong}"
-                            BorderThickness="1" CornerRadius="4" Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource SettingsHover}"/>
-                        </Trigger>
-                        <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource SettingsAccent}"/>
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource ThemeAccent}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -239,7 +143,7 @@
 
     <!-- Entry of the navigation list -->
     <Style x:Key="SettingsNavItem" TargetType="ListBoxItem">
-        <Setter Property="Foreground" Value="{StaticResource SettingsTextSecondary}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
         <Setter Property="Margin" Value="0,0,0,2"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -249,11 +153,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource SettingsHover}"/>
+                            <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ThemeHover}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource SettingsAccentSoft}"/>
-                            <Setter Property="Foreground" Value="{StaticResource SettingsAccent}"/>
+                            <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ThemeAccentSoft}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeAccent}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -263,7 +167,7 @@
 
     <!-- Button at the bottom of the navigation -->
     <Style x:Key="SettingsNavButton" TargetType="Button">
-        <Setter Property="Foreground" Value="{StaticResource SettingsTextSecondary}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -273,7 +177,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource SettingsHover}"/>
+                            <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ThemeHover}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

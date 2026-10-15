@@ -34,6 +34,14 @@ namespace Sentinel.LogViewer.Tests
         {
             var app = new Application();
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            // The application styles are normally merged by App.xaml, which does not run in tests.
+            foreach (var dictionary in new[] { "Theme", "AppStyles", "ShellStyles", "SettingsStyles" })
+            {
+                app.Resources.MergedDictionaries.Add(new ResourceDictionary
+                {
+                    Source = new Uri($"pack://application:,,,/Sentinel.LogViewer;component/Styles/{dictionary}.xaml")
+                });
+            }
             _dispatcher = Dispatcher.CurrentDispatcher;
             _ready.Set();
             Dispatcher.Run();

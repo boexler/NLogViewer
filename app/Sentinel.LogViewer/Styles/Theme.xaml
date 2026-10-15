@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Colours of the application. The styles refer to them with DynamicResource, so replacing a
+        brush in the application resources changes the look of every window at once.
+    -->
+    <SolidColorBrush x:Key="ThemePageBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeSurface" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeSurfaceAlt" Color="#F6F6F6"/>
+    <SolidColorBrush x:Key="ThemeBorder" Color="#E3E3E3"/>
+    <SolidColorBrush x:Key="ThemeBorderStrong" Color="#B8B8B8"/>
+    <SolidColorBrush x:Key="ThemeTextPrimary" Color="#1B1B1B"/>
+    <SolidColorBrush x:Key="ThemeTextSecondary" Color="#5F5F5F"/>
+    <SolidColorBrush x:Key="ThemeTextMuted" Color="#8A8A8A"/>
+    <SolidColorBrush x:Key="ThemeAccent" Color="#0067C0"/>
+    <SolidColorBrush x:Key="ThemeAccentSoft" Color="#E3EFFA"/>
+    <SolidColorBrush x:Key="ThemeOnAccent" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ThemeHover" Color="#EBEBEB"/>
+    <SolidColorBrush x:Key="ThemeSuccess" Color="#107C10"/>
+    <SolidColorBrush x:Key="ThemeError" Color="#C42B1C"/>
+    <SolidColorBrush x:Key="ThemeWarningBackground" Color="#FFF4CE"/>
+    <SolidColorBrush x:Key="ThemeWarningText" Color="#6D5200"/>
+
+    <!-- Glyphs of the symbol font: Segoe MDL2 Assets -->
+    <FontFamily x:Key="ThemeIconFont">Segoe MDL2 Assets</FontFamily>
+</ResourceDictionary>
