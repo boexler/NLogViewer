@@ -12,13 +12,17 @@ namespace Sentinel.LogViewer.Models
     {
         private string _header = string.Empty;
         private string _targetName = string.Empty;
-        private int _logCount;
         private int _maxCount = 10000;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewerBase.ItemsSource"/>.
         /// </summary>
         public ObservableCollection<LogEventInfo> LogEntries { get; } = new();
+
+        public LogTabViewModel()
+        {
+            LogEntries.CollectionChanged += (_, _) => OnPropertyChanged(nameof(LogCount));
+        }
 
         public string Header
         {
@@ -46,18 +50,10 @@ namespace Sentinel.LogViewer.Models
             }
         }
 
-        public int LogCount
-        {
-            get => _logCount;
-            set
-            {
-                if (_logCount != value)
-                {
-                    _logCount = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        /// <summary>
+        /// Number of entries in the tab: it follows <see cref="LogEntries"/>, also when the viewer clears it or removes the oldest entries
+        /// </summary>
+        public int LogCount => LogEntries.Count;
 
         public int MaxCount
         {
@@ -87,8 +83,6 @@ namespace Sentinel.LogViewer.Models
             LogEntries.Add(logEvent);
             while (MaxCount >= 0 && LogEntries.Count > MaxCount)
                 LogEntries.RemoveAt(0);
-
-            LogCount++;
         }
     }
 }
