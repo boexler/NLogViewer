@@ -332,6 +332,39 @@ logViewer.SearchHighlightBackground = Brushes.Yellow;
 - Invalid regex patterns show a warning dialog and are not added
 - Search highlighting works in real-time as you add/remove terms
 
+### Logger Tree
+
+The loggers of the entries are shown as a tree on the right of the list, split at the dots of their names (`Company` → `Product` → `Service`). Open it with the **Loggers** button on the right edge of the list.
+
+**Features:**
+- A check box per logger shows or hides that logger and everything below it; a partly checked box means some of the loggers below are hidden
+- Per logger: number of entries, plus counters for warnings and for errors and fatal errors; they update while entries arrive
+- Right-click a logger: **Show only this logger**, **Show all loggers**, **Expand all**, **Collapse all**
+- Right-click a logger name in the list: **Show only this logger**, **Hide this logger** (the same rules; `ShowOnlyLoggerCommand` and `HideLoggerCommand` take the logger name)
+- A search box above the tree lists the loggers that contain the text
+- Drag the splitter between the list and the tree to change its width; the arrow button in the header moves the tree to the other side of the list
+- Hidden loggers work together with the level buttons and the filter terms; an entry is shown only if all of them allow it
+
+**Logger Tree Properties:**
+- `ShowLoggerTree` - Whether the tree can be opened (default `true`)
+- `IsLoggerTreeExpanded` - Whether the tree is open (default `false`)
+- `LoggerTreeWidth` - Width of the open tree (default `260`, at least `140`); it also follows the splitter
+- `IsLoggerTreeOnLeft` - Whether the tree is on the left of the list instead of the right (default `false`)
+- `LoggerFilterRules` - The hidden and shown loggers as text, to save and restore them
+- `LoggerTree` - The tree itself with its nodes, counters and commands
+
+`LoggerFilterRules` holds one rule per entry: `-Company.Product` hides that logger and everything below it, `+Company.Product.Service` shows one of them again; the most specific rule wins. `-` alone stands for all loggers. Rules also work for loggers that did not log anything yet.
+
+```csharp
+logViewer.IsLoggerTreeExpanded = true;
+
+// Hide a logger and everything below it, except one logger
+logViewer.LoggerFilterRules = new[] { "-Company.Product", "+Company.Product.Service" };
+
+// Save and restore the state
+var saved = logViewer.LoggerFilterRules;
+```
+
 ### Control Architecture
 
 LogViewer is built as a CustomControl with theming support:
