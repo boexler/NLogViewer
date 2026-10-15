@@ -108,6 +108,7 @@ public class ThemeService : IDisposable
 		resources[SystemColors.ControlBrushKey] = resources["ThemeSurfaceAlt"];
 		resources[SystemColors.ControlTextBrushKey] = resources["ThemeTextPrimary"];
 		resources[SystemColors.GrayTextBrushKey] = resources["ThemeTextMuted"];
+		resources[SystemColors.ControlDarkBrushKey] = resources["ThemeBorder"];
 		resources[SystemColors.HighlightBrushKey] = resources["ThemeAccent"];
 		resources[SystemColors.HighlightTextBrushKey] = resources["ThemeOnAccent"];
 		resources[SystemColors.InactiveSelectionHighlightBrushKey] = resources["ThemeAccentSoft"];

@@ -7,6 +7,7 @@
     xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter"
     xmlns:helper="clr-namespace:Sentinel.LogViewer.Wpf.Helper"
     xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter"
+    xmlns:models="clr-namespace:Sentinel.LogViewer.Wpf.Models"
     x:Class="Sentinel.LogViewer.Wpf.Themes.GenericTheme">
 
     <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -292,214 +293,329 @@
                             </GroupBox>
                         </WrapPanel>
 
-                        <ListView
-                            x:Name="PART_ListView"
-                            Grid.Row="2"
-                            ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
-                            BorderThickness="0"
-                            ScrollViewer.CanContentScroll="True"
-                            listViewLayoutManager:ListViewLayoutManager.Enabled="true">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="BorderBrush" Value="Black" />
-                                    <Setter Property="BorderThickness" Value="1" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Trace}">
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceBackground}" />
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceForeground}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Debug}">
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugForeground}" />
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugBackground}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Info}">
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoForeground}" />
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoBackground}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Warn}">
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnForeground}" />
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnBackground}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Error}">
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorForeground}" />
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorBackground}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Level}"
-                                                     Value="{x:Static nLog:LogLevel.Fatal}">
-                                            <Setter Property="Foreground"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalForeground}" />
-                                            <Setter Property="Background"
-                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalBackground}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <helper:AutoSizedGridView>
-                                    <GridViewColumn Header="ID" Width="40">
-                                        <GridViewColumn.DisplayMemberBinding>
-                                            <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                <Binding Path="."/>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="IdResolver"/>
-                                            </MultiBinding>
-                                        </GridViewColumn.DisplayMemberBinding>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Level" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
-                                                       Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                                <DataTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Trace}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Trace.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Debug}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Debug.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Info}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Info.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Warn}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Warning.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Error}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Error.png" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=Level}"
-                                                                 Value="{x:Static nLog:LogLevel.Fatal}">
-                                                        <Setter TargetName="Image" Property="Source"
-                                                                Value="../Images/Small/Fatal.png" />
-                                                    </DataTrigger>
-                                                </DataTemplate.Triggers>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="TimeStamp" Width="Auto">
-                                        <GridViewColumn.DisplayMemberBinding>
-                                            <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                <Binding Path="."/>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="TimeStampResolver"/>
-                                            </MultiBinding>
-                                        </GridViewColumn.DisplayMemberBinding>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="LoggerName" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock
-                                                    helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=LoggerNameResolver}"
-                                                    Background="Transparent"
-                                                    Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
-                                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
-                                                    <TextBlock.ContextMenu>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ListView
+                                x:Name="PART_ListView"
+                                ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
+                                BorderThickness="0"
+                                ScrollViewer.CanContentScroll="True"
+                                listViewLayoutManager:ListViewLayoutManager.Enabled="true">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="BorderBrush" Value="Black" />
+                                        <Setter Property="BorderThickness" Value="1" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Trace}">
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceBackground}" />
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceForeground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Debug}">
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugForeground}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Info}">
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoForeground}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Warn}">
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnForeground}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Error}">
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorForeground}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorBackground}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=Level}"
+                                                         Value="{x:Static nLog:LogLevel.Fatal}">
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalForeground}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalBackground}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.View>
+                                    <helper:AutoSizedGridView>
+                                        <GridViewColumn Header="ID" Width="40">
+                                            <GridViewColumn.DisplayMemberBinding>
+                                                <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                    <Binding Path="."/>
+                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="IdResolver"/>
+                                                </MultiBinding>
+                                            </GridViewColumn.DisplayMemberBinding>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Level" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
+                                                           Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Trace}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Trace.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Debug}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Debug.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Info}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Info.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Warn}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Warning.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Error}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Error.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Level}"
+                                                                     Value="{x:Static nLog:LogLevel.Fatal}">
+                                                            <Setter TargetName="Image" Property="Source"
+                                                                    Value="../Images/Small/Fatal.png" />
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="TimeStamp" Width="Auto">
+                                            <GridViewColumn.DisplayMemberBinding>
+                                                <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                    <Binding Path="."/>
+                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="TimeStampResolver"/>
+                                                </MultiBinding>
+                                            </GridViewColumn.DisplayMemberBinding>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="LoggerName" Width="Auto">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=LoggerNameResolver}"
+                                                        Background="Transparent"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem
+                                                                    Header="{Binding LoggerName, Converter={StaticResource ContextMenuHeaderConverter}}"
+                                                                    IsEnabled="False"/>
+                                                                <MenuItem
+                                                                    Header="Add to Filter"
+                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                    Header="Add to Filter (Exclude)"
+                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermExcludeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                    Header="Copy to Clipboard"
+                                                                    Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </TextBlock.ContextMenu>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Message" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock
+                                                        x:Name="TextBlock1"
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=MessageResolver}"
+                                                        Background="Transparent"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
+                                                        <TextBlock.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem
+                                                                    Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
+                                                                    IsEnabled="False"/>
+                                                                <MenuItem
+                                                                    Header="Add to Filter"
+                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                                <MenuItem
+                                                                    Header="Copy to Clipboard"
+                                                                    Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                    <MenuItem.CommandParameter>
+                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
+                                                                            <Binding Path="."/>
+                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                        </MultiBinding>
+                                                                    </MenuItem.CommandParameter>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </TextBlock.ContextMenu>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </helper:AutoSizedGridView>
+                                </ListView.View>
+                            </ListView>
+
+                            <!-- Logger tree: opens on the right of the list -->
+                            <Border x:Name="PART_LoggerTreePanel" Grid.Column="1" Visibility="Collapsed"
+                                    Width="{TemplateBinding LoggerTreeWidth}"
+                                    BorderThickness="1,0,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                                <DockPanel Margin="6">
+                                    <TextBlock DockPanel.Dock="Top" Text="Loggers" FontWeight="SemiBold" Margin="2,0,0,4"/>
+                                    <TextBox DockPanel.Dock="Top" Margin="0,0,0,6" ToolTip="Search loggers"
+                                             Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TreeView ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
+                                              BorderThickness="0" Background="Transparent"
+                                              VirtualizingPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
+                                        <TreeView.Resources>
+                                            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                                                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                                <Setter Property="Visibility" Value="{Binding IsListed, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            </Style>
+                                            <HierarchicalDataTemplate DataType="{x:Type models:LoggerNode}" ItemsSource="{Binding Children}">
+                                                <Grid Background="Transparent" Margin="0,1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.ContextMenu>
                                                         <ContextMenu>
-                                                            <MenuItem
-                                                                Header="{Binding LoggerName, Converter={StaticResource ContextMenuHeaderConverter}}"
-                                                                IsEnabled="False"/>
-                                                            <MenuItem
-                                                                Header="Add to Filter"
-                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                <MenuItem.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                        <Binding Path="."/>
-                                                                        <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
-                                                                    </MultiBinding>
-                                                                </MenuItem.CommandParameter>
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                Header="Add to Filter (Exclude)"
-                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermExcludeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                <MenuItem.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                        <Binding Path="."/>
-                                                                        <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
-                                                                    </MultiBinding>
-                                                                </MenuItem.CommandParameter>
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                Header="Copy to Clipboard"
-                                                                Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                <MenuItem.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                        <Binding Path="."/>
-                                                                        <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
-                                                                    </MultiBinding>
-                                                                </MenuItem.CommandParameter>
-                                                            </MenuItem>
+                                                            <MenuItem Header="Show only this logger"
+                                                                      Command="{Binding PlacementTarget.DataContext.Tree.ShowOnlyCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                      CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                            <MenuItem Header="Show all loggers"
+                                                                      Command="{Binding PlacementTarget.DataContext.Tree.ShowAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                            <Separator/>
+                                                            <MenuItem Header="Expand all"
+                                                                      Command="{Binding PlacementTarget.DataContext.Tree.ExpandAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                                            <MenuItem Header="Collapse all"
+                                                                      Command="{Binding PlacementTarget.DataContext.Tree.CollapseAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                                         </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="Message" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock
-                                                    x:Name="TextBlock1"
-                                                    helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=MessageResolver}"
-                                                    Background="Transparent"
-                                                    Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
-                                                    Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
-                                                    <TextBlock.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem
-                                                                Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
-                                                                IsEnabled="False"/>
-                                                            <MenuItem
-                                                                Header="Add to Filter"
-                                                                Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                <MenuItem.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                        <Binding Path="."/>
-                                                                        <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
-                                                                    </MultiBinding>
-                                                                </MenuItem.CommandParameter>
-                                                            </MenuItem>
-                                                            <MenuItem
-                                                                Header="Copy to Clipboard"
-                                                                Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                <MenuItem.CommandParameter>
-                                                                    <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                        <Binding Path="."/>
-                                                                        <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
-                                                                    </MultiBinding>
-                                                                </MenuItem.CommandParameter>
-                                                            </MenuItem>
-                                                        </ContextMenu>
-                                                    </TextBlock.ContextMenu>
-                                                </TextBlock>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </helper:AutoSizedGridView>
-                            </ListView.View>
-                        </ListView>
+                                                    </Grid.ContextMenu>
+                                                    <CheckBox Grid.Column="0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                                              IsChecked="{Binding IsChecked, Mode=TwoWay}"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Name}" ToolTip="{Binding FullName}"
+                                                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsChecked}" Value="False">
+                                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                    <Border Grid.Column="2" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Warnings"
+                                                            Background="{Binding WarnBackground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding WarnCount}" Value="0">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding WarnCount}" FontSize="10"
+                                                                   Foreground="{Binding WarnForeground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}"/>
+                                                    </Border>
+                                                    <Border Grid.Column="3" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Errors and fatal errors"
+                                                            Background="{Binding ErrorBackground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ErrorCount}" Value="0">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding ErrorCount}" FontSize="10"
+                                                                   Foreground="{Binding ErrorForeground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}"/>
+                                                    </Border>
+                                                    <TextBlock Grid.Column="4" Margin="6,0,0,0" Text="{Binding TotalCount}" ToolTip="Entries"
+                                                               Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.Resources>
+                                    </TreeView>
+                                </DockPanel>
+                            </Border>
+                            <ToggleButton x:Name="PART_LoggerTreeHandle" Grid.Column="2" Width="22" Margin="2,0,0,0"
+                                          ToolTip="Show or hide the logger tree"
+                                          IsChecked="{Binding IsLoggerTreeExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                <TextBlock Text="Loggers">
+                                    <TextBlock.LayoutTransform>
+                                        <RotateTransform Angle="90"/>
+                                    </TextBlock.LayoutTransform>
+                                </TextBlock>
+                            </ToggleButton>
+                        </Grid>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsLoggerTreeExpanded" Value="True">
+                            <Setter TargetName="PART_LoggerTreePanel" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="ShowLoggerTree" Value="False">
+                            <Setter TargetName="PART_LoggerTreePanel" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="PART_LoggerTreeHandle" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

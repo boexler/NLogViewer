@@ -594,6 +594,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             {
                 if (item is not LogEventInfo logEvent) return true;
 
+                if (!LoggerTree.IsVisible(logEvent.LoggerName)) return false;
+
                 // Apply level filters first
                 var levelFilterPassed = logEvent.Level.Name switch
                 {
@@ -1728,6 +1730,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 LogEvents.Source = GetEffectiveEntries();
 
             AttachEffectiveCollectionChangedHandler();
+            LoggerTree.Rebuild(GetEffectiveEntries());
             LogEvents?.View?.Refresh();
             UpdateFilter();
             _columnWidthFitter?.Reset(GetEffectiveEntries());
@@ -1750,6 +1753,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         {
             if (sender is not ObservableCollection<LogEventInfo> coll)
                 return;
+
+            UpdateLoggerTree(e, coll);
 
             if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
                 ApplyMaxCountTrim(coll);
@@ -1799,6 +1804,9 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             DataContext = this;
 
             Uid = GetHashCode().ToString();
+
+            LoggerTree = new LoggerTree(ScheduleLoggerTreeUpdate);
+            LoggerTree.RulesChanged += OnLoggerTreeRulesChanged;
 
             if (DesignerProperties.GetIsInDesignMode(this))
                 return;
