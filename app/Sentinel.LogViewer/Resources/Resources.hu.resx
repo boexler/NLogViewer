@@ -409,12 +409,6 @@
   <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
     <value>Az felület és a naplólista témája és színei.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Téma</value>
-  </data>
-  <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Az egész alkalmazás színsémája. A Newschool világos és letisztult, az Oldschool megtartja a naplólista klasszikus színeit. Az alábbi színek mindegyike témánként módosítható.</value>
-  </data>
   <data name="Settings_Section_Interface" xml:space="preserve">
     <value>Felület</value>
   </data>
@@ -609,6 +603,39 @@
   </data>
   <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
     <value>Az üzenetben a keresésnek megfelelő szöveg háttere.</value>
+  </data>
+  <data name="Settings_ThemeMode" xml:space="preserve">
+    <value>Színmód</value>
+  </data>
+  <data name="Settings_ThemeMode_Description" xml:space="preserve">
+    <value>Világos vagy sötét, vagy ugyanaz, mint a Windowsban. Az alábbi színek az éppen használt témához tartoznak.</value>
+  </data>
+  <data name="Settings_ThemeMode_System" xml:space="preserve">
+    <value>Mint a Windows</value>
+  </data>
+  <data name="Settings_ThemeMode_Light" xml:space="preserve">
+    <value>Világos</value>
+  </data>
+  <data name="Settings_ThemeMode_Dark" xml:space="preserve">
+    <value>Sötét</value>
+  </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Igen</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Nem</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Téma</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
   </data>
 </root>
 

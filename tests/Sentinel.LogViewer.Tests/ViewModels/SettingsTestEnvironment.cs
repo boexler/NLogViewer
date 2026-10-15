@@ -72,7 +72,7 @@ public sealed class SettingsTestEnvironment : IDisposable
 	/// </summary>
 	public AppConfiguration Saved => Configuration.LoadConfiguration();
 
-	public SettingsViewModel CreateViewModel() => new(Configuration, Localization, Transfer, new ThemeService()) { Dialogs = Dialogs };
+	public SettingsViewModel CreateViewModel() => new(Configuration, Localization, Transfer, new ThemeService(() => true)) { Dialogs = Dialogs };
 
 	public string PathOf(string fileName) => Path.Combine(Directory, fileName);
 

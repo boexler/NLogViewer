@@ -6,31 +6,50 @@ using Sentinel.LogViewer.ViewModels.Settings;
 namespace Sentinel.LogViewer.ViewModels
 {
     /// <summary>
-    /// The appearance settings: the theme and a card for every colour of it
+    /// The appearance settings: light or dark mode, the theme and a card for every colour of the theme in use
     /// </summary>
     public partial class SettingsViewModel
     {
         private IEnumerable<SettingViewModel> CreateAppearanceSettings()
         {
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE790",
-                Text("Settings_Theme", "Theme"),
-                Text("Settings_Theme_Description", "Colour scheme of the whole application."),
+                Text("Settings_ThemeMode", "Colour mode"),
+                Text("Settings_ThemeMode_Description", "Light or dark, or the same as Windows. The colours below belong to the theme that is in use."),
                 needsRestart: false,
-                options: ThemeCatalog.Themes.Select(theme => new ChoiceOption(theme.Id, theme.Name)).ToList(),
+                options: new[]
+                {
+                    new ChoiceOption(ThemeCatalog.ModeSystem, Text("Settings_ThemeMode_System", "Like Windows")),
+                    new ChoiceOption(ThemeCatalog.ModeLight, Text("Settings_ThemeMode_Light", "Light")),
+                    new ChoiceOption(ThemeCatalog.ModeDark, Text("Settings_ThemeMode_Dark", "Dark"))
+                },
+                get: () => _configuration.ThemeMode,
+                set: mode =>
+                {
+                    _configuration.ThemeMode = mode;
+                    ChangeTheme();
+                },
+                getDefault: () => ThemeCatalog.ModeSystem,
+                // Resetting the appearance also takes back the theme and every custom colour of every theme.
+                reset: () =>
+                {
+                    _configuration.ThemeMode = ThemeCatalog.ModeSystem;
+                    _configuration.Theme = ThemeCatalog.DefaultThemeId;
+                    _configuration.ThemeColors.Clear();
+                    ChangeTheme();
+                });
+
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE771",
+                Text("Settings_Theme", "Theme"),
+                Text("Settings_Theme_Description", "Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode."),
+                needsRestart: false,
+                options: ThemeCatalog.Designs.Select(theme => new ChoiceOption(theme.Id, theme.Name)).ToList(),
                 get: () => ThemeCatalog.Find(_configuration.Theme).Id,
                 set: id =>
                 {
                     _configuration.Theme = id;
                     ChangeTheme();
                 },
-                getDefault: () => ThemeCatalog.DefaultThemeId,
-                // Resetting the appearance also takes back every custom colour of every theme.
-                reset: () =>
-                {
-                    _configuration.Theme = ThemeCatalog.DefaultThemeId;
-                    _configuration.ThemeColors.Clear();
-                    ChangeTheme();
-                });
+                getDefault: () => ThemeCatalog.DefaultThemeId);
 
             foreach (var token in ThemeCatalog.Tokens)
                 yield return CreateColorSetting(token);
@@ -60,7 +79,7 @@ namespace Sentinel.LogViewer.ViewModels
             };
 
             return new ColorSettingViewModel(AppearanceId, "", title, description,
-                getColor: () => ThemeCatalog.Resolve(_configuration.Theme, CustomColors(), token.Key),
+                getColor: () => ThemeCatalog.Resolve(EffectiveTheme().Id, CustomColors(), token.Key),
                 isCustom: () => CustomColors().ContainsKey(token.Key),
                 setCustom: color => SetCustomColor(token.Key, color),
                 invalidMessage: Text("Settings_Color_Invalid", "Enter a colour like #1B1B1B or #801B1B1B (with transparency)."))
@@ -70,15 +89,20 @@ namespace Sentinel.LogViewer.ViewModels
         }
 
         /// <summary>
-        /// The colours the user changed in the current theme
+        /// The theme that is in effect: the dark theme, or the light theme, depending on the mode
+        /// </summary>
+        private ThemeDefinition EffectiveTheme() => ThemeCatalog.Find(_themeService.ResolveThemeId(_configuration));
+
+        /// <summary>
+        /// The colours the user changed in the theme that is in effect
         /// </summary>
         private IReadOnlyDictionary<string, string> CustomColors() =>
-            _configuration.ThemeColors.GetValueOrDefault(ThemeCatalog.Find(_configuration.Theme).Id) ?? new Dictionary<string, string>();
+            _configuration.ThemeColors.GetValueOrDefault(EffectiveTheme().Id) ?? new Dictionary<string, string>();
 
         /// <param name="color">The new colour; null, or the colour the theme has anyway, goes back to the theme</param>
         private void SetCustomColor(string key, string? color)
         {
-            var theme = ThemeCatalog.Find(_configuration.Theme);
+            var theme = EffectiveTheme();
             if (color == theme.Colors[key])
                 color = null;
 
@@ -104,7 +128,7 @@ namespace Sentinel.LogViewer.ViewModels
         }
 
         /// <summary>
-        /// Saves and applies a theme that was chosen or reset; the colours then show those of the theme
+        /// Saves and applies a mode or theme that was chosen or reset; the colours then show those of the theme in effect
         /// </summary>
         private void ChangeTheme()
         {

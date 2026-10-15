@@ -409,12 +409,6 @@
   <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
     <value>Thème et couleurs de l’interface et de la liste des journaux.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Thème</value>
-  </data>
-  <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Jeu de couleurs de toute l’application. Newschool est clair et épuré, Oldschool conserve les couleurs classiques de la liste des journaux. Chaque couleur ci-dessous peut être modifiée pour chaque thème.</value>
-  </data>
   <data name="Settings_Section_Interface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -609,6 +603,39 @@
   </data>
   <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
     <value>Arrière-plan du texte d’un message qui correspond à la recherche.</value>
+  </data>
+  <data name="Settings_ThemeMode" xml:space="preserve">
+    <value>Mode de couleur</value>
+  </data>
+  <data name="Settings_ThemeMode_Description" xml:space="preserve">
+    <value>Clair ou sombre, ou comme Windows. Les couleurs ci-dessous appartiennent au thème utilisé.</value>
+  </data>
+  <data name="Settings_ThemeMode_System" xml:space="preserve">
+    <value>Comme Windows</value>
+  </data>
+  <data name="Settings_ThemeMode_Light" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Settings_ThemeMode_Dark" xml:space="preserve">
+    <value>Sombre</value>
+  </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool est plat et moderne, Oldschool conserve l’aspect classique et les couleurs classiques de la liste des journaux. Fonctionne en mode clair et sombre.</value>
   </data>
 </root>
 

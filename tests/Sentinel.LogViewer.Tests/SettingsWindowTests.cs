@@ -62,9 +62,9 @@ public class SettingsWindowTests
 			var window = ShowOffScreen(new SettingsWindow(viewModel));
 			try
 			{
-				var theme = Descendants<ComboBox>(window).First();
+				var mode = Descendants<ComboBox>(window).First();
 
-				Assert.Contains(Descendants<TextBlock>(theme), text => text.Text == "Newschool");
+				Assert.Contains(Descendants<TextBlock>(mode), text => text.Text == "Like Windows");
 			}
 			finally
 			{

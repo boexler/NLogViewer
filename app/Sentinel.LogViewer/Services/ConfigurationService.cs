@@ -180,7 +180,10 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Whether prerelease versions are offered as updates; null follows the running version.</summary>
         public bool? IncludePrereleaseUpdates { get; set; }
 
-        /// <summary>Id of the colour theme, see <see cref="Theming.ThemeCatalog"/>.</summary>
+        /// <summary>Whether the application is light, dark or follows Windows, see <see cref="Theming.ThemeCatalog"/>.</summary>
+        public string ThemeMode { get; set; } = Theming.ThemeCatalog.ModeSystem;
+
+        /// <summary>Id of the design, newschool or oldschool; it exists in a light and in a dark version, see <see cref="Theming.ThemeCatalog"/>.</summary>
         public string Theme { get; set; } = Theming.ThemeCatalog.DefaultThemeId;
 
         /// <summary>Colours the user changed: theme id, then token key, then the colour as #RRGGBB or #AARRGGBB.</summary>

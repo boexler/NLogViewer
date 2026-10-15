@@ -29,7 +29,8 @@ public sealed record ThemeToken(string Key, ThemeSection Section, string Name, s
 /// <summary>
 /// A set of colours with a name
 /// </summary>
-public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary<string, string> Colors);
+/// <param name="IsDark">Whether the theme is for dark mode; the title bars of the windows follow it</param>
+public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary<string, string> Colors, bool IsDark = false);
 
 /// <summary>
 /// The colours of the application: the tokens that exist, the built-in themes and the rules for custom colours.
@@ -40,9 +41,19 @@ public static class ThemeCatalog
 {
 	public const string NewschoolId = "newschool";
 	public const string OldschoolId = "oldschool";
+	public const string NewschoolDarkId = NewschoolId + DarkSuffix;
+	public const string OldschoolDarkId = OldschoolId + DarkSuffix;
 	public const string DefaultThemeId = NewschoolId;
 
+	/// <summary>
+	/// The values of <see cref="AppConfiguration.ThemeMode"/>
+	/// </summary>
+	public const string ModeSystem = "system";
+	public const string ModeLight = "light";
+	public const string ModeDark = "dark";
+
 	private const string LogPrefix = "Log";
+	private const string DarkSuffix = "-dark";
 
 	private static readonly string[] Levels = { "Trace", "Debug", "Info", "Warn", "Error", "Fatal" };
 
@@ -63,6 +74,29 @@ public static class ThemeCatalog
 	public static IReadOnlyList<ThemeToken> Tokens { get; } = CreateTokens();
 
 	public static IReadOnlyList<ThemeDefinition> Themes { get; } = CreateThemes();
+
+	/// <summary>
+	/// The designs the user can choose from; each of them exists in a light and in a dark version
+	/// </summary>
+	public static IEnumerable<ThemeDefinition> Designs => Themes.Where(theme => !theme.IsDark);
+
+	/// <summary>
+	/// Returns the id of the theme that is in effect: the chosen design in its light or dark version, depending on the mode;
+	/// the mode that follows Windows takes the one that fits the system setting
+	/// </summary>
+	public static string ResolveThemeId(AppConfiguration configuration, bool systemUsesLightTheme)
+	{
+		var dark = configuration.ThemeMode switch
+		{
+			ModeDark => true,
+			ModeLight => false,
+			_ => !systemUsesLightTheme
+		};
+
+		var design = Designs.FirstOrDefault(theme => theme.Id.Equals(configuration.Theme, StringComparison.OrdinalIgnoreCase))
+		             ?? Find(DefaultThemeId);
+		return dark ? design.Id + DarkSuffix : design.Id;
+	}
 
 	/// <summary>
 	/// Returns the theme with the id, or the default theme when there is none
@@ -120,7 +154,9 @@ public static class ThemeCatalog
 	/// </summary>
 	public static void Sanitize(AppConfiguration configuration)
 	{
-		configuration.Theme = Find(configuration.Theme).Id;
+		configuration.ThemeMode = configuration.ThemeMode is ModeLight or ModeDark ? configuration.ThemeMode : ModeSystem;
+		configuration.Theme = Designs.FirstOrDefault(theme => theme.Id.Equals(configuration.Theme, StringComparison.OrdinalIgnoreCase))?.Id
+		                      ?? DefaultThemeId;
 
 		var knownKeys = Tokens.Select(token => token.Key).ToHashSet();
 		var cleaned = new Dictionary<string, Dictionary<string, string>>();
@@ -204,15 +240,76 @@ public static class ThemeCatalog
 			["LogSearchHighlightBackground"] = "#FFD54F",
 			["LogFindHighlightBackground"] = "#F58CC0"
 		}),
-		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors())
+		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors(dark: false)),
+		new ThemeDefinition(NewschoolDarkId, "Newschool dark", new Dictionary<string, string>
+		{
+			["ThemePageBackground"] = "#1E2024",
+			["ThemeSurface"] = "#2A2D33",
+			["ThemeSurfaceAlt"] = "#17191C",
+			["ThemeBorder"] = "#3A3F47",
+			["ThemeBorderStrong"] = "#6A727E",
+			["ThemeTextPrimary"] = "#ECEFF3",
+			["ThemeTextSecondary"] = "#B6BDC8",
+			["ThemeTextMuted"] = "#8A929E",
+			["ThemeAccent"] = "#5AA2F0",
+			["ThemeAccentSoft"] = "#1F3A5C",
+			["ThemeOnAccent"] = "#0B1220",
+			["ThemeHover"] = "#353A42",
+			["ThemeSuccess"] = "#5FD068",
+			["ThemeError"] = "#FF6B5E",
+			["ThemeWarningBackground"] = "#4A3B10",
+			["ThemeWarningText"] = "#FFD97A",
+
+			["LogTraceBackground"] = "#2B2E34",
+			["LogTraceForeground"] = "#A0A8B4",
+			["LogDebugBackground"] = "#1F3B28",
+			["LogDebugForeground"] = "#8FE0A0",
+			["LogInfoBackground"] = "#1C3552",
+			["LogInfoForeground"] = "#9CC9F8",
+			["LogWarnBackground"] = "#4A3B10",
+			["LogWarnForeground"] = "#FFD97A",
+			["LogErrorBackground"] = "#4F2226",
+			["LogErrorForeground"] = "#FF9EA3",
+			["LogFatalBackground"] = "#B3262E",
+			["LogFatalForeground"] = "#FFFFFF",
+
+			["LogTextSearchTermBackground"] = "#4A3B10",
+			["LogTextSearchTermBorderBrush"] = "#B38A00",
+			["LogTextSearchTermForeground"] = "#ECEFF3",
+			["LogRegexSearchTermBackground"] = "#1F3A5C",
+			["LogRegexSearchTermBorderBrush"] = "#3F78B8",
+			["LogRegexSearchTermForeground"] = "#ECEFF3",
+			["LogRegexPrefixForeground"] = "#5AA2F0",
+			["LogSearchHighlightBackground"] = "#8A6A00",
+			["LogFindHighlightBackground"] = "#A63D7B"
+		}, IsDark: true),
+		new ThemeDefinition(OldschoolDarkId, "Oldschool dark", CreateOldschoolColors(dark: true), IsDark: true)
 	};
 
 	/// <summary>
-	/// The classic look: grey surfaces and the colours that the log list control brings along
+	/// The classic look: grey surfaces and the colours that the log list control brings along, also in the dark version
 	/// </summary>
-	private static Dictionary<string, string> CreateOldschoolColors()
+	private static Dictionary<string, string> CreateOldschoolColors(bool dark)
 	{
-		var colors = new Dictionary<string, string>
+		var colors = dark ? new Dictionary<string, string>
+		{
+			["ThemePageBackground"] = "#1F1F1F",
+			["ThemeSurface"] = "#2D2D2D",
+			["ThemeSurfaceAlt"] = "#383838",
+			["ThemeBorder"] = "#4A4A4A",
+			["ThemeBorderStrong"] = "#7A7A7A",
+			["ThemeTextPrimary"] = "#F0F0F0",
+			["ThemeTextSecondary"] = "#C8C8C8",
+			["ThemeTextMuted"] = "#999999",
+			["ThemeAccent"] = "#3A96DD",
+			["ThemeAccentSoft"] = "#26425E",
+			["ThemeOnAccent"] = "#FFFFFF",
+			["ThemeHover"] = "#444444",
+			["ThemeSuccess"] = "#5FD068",
+			["ThemeError"] = "#FF6B5E",
+			["ThemeWarningBackground"] = "#4A3B10",
+			["ThemeWarningText"] = "#FFD97A"
+		} : new Dictionary<string, string>
 		{
 			["ThemePageBackground"] = "#FFFFFF",
 			["ThemeSurface"] = "#FFFFFF",

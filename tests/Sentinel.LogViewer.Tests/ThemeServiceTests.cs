@@ -20,14 +20,15 @@ public class ThemeServiceTests : IDisposable
 	}
 
 	// The application is shared by all WPF tests, so it goes back to the default theme.
-	public void Dispose() => _context.RunOnSta(() => new ThemeService().Apply(new AppConfiguration()));
+	public void Dispose() => _context.RunOnSta(() => new ThemeService(() => true).Apply(new AppConfiguration()));
 
 	[Fact]
 	public void Apply_SetsABrushForEveryToken()
 	{
 		_context.RunOnSta(() =>
 		{
-			new ThemeService().Apply(new AppConfiguration { Theme = ThemeCatalog.OldschoolId });
+			new ThemeService(() => true).Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight,
+				Theme = ThemeCatalog.OldschoolId });
 
 			foreach (var token in ThemeCatalog.Tokens)
 			{
@@ -45,6 +46,7 @@ public class ThemeServiceTests : IDisposable
 		{
 			var configuration = new AppConfiguration
 			{
+				ThemeMode = ThemeCatalog.ModeLight,
 				Theme = ThemeCatalog.OldschoolId,
 				ThemeColors = new()
 				{
@@ -53,7 +55,7 @@ public class ThemeServiceTests : IDisposable
 				}
 			};
 
-			new ThemeService().Apply(configuration);
+			new ThemeService(() => true).Apply(configuration);
 
 			Assert.Equal(Color.FromRgb(0x11, 0x22, 0x33), ((SolidColorBrush)Application.Current.Resources["ThemeAccent"]).Color);
 			Assert.Equal(Color.FromArgb(0x80, 0xFF, 0, 0), ((SolidColorBrush)Application.Current.Resources["LogTraceBackground"]).Color);
@@ -70,7 +72,7 @@ public class ThemeServiceTests : IDisposable
 			border.SetResourceReference(System.Windows.Controls.Border.BackgroundProperty, "ThemeSurface");
 			var window = new Window { Content = border };
 
-			new ThemeService().Apply(new AppConfiguration { ThemeColors = new() { [ThemeCatalog.NewschoolId] = new() { ["ThemeSurface"] = "#102030" } } });
+			new ThemeService(() => true).Apply(new AppConfiguration { ThemeColors = new() { [ThemeCatalog.NewschoolId] = new() { ["ThemeSurface"] = "#102030" } } });
 
 			Assert.Equal(Color.FromRgb(0x10, 0x20, 0x30), ((SolidColorBrush)border.Background).Color);
 			window.Close();

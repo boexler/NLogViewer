@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
                 <ResourceDictionary Source="Styles/AppStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ShellStyles.xaml"/>
+                <ResourceDictionary Source="Styles/ControlStyles.xaml"/>
                 <ResourceDictionary Source="Styles/SettingsStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <!-- Converters -->

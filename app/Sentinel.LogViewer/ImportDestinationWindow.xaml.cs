@@ -138,7 +138,7 @@ public partial class ImportDestinationWindow : Window
 		{
 			if (TabsListBox.SelectedItem is not LogTabViewModel tab)
 			{
-				MessageBox.Show(
+				MessageDialogWindow.Show(
 					this,
 					GetMessage("ImportDestination_SelectTab", "Please select a tab."));
 				return;

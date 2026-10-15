@@ -409,12 +409,6 @@
   <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
     <value>Design und Farben der Oberfläche und der Log-Liste.</value>
   </data>
-  <data name="Settings_Theme" xml:space="preserve">
-    <value>Design</value>
-  </data>
-  <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Farbschema der gesamten Anwendung. Newschool ist hell und flach, Oldschool behält die klassischen Farben der Log-Liste bei. Jede Farbe darunter lässt sich für jedes Design ändern.</value>
-  </data>
   <data name="Settings_Section_Interface" xml:space="preserve">
     <value>Oberfläche</value>
   </data>
@@ -609,6 +603,39 @@
   </data>
   <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
     <value>Hintergrund des Texts in einer Meldung, der zur Suche passt.</value>
+  </data>
+  <data name="Settings_ThemeMode" xml:space="preserve">
+    <value>Farbmodus</value>
+  </data>
+  <data name="Settings_ThemeMode_Description" xml:space="preserve">
+    <value>Hell oder dunkel, oder wie Windows. Die Farben darunter gehören zum Design, das gerade verwendet wird.</value>
+  </data>
+  <data name="Settings_ThemeMode_System" xml:space="preserve">
+    <value>Wie Windows</value>
+  </data>
+  <data name="Settings_ThemeMode_Light" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Settings_ThemeMode_Dark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool ist flach und modern, Oldschool behält das klassische Aussehen und die klassischen Farben der Log-Liste bei. Gilt im hellen und im dunklen Modus.</value>
   </data>
 </root>
 

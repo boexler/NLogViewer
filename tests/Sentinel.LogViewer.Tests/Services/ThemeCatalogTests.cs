@@ -86,21 +86,23 @@ public class ThemeCatalogTests
 	{
 		var configuration = new AppConfiguration
 		{
-			Theme = "nonsense",
+			ThemeMode = "nonsense",
+			Theme = ThemeCatalog.OldschoolDarkId,
 			ThemeColors = new()
 			{
 				["OldSchool"] = new() { ["ThemeAccent"] = "#abc", ["ThemeBorder"] = "nonsense", ["NoSuchToken"] = "#000000" },
 				["gone"] = new() { ["ThemeAccent"] = "#000000" },
-				["newschool"] = new() { ["ThemeBorder"] = "nonsense" }
+				["newschool"] = new() { ["ThemeBorder"] = "nonsense" },
+				["oldschool-dark"] = new() { ["ThemeBorder"] = "#445566" }
 			}
 		};
 
 		ThemeCatalog.Sanitize(configuration);
 
+		Assert.Equal(ThemeCatalog.ModeSystem, configuration.ThemeMode);
 		Assert.Equal(ThemeCatalog.DefaultThemeId, configuration.Theme);
-		var colors = Assert.Single(configuration.ThemeColors);
-		Assert.Equal(ThemeCatalog.OldschoolId, colors.Key);
-		Assert.Equal(new Dictionary<string, string> { ["ThemeAccent"] = "#AABBCC" }, colors.Value);
+		Assert.Equal(new[] { ThemeCatalog.OldschoolId, ThemeCatalog.OldschoolDarkId }, configuration.ThemeColors.Keys.OrderBy(key => key));
+		Assert.Equal(new Dictionary<string, string> { ["ThemeAccent"] = "#AABBCC" }, configuration.ThemeColors[ThemeCatalog.OldschoolId]);
 	}
 
 	[Fact]
@@ -110,5 +112,47 @@ public class ThemeCatalogTests
 
 		var sections = ThemeCatalog.Tokens.Select(token => token.Section).ToList();
 		Assert.Equal(sections.OrderBy(section => section), sections);
+	}
+
+	[Theory]
+	[InlineData("light", "newschool", true, "newschool")]
+	[InlineData("light", "oldschool", false, "oldschool")]
+	[InlineData("dark", "newschool", true, "newschool-dark")]
+	[InlineData("dark", "oldschool", false, "oldschool-dark")]
+	[InlineData("system", "newschool", true, "newschool")]
+	[InlineData("system", "newschool", false, "newschool-dark")]
+	[InlineData("system", "oldschool", true, "oldschool")]
+	[InlineData("system", "oldschool", false, "oldschool-dark")]
+	[InlineData("nonsense", "nonsense", false, "newschool-dark")]
+	[InlineData("light", "newschool-dark", true, "newschool")]
+	public void ResolveThemeId_CombinesTheDesignWithTheModeOrTheSystem(string mode, string design, bool systemUsesLightTheme, string expected)
+	{
+		var configuration = new AppConfiguration { ThemeMode = mode, Theme = design };
+
+		Assert.Equal(expected, ThemeCatalog.ResolveThemeId(configuration, systemUsesLightTheme));
+	}
+
+	[Fact]
+	public void EveryDesignHasALightAndADarkTheme()
+	{
+		foreach (var design in ThemeCatalog.Designs)
+		{
+			Assert.False(design.IsDark);
+			Assert.True(ThemeCatalog.Find(design.Id + "-dark").IsDark);
+			Assert.Equal(design.Id + "-dark", ThemeCatalog.Find(design.Id + "-dark").Id);
+		}
+
+		Assert.Equal(4, ThemeCatalog.Themes.Count);
+	}
+
+	[Fact]
+	public void OldschoolDark_HasDarkSurfacesAndTheClassicColoursOfTheLogList()
+	{
+		var light = ThemeCatalog.Find(ThemeCatalog.OldschoolId).Colors;
+		var dark = ThemeCatalog.Find(ThemeCatalog.OldschoolDarkId).Colors;
+
+		Assert.NotEqual(light["ThemePageBackground"], dark["ThemePageBackground"]);
+		foreach (var token in ThemeCatalog.Tokens.Where(token => token.Section != ThemeSection.Interface))
+			Assert.Equal(light[token.Key], dark[token.Key]);
 	}
 }
