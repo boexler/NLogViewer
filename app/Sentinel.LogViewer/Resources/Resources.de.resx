@@ -274,5 +274,134 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Möchten Sie wirklich alle anderen Tabs schließen?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Einstellungen durchsuchen</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Suchergebnisse</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Einstellungen, deren Titel oder Beschreibung „{0}“ enthält.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Keine Einstellung zu „{0}“ gefunden.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Änderungen werden sofort gespeichert</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>{0} zurücksetzen</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Einstellungen zurücksetzen</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Alle Einstellungen in „{0}“ auf die Standardwerte zurücksetzen?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>{0} wurde auf die Standardwerte zurückgesetzt.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Exportieren…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importieren…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Einstellungen exportieren</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Einstellungen importieren</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Einstellungsdateien (*.json)|*.json|Alle Dateien (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Der Import ersetzt alle aktuellen Einstellungen und gespeicherten Spaltenzuordnungen. Fortfahren?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Einstellungen nach {0} exportiert</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Einstellungen importiert. Starten Sie die Anwendung neu, um alle Änderungen zu übernehmen.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>Dies ist keine aus Sentinel LogViewer exportierte Einstellungsdatei.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>Die Datei konnte nicht importiert werden: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>Die Einstellungen konnten nicht exportiert werden: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Neustart nötig</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Port hinzufügen</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Port entfernen</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Geben Sie eine Adresse wie udp://0.0.0.0:4000 mit einem Port von 1 bis 65535 ein.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Dieser Port steht bereits in der Liste.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Geben Sie eine ganze Zahl zwischen {0} und {1} ein.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Sprache und Grundverhalten der Anwendung.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Empfang</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Wie und woher Logs in der Anwendung ankommen.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Wie die Anwendung nach neuen Versionen sucht.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Sprache der Menüs und Dialoge. Wird nach einem Neustart der Anwendung vollständig übernommen.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Beim Start lauschen</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Adressen, auf denen die Anwendung auf Logs wartet, zum Beispiel udp://0.0.0.0:4000. Änderungen gelten ab dem nächsten Start des Lauschens.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Höchstzahl Einträge je Tab</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Ältere Einträge werden entfernt, sobald ein Tab mehr enthält. Schützt bei langen Live-Sitzungen den Arbeitsspeicher. Gilt für danach geöffnete Tabs.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Berücksichtigt Beta-Versionen bei der Suche nach Updates. Standardmäßig an, solange eine Vorabversion läuft.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Empfängt sofort nach dem Start Logs auf allen Ports, ohne dass „Lauschen starten“ geklickt werden muss.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Fragt beim Start der Anwendung einmal bei GitHub nach, ob es eine neuere Version gibt. Hilfe → Über prüft immer.</value>
+  </data>
 </root>
 

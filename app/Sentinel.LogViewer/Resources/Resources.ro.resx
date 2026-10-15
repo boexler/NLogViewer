@@ -274,6 +274,135 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Sigur doriți să închideți toate celelalte file?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Setări</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Caută în setări</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Rezultatele căutării</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Setări al căror titlu sau descriere conține „{0}”.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Nu s-a găsit nicio setare pentru „{0}”.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Modificările se salvează imediat</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Resetează {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Resetare setări</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Resetați toate setările din „{0}” la valorile implicite?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>{0} a fost resetat la valorile implicite.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Exportă…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importă…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Exportă setările</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Importă setările</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Fișiere de setări (*.json)|*.json|Toate fișierele (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Importul înlocuiește toate setările curente și mapările de coloane salvate. Continuați?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Setările au fost exportate în {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Setări importate. Reporniți aplicația pentru a aplica toate modificările.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>Acesta nu este un fișier de setări exportat din Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>Fișierul nu a putut fi importat: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>Setările nu au putut fi exportate: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Necesită repornire</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Adaugă port</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Elimină portul</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Introduceți o adresă precum udp://0.0.0.0:4000 cu un port între 1 și 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Acest port este deja în listă.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Introduceți un număr întreg între {0} și {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Limba și comportamentul de bază al aplicației.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Recepție</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Cum și pe unde ajung jurnalele în aplicație.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Actualizări</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Cum caută aplicația versiuni noi.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Limbă</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Limba meniurilor și a dialogurilor. Se aplică complet după repornirea aplicației.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Ascultă la pornire</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Porturi</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Adresele pe care aplicația ascultă jurnale, de exemplu udp://0.0.0.0:4000. Modificările se aplică la următoarea pornire a ascultării.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Număr maxim de intrări pe filă</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Intrările mai vechi sunt eliminate când o filă conține mai multe. Protejează memoria în sesiuni live lungi. Se aplică filelor deschise ulterior.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Include versiunile beta la căutarea actualizărilor. Activat implicit cât timp rulați o versiune preliminară.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Începe să primească jurnale pe toate porturile imediat ce se deschide aplicația, fără a apăsa „Începe ascultarea”.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>La pornirea aplicației întreabă o dată GitHub dacă există o versiune mai nouă. Ajutor → Despre verifică întotdeauna.</value>
+  </data>
 </root>
 
 

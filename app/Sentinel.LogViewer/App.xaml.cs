@@ -51,6 +51,7 @@ namespace Sentinel.LogViewer
             services.AddSingleton<TextFileFormatDetector>();
             services.AddSingleton<TextFileFormatConfigService>();
             services.AddSingleton<UpdateService>();
+            services.AddSingleton<SettingsTransferService>();
 
             // Register services as scoped (one per window/view)
             services.AddScoped<UdpLogReceiverService>();

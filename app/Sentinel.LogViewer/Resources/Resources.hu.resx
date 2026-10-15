@@ -274,6 +274,135 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Biztosan bezárja az összes többi lapot?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Beállítások keresése</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Keresési találatok</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Azok a beállítások, amelyek címe vagy leírása tartalmazza: „{0}”.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Nincs találat erre: „{0}”.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>A módosítások azonnal mentésre kerülnek</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>{0} visszaállítása</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Beállítások visszaállítása</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Visszaállítja a(z) „{0}” összes beállítását az alapértékekre?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>A(z) {0} visszaállt az alapértékekre.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Exportálás…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importálás…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Beállítások exportálása</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Beállítások importálása</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Beállításfájlok (*.json)|*.json|Minden fájl (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Az importálás lecseréli az összes jelenlegi beállítást és a mentett oszlopleképezést. Folytatja?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>A beállítások exportálva: {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Beállítások importálva. Indítsa újra az alkalmazást a módosítások teljes érvényesítéséhez.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>Ez nem a Sentinel LogViewerből exportált beállításfájl.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>A fájl importálása nem sikerült: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>A beállításokat nem sikerült exportálni: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Újraindítás szükséges</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Port hozzáadása</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Port eltávolítása</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Ez a port már szerepel a listában.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Adjon meg egy egész számot {0} és {1} között.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>Általános</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Az alkalmazás nyelve és alapvető működése.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Fogadás</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Hogyan és honnan érkeznek a naplók az alkalmazásba.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Frissítések</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Hogyan keres az alkalmazás új verziókat.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>A menük és párbeszédablakok nyelve. Az alkalmazás újraindítása után érvényesül teljesen.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Figyelés indításkor</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Portok</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Azok a címek, amelyeken az alkalmazás naplókat vár, például udp://0.0.0.0:4000. A módosítások a figyelés következő indításakor lépnek érvénybe.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Bejegyzések maximális száma lapfülenként</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>A régebbi bejegyzések törlődnek, ha egy lapfül ennél többet tartalmaz. Hosszú élő munkamenetek során védi a memóriát. A később megnyitott lapfülekre vonatkozik.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>A frissítések keresésekor a béta verziókat is figyelembe veszi. Alapértelmezés szerint be van kapcsolva, amíg előzetes verziót futtat.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Az alkalmazás megnyitása után azonnal fogadja a naplókat az összes porton, a „Figyelés indítása” gomb megnyomása nélkül.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>A program indításakor egyszer megkérdezi a GitHubot, hogy létezik-e újabb verzió. A Súgó → Névjegy mindig ellenőriz.</value>
+  </data>
 </root>
 
 

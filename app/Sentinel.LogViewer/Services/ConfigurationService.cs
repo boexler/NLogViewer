@@ -127,10 +127,17 @@ namespace Sentinel.LogViewer.Services
                 // Fall back to default configuration
             }
 
-            // Return default configuration with empty language for auto-detection
+            return CreateDefaultConfiguration();
+        }
+
+        /// <summary>
+        /// Returns the settings of a fresh installation
+        /// </summary>
+        public static AppConfiguration CreateDefaultConfiguration()
+        {
             return new AppConfiguration
             {
-                Ports = new List<string> { "udp://0.0.0.0:4000" },
+                Ports = new List<string> { SettingsRules.DefaultPortAddress },
                 Language = string.Empty, // Empty means auto-detect on first start
                 MaxLogEntriesPerTab = 10000,
                 AutoStartListening = false,

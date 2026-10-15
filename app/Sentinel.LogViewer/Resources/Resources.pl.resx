@@ -274,6 +274,135 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Czy na pewno chcesz zamknąć wszystkie inne karty?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Szukaj w ustawieniach</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Wyniki wyszukiwania</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Ustawienia, których tytuł lub opis zawiera „{0}”.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Nie znaleziono ustawień dla „{0}”.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Zmiany są zapisywane od razu</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Przywróć: {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Przywracanie ustawień</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Przywrócić wartości domyślne wszystkich ustawień w kategorii „{0}”?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>Kategoria {0} została przywrócona do wartości domyślnych.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Eksportuj…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importuj…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Eksport ustawień</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Import ustawień</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Pliki ustawień (*.json)|*.json|Wszystkie pliki (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Import zastąpi wszystkie bieżące ustawienia i zapisane mapowania kolumn. Kontynuować?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Ustawienia wyeksportowano do {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Ustawienia zaimportowano. Uruchom aplikację ponownie, aby zastosować wszystkie zmiany.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>To nie jest plik ustawień wyeksportowany z Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>Nie udało się zaimportować pliku: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>Nie udało się wyeksportować ustawień: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Wymagany restart</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Dodaj port</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Usuń port</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Podaj adres w postaci udp://0.0.0.0:4000 z portem od 1 do 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Ten port jest już na liście.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Podaj liczbę całkowitą od {0} do {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>Ogólne</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Język i podstawowe zachowanie aplikacji.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Odbieranie</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Jak i którędy logi trafiają do aplikacji.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Aktualizacje</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Jak aplikacja szuka nowych wersji.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Język menu i okien dialogowych. W pełni stosowany po ponownym uruchomieniu aplikacji.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Nasłuchuj przy uruchomieniu</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Porty</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Adresy, na których aplikacja nasłuchuje logów, na przykład udp://0.0.0.0:4000. Zmiany zaczynają obowiązywać przy następnym rozpoczęciu nasłuchiwania.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Maksymalna liczba wpisów na kartę</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Starsze wpisy są usuwane, gdy karta zawiera ich więcej. Chroni pamięć podczas długich sesji na żywo. Dotyczy kart otwartych później.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Uwzględnia wersje beta podczas wyszukiwania aktualizacji. Domyślnie włączone, dopóki działa wersja przedpremierowa.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Rozpoczyna odbieranie logów na wszystkich portach zaraz po otwarciu aplikacji, bez klikania „Rozpocznij nasłuchiwanie”.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Raz przy uruchomieniu aplikacji sprawdza w GitHub, czy istnieje nowsza wersja. Pomoc → O programie zawsze sprawdza.</value>
+  </data>
 </root>
 
 

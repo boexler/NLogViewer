@@ -15,14 +15,37 @@ public class TextFileFormatConfigService
 {
 	private readonly string _configPath;
 
-	public TextFileFormatConfigService()
+	public TextFileFormatConfigService() : this(CreateDefaultConfigPath())
+	{
+	}
+
+	/// <summary>
+	/// For tests: stores the formats in the given file
+	/// </summary>
+	internal TextFileFormatConfigService(string configPath)
+	{
+		_configPath = configPath;
+	}
+
+	private static string CreateDefaultConfigPath()
 	{
 		var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 		var appDataPath = Path.Combine(localAppData, ProductNames.Technical);
 		Directory.CreateDirectory(appDataPath);
-		_configPath = Path.Combine(appDataPath, "textfileformats.json");
-		ConfigurationService.MigrateLegacyAppDataFile(localAppData, _configPath);
+		var configPath = Path.Combine(appDataPath, "textfileformats.json");
+		ConfigurationService.MigrateLegacyAppDataFile(localAppData, configPath);
+		return configPath;
 	}
+
+	/// <summary>
+	/// Gets all saved format configurations
+	/// </summary>
+	public TextFileFormatConfigCollection GetAll() => LoadConfigurations();
+
+	/// <summary>
+	/// Replaces all saved format configurations
+	/// </summary>
+	public void ReplaceAll(TextFileFormatConfigCollection collection) => SaveConfigurations(collection);
 
 	/// <summary>
 	/// Gets the format configuration for a specific file

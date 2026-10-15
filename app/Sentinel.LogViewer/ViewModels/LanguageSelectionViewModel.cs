@@ -16,20 +16,6 @@ namespace Sentinel.LogViewer.ViewModels
     {
         private LanguageItem? _selectedLanguage;
 
-        /// <summary>
-        /// Language names mapping
-        /// </summary>
-        private static readonly Dictionary<string, string> LanguageNames = new()
-        {
-            { "de", "Deutsch" },
-            { "en", "English" },
-            { "es", "Español" },
-            { "fr", "Français" },
-            { "hu", "Magyar" },
-            { "pl", "Polski" },
-            { "ro", "Română" }
-        };
-
         private readonly LocalizationService _localizationService;
 
         public LanguageSelectionViewModel(LocalizationService localizationService)
@@ -43,7 +29,7 @@ namespace Sentinel.LogViewer.ViewModels
                 Languages.Add(new LanguageItem
                 {
                     Code = lang.Key,
-                    Name = LanguageNames.TryGetValue(lang.Key, out var name) ? name : lang.Key,
+                    Name = Services.LocalizationService.LanguageNames.TryGetValue(lang.Key, out var name) ? name : lang.Key,
                     FlagPath = lang.Value
                 });
             }

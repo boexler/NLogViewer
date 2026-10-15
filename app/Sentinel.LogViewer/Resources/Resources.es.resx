@@ -274,5 +274,134 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>¿Realmente desea cerrar las demás pestañas?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Configuración</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Buscar en la configuración</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Resultados de la búsqueda</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Opciones cuyo título o descripción contienen «{0}».</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>No se encontró ninguna opción para «{0}».</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Los cambios se guardan al instante</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Restablecer {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Restablecer configuración</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>¿Restablecer todas las opciones de «{0}» a sus valores predeterminados?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>{0} se restableció a sus valores predeterminados.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Exportar…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importar…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Exportar configuración</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Importar configuración</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Archivos de configuración (*.json)|*.json|Todos los archivos (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>La importación reemplaza toda la configuración actual y las asignaciones de columnas guardadas. ¿Continuar?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Configuración exportada a {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Configuración importada. Reinicie la aplicación para aplicar todos los cambios.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>Este no es un archivo de configuración exportado desde Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>No se pudo importar el archivo: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>No se pudo exportar la configuración: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Requiere reinicio</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Añadir puerto</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Quitar puerto</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Introduzca una dirección como udp://0.0.0.0:4000 con un puerto de 1 a 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Este puerto ya está en la lista.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Introduzca un número entero entre {0} y {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Idioma y comportamiento básico de la aplicación.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Recepción</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Cómo y por dónde llegan los registros a la aplicación.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Actualizaciones</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Cómo busca la aplicación nuevas versiones.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Idioma de los menús y cuadros de diálogo. Se aplica por completo al reiniciar la aplicación.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Escuchar al iniciar</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Puertos</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Direcciones en las que la aplicación escucha registros, por ejemplo udp://0.0.0.0:4000. Los cambios se aplican la próxima vez que se inicie la escucha.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Máximo de entradas por pestaña</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Las entradas más antiguas se eliminan cuando una pestaña contiene más. Protege la memoria en sesiones en vivo largas. Se aplica a las pestañas que se abran después.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Incluye las versiones beta al buscar actualizaciones. Activado de forma predeterminada mientras se ejecuta una versión preliminar.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Empieza a recibir registros en todos los puertos en cuanto se abre la aplicación, sin pulsar «Iniciar escucha».</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Pregunta a GitHub una vez al iniciar la aplicación si existe una versión más reciente. Ayuda → Acerca de siempre comprueba.</value>
+  </data>
 </root>
 

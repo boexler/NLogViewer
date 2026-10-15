@@ -286,5 +286,134 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Do you really want to close all other tabs?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Search settings</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Search results</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Settings whose title or description contain “{0}”.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>No settings found for “{0}”.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Changes are saved immediately</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Reset {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Reset settings</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Reset all settings in “{0}” to their defaults?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>{0} was reset to its defaults.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Export…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Import…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Export settings</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Import settings</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Settings files (*.json)|*.json|All files (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Importing replaces all current settings and saved column mappings. Continue?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Settings exported to {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Settings imported. Restart the application to apply all changes.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>This is not a settings file exported from Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>The file could not be imported: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>The settings could not be exported: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Restart required</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Add port</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Remove port</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>This port is already in the list.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Enter a whole number between {0} and {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Language and basic behaviour of the application.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Receiving</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>How and where logs reach the application.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>How the application looks for new versions.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Language of the menus and dialogs. Fully applied after restarting the application.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Start listening on launch</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Addresses the application listens on for logs, for example udp://0.0.0.0:4000. Changes apply the next time listening is started.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Maximum entries per tab</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Older entries are removed once a tab holds more. Protects memory during long live sessions. Applies to tabs opened afterwards.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Includes beta versions when looking for updates. Switched on by default while you run a prerelease.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Starts receiving logs on all ports as soon as the application opens, without clicking “Start Listening”.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Asks GitHub once when the application starts whether a newer version exists. Help → About always checks.</value>
+  </data>
 </root>
 
