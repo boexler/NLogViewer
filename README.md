@@ -42,12 +42,6 @@ Build the installer locally (Windows): `dotnet build installer/Sentinel.LogViewe
 
 ![LogViewer][p2]
 
-## Material Design Theme
-
-This project also includes **Sentinel.LogViewer.Wpf.MaterialDesign** - a Material Design theme and style package for the LogViewer control. The Material Design theme provides a modern, clean UI following Google's Material Design guidelines.
-
-📦 **Sentinel.LogViewer.Wpf.MaterialDesign** - [View Project](ui/Sentinel.LogViewer.Wpf.MaterialDesign/)
-
 ## Quick Start
 
 ### 1. Add Required References
@@ -345,7 +339,7 @@ LogViewer is built as a CustomControl with theming support:
 **Architecture:**
 - **CustomControl Base Class** - Enables proper theming and styling
 - **RelayCommand System** - MVVM-compatible command system
-- **Theme Support** - Full support for custom themes including Material Design
+- **Theme Support** - Full support for custom themes through resource dictionaries
 - **Code Organization** - Separation of concerns between UI and logic
 
 ### Format output (ILogEventInfoResolver)
