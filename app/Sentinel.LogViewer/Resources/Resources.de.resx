@@ -619,12 +619,6 @@
   <data name="Settings_ThemeMode_Dark" xml:space="preserve">
     <value>Dunkel</value>
   </data>
-  <data name="Settings_LightTheme" xml:space="preserve">
-    <value>Helles Design</value>
-  </data>
-  <data name="Settings_LightTheme_Description" xml:space="preserve">
-    <value>Newschool ist hell und flach, Oldschool behält die klassischen Farben der Log-Liste bei. Gilt immer, wenn die Anwendung hell ist.</value>
-  </data>
   <data name="MessageBox_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -636,6 +630,12 @@
   </data>
   <data name="MessageBox_No" xml:space="preserve">
     <value>Nein</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool ist flach und modern, Oldschool behält das klassische Aussehen und die klassischen Farben der Log-Liste bei. Gilt im hellen und im dunklen Modus.</value>
   </data>
 </root>
 

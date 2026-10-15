@@ -619,12 +619,6 @@
   <data name="Settings_ThemeMode_Dark" xml:space="preserve">
     <value>Sombre</value>
   </data>
-  <data name="Settings_LightTheme" xml:space="preserve">
-    <value>Thème clair</value>
-  </data>
-  <data name="Settings_LightTheme_Description" xml:space="preserve">
-    <value>Newschool est clair et épuré, Oldschool conserve les couleurs classiques de la liste des journaux. Utilisé chaque fois que l’application est claire.</value>
-  </data>
   <data name="MessageBox_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -636,6 +630,12 @@
   </data>
   <data name="MessageBox_No" xml:space="preserve">
     <value>Non</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool est plat et moderne, Oldschool conserve l’aspect classique et les couleurs classiques de la liste des journaux. Fonctionne en mode clair et sombre.</value>
   </data>
 </root>
 

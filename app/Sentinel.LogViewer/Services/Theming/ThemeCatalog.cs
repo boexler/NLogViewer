@@ -41,7 +41,8 @@ public static class ThemeCatalog
 {
 	public const string NewschoolId = "newschool";
 	public const string OldschoolId = "oldschool";
-	public const string DarkId = "dark";
+	public const string NewschoolDarkId = NewschoolId + DarkSuffix;
+	public const string OldschoolDarkId = OldschoolId + DarkSuffix;
 	public const string DefaultThemeId = NewschoolId;
 
 	/// <summary>
@@ -52,6 +53,7 @@ public static class ThemeCatalog
 	public const string ModeDark = "dark";
 
 	private const string LogPrefix = "Log";
+	private const string DarkSuffix = "-dark";
 
 	private static readonly string[] Levels = { "Trace", "Debug", "Info", "Warn", "Error", "Fatal" };
 
@@ -74,13 +76,13 @@ public static class ThemeCatalog
 	public static IReadOnlyList<ThemeDefinition> Themes { get; } = CreateThemes();
 
 	/// <summary>
-	/// The themes that can be used in light mode
+	/// The designs the user can choose from; each of them exists in a light and in a dark version
 	/// </summary>
-	public static IEnumerable<ThemeDefinition> LightThemes => Themes.Where(theme => !theme.IsDark);
+	public static IEnumerable<ThemeDefinition> Designs => Themes.Where(theme => !theme.IsDark);
 
 	/// <summary>
-	/// Returns the id of the theme that is in effect: the dark theme in dark mode, the chosen light theme in light mode,
-	/// and in the mode that follows Windows the one that fits the system setting
+	/// Returns the id of the theme that is in effect: the chosen design in its light or dark version, depending on the mode;
+	/// the mode that follows Windows takes the one that fits the system setting
 	/// </summary>
 	public static string ResolveThemeId(AppConfiguration configuration, bool systemUsesLightTheme)
 	{
@@ -91,11 +93,9 @@ public static class ThemeCatalog
 			_ => !systemUsesLightTheme
 		};
 
-		if (dark)
-			return DarkId;
-
-		var light = Find(configuration.LightTheme);
-		return light.IsDark ? DefaultThemeId : light.Id;
+		var design = Designs.FirstOrDefault(theme => theme.Id.Equals(configuration.Theme, StringComparison.OrdinalIgnoreCase))
+		             ?? Find(DefaultThemeId);
+		return dark ? design.Id + DarkSuffix : design.Id;
 	}
 
 	/// <summary>
@@ -155,8 +155,8 @@ public static class ThemeCatalog
 	public static void Sanitize(AppConfiguration configuration)
 	{
 		configuration.ThemeMode = configuration.ThemeMode is ModeLight or ModeDark ? configuration.ThemeMode : ModeSystem;
-		var lightTheme = Find(configuration.LightTheme);
-		configuration.LightTheme = lightTheme.IsDark ? DefaultThemeId : lightTheme.Id;
+		configuration.Theme = Designs.FirstOrDefault(theme => theme.Id.Equals(configuration.Theme, StringComparison.OrdinalIgnoreCase))?.Id
+		                      ?? DefaultThemeId;
 
 		var knownKeys = Tokens.Select(token => token.Key).ToHashSet();
 		var cleaned = new Dictionary<string, Dictionary<string, string>>();
@@ -240,8 +240,8 @@ public static class ThemeCatalog
 			["LogSearchHighlightBackground"] = "#FFD54F",
 			["LogFindHighlightBackground"] = "#F58CC0"
 		}),
-		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors()),
-		new ThemeDefinition(DarkId, "Dark", new Dictionary<string, string>
+		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors(dark: false)),
+		new ThemeDefinition(NewschoolDarkId, "Newschool dark", new Dictionary<string, string>
 		{
 			["ThemePageBackground"] = "#1E2024",
 			["ThemeSurface"] = "#2A2D33",
@@ -282,15 +282,34 @@ public static class ThemeCatalog
 			["LogRegexPrefixForeground"] = "#5AA2F0",
 			["LogSearchHighlightBackground"] = "#8A6A00",
 			["LogFindHighlightBackground"] = "#A63D7B"
-		}, IsDark: true)
+		}, IsDark: true),
+		new ThemeDefinition(OldschoolDarkId, "Oldschool dark", CreateOldschoolColors(dark: true), IsDark: true)
 	};
 
 	/// <summary>
-	/// The classic look: grey surfaces and the colours that the log list control brings along
+	/// The classic look: grey surfaces and the colours that the log list control brings along, also in the dark version
 	/// </summary>
-	private static Dictionary<string, string> CreateOldschoolColors()
+	private static Dictionary<string, string> CreateOldschoolColors(bool dark)
 	{
-		var colors = new Dictionary<string, string>
+		var colors = dark ? new Dictionary<string, string>
+		{
+			["ThemePageBackground"] = "#1F1F1F",
+			["ThemeSurface"] = "#2D2D2D",
+			["ThemeSurfaceAlt"] = "#383838",
+			["ThemeBorder"] = "#4A4A4A",
+			["ThemeBorderStrong"] = "#7A7A7A",
+			["ThemeTextPrimary"] = "#F0F0F0",
+			["ThemeTextSecondary"] = "#C8C8C8",
+			["ThemeTextMuted"] = "#999999",
+			["ThemeAccent"] = "#3A96DD",
+			["ThemeAccentSoft"] = "#26425E",
+			["ThemeOnAccent"] = "#FFFFFF",
+			["ThemeHover"] = "#444444",
+			["ThemeSuccess"] = "#5FD068",
+			["ThemeError"] = "#FF6B5E",
+			["ThemeWarningBackground"] = "#4A3B10",
+			["ThemeWarningText"] = "#FFD97A"
+		} : new Dictionary<string, string>
 		{
 			["ThemePageBackground"] = "#FFFFFF",
 			["ThemeSurface"] = "#FFFFFF",

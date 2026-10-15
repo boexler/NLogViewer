@@ -619,12 +619,6 @@
   <data name="Settings_ThemeMode_Dark" xml:space="preserve">
     <value>Ciemny</value>
   </data>
-  <data name="Settings_LightTheme" xml:space="preserve">
-    <value>Jasny motyw</value>
-  </data>
-  <data name="Settings_LightTheme_Description" xml:space="preserve">
-    <value>Newschool jest jasny i płaski, Oldschool zachowuje klasyczne kolory listy logów. Używany zawsze, gdy aplikacja jest jasna.</value>
-  </data>
   <data name="MessageBox_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -636,6 +630,12 @@
   </data>
   <data name="MessageBox_No" xml:space="preserve">
     <value>Nie</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool jest płaski i nowoczesny, Oldschool zachowuje klasyczny wygląd i klasyczne kolory listy logów. Działa w trybie jasnym i ciemnym.</value>
   </data>
 </root>
 

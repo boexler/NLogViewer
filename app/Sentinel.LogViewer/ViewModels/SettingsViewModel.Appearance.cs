@@ -6,7 +6,7 @@ using Sentinel.LogViewer.ViewModels.Settings;
 namespace Sentinel.LogViewer.ViewModels
 {
     /// <summary>
-    /// The appearance settings: light or dark mode, the light theme and a card for every colour of the theme in use
+    /// The appearance settings: light or dark mode, the theme and a card for every colour of the theme in use
     /// </summary>
     public partial class SettingsViewModel
     {
@@ -29,24 +29,24 @@ namespace Sentinel.LogViewer.ViewModels
                     ChangeTheme();
                 },
                 getDefault: () => ThemeCatalog.ModeSystem,
-                // Resetting the appearance also takes back the light theme and every custom colour of every theme.
+                // Resetting the appearance also takes back the theme and every custom colour of every theme.
                 reset: () =>
                 {
                     _configuration.ThemeMode = ThemeCatalog.ModeSystem;
-                    _configuration.LightTheme = ThemeCatalog.DefaultThemeId;
+                    _configuration.Theme = ThemeCatalog.DefaultThemeId;
                     _configuration.ThemeColors.Clear();
                     ChangeTheme();
                 });
 
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE771",
-                Text("Settings_LightTheme", "Light theme"),
-                Text("Settings_LightTheme_Description", "Newschool is light and flat, Oldschool keeps the classic colours of the log list. Used whenever the application is light."),
+                Text("Settings_Theme", "Theme"),
+                Text("Settings_Theme_Description", "Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode."),
                 needsRestart: false,
-                options: ThemeCatalog.LightThemes.Select(theme => new ChoiceOption(theme.Id, theme.Name)).ToList(),
-                get: () => ThemeCatalog.Find(_configuration.LightTheme).Id,
+                options: ThemeCatalog.Designs.Select(theme => new ChoiceOption(theme.Id, theme.Name)).ToList(),
+                get: () => ThemeCatalog.Find(_configuration.Theme).Id,
                 set: id =>
                 {
-                    _configuration.LightTheme = id;
+                    _configuration.Theme = id;
                     ChangeTheme();
                 },
                 getDefault: () => ThemeCatalog.DefaultThemeId);

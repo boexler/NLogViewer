@@ -631,12 +631,6 @@
   <data name="Settings_ThemeMode_Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
-  <data name="Settings_LightTheme" xml:space="preserve">
-    <value>Light theme</value>
-  </data>
-  <data name="Settings_LightTheme_Description" xml:space="preserve">
-    <value>Newschool is light and flat, Oldschool keeps the classic colours of the log list. Used whenever the application is light.</value>
-  </data>
   <data name="MessageBox_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -648,6 +642,12 @@
   </data>
   <data name="MessageBox_No" xml:space="preserve">
     <value>No</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode.</value>
   </data>
 </root>
 

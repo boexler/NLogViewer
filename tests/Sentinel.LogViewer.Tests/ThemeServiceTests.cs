@@ -28,7 +28,7 @@ public class ThemeServiceTests : IDisposable
 		_context.RunOnSta(() =>
 		{
 			new ThemeService(() => true).Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight,
-				LightTheme = ThemeCatalog.OldschoolId });
+				Theme = ThemeCatalog.OldschoolId });
 
 			foreach (var token in ThemeCatalog.Tokens)
 			{
@@ -47,7 +47,7 @@ public class ThemeServiceTests : IDisposable
 			var configuration = new AppConfiguration
 			{
 				ThemeMode = ThemeCatalog.ModeLight,
-				LightTheme = ThemeCatalog.OldschoolId,
+				Theme = ThemeCatalog.OldschoolId,
 				ThemeColors = new()
 				{
 					[ThemeCatalog.OldschoolId] = new() { ["ThemeAccent"] = "#112233", ["LogTraceBackground"] = "#80FF0000" },

@@ -619,12 +619,6 @@
   <data name="Settings_ThemeMode_Dark" xml:space="preserve">
     <value>Întunecat</value>
   </data>
-  <data name="Settings_LightTheme" xml:space="preserve">
-    <value>Temă luminoasă</value>
-  </data>
-  <data name="Settings_LightTheme_Description" xml:space="preserve">
-    <value>Newschool este deschis și plat, Oldschool păstrează culorile clasice ale listei de jurnale. Folosită ori de câte ori aplicația este în mod luminos.</value>
-  </data>
   <data name="MessageBox_OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -636,6 +630,12 @@
   </data>
   <data name="MessageBox_No" xml:space="preserve">
     <value>Nu</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Temă</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
   </data>
 </root>
 

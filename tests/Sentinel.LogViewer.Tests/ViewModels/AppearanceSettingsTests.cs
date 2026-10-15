@@ -15,7 +15,7 @@ namespace Sentinel.LogViewer.Tests.ViewModels;
 public class AppearanceSettingsTests : IDisposable
 {
 	private const string ModeTitle = "Colour mode";
-	private const string LightThemeTitle = "Light theme";
+	private const string ThemeTitle = "Theme";
 	private const string AccentTitle = "Accent";
 	private const string TraceBackgroundTitle = "Trace: background";
 
@@ -58,12 +58,12 @@ public class AppearanceSettingsTests : IDisposable
 	[Fact]
 	public void Theme_IsNewschoolByDefault_AndSavedWhenChanged()
 	{
-		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(LightThemeTitle);
+		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(ThemeTitle);
 		Assert.Equal(ThemeCatalog.NewschoolId, theme.Value);
 
 		theme.Value = ThemeCatalog.OldschoolId;
 
-		Assert.Equal(ThemeCatalog.OldschoolId, _environment.Saved.LightTheme);
+		Assert.Equal(ThemeCatalog.OldschoolId, _environment.Saved.Theme);
 	}
 
 	[Fact]
@@ -75,7 +75,7 @@ public class AppearanceSettingsTests : IDisposable
 		traceBackground.PropertyChanged += (_, _) => changes++;
 		Assert.Equal("#E4E7EB", traceBackground.Text);
 
-		viewModel.Setting<ChoiceSettingViewModel>(LightThemeTitle).Value = ThemeCatalog.OldschoolId;
+		viewModel.Setting<ChoiceSettingViewModel>(ThemeTitle).Value = ThemeCatalog.OldschoolId;
 
 		Assert.Equal("#D3D3D3", traceBackground.Text);
 		Assert.True(changes > 0);
@@ -95,11 +95,11 @@ public class AppearanceSettingsTests : IDisposable
 		Assert.Equal("#AABBCC", _environment.Saved.ThemeColors[ThemeCatalog.NewschoolId]["ThemeAccent"]);
 		Assert.True(viewModel.HasChanges);
 
-		viewModel.Setting<ChoiceSettingViewModel>(LightThemeTitle).Value = ThemeCatalog.OldschoolId;
+		viewModel.Setting<ChoiceSettingViewModel>(ThemeTitle).Value = ThemeCatalog.OldschoolId;
 		Assert.Equal("#0078D7", accent.Text);
 		Assert.False(accent.IsCustom);
 
-		viewModel.Setting<ChoiceSettingViewModel>(LightThemeTitle).Value = ThemeCatalog.NewschoolId;
+		viewModel.Setting<ChoiceSettingViewModel>(ThemeTitle).Value = ThemeCatalog.NewschoolId;
 		Assert.Equal("#AABBCC", accent.Text);
 	}
 
@@ -150,7 +150,7 @@ public class AppearanceSettingsTests : IDisposable
 	public void ResetCategory_TakesBackTheThemeAndEveryCustomColourOfEveryTheme()
 	{
 		var viewModel = _environment.CreateViewModel();
-		var theme = viewModel.Setting<ChoiceSettingViewModel>(LightThemeTitle);
+		var theme = viewModel.Setting<ChoiceSettingViewModel>(ThemeTitle);
 		viewModel.Setting<ColorSettingViewModel>(AccentTitle).Text = "#112233";
 		theme.Value = ThemeCatalog.OldschoolId;
 		viewModel.Setting<ColorSettingViewModel>(AccentTitle).Text = "#445566";
@@ -161,7 +161,7 @@ public class AppearanceSettingsTests : IDisposable
 
 		var saved = _environment.Saved;
 		Assert.Equal(ThemeCatalog.ModeSystem, saved.ThemeMode);
-		Assert.Equal(ThemeCatalog.DefaultThemeId, saved.LightTheme);
+		Assert.Equal(ThemeCatalog.DefaultThemeId, saved.Theme);
 		Assert.Empty(saved.ThemeColors);
 		Assert.Equal(ThemeCatalog.DefaultThemeId, theme.Value);
 		Assert.Equal("#0A5CB8", viewModel.Setting<ColorSettingViewModel>(AccentTitle).Text);
@@ -191,9 +191,9 @@ public class AppearanceSettingsTests : IDisposable
 	}
 
 	[Fact]
-	public void LightTheme_OffersOnlyLightThemes()
+	public void Theme_OffersTheDesigns_ForBothModes()
 	{
-		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(LightThemeTitle);
+		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(ThemeTitle);
 
 		Assert.Equal(new[] { ThemeCatalog.NewschoolId, ThemeCatalog.OldschoolId }, theme.Options.Select(option => option.Value));
 	}
@@ -213,7 +213,7 @@ public class AppearanceSettingsTests : IDisposable
 		accent.Text = "#445566";
 
 		var colors = _environment.Saved.ThemeColors;
-		Assert.Equal("#445566", colors[ThemeCatalog.DarkId]["ThemeAccent"]);
+		Assert.Equal("#445566", colors[ThemeCatalog.NewschoolDarkId]["ThemeAccent"]);
 		Assert.Equal("#112233", colors[ThemeCatalog.NewschoolId]["ThemeAccent"]);
 	}
 
@@ -231,5 +231,19 @@ public class AppearanceSettingsTests : IDisposable
 		accent.Reload();
 
 		Assert.Equal("#5AA2F0", accent.Text);
+	}
+
+	[Fact]
+	public void Theme_AlsoAppliesInDarkMode()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var traceBackground = viewModel.Setting<ColorSettingViewModel>(TraceBackgroundTitle);
+		viewModel.Setting<ChoiceSettingViewModel>(ModeTitle).Value = ThemeCatalog.ModeDark;
+		Assert.Equal("#2B2E34", traceBackground.Text);
+
+		viewModel.Setting<ChoiceSettingViewModel>(ThemeTitle).Value = ThemeCatalog.OldschoolId;
+
+		Assert.Equal("#D3D3D3", traceBackground.Text);
+		Assert.Equal("#3A96DD", viewModel.Setting<ColorSettingViewModel>(AccentTitle).Text);
 	}
 }
