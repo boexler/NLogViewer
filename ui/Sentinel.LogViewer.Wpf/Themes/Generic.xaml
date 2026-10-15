@@ -432,25 +432,13 @@
                                                                     Header="{Binding LoggerName, Converter={StaticResource ContextMenuHeaderConverter}}"
                                                                     IsEnabled="False"/>
                                                                 <MenuItem
-                                                                    Header="Add to Filter"
-                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                    <MenuItem.CommandParameter>
-                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                            <Binding Path="."/>
-                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
-                                                                        </MultiBinding>
-                                                                    </MenuItem.CommandParameter>
-                                                                </MenuItem>
+                                                                    Header="Show only this logger"
+                                                                    Command="{Binding PlacementTarget.Tag.ShowOnlyLoggerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                    CommandParameter="{Binding LoggerName}"/>
                                                                 <MenuItem
-                                                                    Header="Add to Filter (Exclude)"
-                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermExcludeCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                    <MenuItem.CommandParameter>
-                                                                        <MultiBinding Converter="{StaticResource ILogEventResolverToStringConverter}">
-                                                                            <Binding Path="."/>
-                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.LoggerNameResolver"/>
-                                                                        </MultiBinding>
-                                                                    </MenuItem.CommandParameter>
-                                                                </MenuItem>
+                                                                    Header="Hide this logger"
+                                                                    Command="{Binding PlacementTarget.Tag.HideLoggerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                                                    CommandParameter="{Binding LoggerName}"/>
                                                                 <MenuItem
                                                                     Header="Copy to Clipboard"
                                                                     Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">

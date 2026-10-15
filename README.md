@@ -340,6 +340,7 @@ The loggers of the entries are shown as a tree on the right of the list, split a
 - A check box per logger shows or hides that logger and everything below it; a partly checked box means some of the loggers below are hidden
 - Per logger: number of entries, plus counters for warnings and for errors and fatal errors; they update while entries arrive
 - Right-click a logger: **Show only this logger**, **Show all loggers**, **Expand all**, **Collapse all**
+- Right-click a logger name in the list: **Show only this logger**, **Hide this logger** (the same rules; `ShowOnlyLoggerCommand` and `HideLoggerCommand` take the logger name)
 - A search box above the tree lists the loggers that contain the text
 - Drag the splitter between the list and the tree to change its width; the arrow button in the header moves the tree to the other side of the list
 - Hidden loggers work together with the level buttons and the filter terms; an entry is shown only if all of them allow it

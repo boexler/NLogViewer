@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using NLog;
 using Sentinel.LogViewer.Wpf.Models;
@@ -24,6 +25,22 @@ namespace Sentinel.LogViewer.Wpf
         /// The loggers of all entries, with their counters, and the rules that show or hide them
         /// </summary>
         public LoggerTree LoggerTree { get; }
+
+        private ICommand? _showOnlyLoggerCommand;
+        private ICommand? _hideLoggerCommand;
+
+        /// <summary>
+        /// Hides everything except one logger and everything below it; the parameter is the logger name.
+        /// The same rules as in the logger tree, used by the context menu of the logger column.
+        /// </summary>
+        public ICommand ShowOnlyLoggerCommand => _showOnlyLoggerCommand ??=
+            new RelayCommand<string>(name => LoggerTree.Rules.ShowOnly(name), name => !string.IsNullOrEmpty(name));
+
+        /// <summary>
+        /// Hides a logger and everything below it; the parameter is the logger name
+        /// </summary>
+        public ICommand HideLoggerCommand => _hideLoggerCommand ??=
+            new RelayCommand<string>(name => LoggerTree.Rules.SetVisible(name, false), name => !string.IsNullOrEmpty(name));
 
         #region Logger Tree Properties
 

@@ -354,4 +354,88 @@ public class LogViewerLoggerTreeTests
 			}
 		});
 	}
+
+	[Fact]
+	public void HideLoggerCommand_HidesTheLoggerAndEverythingBelow_LikeTheTree()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.HideLoggerCommand.Execute("Acme.Shop");
+
+				Assert.Equal(3, VisibleCount(viewer));
+				Assert.Equal(new[] { "-Acme.Shop" }, viewer.LoggerFilterRules);
+				Assert.False(viewer.LoggerTree.Roots.Single(root => root.Name == "Acme").Children.Single(child => child.Name == "Shop").IsChecked);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
+	public void ShowOnlyLoggerCommand_ShowsOnlyThatLoggerAndEverythingBelow()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.ShowOnlyLoggerCommand.Execute("Acme.Core.Db");
+
+				Assert.Equal(2, VisibleCount(viewer));
+				Assert.False(viewer.ShowOnlyLoggerCommand.CanExecute(string.Empty));
+				Assert.False(viewer.HideLoggerCommand.CanExecute(null));
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
+	public void TheLoggerColumn_OffersTheTreeRulesInsteadOfTextFilters()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.UpdateLayout();
+				var listView = (ListView)viewer.Template.FindName("PART_ListView", viewer);
+				var row = (DependencyObject)listView.ItemContainerGenerator.ContainerFromIndex(0);
+				var headers = Descendants<TextBlock>(row)
+					.Where(text => text.ContextMenu != null)
+					.Select(text => text.ContextMenu.Items.OfType<MenuItem>().Select(item => item.Header as string).ToList())
+					.Where(items => items.Contains("Hide this logger"))
+					.ToList();
+
+				var menu = Assert.Single(headers);
+				Assert.Contains("Show only this logger", menu);
+				Assert.DoesNotContain("Add to Filter (Exclude)", menu);
+				Assert.Contains("Copy to Clipboard", menu);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	private static System.Collections.Generic.IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
+	{
+		for (var i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(root); i++)
+		{
+			var child = System.Windows.Media.VisualTreeHelper.GetChild(root, i);
+			if (child is T match)
+				yield return match;
+
+			foreach (var descendant in Descendants<T>(child))
+				yield return descendant;
+		}
+	}
 }
