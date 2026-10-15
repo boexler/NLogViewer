@@ -45,6 +45,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string _currentLanguageFlag = "🇬🇧";
 	private bool _isLoading;
 	private string _loadingProgress = string.Empty;
+	private TimeStampFormat _defaultTimeStampFormat;
 
 	private readonly CompositeDisposable _subscriptions = new();
 
@@ -136,6 +137,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName?.Name}";
+	}
+
+	/// <summary>
+	/// The format of the timestamp column that tabs show until the user picks another one for a tab
+	/// </summary>
+	public TimeStampFormat DefaultTimeStampFormat
+	{
+		get => _defaultTimeStampFormat;
+		private set
+		{
+			if (_defaultTimeStampFormat == value)
+				return;
+
+			_defaultTimeStampFormat = value;
+			OnPropertyChanged();
+		}
 	}
 
 	public ObservableCollection<LogTabViewModel> LogTabs { get; }
@@ -432,6 +449,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private void LoadConfiguration()
 	{
 		var config = _configService.LoadConfiguration();
+		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
 
 		if (config.CheckForUpdates && UpdateNotice == null)
 			_ = CheckForUpdatesInBackgroundAsync(UpdateService.IncludesPrereleases(config));

@@ -637,5 +637,23 @@
   <data name="Settings_Theme_Description" xml:space="preserve">
     <value>Newschool es plano y moderno; Oldschool conserva el aspecto clásico y los colores clásicos de la lista de registros. Funciona en modo claro y oscuro.</value>
   </data>
+  <data name="Settings_TimeStampFormat" xml:space="preserve">
+    <value>Formato de la marca de tiempo</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Description" xml:space="preserve">
+    <value>Formato de la columna de marca de tiempo en la lista de registros. Una pestaña puede mostrar otro formato desde el menú contextual de la columna; «Vista predeterminada» vuelve a este formato. Se aplica al cerrar la ventana de configuración.</value>
+  </data>
+  <data name="Settings_TimeStampFormat_System" xml:space="preserve">
+    <value>Sistema (formato de este equipo)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Iso" xml:space="preserve">
+    <value>ISO 8601 (2025-12-18 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_German" xml:space="preserve">
+    <value>Alemán (18.12.2025 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_English" xml:space="preserve">
+    <value>Inglés (12/18/2025 03:11:48.385 PM)</value>
+  </data>
 </root>
 

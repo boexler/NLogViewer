@@ -637,6 +637,24 @@
   <data name="Settings_Theme_Description" xml:space="preserve">
     <value>Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
   </data>
+  <data name="Settings_TimeStampFormat" xml:space="preserve">
+    <value>Formatul marcajului de timp</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Description" xml:space="preserve">
+    <value>Formatul coloanei cu marcajul de timp din lista de jurnale. O filă poate arăta alt format prin meniul contextual al coloanei; „Vizualizare implicită” revine la acest format. Se aplică la închiderea ferestrei de setări.</value>
+  </data>
+  <data name="Settings_TimeStampFormat_System" xml:space="preserve">
+    <value>Sistem (formatul acestui computer)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Iso" xml:space="preserve">
+    <value>ISO 8601 (2025-12-18 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_German" xml:space="preserve">
+    <value>Germană (18.12.2025 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_English" xml:space="preserve">
+    <value>Engleză (12/18/2025 03:11:48.385 PM)</value>
+  </data>
 </root>
 
 

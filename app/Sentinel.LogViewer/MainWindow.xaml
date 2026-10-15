@@ -61,6 +61,7 @@
                 <dj:LogViewerBase 
                     x:Name="LogViewer1"
                     Tag="{Binding ElementName=LogViewer1}"
+                    DefaultTimeStampFormat="{Binding DataContext.DefaultTimeStampFormat, RelativeSource={RelativeSource AncestorType=Window}}"
                     TraceBackground="{DynamicResource LogTraceBackground}"
                     TraceForeground="{DynamicResource LogTraceForeground}"
                     DebugBackground="{DynamicResource LogDebugBackground}"

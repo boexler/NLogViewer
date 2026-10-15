@@ -365,6 +365,24 @@ logViewer.LoggerFilterRules = new[] { "-Company.Product", "+Company.Product.Serv
 var saved = logViewer.LoggerFilterRules;
 ```
 
+### Timestamp Format
+
+The timestamp column shows the time with date and milliseconds in one of four formats of a fixed width:
+
+| `TimeStampFormat` | Example |
+|---|---|
+| `System` (default) | the short date and long time of the culture of the computer, e.g. `18.12.2025 15:11:48.385` |
+| `Iso` | `2025-12-18 15:11:48.385` |
+| `German` | `18.12.2025 15:11:48.385` |
+| `English` | `12/18/2025 03:11:48.385 PM` |
+
+Right-click the header or a cell of the timestamp column to switch the format of that viewer; **Default view** goes back to the default.
+
+- `DefaultTimeStampFormat` - The format of all viewers that have no choice of their own
+- `CustomTimeStampFormat` - The format of this viewer, or `null` to follow the default
+- `EffectiveTimeStampFormat` - The format that is shown (read-only)
+- `CanChangeTimeStampFormat` - `false` while you use a `TimeStampResolver` of your own; the menu is then disabled and your resolver is left alone
+
 ### Control Architecture
 
 LogViewer is built as a CustomControl with theming support:

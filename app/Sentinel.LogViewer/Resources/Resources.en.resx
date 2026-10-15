@@ -637,5 +637,23 @@
   <data name="Settings_Theme_Description" xml:space="preserve">
     <value>Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode.</value>
   </data>
+  <data name="Settings_TimeStampFormat" xml:space="preserve">
+    <value>Timestamp format</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Description" xml:space="preserve">
+    <value>Format of the timestamp column in the log list. A tab can show another format through the context menu of the column; “Default view” goes back to this one. Applies when the settings window is closed.</value>
+  </data>
+  <data name="Settings_TimeStampFormat_System" xml:space="preserve">
+    <value>System (format of this computer)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Iso" xml:space="preserve">
+    <value>ISO 8601 (2025-12-18 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_German" xml:space="preserve">
+    <value>German (18.12.2025 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_English" xml:space="preserve">
+    <value>English (12/18/2025 03:11:48.385 PM)</value>
+  </data>
 </root>
 

@@ -186,6 +186,9 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Id of the design, newschool or oldschool; it exists in a light and in a dark version, see <see cref="Theming.ThemeCatalog"/>.</summary>
         public string Theme { get; set; } = Theming.ThemeCatalog.DefaultThemeId;
 
+        /// <summary>Default format of the timestamp column: system, iso, german or english.</summary>
+        public string TimeStampFormat { get; set; } = "system";
+
         /// <summary>Colours the user changed: theme id, then token key, then the colour as #RRGGBB or #AARRGGBB.</summary>
         public Dictionary<string, Dictionary<string, string>> ThemeColors { get; set; } = new();
     }

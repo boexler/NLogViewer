@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Theming;
 using Sentinel.LogViewer.ViewModels.Settings;
+using Sentinel.LogViewer.Wpf.Models;
 
 namespace Sentinel.LogViewer.ViewModels
 {
@@ -50,6 +52,25 @@ namespace Sentinel.LogViewer.ViewModels
                     ChangeTheme();
                 },
                 getDefault: () => ThemeCatalog.DefaultThemeId);
+
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE121",
+                Text("Settings_TimeStampFormat", "Timestamp format"),
+                Text("Settings_TimeStampFormat_Description", "Format of the timestamp column in the log list."),
+                needsRestart: false,
+                options: new[]
+                {
+                    new ChoiceOption(TimeStampFormats.ToId(TimeStampFormat.System), Text("Settings_TimeStampFormat_System", "System (format of this computer)")),
+                    new ChoiceOption(TimeStampFormats.ToId(TimeStampFormat.Iso), Text("Settings_TimeStampFormat_Iso", "ISO 8601 (2025-12-18 15:11:48.385)")),
+                    new ChoiceOption(TimeStampFormats.ToId(TimeStampFormat.German), Text("Settings_TimeStampFormat_German", "German (18.12.2025 15:11:48.385)")),
+                    new ChoiceOption(TimeStampFormats.ToId(TimeStampFormat.English), Text("Settings_TimeStampFormat_English", "English (12/18/2025 03:11:48.385 PM)"))
+                },
+                get: () => TimeStampFormats.ToId(TimeStampFormats.Parse(_configuration.TimeStampFormat)),
+                set: id =>
+                {
+                    _configuration.TimeStampFormat = id;
+                    Commit();
+                },
+                getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
             foreach (var token in ThemeCatalog.Tokens)
                 yield return CreateColorSetting(token);
