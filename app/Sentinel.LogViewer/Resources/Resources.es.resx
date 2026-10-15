@@ -625,5 +625,17 @@
   <data name="Settings_LightTheme_Description" xml:space="preserve">
     <value>Newschool es claro y plano; Oldschool conserva los colores clásicos de la lista de registros. Se usa siempre que la aplicación es clara.</value>
   </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>No</value>
+  </data>
 </root>
 

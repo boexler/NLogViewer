@@ -10,10 +10,10 @@ namespace Sentinel.LogViewer.Helpers;
 public sealed class WpfSettingsDialogs(Window owner) : ISettingsDialogs
 {
 	public bool Confirm(string caption, string message) =>
-		MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+		MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
 
 	public void ShowError(string caption, string message) =>
-		MessageBox.Show(owner, message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+		MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 
 	public string? PickFileToExport(string title, string filter, string defaultFileName)
 	{

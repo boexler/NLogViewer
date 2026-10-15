@@ -177,7 +177,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			"Confirm_CloseCurrentTab_Message",
 			"Do you really want to close the current tab?");
 		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
 		    MessageBoxResult.Yes)
 			return;
 
@@ -215,7 +215,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			"Confirm_CloseOtherTabs_Message",
 			"Do you really want to close all other tabs?");
 		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
 		    MessageBoxResult.Yes)
 			return;
 
@@ -254,7 +254,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			"Confirm_CloseAllTabs_Message",
 			"Do you really want to close all tabs?");
 		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageBox.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
 		    MessageBoxResult.Yes)
 			return;
 
@@ -473,7 +473,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				ListeningStatus = _localizationService.GetString("Status_Error", "Error");
 				StatusMessage = result.ErrorMessage;
 				var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
-				MessageBox.Show(result.ErrorMessage, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageDialogWindow.Show(null, result.ErrorMessage, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 		catch (Exception ex)
@@ -482,7 +482,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			ListeningStatus = _localizationService.GetString("Status_Error", "Error");
 			StatusMessage = _localizationService.GetString("Error_StartingListener", $"Error starting listener: {ex.Message}");
 			var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
-			MessageBox.Show(ex.Message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+			MessageDialogWindow.Show(null, ex.Message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 		}
 	}
 

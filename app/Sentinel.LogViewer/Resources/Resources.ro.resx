@@ -625,6 +625,18 @@
   <data name="Settings_LightTheme_Description" xml:space="preserve">
     <value>Newschool este deschis și plat, Oldschool păstrează culorile clasice ale listei de jurnale. Folosită ori de câte ori aplicația este în mod luminos.</value>
   </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Anulare</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Da</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Nu</value>
+  </data>
 </root>
 
 

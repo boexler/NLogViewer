@@ -1,0 +1,44 @@
+<Window x:Class="Sentinel.LogViewer.MessageDialogWindow"
+        Background="{DynamicResource ThemePageBackground}"
+        Foreground="{DynamicResource ThemeTextPrimary}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
+        MinWidth="360"
+        MaxWidth="520"
+        SizeToContent="WidthAndHeight"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        TextOptions.TextFormattingMode="Display">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="24,22,24,22">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="IconText" FontFamily="{DynamicResource ThemeIconFont}" FontSize="26" Margin="0,0,16,0"
+                       VerticalAlignment="Top" Foreground="{DynamicResource ThemeAccent}"/>
+            <TextBlock x:Name="MessageText" Grid.Column="1" TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center"/>
+        </Grid>
+
+        <Border Grid.Row="1" Background="{DynamicResource ThemeSurfaceAlt}" BorderBrush="{DynamicResource ThemeBorder}"
+                BorderThickness="0,1,0,0" Padding="24,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="YesButton" MinWidth="80" Margin="8,0,0,0" Click="OnButtonClick" Tag="Yes"
+                        Content="{helpers:Resource Key=MessageBox_Yes, DefaultValue=Yes}"/>
+                <Button x:Name="NoButton" MinWidth="80" Margin="8,0,0,0" Click="OnButtonClick" Tag="No"
+                        Content="{helpers:Resource Key=MessageBox_No, DefaultValue=No}"/>
+                <Button x:Name="OkButton" MinWidth="80" Margin="8,0,0,0" Click="OnButtonClick" Tag="OK"
+                        Content="{helpers:Resource Key=MessageBox_OK, DefaultValue=OK}"/>
+                <Button x:Name="CancelButton" MinWidth="80" Margin="8,0,0,0" Click="OnButtonClick" Tag="Cancel"
+                        Content="{helpers:Resource Key=MessageBox_Cancel, DefaultValue=Cancel}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

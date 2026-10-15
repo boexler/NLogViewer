@@ -625,5 +625,17 @@
   <data name="Settings_LightTheme_Description" xml:space="preserve">
     <value>Newschool ist hell und flach, Oldschool behält die klassischen Farben der Log-Liste bei. Gilt immer, wenn die Anwendung hell ist.</value>
   </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
 </root>
 

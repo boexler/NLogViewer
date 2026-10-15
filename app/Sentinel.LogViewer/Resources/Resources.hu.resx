@@ -625,6 +625,18 @@
   <data name="Settings_LightTheme_Description" xml:space="preserve">
     <value>A Newschool világos és letisztult, az Oldschool megtartja a naplólista klasszikus színeit. Mindig ezt használja az alkalmazás, ha világos módban van.</value>
   </data>
+  <data name="MessageBox_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="MessageBox_Cancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="MessageBox_Yes" xml:space="preserve">
+    <value>Igen</value>
+  </data>
+  <data name="MessageBox_No" xml:space="preserve">
+    <value>Nem</value>
+  </data>
 </root>
 
 
