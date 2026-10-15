@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Theming;
 using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels.Settings;
 using Sentinel.LogViewer.Wpf;
@@ -17,14 +18,15 @@ namespace Sentinel.LogViewer.ViewModels
     /// <summary>
     /// ViewModel for the Settings window: categories with described settings that are saved as soon as they change
     /// </summary>
-    public class SettingsViewModel : INotifyPropertyChanged
+    public partial class SettingsViewModel : INotifyPropertyChanged
     {
         internal const string GeneralId = "General";
         internal const string ReceivingId = "Receiving";
+        internal const string AppearanceId = "Appearance";
         internal const string UpdatesId = "Updates";
 
         /// <summary>
-        /// The order leaves room for categories that later features add (e.g. Import, Display, Highlighting)
+        /// The order leaves room for categories that later features add (e.g. Import, Highlighting)
         /// </summary>
         private sealed record CategoryDefinition(string Id, int Order, string Icon, string TitleKey, string Title, string SubtitleKey, string Subtitle);
 
@@ -34,6 +36,8 @@ namespace Sentinel.LogViewer.ViewModels
                 "Settings_Category_General_Subtitle", "Language and basic behaviour of the application."),
             new(ReceivingId, 20, "", "Settings_Category_Receiving", "Receiving",
                 "Settings_Category_Receiving_Subtitle", "How and where logs reach the application."),
+            new(AppearanceId, 30, "\uE790", "Settings_Category_Appearance", "Appearance",
+                "Settings_Category_Appearance_Subtitle", "Theme and colours of the interface and the log list."),
             new(UpdatesId, 90, "", "Settings_Category_Updates", "Updates",
                 "Settings_Category_Updates_Subtitle", "How the application looks for new versions.")
         };
@@ -41,6 +45,7 @@ namespace Sentinel.LogViewer.ViewModels
         private readonly ConfigurationService _configService;
         private readonly LocalizationService _localizationService;
         private readonly SettingsTransferService _transferService;
+        private readonly ThemeService _themeService;
         private readonly List<SettingViewModel> _settings;
         private AppConfiguration _configuration;
         private SettingsCategoryViewModel? _selectedCategory;
@@ -51,11 +56,13 @@ namespace Sentinel.LogViewer.ViewModels
         public SettingsViewModel(
             ConfigurationService configService,
             LocalizationService localizationService,
-            SettingsTransferService transferService)
+            SettingsTransferService transferService,
+            ThemeService themeService)
         {
             _configService = configService ?? throw new ArgumentNullException(nameof(configService));
             _localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
             _transferService = transferService ?? throw new ArgumentNullException(nameof(transferService));
+            _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
             _configuration = _configService.LoadConfiguration();
 
             _settings = CreateSettings();
@@ -188,7 +195,7 @@ namespace Sentinel.LogViewer.ViewModels
                 SettingsRules.MaxEntriesPerTab.ToString("N0", CultureInfo.CurrentCulture)
             };
 
-            return new List<SettingViewModel>
+            var settings = new List<SettingViewModel>
             {
                 new ChoiceSettingViewModel(GeneralId, "",
                     Text("Settings_Language", "Language"),
@@ -272,6 +279,9 @@ namespace Sentinel.LogViewer.ViewModels
                         Commit();
                     })
             };
+
+            settings.AddRange(CreateAppearanceSettings());
+            return settings;
         }
 
         private IReadOnlyList<SettingsCategoryViewModel> CreateCategories()
@@ -304,8 +314,15 @@ namespace Sentinel.LogViewer.ViewModels
                 if (_selectedCategory != null)
                 {
                     PageItems.Add(new SettingsPageHeader(_selectedCategory.Title, _selectedCategory.Subtitle));
+                    string? section = null;
                     foreach (var setting in _selectedCategory.Settings)
+                    {
+                        if (setting.Section != null && setting.Section != section)
+                            PageItems.Add(new SettingsSectionLabel(setting.Section));
+
+                        section = setting.Section;
                         PageItems.Add(setting);
+                    }
                 }
             }
             else
@@ -408,6 +425,7 @@ namespace Sentinel.LogViewer.ViewModels
             if (!string.IsNullOrEmpty(_configuration.Language))
                 _localizationService.SetLanguage(_configuration.Language);
 
+            _themeService.Apply(_configuration);
             foreach (var setting in _settings)
                 setting.Reload();
 

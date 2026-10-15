@@ -403,6 +403,213 @@
   <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
     <value>La pornirea aplicației întreabă o dată GitHub dacă există o versiune mai nouă. Ajutor → Despre verifică întotdeauna.</value>
   </data>
+  <data name="Settings_Category_Appearance" xml:space="preserve">
+    <value>Aspect</value>
+  </data>
+  <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
+    <value>Tema și culorile interfeței și ale listei de jurnale.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Temă</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Schema de culori a întregii aplicații. Newschool este deschis și plat, Oldschool păstrează culorile clasice ale listei de jurnale. Fiecare culoare de mai jos poate fi schimbată pentru fiecare temă.</value>
+  </data>
+  <data name="Settings_Section_Interface" xml:space="preserve">
+    <value>Interfață</value>
+  </data>
+  <data name="Settings_Section_Levels" xml:space="preserve">
+    <value>Niveluri de jurnal</value>
+  </data>
+  <data name="Settings_Section_Highlighting" xml:space="preserve">
+    <value>Evidențierea căutării</value>
+  </data>
+  <data name="Settings_Color_Invalid" xml:space="preserve">
+    <value>Introduceți o culoare precum #1B1B1B sau #801B1B1B (cu transparență).</value>
+  </data>
+  <data name="Settings_Color_Reset" xml:space="preserve">
+    <value>Resetează la culoarea temei</value>
+  </data>
+  <data name="Settings_Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Settings_Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Settings_Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Settings_Level_Warn" xml:space="preserve">
+    <value>Avertisment</value>
+  </data>
+  <data name="Settings_Level_Error" xml:space="preserve">
+    <value>Eroare</value>
+  </data>
+  <data name="Settings_Level_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Settings_LevelBackground" xml:space="preserve">
+    <value>{0}: fundal</value>
+  </data>
+  <data name="Settings_LevelForeground" xml:space="preserve">
+    <value>{0}: text</value>
+  </data>
+  <data name="Settings_LevelBackground_Description" xml:space="preserve">
+    <value>Fundalul intrărilor de jurnal cu nivelul {0}.</value>
+  </data>
+  <data name="Settings_LevelForeground_Description" xml:space="preserve">
+    <value>Culoarea textului intrărilor de jurnal cu nivelul {0}.</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground" xml:space="preserve">
+    <value>Fundalul ferestrei</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground_Description" xml:space="preserve">
+    <value>Fundalul ferestrelor și al zonei de jurnale.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface" xml:space="preserve">
+    <value>Fundalul cardurilor</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface_Description" xml:space="preserve">
+    <value>Fundalul cardurilor, butoanelor, meniurilor și câmpurilor de introducere.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt" xml:space="preserve">
+    <value>Bare și panouri laterale</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt_Description" xml:space="preserve">
+    <value>Fundalul barei de instrumente, al barei de stare și al navigației setărilor.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder" xml:space="preserve">
+    <value>Chenar</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder_Description" xml:space="preserve">
+    <value>Linii subțiri în jurul cardurilor și între zone.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong" xml:space="preserve">
+    <value>Chenarul controalelor</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong_Description" xml:space="preserve">
+    <value>Chenarul butoanelor, câmpurilor de introducere și listelor derulante.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary_Description" xml:space="preserve">
+    <value>Culoarea textului principal.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary" xml:space="preserve">
+    <value>Text secundar</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary_Description" xml:space="preserve">
+    <value>Descrieri, titluri de grup și indicii.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted" xml:space="preserve">
+    <value>Text estompat</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted_Description" xml:space="preserve">
+    <value>Texte de substituire, intrări dezactivate și simbolurile butoanelor de închidere.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent" xml:space="preserve">
+    <value>Accent</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent_Description" xml:space="preserve">
+    <value>Intrări selectate, linkuri, comutatoare și cadrul de focalizare.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft" xml:space="preserve">
+    <value>Accent, deschis</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft_Description" xml:space="preserve">
+    <value>Fundalul categoriei, filei sau intrării de listă selectate.</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent" xml:space="preserve">
+    <value>Text pe accent</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent_Description" xml:space="preserve">
+    <value>Text și simboluri pe suprafețe de accent, de exemplu pe un comutator pornit.</value>
+  </data>
+  <data name="Settings_Token_ThemeHover" xml:space="preserve">
+    <value>Cursor deasupra</value>
+  </data>
+  <data name="Settings_Token_ThemeHover_Description" xml:space="preserve">
+    <value>Fundalul unei intrări peste care trece mouse-ul și al indicatorului de stare.</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess" xml:space="preserve">
+    <value>Succes</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess_Description" xml:space="preserve">
+    <value>Bife, de exemplu atunci când aplicația este la zi.</value>
+  </data>
+  <data name="Settings_Token_ThemeError" xml:space="preserve">
+    <value>Eroare</value>
+  </data>
+  <data name="Settings_Token_ThemeError_Description" xml:space="preserve">
+    <value>Cadre și mesaje pentru introduceri nevalide.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground" xml:space="preserve">
+    <value>Fundalul notificărilor</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground_Description" xml:space="preserve">
+    <value>Fundalul notificărilor mici precum „Repornire necesară”.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText" xml:space="preserve">
+    <value>Textul notificărilor</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText_Description" xml:space="preserve">
+    <value>Textul notificărilor mici precum „Repornire necesară”.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground" xml:space="preserve">
+    <value>Filtru de text: fundal</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground_Description" xml:space="preserve">
+    <value>Fundalul etichetelor care afișează termenii filtrului de text.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtru de text: chenar</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Chenarul etichetelor care afișează termenii filtrului de text.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground" xml:space="preserve">
+    <value>Filtru de text: text</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground_Description" xml:space="preserve">
+    <value>Textul etichetelor care afișează termenii filtrului de text.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground" xml:space="preserve">
+    <value>Filtru regex: fundal</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground_Description" xml:space="preserve">
+    <value>Fundalul etichetelor care afișează termenii filtrului regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtru regex: chenar</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Chenarul etichetelor care afișează termenii filtrului regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground" xml:space="preserve">
+    <value>Filtru regex: text</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground_Description" xml:space="preserve">
+    <value>Textul etichetelor care afișează termenii filtrului regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground" xml:space="preserve">
+    <value>Filtru regex: prefix</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground_Description" xml:space="preserve">
+    <value>Culoarea etichetei „Regex:” din fața termenilor filtrului regex.</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground" xml:space="preserve">
+    <value>Potrivire filtru</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground_Description" xml:space="preserve">
+    <value>Fundalul textului dintr-un mesaj care se potrivește cu filtrul.</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground" xml:space="preserve">
+    <value>Rezultat căutare</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
+    <value>Fundalul textului dintr-un mesaj care se potrivește cu căutarea.</value>
+  </data>
 </root>
 
 

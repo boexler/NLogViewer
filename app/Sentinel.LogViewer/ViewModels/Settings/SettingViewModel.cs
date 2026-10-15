@@ -31,6 +31,11 @@ public abstract class SettingViewModel : INotifyPropertyChanged
 	public string Description { get; }
 
 	/// <summary>
+	/// Heading above the card when a category groups its settings; settings of the same section follow each other
+	/// </summary>
+	public string? Section { get; init; }
+
+	/// <summary>
 	/// Whether a change only takes full effect after restarting the application
 	/// </summary>
 	public bool NeedsRestart { get; }
@@ -124,8 +129,8 @@ public sealed record ChoiceOption(string Value, string Display);
 /// A setting with a fixed list of values
 /// </summary>
 public sealed class ChoiceSettingViewModel(string categoryId, string icon, string title, string description, bool needsRestart,
-	IReadOnlyList<ChoiceOption> options, Func<string> get, Action<string> set, Func<string> getDefault)
-	: ValueSettingViewModel<string>(categoryId, icon, title, description, needsRestart, get, set, getDefault, null)
+	IReadOnlyList<ChoiceOption> options, Func<string> get, Action<string> set, Func<string> getDefault, Action? reset = null)
+	: ValueSettingViewModel<string>(categoryId, icon, title, description, needsRestart, get, set, getDefault, reset)
 {
 	public IReadOnlyList<ChoiceOption> Options { get; } = options;
 }

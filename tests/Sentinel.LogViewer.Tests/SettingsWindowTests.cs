@@ -52,6 +52,28 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
+	public void DropDown_ShowsTheNameOfTheSelectedOption()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			viewModel.SelectedCategory = viewModel.Category("Appearance");
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var theme = Descendants<ComboBox>(window).First();
+
+				Assert.Contains(Descendants<TextBlock>(theme), text => text.Text == "Newschool");
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void Switch_WhenToggled_SavesTheSetting()
 	{
 		_context.RunOnSta(() =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Theming;
 using Sentinel.LogViewer.ViewModels;
 using Sentinel.LogViewer.ViewModels.Settings;
 using Xunit;
@@ -71,7 +72,7 @@ public sealed class SettingsTestEnvironment : IDisposable
 	/// </summary>
 	public AppConfiguration Saved => Configuration.LoadConfiguration();
 
-	public SettingsViewModel CreateViewModel() => new(Configuration, Localization, Transfer) { Dialogs = Dialogs };
+	public SettingsViewModel CreateViewModel() => new(Configuration, Localization, Transfer, new ThemeService()) { Dialogs = Dialogs };
 
 	public string PathOf(string fileName) => Path.Combine(Directory, fileName);
 

@@ -118,6 +118,7 @@ namespace Sentinel.LogViewer.Services
                         {
                             config.Language = string.Empty;
                         }
+                        Theming.ThemeCatalog.Sanitize(config);
                         return config;
                     }
                 }
@@ -178,5 +179,11 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Whether prerelease versions are offered as updates; null follows the running version.</summary>
         public bool? IncludePrereleaseUpdates { get; set; }
+
+        /// <summary>Id of the colour theme, see <see cref="Theming.ThemeCatalog"/>.</summary>
+        public string Theme { get; set; } = Theming.ThemeCatalog.DefaultThemeId;
+
+        /// <summary>Colours the user changed: theme id, then token key, then the colour as #RRGGBB or #AARRGGBB.</summary>
+        public Dictionary<string, Dictionary<string, string>> ThemeColors { get; set; } = new();
     }
 }

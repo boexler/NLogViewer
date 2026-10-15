@@ -403,6 +403,213 @@
   <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
     <value>A program indításakor egyszer megkérdezi a GitHubot, hogy létezik-e újabb verzió. A Súgó → Névjegy mindig ellenőriz.</value>
   </data>
+  <data name="Settings_Category_Appearance" xml:space="preserve">
+    <value>Megjelenés</value>
+  </data>
+  <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
+    <value>Az felület és a naplólista témája és színei.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Téma</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Az egész alkalmazás színsémája. A Newschool világos és letisztult, az Oldschool megtartja a naplólista klasszikus színeit. Az alábbi színek mindegyike témánként módosítható.</value>
+  </data>
+  <data name="Settings_Section_Interface" xml:space="preserve">
+    <value>Felület</value>
+  </data>
+  <data name="Settings_Section_Levels" xml:space="preserve">
+    <value>Naplószintek</value>
+  </data>
+  <data name="Settings_Section_Highlighting" xml:space="preserve">
+    <value>Keresés kiemelése</value>
+  </data>
+  <data name="Settings_Color_Invalid" xml:space="preserve">
+    <value>Adjon meg egy színt, például #1B1B1B vagy #801B1B1B (átlátszósággal).</value>
+  </data>
+  <data name="Settings_Color_Reset" xml:space="preserve">
+    <value>Visszaállítás a téma színére</value>
+  </data>
+  <data name="Settings_Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Settings_Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Settings_Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Settings_Level_Warn" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
+  <data name="Settings_Level_Error" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Settings_Level_Fatal" xml:space="preserve">
+    <value>Végzetes</value>
+  </data>
+  <data name="Settings_LevelBackground" xml:space="preserve">
+    <value>{0}: háttér</value>
+  </data>
+  <data name="Settings_LevelForeground" xml:space="preserve">
+    <value>{0}: szöveg</value>
+  </data>
+  <data name="Settings_LevelBackground_Description" xml:space="preserve">
+    <value>A(z) {0} szintű naplóbejegyzések háttere.</value>
+  </data>
+  <data name="Settings_LevelForeground_Description" xml:space="preserve">
+    <value>A(z) {0} szintű naplóbejegyzések szövegszíne.</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground" xml:space="preserve">
+    <value>Ablak háttere</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground_Description" xml:space="preserve">
+    <value>Az ablakok és a naplóterület háttere.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface" xml:space="preserve">
+    <value>Kártyák háttere</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface_Description" xml:space="preserve">
+    <value>A kártyák, gombok, menük és beviteli mezők háttere.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt" xml:space="preserve">
+    <value>Sávok és oldalsó panelek</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt_Description" xml:space="preserve">
+    <value>Az eszköztár, az állapotsor és a beállítások navigációjának háttere.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder" xml:space="preserve">
+    <value>Keret</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder_Description" xml:space="preserve">
+    <value>Vékony vonalak a kártyák körül és a területek között.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong" xml:space="preserve">
+    <value>Vezérlők kerete</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong_Description" xml:space="preserve">
+    <value>A gombok, beviteli mezők és legördülő listák kerete.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary_Description" xml:space="preserve">
+    <value>A fő szöveg színe.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary" xml:space="preserve">
+    <value>Másodlagos szöveg</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary_Description" xml:space="preserve">
+    <value>Leírások, csoportcímek és tippek.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted" xml:space="preserve">
+    <value>Halvány szöveg</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted_Description" xml:space="preserve">
+    <value>Helyőrzők, letiltott elemek és a bezárógombok szimbólumai.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent" xml:space="preserve">
+    <value>Kiemelőszín</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent_Description" xml:space="preserve">
+    <value>Kijelölt elemek, hivatkozások, kapcsolók és a fókuszkeret.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft" xml:space="preserve">
+    <value>Kiemelőszín, világos</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft_Description" xml:space="preserve">
+    <value>A kijelölt kategória, lapfül vagy listaelem háttere.</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent" xml:space="preserve">
+    <value>Szöveg kiemelőszínen</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent_Description" xml:space="preserve">
+    <value>Szöveg és szimbólumok kiemelt felületeken, például bekapcsolt kapcsolón.</value>
+  </data>
+  <data name="Settings_Token_ThemeHover" xml:space="preserve">
+    <value>Egér fölötte</value>
+  </data>
+  <data name="Settings_Token_ThemeHover_Description" xml:space="preserve">
+    <value>A bejegyzés háttere egérrel fölötte, valamint az állapotjelzőé.</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess" xml:space="preserve">
+    <value>Sikeres</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess_Description" xml:space="preserve">
+    <value>Pipák, például ha az alkalmazás naprakész.</value>
+  </data>
+  <data name="Settings_Token_ThemeError" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Settings_Token_ThemeError_Description" xml:space="preserve">
+    <value>Érvénytelen bevitel keretei és üzenetei.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground" xml:space="preserve">
+    <value>Értesítés háttere</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground_Description" xml:space="preserve">
+    <value>Kis értesítések, például az „Újraindítás szükséges” háttere.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText" xml:space="preserve">
+    <value>Értesítés szövege</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText_Description" xml:space="preserve">
+    <value>Kis értesítések, például az „Újraindítás szükséges” szövege.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground" xml:space="preserve">
+    <value>Szövegszűrő: háttér</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground_Description" xml:space="preserve">
+    <value>A szövegszűrő kifejezéseit mutató címkék háttere.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush" xml:space="preserve">
+    <value>Szövegszűrő: keret</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>A szövegszűrő kifejezéseit mutató címkék kerete.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground" xml:space="preserve">
+    <value>Szövegszűrő: szöveg</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground_Description" xml:space="preserve">
+    <value>A szövegszűrő kifejezéseit mutató címkék szövege.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground" xml:space="preserve">
+    <value>Regex-szűrő: háttér</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground_Description" xml:space="preserve">
+    <value>A regex-szűrő kifejezéseit mutató címkék háttere.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush" xml:space="preserve">
+    <value>Regex-szűrő: keret</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>A regex-szűrő kifejezéseit mutató címkék kerete.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground" xml:space="preserve">
+    <value>Regex-szűrő: szöveg</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground_Description" xml:space="preserve">
+    <value>A regex-szűrő kifejezéseit mutató címkék szövege.</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground" xml:space="preserve">
+    <value>Regex-szűrő: előtag</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground_Description" xml:space="preserve">
+    <value>A regex-szűrő kifejezései előtti „Regex:” felirat színe.</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground" xml:space="preserve">
+    <value>Szűrő találata</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground_Description" xml:space="preserve">
+    <value>Az üzenetben a szűrőnek megfelelő szöveg háttere.</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground" xml:space="preserve">
+    <value>Keresési találat</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
+    <value>Az üzenetben a keresésnek megfelelő szöveg háttere.</value>
+  </data>
 </root>
 
 

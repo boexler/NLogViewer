@@ -62,6 +62,32 @@ public class SettingsTransferServiceTests : IDisposable
 		Assert.Equal(10000, saved.MaxLogEntriesPerTab);
 	}
 
+	[Fact]
+	public void Import_KeepsTheThemeAndItsColours_AndDropsWhatDoesNotExist()
+	{
+		var file = _environment.PathOf("themed.json");
+		File.WriteAllText(file, """
+			{
+			  "Version": 1,
+			  "Settings": {
+			    "Theme": "oldschool",
+			    "ThemeColors": {
+			      "oldschool": { "ThemeAccent": "#abc", "ThemeBorder": "nonsense", "NoSuchToken": "#000000" },
+			      "gone": { "ThemeAccent": "#000000" }
+			    }
+			  }
+			}
+			""");
+
+		_environment.Transfer.Import(file);
+
+		var saved = _environment.Saved;
+		Assert.Equal("oldschool", saved.Theme);
+		var colors = Assert.Single(saved.ThemeColors);
+		Assert.Equal("oldschool", colors.Key);
+		Assert.Equal(new System.Collections.Generic.Dictionary<string, string> { ["ThemeAccent"] = "#AABBCC" }, colors.Value);
+	}
+
 	[Theory]
 	[InlineData("not json")]
 	[InlineData("[]")]

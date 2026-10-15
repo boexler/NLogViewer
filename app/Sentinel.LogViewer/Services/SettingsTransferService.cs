@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Sentinel.LogViewer.Models;
+using Sentinel.LogViewer.Services.Theming;
 
 namespace Sentinel.LogViewer.Services;
 
@@ -54,6 +55,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 			settings.MaxLogEntriesPerTab = ConfigurationService.CreateDefaultConfiguration().MaxLogEntriesPerTab;
 		if (!string.IsNullOrEmpty(settings.Language) && !LocalizationService.AvailableLanguages.ContainsKey(settings.Language))
 			settings.Language = string.Empty;
+		ThemeCatalog.Sanitize(settings);
 
 		configurationService.SaveConfiguration(settings);
 		formatConfigService.ReplaceAll(bundle.TextFileFormats);

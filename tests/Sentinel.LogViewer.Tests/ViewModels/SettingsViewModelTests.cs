@@ -47,7 +47,7 @@ public class SettingsViewModelTests : IDisposable
 	{
 		var viewModel = _environment.CreateViewModel();
 
-		Assert.Equal(new[] { "General", "Receiving", "Updates" }, viewModel.Categories.Select(category => category.Id));
+		Assert.Equal(new[] { "General", "Receiving", "Appearance", "Updates" }, viewModel.Categories.Select(category => category.Id));
 		Assert.Equal("General", viewModel.SelectedCategory?.Id);
 		Assert.Equal(1 + viewModel.SelectedCategory!.Settings.Count, viewModel.PageItems.Count);
 		Assert.IsType<SettingsPageHeader>(viewModel.PageItems[0]);
