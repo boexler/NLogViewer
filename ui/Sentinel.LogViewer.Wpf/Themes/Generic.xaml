@@ -295,12 +295,17 @@
 
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition x:Name="PART_LoggerTreeLeftColumn" Width="0"/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition x:Name="PART_LoggerTreeRightColumn" Width="0"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <ListView
                                 x:Name="PART_ListView"
+                                Grid.Column="3"
                                 ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
                                 BorderThickness="0"
                                 ScrollViewer.CanContentScroll="True"
@@ -507,11 +512,39 @@
                             </ListView>
 
                             <!-- Logger tree: opens on the right of the list -->
-                            <Border x:Name="PART_LoggerTreePanel" Grid.Column="1" Visibility="Collapsed"
-                                    Width="{TemplateBinding LoggerTreeWidth}"
-                                    BorderThickness="1,0,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                            <GridSplitter x:Name="PART_LoggerTreeSplitter" Grid.Column="4" Width="5" Visibility="Collapsed"
+                                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                          ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
+                                          ToolTip="Drag to change the width of the logger tree">
+                                <GridSplitter.Template>
+                                    <ControlTemplate TargetType="GridSplitter">
+                                        <Border Background="Transparent">
+                                            <Rectangle Width="1" HorizontalAlignment="Center"
+                                                       Fill="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </GridSplitter.Template>
+                            </GridSplitter>
+                            <Border x:Name="PART_LoggerTreePanel" Grid.Column="5" Visibility="Collapsed">
                                 <DockPanel Margin="6">
-                                    <TextBlock DockPanel.Dock="Top" Text="Loggers" FontWeight="SemiBold" Margin="2,0,0,4"/>
+                                    <Grid DockPanel.Dock="Top" Margin="2,0,0,4">
+                                        <TextBlock Text="Loggers" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <ToggleButton HorizontalAlignment="Right" Width="24" Height="22" Padding="0"
+                                                      ToolTip="Move the logger tree to the other side"
+                                                      IsChecked="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                            <TextBlock Text="&#x2192;" FontSize="14">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
+                                                                <Setter Property="Text" Value="&#x2190;"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </ToggleButton>
+                                    </Grid>
                                     <TextBox DockPanel.Dock="Top" Margin="0,0,0,6" ToolTip="Search loggers"
                                              Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TreeView ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
@@ -596,7 +629,7 @@
                                     </TreeView>
                                 </DockPanel>
                             </Border>
-                            <ToggleButton x:Name="PART_LoggerTreeHandle" Grid.Column="2" Width="22" Margin="2,0,0,0"
+                            <ToggleButton x:Name="PART_LoggerTreeHandle" Grid.Column="6" Width="22" Margin="2,0,0,0"
                                           ToolTip="Show or hide the logger tree"
                                           IsChecked="{Binding IsLoggerTreeExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                 <TextBlock Text="Loggers">
@@ -610,9 +643,17 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsLoggerTreeExpanded" Value="True">
                             <Setter TargetName="PART_LoggerTreePanel" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="PART_LoggerTreeSplitter" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsLoggerTreeOnLeft" Value="True">
+                            <Setter TargetName="PART_LoggerTreeHandle" Property="Grid.Column" Value="0"/>
+                            <Setter TargetName="PART_LoggerTreeHandle" Property="Margin" Value="0,0,2,0"/>
+                            <Setter TargetName="PART_LoggerTreePanel" Property="Grid.Column" Value="1"/>
+                            <Setter TargetName="PART_LoggerTreeSplitter" Property="Grid.Column" Value="2"/>
                         </Trigger>
                         <Trigger Property="ShowLoggerTree" Value="False">
                             <Setter TargetName="PART_LoggerTreePanel" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="PART_LoggerTreeSplitter" Property="Visibility" Value="Collapsed"/>
                             <Setter TargetName="PART_LoggerTreeHandle" Property="Visibility" Value="Collapsed"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

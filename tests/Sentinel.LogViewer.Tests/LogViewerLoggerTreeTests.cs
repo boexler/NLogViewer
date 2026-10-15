@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using NLog;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
@@ -226,11 +228,125 @@ public class LogViewerLoggerTreeTests
 
 				viewer.IsLoggerTreeExpanded = true;
 				Assert.Equal(Visibility.Visible, panel.Visibility);
-				Assert.Equal(viewer.LoggerTreeWidth, panel.Width);
 
 				viewer.ShowLoggerTree = false;
 				Assert.Equal(Visibility.Collapsed, panel.Visibility);
 				Assert.Equal(Visibility.Collapsed, handle.Visibility);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	private static double ColumnWidth(LogViewerBase viewer, string name) => ((ColumnDefinition)viewer.Template.FindName(name, viewer)).Width.Value;
+
+	[Fact]
+	public void Panel_GetsItsWidthOnTheSideItIsOn_AndNoneOnTheOtherSide()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				Assert.Equal(0, ColumnWidth(viewer, "PART_LoggerTreeRightColumn"));
+				Assert.Equal(0, ColumnWidth(viewer, "PART_LoggerTreeLeftColumn"));
+
+				viewer.IsLoggerTreeExpanded = true;
+				Assert.Equal(260, ColumnWidth(viewer, "PART_LoggerTreeRightColumn"));
+				Assert.Equal(0, ColumnWidth(viewer, "PART_LoggerTreeLeftColumn"));
+				viewer.UpdateLayout();
+				Assert.True(((FrameworkElement)viewer.Template.FindName("PART_LoggerTreePanel", viewer)).ActualWidth > 200);
+
+				viewer.IsLoggerTreeOnLeft = true;
+				Assert.Equal(260, ColumnWidth(viewer, "PART_LoggerTreeLeftColumn"));
+				Assert.Equal(0, ColumnWidth(viewer, "PART_LoggerTreeRightColumn"));
+
+				viewer.IsLoggerTreeExpanded = false;
+				Assert.Equal(0, ColumnWidth(viewer, "PART_LoggerTreeLeftColumn"));
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
+	public void Switching_MovesThePanelTheSplitterAndTheHandleToTheOtherSideOfTheList()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.IsLoggerTreeExpanded = true;
+				var panel = (FrameworkElement)viewer.Template.FindName("PART_LoggerTreePanel", viewer);
+				var splitter = (FrameworkElement)viewer.Template.FindName("PART_LoggerTreeSplitter", viewer);
+				var handle = (FrameworkElement)viewer.Template.FindName("PART_LoggerTreeHandle", viewer);
+				var list = (FrameworkElement)viewer.Template.FindName("PART_ListView", viewer);
+				Assert.Equal(new[] { 5, 4, 6 }, new[] { Grid.GetColumn(panel), Grid.GetColumn(splitter), Grid.GetColumn(handle) });
+				viewer.UpdateLayout();
+				Assert.True(panel.TranslatePoint(new Point(), list).X > list.ActualWidth);
+
+				viewer.IsLoggerTreeOnLeft = true;
+
+				Assert.Equal(new[] { 1, 2, 0 }, new[] { Grid.GetColumn(panel), Grid.GetColumn(splitter), Grid.GetColumn(handle) });
+				viewer.UpdateLayout();
+				Assert.True(panel.TranslatePoint(new Point(), list).X < 0);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
+	public void LoggerTreeWidth_SetsTheWidthOfTheOpenPanel_NotBelowTheMinimum()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.IsLoggerTreeExpanded = true;
+
+				viewer.LoggerTreeWidth = 320;
+				Assert.Equal(320, ColumnWidth(viewer, "PART_LoggerTreeRightColumn"));
+
+				viewer.LoggerTreeWidth = 50;
+				Assert.Equal(140, ColumnWidth(viewer, "PART_LoggerTreeRightColumn"));
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
+	public void DraggingTheSplitter_ChangesTheWidthProperty_AndKeepsItWhenSwitchingSides()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.IsLoggerTreeExpanded = true;
+				var splitter = (GridSplitter)viewer.Template.FindName("PART_LoggerTreeSplitter", viewer);
+				var column = (ColumnDefinition)viewer.Template.FindName("PART_LoggerTreeRightColumn", viewer);
+
+				// What the splitter does while it is dragged
+				column.Width = new GridLength(350);
+				viewer.UpdateLayout();
+				splitter.RaiseEvent(new DragCompletedEventArgs(0, 0, false));
+
+				Assert.Equal(350, viewer.LoggerTreeWidth, 0);
+
+				viewer.IsLoggerTreeOnLeft = true;
+				Assert.Equal(350, ColumnWidth(viewer, "PART_LoggerTreeLeftColumn"), 0);
 			}
 			finally
 			{

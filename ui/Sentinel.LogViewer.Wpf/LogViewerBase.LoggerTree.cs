@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using NLog;
 using Sentinel.LogViewer.Wpf.Models;
@@ -17,6 +18,7 @@ namespace Sentinel.LogViewer.Wpf
     public partial class LogViewerBase
     {
         private bool _syncingLoggerFilterRules;
+        private GridSplitter? _loggerTreeSplitter;
 
         /// <summary>
         /// The loggers of all entries, with their counters, and the rules that show or hide them
@@ -40,7 +42,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="ShowLoggerTree"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowLoggerTreeProperty =
-            DependencyProperty.Register(nameof(ShowLoggerTree), typeof(bool), typeof(LogViewerBase), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(ShowLoggerTree), typeof(bool), typeof(LogViewerBase), new PropertyMetadata(true, OnLoggerTreeLayoutChanged));
 
         /// <summary>
         /// Whether the logger tree is open
@@ -58,7 +60,7 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         public static readonly DependencyProperty IsLoggerTreeExpandedProperty =
             DependencyProperty.Register(nameof(IsLoggerTreeExpanded), typeof(bool), typeof(LogViewerBase),
-                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
 
         /// <summary>
         /// Width of the open logger tree
@@ -75,7 +77,31 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="LoggerTreeWidth"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty LoggerTreeWidthProperty =
-            DependencyProperty.Register(nameof(LoggerTreeWidth), typeof(double), typeof(LogViewerBase), new PropertyMetadata(260d));
+            DependencyProperty.Register(nameof(LoggerTreeWidth), typeof(double), typeof(LogViewerBase),
+                new FrameworkPropertyMetadata(260d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
+
+        /// <summary>
+        /// Whether the logger tree is on the left of the list instead of the right
+        /// </summary>
+        [Category("LogViewerLoggerTree")]
+        [Description("Whether the logger tree is on the left of the list instead of the right")]
+        public bool IsLoggerTreeOnLeft
+        {
+            get => (bool)GetValue(IsLoggerTreeOnLeftProperty);
+            set => SetValue(IsLoggerTreeOnLeftProperty, value);
+        }
+
+        /// <summary>
+        /// The <see cref="IsLoggerTreeOnLeft"/> DependencyProperty.
+        /// </summary>
+        public static readonly DependencyProperty IsLoggerTreeOnLeftProperty =
+            DependencyProperty.Register(nameof(IsLoggerTreeOnLeft), typeof(bool), typeof(LogViewerBase),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
+
+        private static void OnLoggerTreeLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as LogViewerBase)?.ApplyLoggerTreeLayout();
+        }
 
         /// <summary>
         /// The loggers that are hidden or shown, as text: <c>-Company.Product</c> hides that logger and everything below it,
@@ -104,6 +130,52 @@ namespace Sentinel.LogViewer.Wpf
         }
 
         #endregion
+
+        private const double MinLoggerTreeWidth = 140;
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            if (_loggerTreeSplitter != null)
+                _loggerTreeSplitter.DragCompleted -= OnLoggerTreeSplitterDragCompleted;
+
+            _loggerTreeSplitter = GetTemplateChild("PART_LoggerTreeSplitter") as GridSplitter;
+            if (_loggerTreeSplitter != null)
+                _loggerTreeSplitter.DragCompleted += OnLoggerTreeSplitterDragCompleted;
+
+            ApplyLoggerTreeLayout();
+        }
+
+        /// <summary>
+        /// Gives the open tree its width on the side it is on, and none to the other side
+        /// </summary>
+        private void ApplyLoggerTreeLayout()
+        {
+            if (GetTemplateChild("PART_LoggerTreeLeftColumn") is not ColumnDefinition left ||
+                GetTemplateChild("PART_LoggerTreeRightColumn") is not ColumnDefinition right)
+                return;
+
+            var open = ShowLoggerTree && IsLoggerTreeExpanded;
+            SetLoggerTreeColumn(left, open && IsLoggerTreeOnLeft);
+            SetLoggerTreeColumn(right, open && !IsLoggerTreeOnLeft);
+        }
+
+        private void SetLoggerTreeColumn(ColumnDefinition column, bool open)
+        {
+            column.MinWidth = open ? MinLoggerTreeWidth : 0;
+            column.Width = new GridLength(open ? Math.Max(LoggerTreeWidth, MinLoggerTreeWidth) : 0);
+        }
+
+        /// <summary>
+        /// Takes over the width that the splitter set
+        /// </summary>
+        private void OnLoggerTreeSplitterDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            var column = GetTemplateChild(IsLoggerTreeOnLeft ? "PART_LoggerTreeLeftColumn" : "PART_LoggerTreeRightColumn") as ColumnDefinition;
+            if (column is { ActualWidth: > 0 })
+                LoggerTreeWidth = column.ActualWidth;
+        }
 
         private void OnLoggerTreeRulesChanged(object? sender, EventArgs e)
         {

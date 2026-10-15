@@ -341,12 +341,14 @@ The loggers of the entries are shown as a tree on the right of the list, split a
 - Per logger: number of entries, plus counters for warnings and for errors and fatal errors; they update while entries arrive
 - Right-click a logger: **Show only this logger**, **Show all loggers**, **Expand all**, **Collapse all**
 - A search box above the tree lists the loggers that contain the text
+- Drag the splitter between the list and the tree to change its width; the arrow button in the header moves the tree to the other side of the list
 - Hidden loggers work together with the level buttons and the filter terms; an entry is shown only if all of them allow it
 
 **Logger Tree Properties:**
 - `ShowLoggerTree` - Whether the tree can be opened (default `true`)
 - `IsLoggerTreeExpanded` - Whether the tree is open (default `false`)
-- `LoggerTreeWidth` - Width of the open tree (default `260`)
+- `LoggerTreeWidth` - Width of the open tree (default `260`, at least `140`); it also follows the splitter
+- `IsLoggerTreeOnLeft` - Whether the tree is on the left of the list instead of the right (default `false`)
 - `LoggerFilterRules` - The hidden and shown loggers as text, to save and restore them
 - `LoggerTree` - The tree itself with its nodes, counters and commands
 
