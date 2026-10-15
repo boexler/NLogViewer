@@ -1,4 +1,6 @@
 <Window x:Class="Sentinel.LogViewer.MainWindow"
+        Background="{DynamicResource ThemePageBackground}"
+        Foreground="{DynamicResource ThemeTextPrimary}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -23,7 +25,7 @@
                 <Setter Property="Height" Value="16"/>
                 <Setter Property="Margin" Value="6,0,-2,0"/>
                 <Setter Property="FontSize" Value="9"/>
-                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -33,8 +35,8 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Chrome" Property="Background" Value="#33000000"/>
-                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ThemeHover}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextPrimary}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -59,8 +61,38 @@
                 <dj:LogViewerBase 
                     x:Name="LogViewer1"
                     Tag="{Binding ElementName=LogViewer1}"
+                    TraceBackground="{DynamicResource LogTraceBackground}"
+                    TraceForeground="{DynamicResource LogTraceForeground}"
+                    DebugBackground="{DynamicResource LogDebugBackground}"
+                    DebugForeground="{DynamicResource LogDebugForeground}"
+                    InfoBackground="{DynamicResource LogInfoBackground}"
+                    InfoForeground="{DynamicResource LogInfoForeground}"
+                    WarnBackground="{DynamicResource LogWarnBackground}"
+                    WarnForeground="{DynamicResource LogWarnForeground}"
+                    ErrorBackground="{DynamicResource LogErrorBackground}"
+                    ErrorForeground="{DynamicResource LogErrorForeground}"
+                    FatalBackground="{DynamicResource LogFatalBackground}"
+                    FatalForeground="{DynamicResource LogFatalForeground}"
+                    TextSearchTermBackground="{DynamicResource LogTextSearchTermBackground}"
+                    TextSearchTermBorderBrush="{DynamicResource LogTextSearchTermBorderBrush}"
+                    TextSearchTermForeground="{DynamicResource LogTextSearchTermForeground}"
+                    RegexSearchTermBackground="{DynamicResource LogRegexSearchTermBackground}"
+                    RegexSearchTermBorderBrush="{DynamicResource LogRegexSearchTermBorderBrush}"
+                    RegexSearchTermForeground="{DynamicResource LogRegexSearchTermForeground}"
+                    RegexPrefixForeground="{DynamicResource LogRegexPrefixForeground}"
+                    SearchHighlightBackground="{DynamicResource LogSearchHighlightBackground}"
+                    FindHighlightBackground="{DynamicResource LogFindHighlightBackground}"
                     ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
+                    <dj:LogViewerBase.Resources>
+                        <!-- The buttons of the control have a fixed size, so they get less padding than the buttons of the dialogs -->
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Padding" Value="2,2"/>
+                        </Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                            <Setter Property="Padding" Value="1,2"/>
+                        </Style>
+                    </dj:LogViewerBase.Resources>
                     <dj:LogViewerBase.IdResolver>
                         <helpers:FileLineIdResolver />
                     </dj:LogViewerBase.IdResolver>
@@ -73,8 +105,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
+        <StackPanel Grid.Row="0">
         <!-- Menu Bar -->
-        <Menu x:Name="MainMenu" Grid.Row="0">
+        <Menu x:Name="MainMenu">
             <MenuItem Header="{helpers:Resource Key=Menu_File, DefaultValue=_File}">
                 <MenuItem Header="{helpers:Resource Key=Menu_OpenFile, DefaultValue=_Open File...}" 
                           Command="{Binding OpenFileCommand}" 
@@ -110,7 +143,7 @@
         </Menu>
         
         <!-- Toolbar -->
-        <ToolBar Grid.Row="0" Margin="0,25,0,0">
+        <ToolBar>
             <Button Content="{helpers:Resource Key=Button_StartListening, DefaultValue=Start Listening}" 
                     Command="{Binding StartListeningCommand}" 
                     ToolTip="{helpers:Resource Key=ToolTip_StartListening, DefaultValue=Start listening on configured ports}"/>
@@ -119,11 +152,12 @@
                     ToolTip="{helpers:Resource Key=ToolTip_StopListening, DefaultValue=Stop listening on all ports}"/>
             <Separator />
             <TextBlock Text="{helpers:Resource Key=Status_Label, DefaultValue=Status:}" VerticalAlignment="Center" Margin="5,0"/>
-            <TextBlock Text="{Binding ListeningStatus}" 
-                       VerticalAlignment="Center" 
-                       Margin="5,0"
-                       FontWeight="Bold"/>
+            <Border Background="{DynamicResource ThemeHover}" CornerRadius="10" Padding="9,2" Margin="5,0"
+                    VerticalAlignment="Center">
+                <TextBlock Text="{Binding ListeningStatus}" FontWeight="SemiBold"/>
+            </Border>
         </ToolBar>
+        </StackPanel>
         
         <!-- Main Content: TabControl with LogViewers -->
         <TabControl x:Name="LogTabsControl"
@@ -136,7 +170,7 @@
                     attachedProperties:TabContent.IsCached="True"
                     attachedProperties:TabContent.Template="{StaticResource TabControlContentTemplate}">
             <TabControl.ItemContainerStyle>
-                <Style TargetType="TabItem">
+                <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
                     <Setter Property="AllowDrop" Value="True"/>
                     <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TabControl}}"/>
                     <Setter Property="ContextMenu" Value="{StaticResource TabContextMenu}"/>
@@ -169,7 +203,7 @@
         <StatusBar Grid.Row="2">
             <!-- Language Selector (Left) -->
             <StatusBarItem HorizontalAlignment="Left">
-                <Button x:Name="LanguageButton" 
+                <Button x:Name="LanguageButton" Style="{StaticResource ThemeIconButton}" 
                         Padding="5,2"
                         Cursor="Hand"
                         ToolTip="Change Language"
@@ -216,7 +250,7 @@
             <Grid Background="#80000000" 
                   Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
                   Panel.ZIndex="1000">
-                <Border Background="White" 
+                <Border Background="{DynamicResource ThemeSurface}" 
                         CornerRadius="10" 
                         Padding="30"
                         HorizontalAlignment="Center"
@@ -234,7 +268,7 @@
                         <TextBlock Text="{Binding LoadingProgress}" 
                                    HorizontalAlignment="Center"
                                    TextAlignment="Center"
-                                   Foreground="Gray"/>
+                                   Foreground="{DynamicResource ThemeTextSecondary}"/>
                     </StackPanel>
                 </Border>
             </Grid>

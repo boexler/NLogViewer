@@ -31,6 +31,20 @@ namespace Sentinel.LogViewer.Services
             { "ro", "pack://application:,,,/Resources/flags/ro.svg" }   // Romanian
         };
 
+        /// <summary>
+        /// Names of the languages in the language itself
+        /// </summary>
+        public static readonly Dictionary<string, string> LanguageNames = new()
+        {
+            { "de", "Deutsch" },
+            { "en", "English" },
+            { "es", "Español" },
+            { "fr", "Français" },
+            { "hu", "Magyar" },
+            { "pl", "Polski" },
+            { "ro", "Română" }
+        };
+
         public LocalizationService(ConfigurationService configService)
         {
             _configService = configService ?? throw new ArgumentNullException(nameof(configService));

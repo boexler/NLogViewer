@@ -34,6 +34,15 @@ namespace Sentinel.LogViewer.Tests
         {
             var app = new Application();
             app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            // The application styles and colours are normally set up by App.xaml and App.OnStartup, which do not run in tests.
+            foreach (var dictionary in new[] { "Theme", "AppStyles", "ShellStyles", "SettingsStyles" })
+            {
+                app.Resources.MergedDictionaries.Add(new ResourceDictionary
+                {
+                    Source = new Uri($"pack://application:,,,/Sentinel.LogViewer;component/Styles/{dictionary}.xaml")
+                });
+            }
+            new Sentinel.LogViewer.Services.Theming.ThemeService().Apply(new Sentinel.LogViewer.Services.AppConfiguration());
             _dispatcher = Dispatcher.CurrentDispatcher;
             _ready.Set();
             Dispatcher.Run();

@@ -274,6 +274,342 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Czy na pewno chcesz zamknąć wszystkie inne karty?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Szukaj w ustawieniach</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Wyniki wyszukiwania</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Ustawienia, których tytuł lub opis zawiera „{0}”.</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Nie znaleziono ustawień dla „{0}”.</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Zmiany są zapisywane od razu</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Przywróć: {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Przywracanie ustawień</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Przywrócić wartości domyślne wszystkich ustawień w kategorii „{0}”?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>Kategoria {0} została przywrócona do wartości domyślnych.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Eksportuj…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importuj…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Eksport ustawień</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Import ustawień</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Pliki ustawień (*.json)|*.json|Wszystkie pliki (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>Import zastąpi wszystkie bieżące ustawienia i zapisane mapowania kolumn. Kontynuować?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Ustawienia wyeksportowano do {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Ustawienia zaimportowano. Uruchom aplikację ponownie, aby zastosować wszystkie zmiany.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>To nie jest plik ustawień wyeksportowany z Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>Nie udało się zaimportować pliku: {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>Nie udało się wyeksportować ustawień: {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Wymagany restart</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Dodaj port</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Usuń port</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Podaj adres w postaci udp://0.0.0.0:4000 z portem od 1 do 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Ten port jest już na liście.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Podaj liczbę całkowitą od {0} do {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>Ogólne</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Język i podstawowe zachowanie aplikacji.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Odbieranie</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Jak i którędy logi trafiają do aplikacji.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Aktualizacje</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Jak aplikacja szuka nowych wersji.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Język menu i okien dialogowych. W pełni stosowany po ponownym uruchomieniu aplikacji.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Nasłuchuj przy uruchomieniu</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Porty</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Adresy, na których aplikacja nasłuchuje logów, na przykład udp://0.0.0.0:4000. Zmiany zaczynają obowiązywać przy następnym rozpoczęciu nasłuchiwania.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Maksymalna liczba wpisów na kartę</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Starsze wpisy są usuwane, gdy karta zawiera ich więcej. Chroni pamięć podczas długich sesji na żywo. Dotyczy kart otwartych później.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Uwzględnia wersje beta podczas wyszukiwania aktualizacji. Domyślnie włączone, dopóki działa wersja przedpremierowa.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Rozpoczyna odbieranie logów na wszystkich portach zaraz po otwarciu aplikacji, bez klikania „Rozpocznij nasłuchiwanie”.</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Raz przy uruchomieniu aplikacji sprawdza w GitHub, czy istnieje nowsza wersja. Pomoc → O programie zawsze sprawdza.</value>
+  </data>
+  <data name="Settings_Category_Appearance" xml:space="preserve">
+    <value>Wygląd</value>
+  </data>
+  <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
+    <value>Motyw i kolory interfejsu oraz listy logów.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Schemat kolorów całej aplikacji. Newschool jest jasny i płaski, Oldschool zachowuje klasyczne kolory listy logów. Każdy z poniższych kolorów można zmienić osobno dla każdego motywu.</value>
+  </data>
+  <data name="Settings_Section_Interface" xml:space="preserve">
+    <value>Interfejs</value>
+  </data>
+  <data name="Settings_Section_Levels" xml:space="preserve">
+    <value>Poziomy logów</value>
+  </data>
+  <data name="Settings_Section_Highlighting" xml:space="preserve">
+    <value>Wyróżnianie wyszukiwania</value>
+  </data>
+  <data name="Settings_Color_Invalid" xml:space="preserve">
+    <value>Podaj kolor, na przykład #1B1B1B lub #801B1B1B (z przezroczystością).</value>
+  </data>
+  <data name="Settings_Color_Reset" xml:space="preserve">
+    <value>Przywróć kolor motywu</value>
+  </data>
+  <data name="Settings_Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Settings_Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Settings_Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Settings_Level_Warn" xml:space="preserve">
+    <value>Ostrzeżenie</value>
+  </data>
+  <data name="Settings_Level_Error" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="Settings_Level_Fatal" xml:space="preserve">
+    <value>Krytyczny</value>
+  </data>
+  <data name="Settings_LevelBackground" xml:space="preserve">
+    <value>{0}: tło</value>
+  </data>
+  <data name="Settings_LevelForeground" xml:space="preserve">
+    <value>{0}: tekst</value>
+  </data>
+  <data name="Settings_LevelBackground_Description" xml:space="preserve">
+    <value>Tło wpisów logu o poziomie {0}.</value>
+  </data>
+  <data name="Settings_LevelForeground_Description" xml:space="preserve">
+    <value>Kolor tekstu wpisów logu o poziomie {0}.</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground" xml:space="preserve">
+    <value>Tło okna</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground_Description" xml:space="preserve">
+    <value>Tło okien i obszaru logów.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface" xml:space="preserve">
+    <value>Tło kart</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface_Description" xml:space="preserve">
+    <value>Tło kart, przycisków, menu i pól wprowadzania.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt" xml:space="preserve">
+    <value>Paski i panele boczne</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt_Description" xml:space="preserve">
+    <value>Tło paska narzędzi, paska stanu i nawigacji ustawień.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder" xml:space="preserve">
+    <value>Obramowanie</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder_Description" xml:space="preserve">
+    <value>Cienkie linie wokół kart i między obszarami.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong" xml:space="preserve">
+    <value>Obramowanie kontrolek</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong_Description" xml:space="preserve">
+    <value>Obramowanie przycisków, pól wprowadzania i list rozwijanych.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary_Description" xml:space="preserve">
+    <value>Kolor głównego tekstu.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary" xml:space="preserve">
+    <value>Tekst pomocniczy</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary_Description" xml:space="preserve">
+    <value>Opisy, nagłówki grup i podpowiedzi.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted" xml:space="preserve">
+    <value>Przygaszony tekst</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted_Description" xml:space="preserve">
+    <value>Teksty zastępcze, wyłączone pozycje i symbole przycisków zamykania.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent" xml:space="preserve">
+    <value>Akcent</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent_Description" xml:space="preserve">
+    <value>Zaznaczone pozycje, linki, przełączniki i ramka fokusu.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft" xml:space="preserve">
+    <value>Akcent, jasny</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft_Description" xml:space="preserve">
+    <value>Tło wybranej kategorii, karty lub pozycji listy.</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent" xml:space="preserve">
+    <value>Tekst na akcencie</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent_Description" xml:space="preserve">
+    <value>Tekst i symbole na powierzchniach akcentu, na przykład na włączonym przełączniku.</value>
+  </data>
+  <data name="Settings_Token_ThemeHover" xml:space="preserve">
+    <value>Najechanie myszą</value>
+  </data>
+  <data name="Settings_Token_ThemeHover_Description" xml:space="preserve">
+    <value>Tło pozycji pod kursorem myszy oraz znacznika stanu.</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess" xml:space="preserve">
+    <value>Powodzenie</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess_Description" xml:space="preserve">
+    <value>Znaczniki wyboru, na przykład gdy aplikacja jest aktualna.</value>
+  </data>
+  <data name="Settings_Token_ThemeError" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="Settings_Token_ThemeError_Description" xml:space="preserve">
+    <value>Ramki i komunikaty nieprawidłowych danych.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground" xml:space="preserve">
+    <value>Tło powiadomień</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground_Description" xml:space="preserve">
+    <value>Tło małych powiadomień, np. „Wymagane ponowne uruchomienie”.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText" xml:space="preserve">
+    <value>Tekst powiadomień</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText_Description" xml:space="preserve">
+    <value>Tekst małych powiadomień, np. „Wymagane ponowne uruchomienie”.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground" xml:space="preserve">
+    <value>Filtr tekstowy: tło</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground_Description" xml:space="preserve">
+    <value>Tło znaczników pokazujących frazy filtra tekstowego.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtr tekstowy: obramowanie</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Obramowanie znaczników pokazujących frazy filtra tekstowego.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground" xml:space="preserve">
+    <value>Filtr tekstowy: tekst</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground_Description" xml:space="preserve">
+    <value>Tekst znaczników pokazujących frazy filtra tekstowego.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground" xml:space="preserve">
+    <value>Filtr regex: tło</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground_Description" xml:space="preserve">
+    <value>Tło znaczników pokazujących frazy filtra regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtr regex: obramowanie</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Obramowanie znaczników pokazujących frazy filtra regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground" xml:space="preserve">
+    <value>Filtr regex: tekst</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground_Description" xml:space="preserve">
+    <value>Tekst znaczników pokazujących frazy filtra regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground" xml:space="preserve">
+    <value>Filtr regex: prefiks</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground_Description" xml:space="preserve">
+    <value>Kolor etykiety „Regex:” przed frazami filtra regex.</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground" xml:space="preserve">
+    <value>Dopasowanie filtra</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground_Description" xml:space="preserve">
+    <value>Tło tekstu w komunikacie pasującego do filtra.</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground" xml:space="preserve">
+    <value>Trafienie wyszukiwania</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
+    <value>Tło tekstu w komunikacie pasującego do wyszukiwania.</value>
+  </data>
 </root>
 
 

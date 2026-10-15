@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sentinel.LogViewer.Services;
+using Sentinel.LogViewer.Services.Theming;
 using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels;
 
@@ -51,6 +52,8 @@ namespace Sentinel.LogViewer
             services.AddSingleton<TextFileFormatDetector>();
             services.AddSingleton<TextFileFormatConfigService>();
             services.AddSingleton<UpdateService>();
+            services.AddSingleton<SettingsTransferService>();
+            services.AddSingleton<ThemeService>();
 
             // Register services as scoped (one per window/view)
             services.AddScoped<UdpLogReceiverService>();
@@ -94,6 +97,10 @@ namespace Sentinel.LogViewer
             // Create a scope for the main window and its dependencies
             if (_host != null)
             {
+                // The colours are resources, so they must be set before the first window loads.
+                _host.Services.GetRequiredService<ThemeService>()
+                    .Apply(_host.Services.GetRequiredService<ConfigurationService>().LoadConfiguration());
+
                 var scope = _host.Services.CreateScope();
                 var mainWindow = scope.ServiceProvider.GetRequiredService<MainWindow>();
                 MainWindow = mainWindow;

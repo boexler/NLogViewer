@@ -848,11 +848,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
 		using var scope = provider.CreateScope();
 		var settingsWindow = scope.ServiceProvider.GetRequiredService<SettingsWindow>();
-		var result = settingsWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
-		if (result == true)
+		settingsWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
+
+		// Settings are saved as they change, so the window has nothing to confirm.
+		if (settingsWindow.HasChanges)
 		{
 			StatusMessage = "Settings saved";
-			// Reload configuration if needed
 			LoadConfiguration();
 		}
 	}

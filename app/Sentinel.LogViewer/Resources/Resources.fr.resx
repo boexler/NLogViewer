@@ -274,5 +274,341 @@
   <data name="Confirm_CloseOtherTabs_Message" xml:space="preserve">
     <value>Voulez-vous vraiment fermer les autres onglets ?</value>
   </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="Settings_SearchPlaceholder" xml:space="preserve">
+    <value>Rechercher dans les paramètres</value>
+  </data>
+  <data name="Settings_SearchResultsTitle" xml:space="preserve">
+    <value>Résultats de la recherche</value>
+  </data>
+  <data name="Settings_SearchResultsSubtitle" xml:space="preserve">
+    <value>Paramètres dont le titre ou la description contient « {0} ».</value>
+  </data>
+  <data name="Settings_NoResults" xml:space="preserve">
+    <value>Aucun paramètre trouvé pour « {0} ».</value>
+  </data>
+  <data name="Settings_SavedHint" xml:space="preserve">
+    <value>Les modifications sont enregistrées immédiatement</value>
+  </data>
+  <data name="Settings_ResetCategory" xml:space="preserve">
+    <value>Réinitialiser {0}</value>
+  </data>
+  <data name="Settings_ResetConfirmCaption" xml:space="preserve">
+    <value>Réinitialiser les paramètres</value>
+  </data>
+  <data name="Settings_ResetConfirmMessage" xml:space="preserve">
+    <value>Réinitialiser tous les paramètres de « {0} » à leurs valeurs par défaut ?</value>
+  </data>
+  <data name="Settings_ResetDone" xml:space="preserve">
+    <value>{0} a été réinitialisé aux valeurs par défaut.</value>
+  </data>
+  <data name="Settings_Export" xml:space="preserve">
+    <value>Exporter…</value>
+  </data>
+  <data name="Settings_Import" xml:space="preserve">
+    <value>Importer…</value>
+  </data>
+  <data name="Settings_ExportTitle" xml:space="preserve">
+    <value>Exporter les paramètres</value>
+  </data>
+  <data name="Settings_ImportTitle" xml:space="preserve">
+    <value>Importer les paramètres</value>
+  </data>
+  <data name="Settings_FileFilter" xml:space="preserve">
+    <value>Fichiers de paramètres (*.json)|*.json|Tous les fichiers (*.*)|*.*</value>
+  </data>
+  <data name="Settings_ImportConfirmMessage" xml:space="preserve">
+    <value>L’importation remplace tous les paramètres actuels et les mappages de colonnes enregistrés. Continuer ?</value>
+  </data>
+  <data name="Settings_Exported" xml:space="preserve">
+    <value>Paramètres exportés vers {0}</value>
+  </data>
+  <data name="Settings_Imported" xml:space="preserve">
+    <value>Paramètres importés. Redémarrez l’application pour appliquer toutes les modifications.</value>
+  </data>
+  <data name="Settings_ImportInvalidFile" xml:space="preserve">
+    <value>Ce fichier n’est pas un fichier de paramètres exporté depuis Sentinel LogViewer.</value>
+  </data>
+  <data name="Settings_ImportFailed" xml:space="preserve">
+    <value>Le fichier n’a pas pu être importé : {0}</value>
+  </data>
+  <data name="Settings_ExportFailed" xml:space="preserve">
+    <value>Les paramètres n’ont pas pu être exportés : {0}</value>
+  </data>
+  <data name="Settings_RestartRequired" xml:space="preserve">
+    <value>Redémarrage requis</value>
+  </data>
+  <data name="Settings_AddPort" xml:space="preserve">
+    <value>Ajouter un port</value>
+  </data>
+  <data name="Settings_RemovePort" xml:space="preserve">
+    <value>Supprimer le port</value>
+  </data>
+  <data name="Settings_InvalidPort" xml:space="preserve">
+    <value>Saisissez une adresse comme udp://0.0.0.0:4000 avec un port de 1 à 65535.</value>
+  </data>
+  <data name="Settings_DuplicatePort" xml:space="preserve">
+    <value>Ce port figure déjà dans la liste.</value>
+  </data>
+  <data name="Settings_InvalidNumber" xml:space="preserve">
+    <value>Saisissez un nombre entier compris entre {0} et {1}.</value>
+  </data>
+  <data name="Settings_Category_General" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="Settings_Category_General_Subtitle" xml:space="preserve">
+    <value>Langue et comportement de base de l’application.</value>
+  </data>
+  <data name="Settings_Category_Receiving" xml:space="preserve">
+    <value>Réception</value>
+  </data>
+  <data name="Settings_Category_Receiving_Subtitle" xml:space="preserve">
+    <value>Comment et par où les journaux arrivent dans l’application.</value>
+  </data>
+  <data name="Settings_Category_Updates" xml:space="preserve">
+    <value>Mises à jour</value>
+  </data>
+  <data name="Settings_Category_Updates_Subtitle" xml:space="preserve">
+    <value>Comment l’application recherche les nouvelles versions.</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Settings_Language_Description" xml:space="preserve">
+    <value>Langue des menus et des boîtes de dialogue. Entièrement appliquée après le redémarrage de l’application.</value>
+  </data>
+  <data name="Settings_AutoStartListening" xml:space="preserve">
+    <value>Écouter au démarrage</value>
+  </data>
+  <data name="Settings_Ports" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Settings_Ports_Description" xml:space="preserve">
+    <value>Adresses sur lesquelles l’application écoute les journaux, par exemple udp://0.0.0.0:4000. Les modifications s’appliquent au prochain démarrage de l’écoute.</value>
+  </data>
+  <data name="Settings_MaxEntries" xml:space="preserve">
+    <value>Nombre maximal d’entrées par onglet</value>
+  </data>
+  <data name="Settings_MaxEntries_Description" xml:space="preserve">
+    <value>Les entrées les plus anciennes sont supprimées lorsqu’un onglet en contient davantage. Protège la mémoire lors de longues sessions en direct. S’applique aux onglets ouverts ensuite.</value>
+  </data>
+  <data name="Settings_IncludePrereleaseUpdates_Description" xml:space="preserve">
+    <value>Inclut les versions bêta lors de la recherche de mises à jour. Activé par défaut tant qu’une préversion est utilisée.</value>
+  </data>
+  <data name="Settings_AutoStartListening_Description" xml:space="preserve">
+    <value>Commence à recevoir les journaux sur tous les ports dès l’ouverture de l’application, sans cliquer sur « Démarrer l'écoute ».</value>
+  </data>
+  <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
+    <value>Interroge GitHub une fois au démarrage de l’application pour savoir s’il existe une version plus récente. Aide → À propos vérifie toujours.</value>
+  </data>
+  <data name="Settings_Category_Appearance" xml:space="preserve">
+    <value>Apparence</value>
+  </data>
+  <data name="Settings_Category_Appearance_Subtitle" xml:space="preserve">
+    <value>Thème et couleurs de l’interface et de la liste des journaux.</value>
+  </data>
+  <data name="Settings_Theme" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="Settings_Theme_Description" xml:space="preserve">
+    <value>Jeu de couleurs de toute l’application. Newschool est clair et épuré, Oldschool conserve les couleurs classiques de la liste des journaux. Chaque couleur ci-dessous peut être modifiée pour chaque thème.</value>
+  </data>
+  <data name="Settings_Section_Interface" xml:space="preserve">
+    <value>Interface</value>
+  </data>
+  <data name="Settings_Section_Levels" xml:space="preserve">
+    <value>Niveaux de journal</value>
+  </data>
+  <data name="Settings_Section_Highlighting" xml:space="preserve">
+    <value>Surlignage de recherche</value>
+  </data>
+  <data name="Settings_Color_Invalid" xml:space="preserve">
+    <value>Saisissez une couleur comme #1B1B1B ou #801B1B1B (avec transparence).</value>
+  </data>
+  <data name="Settings_Color_Reset" xml:space="preserve">
+    <value>Rétablir la couleur du thème</value>
+  </data>
+  <data name="Settings_Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Settings_Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Settings_Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Settings_Level_Warn" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Settings_Level_Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Settings_Level_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Settings_LevelBackground" xml:space="preserve">
+    <value>{0} : arrière-plan</value>
+  </data>
+  <data name="Settings_LevelForeground" xml:space="preserve">
+    <value>{0} : texte</value>
+  </data>
+  <data name="Settings_LevelBackground_Description" xml:space="preserve">
+    <value>Arrière-plan des entrées de journal de niveau {0}.</value>
+  </data>
+  <data name="Settings_LevelForeground_Description" xml:space="preserve">
+    <value>Couleur du texte des entrées de journal de niveau {0}.</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground" xml:space="preserve">
+    <value>Arrière-plan de la fenêtre</value>
+  </data>
+  <data name="Settings_Token_ThemePageBackground_Description" xml:space="preserve">
+    <value>Arrière-plan des fenêtres et de la zone des journaux.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface" xml:space="preserve">
+    <value>Arrière-plan des cartes</value>
+  </data>
+  <data name="Settings_Token_ThemeSurface_Description" xml:space="preserve">
+    <value>Arrière-plan des cartes, boutons, menus et champs de saisie.</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt" xml:space="preserve">
+    <value>Barres et panneaux latéraux</value>
+  </data>
+  <data name="Settings_Token_ThemeSurfaceAlt_Description" xml:space="preserve">
+    <value>Arrière-plan de la barre d’outils, de la barre d’état et de la navigation des paramètres.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder" xml:space="preserve">
+    <value>Bordure</value>
+  </data>
+  <data name="Settings_Token_ThemeBorder_Description" xml:space="preserve">
+    <value>Fines lignes autour des cartes et entre les zones.</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong" xml:space="preserve">
+    <value>Bordure des contrôles</value>
+  </data>
+  <data name="Settings_Token_ThemeBorderStrong_Description" xml:space="preserve">
+    <value>Bordure des boutons, champs de saisie et listes déroulantes.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary" xml:space="preserve">
+    <value>Texte</value>
+  </data>
+  <data name="Settings_Token_ThemeTextPrimary_Description" xml:space="preserve">
+    <value>Couleur du texte principal.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary" xml:space="preserve">
+    <value>Texte secondaire</value>
+  </data>
+  <data name="Settings_Token_ThemeTextSecondary_Description" xml:space="preserve">
+    <value>Descriptions, titres de groupes et indications.</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted" xml:space="preserve">
+    <value>Texte atténué</value>
+  </data>
+  <data name="Settings_Token_ThemeTextMuted_Description" xml:space="preserve">
+    <value>Textes indicatifs, entrées désactivées et symboles des boutons de fermeture.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent" xml:space="preserve">
+    <value>Accent</value>
+  </data>
+  <data name="Settings_Token_ThemeAccent_Description" xml:space="preserve">
+    <value>Entrées sélectionnées, liens, interrupteurs et cadre de focus.</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft" xml:space="preserve">
+    <value>Accent, clair</value>
+  </data>
+  <data name="Settings_Token_ThemeAccentSoft_Description" xml:space="preserve">
+    <value>Arrière-plan de la catégorie, de l’onglet ou de l’entrée de liste sélectionnés.</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent" xml:space="preserve">
+    <value>Texte sur accent</value>
+  </data>
+  <data name="Settings_Token_ThemeOnAccent_Description" xml:space="preserve">
+    <value>Texte et symboles sur les surfaces d’accent, par exemple sur un interrupteur activé.</value>
+  </data>
+  <data name="Settings_Token_ThemeHover" xml:space="preserve">
+    <value>Survol</value>
+  </data>
+  <data name="Settings_Token_ThemeHover_Description" xml:space="preserve">
+    <value>Arrière-plan d’une entrée survolée par la souris et de la pastille d’état.</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess" xml:space="preserve">
+    <value>Succès</value>
+  </data>
+  <data name="Settings_Token_ThemeSuccess_Description" xml:space="preserve">
+    <value>Coches, par exemple lorsque l’application est à jour.</value>
+  </data>
+  <data name="Settings_Token_ThemeError" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Settings_Token_ThemeError_Description" xml:space="preserve">
+    <value>Cadres et messages des saisies non valides.</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground" xml:space="preserve">
+    <value>Arrière-plan des avis</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningBackground_Description" xml:space="preserve">
+    <value>Arrière-plan de petits avis comme « Redémarrage requis ».</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText" xml:space="preserve">
+    <value>Texte des avis</value>
+  </data>
+  <data name="Settings_Token_ThemeWarningText_Description" xml:space="preserve">
+    <value>Texte de petits avis comme « Redémarrage requis ».</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground" xml:space="preserve">
+    <value>Filtre de texte : arrière-plan</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBackground_Description" xml:space="preserve">
+    <value>Arrière-plan des pastilles qui affichent les termes du filtre de texte.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtre de texte : bordure</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Bordure des pastilles qui affichent les termes du filtre de texte.</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground" xml:space="preserve">
+    <value>Filtre de texte : texte</value>
+  </data>
+  <data name="Settings_Token_LogTextSearchTermForeground_Description" xml:space="preserve">
+    <value>Texte des pastilles qui affichent les termes du filtre de texte.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground" xml:space="preserve">
+    <value>Filtre regex : arrière-plan</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBackground_Description" xml:space="preserve">
+    <value>Arrière-plan des pastilles qui affichent les termes du filtre regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush" xml:space="preserve">
+    <value>Filtre regex : bordure</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermBorderBrush_Description" xml:space="preserve">
+    <value>Bordure des pastilles qui affichent les termes du filtre regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground" xml:space="preserve">
+    <value>Filtre regex : texte</value>
+  </data>
+  <data name="Settings_Token_LogRegexSearchTermForeground_Description" xml:space="preserve">
+    <value>Texte des pastilles qui affichent les termes du filtre regex.</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground" xml:space="preserve">
+    <value>Filtre regex : préfixe</value>
+  </data>
+  <data name="Settings_Token_LogRegexPrefixForeground_Description" xml:space="preserve">
+    <value>Couleur de l’étiquette « Regex : » devant les termes du filtre regex.</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground" xml:space="preserve">
+    <value>Correspondance du filtre</value>
+  </data>
+  <data name="Settings_Token_LogSearchHighlightBackground_Description" xml:space="preserve">
+    <value>Arrière-plan du texte d’un message qui correspond au filtre.</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground" xml:space="preserve">
+    <value>Résultat de la recherche</value>
+  </data>
+  <data name="Settings_Token_LogFindHighlightBackground_Description" xml:space="preserve">
+    <value>Arrière-plan du texte d’un message qui correspond à la recherche.</value>
+  </data>
 </root>
 
