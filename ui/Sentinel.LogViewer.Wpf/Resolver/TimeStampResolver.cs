@@ -6,7 +6,7 @@ namespace Sentinel.LogViewer.Wpf.Resolver
     {
         public string Resolve(LogEventInfo logEventInfo)
         {
-            return logEventInfo.TimeStamp.ToString("dd-MM-yyyy hh:mm:ss.fff");
+            return logEventInfo.TimeStamp.ToString("dd-MM-yyyy HH:mm:ss.fff");
         }
     }
 }
