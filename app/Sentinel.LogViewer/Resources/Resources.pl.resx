@@ -637,6 +637,24 @@
   <data name="Settings_Theme_Description" xml:space="preserve">
     <value>Newschool jest płaski i nowoczesny, Oldschool zachowuje klasyczny wygląd i klasyczne kolory listy logów. Działa w trybie jasnym i ciemnym.</value>
   </data>
+  <data name="Settings_TimeStampFormat" xml:space="preserve">
+    <value>Format znacznika czasu</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Description" xml:space="preserve">
+    <value>Format kolumny znacznika czasu na liście logów. Karta może pokazywać inny format przez menu kontekstowe kolumny; „Widok domyślny” wraca do tego formatu. Obowiązuje po zamknięciu okna ustawień.</value>
+  </data>
+  <data name="Settings_TimeStampFormat_System" xml:space="preserve">
+    <value>System (format tego komputera)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Iso" xml:space="preserve">
+    <value>ISO 8601 (2025-12-18 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_German" xml:space="preserve">
+    <value>Niemiecki (18.12.2025 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_English" xml:space="preserve">
+    <value>Angielski (12/18/2025 03:11:48.385 PM)</value>
+  </data>
 </root>
 
 

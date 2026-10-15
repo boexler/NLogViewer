@@ -59,4 +59,58 @@ public class ColumnMappingTests
 
 		Assert.Equal("74", new FileLineIdResolver().Resolve(logEvent));
 	}
+
+	private static ColumnMappingViewModel SpaceSeparatedDialog(int timestampColumnCount = 2, DateOrder dateOrder = DateOrder.Auto)
+	{
+		var detected = new TextFileFormat
+		{
+			Separator = TextLineSplitter.SpacesSeparator,
+			ColumnCount = 6,
+			DateOrder = dateOrder,
+			ColumnMapping = new ColumnMapping { TimestampColumn = 0, TimestampColumnCount = timestampColumnCount, LevelColumn = 2, LoggerColumn = 3, MessageColumn = 4 }
+		};
+		var sampleLines = new List<string> { "2025-12-18 15:11:48.385 INFO Acme.Shop.Orders.Service hello world" };
+		return new ColumnMappingViewModel(detected, sampleLines, "sample.log");
+	}
+
+	[Fact]
+	public void TimestampOfSeveralColumns_IsShownOnAllItsColumns_AndKeptInTheFinalFormat()
+	{
+		var viewModel = SpaceSeparatedDialog();
+
+		Assert.Equal(new[] { "Timestamp", "Timestamp", "Level", "Logger", "Message", "None" }, viewModel.Columns.Select(c => c.MappedField));
+		var mapping = viewModel.FinalFormat.ColumnMapping;
+		Assert.Equal((0, 2), (mapping.TimestampColumn, mapping.TimestampColumnCount));
+		Assert.Contains("Timestamp: 2025-12-18 15:11:48.385 |", viewModel.PreviewResults[0].SampleData);
+	}
+
+	[Fact]
+	public void MappingAnotherColumnToTheTimestamp_ExtendsItOnlyWhenTheColumnsAreNextToEachOther()
+	{
+		var viewModel = SpaceSeparatedDialog(timestampColumnCount: 1);
+
+		viewModel.Columns[1].MappedField = "Timestamp";
+		Assert.Equal(2, viewModel.FinalFormat.ColumnMapping.TimestampColumnCount);
+
+		viewModel.Columns[5].MappedField = "Timestamp";
+		Assert.Equal(2, viewModel.FinalFormat.ColumnMapping.TimestampColumnCount);
+
+		viewModel.Columns[0].MappedField = "None";
+		viewModel.Columns[1].MappedField = "None";
+		Assert.Equal((5, 1), (viewModel.FinalFormat.ColumnMapping.TimestampColumn, viewModel.FinalFormat.ColumnMapping.TimestampColumnCount));
+	}
+
+	[Fact]
+	public void DateOrder_ComesFromTheDetectedFormat_CanBeChanged_AndIsUsedByTheFinalFormat()
+	{
+		var viewModel = SpaceSeparatedDialog(dateOrder: DateOrder.MonthFirst);
+		Assert.Equal(DateOrder.MonthFirst, viewModel.DateOrder);
+		Assert.Equal(DateOrder.MonthFirst, viewModel.FinalFormat.DateOrder);
+
+		viewModel.DateOrder = DateOrder.DayFirst;
+
+		Assert.Equal(DateOrder.DayFirst, viewModel.FinalFormat.DateOrder);
+		Assert.Equal(new[] { DateOrder.Auto, DateOrder.DayFirst, DateOrder.MonthFirst }, viewModel.DateOrders.Values);
+		Assert.StartsWith("Automatic (", viewModel.DateOrders.Keys.First());
+	}
 }

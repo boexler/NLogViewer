@@ -40,6 +40,8 @@ Build the installer locally (Windows): `dotnet build installer/Sentinel.LogViewe
 
 **Versioning:** MSI, portable ZIPs, and NuGet packages always use GitVersion `fullSemVer` (for example `3.2.0-124-wix-installer-implementation-and-portable-versions.88` on a feature branch, or `3.2.0` on a release tag). The Chocolatey Community package is the only exception; it uses a flattened prerelease such as `3.2.0-dev0000000004001`. See [chocolatey/README.md](chocolatey/README.md).
 
+**Text log files:** the application detects the separator and the columns of a text file (timestamp, level, logger, message), and **File → Open File with Column Mapping** lets you correct them. Timestamps are read in the common formats, also when date and time are separate columns or in English: `2025-12-18 15:11:48.385`, `18.12.2025 15:11:48`, `12/18/2025 3:11:48 PM`, `18 Dec 2025 15:11:48`, `Thu Dec 18 15:11:48 2025` and syslog's `Dec 18 15:11:48` (the year is taken from the file date). Whether a date like `01/02/2025` is day first or month first is read from the dates of the file (a day above 12 decides); when the file does not tell, the culture of the computer is used, and the *Date order* setting of the mapping dialog overrides it. The format of the timestamp column in the list is a setting and can be switched per tab with a right-click on the column.
+
 ![LogViewer][p2]
 
 ## Quick Start
@@ -364,6 +366,24 @@ logViewer.LoggerFilterRules = new[] { "-Company.Product", "+Company.Product.Serv
 // Save and restore the state
 var saved = logViewer.LoggerFilterRules;
 ```
+
+### Timestamp Format
+
+The timestamp column shows the time with date and milliseconds in one of four formats of a fixed width:
+
+| `TimeStampFormat` | Example |
+|---|---|
+| `System` (default) | the short date and long time of the culture of the computer, e.g. `18.12.2025 15:11:48.385` |
+| `Iso` | `2025-12-18 15:11:48.385` |
+| `German` | `18.12.2025 15:11:48.385` |
+| `English` | `12/18/2025 03:11:48.385 PM` |
+
+Right-click the header or a cell of the timestamp column to switch the format of that viewer; **Default view** goes back to the default.
+
+- `DefaultTimeStampFormat` - The format of all viewers that have no choice of their own
+- `CustomTimeStampFormat` - The format of this viewer, or `null` to follow the default
+- `EffectiveTimeStampFormat` - The format that is shown (read-only)
+- `CanChangeTimeStampFormat` - `false` while you use a `TimeStampResolver` of your own; the menu is then disabled and your resolver is left alone
 
 ### Control Architecture
 

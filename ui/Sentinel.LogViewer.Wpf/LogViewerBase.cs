@@ -935,7 +935,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="TimeStampResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new TimeStampResolver()));
+        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new TimeStampResolver(), OnTimeStampResolverChanged));
         
         /// <summary>
         /// The <see cref="ILogEventInfoResolver"/> to format the loggername

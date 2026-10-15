@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sentinel.LogViewer.Parsers;
 
 namespace Sentinel.LogViewer.Models;
 
@@ -38,6 +39,12 @@ public class TextFileFormat
 	/// Gets or sets the number of columns detected in the file
 	/// </summary>
 	public int ColumnCount { get; set; }
+
+	/// <summary>
+	/// Gets or sets how day and month are ordered in dates like 01/02/2025 of this file. <see cref="DateOrder.Auto"/> when the file does
+	/// not tell; the culture of the computer decides then.
+	/// </summary>
+	public DateOrder DateOrder { get; set; } = DateOrder.Auto;
 }
 
 /// <summary>
@@ -49,6 +56,12 @@ public class ColumnMapping
 	/// Gets or sets the column index for the timestamp field (-1 if not mapped)
 	/// </summary>
 	public int TimestampColumn { get; set; } = -1;
+
+	/// <summary>
+	/// Gets or sets how many columns, beginning with <see cref="TimestampColumn"/>, make up the timestamp: 2 when
+	/// date and time are separate columns, 3 with an AM / PM column
+	/// </summary>
+	public int TimestampColumnCount { get; set; } = 1;
 
 	/// <summary>
 	/// Gets or sets the column index for the level field (-1 if not mapped)
@@ -70,7 +83,12 @@ public class ColumnMapping
 	/// </summary>
 	public IEnumerable<int> GetMappedColumns()
 	{
-		if (TimestampColumn >= 0) yield return TimestampColumn;
+		if (TimestampColumn >= 0)
+		{
+			for (var i = 0; i < Math.Max(1, TimestampColumnCount); i++)
+				yield return TimestampColumn + i;
+		}
+
 		if (LevelColumn >= 0) yield return LevelColumn;
 		if (LoggerColumn >= 0) yield return LoggerColumn;
 		if (MessageColumn >= 0) yield return MessageColumn;

@@ -637,6 +637,24 @@
   <data name="Settings_Theme_Description" xml:space="preserve">
     <value>A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
   </data>
+  <data name="Settings_TimeStampFormat" xml:space="preserve">
+    <value>Időbélyeg formátuma</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Description" xml:space="preserve">
+    <value>Az időbélyeg oszlop formátuma a naplólistában. Egy lapfül az oszlop helyi menüjével másik formátumot is mutathat; az „Alapértelmezett nézet” visszatér ehhez a formátumhoz. A beállítások ablak bezárásakor lép érvénybe.</value>
+  </data>
+  <data name="Settings_TimeStampFormat_System" xml:space="preserve">
+    <value>Rendszer (a számítógép formátuma)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_Iso" xml:space="preserve">
+    <value>ISO 8601 (2025-12-18 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_German" xml:space="preserve">
+    <value>Német (18.12.2025 15:11:48.385)</value>
+  </data>
+  <data name="Settings_TimeStampFormat_English" xml:space="preserve">
+    <value>Angol (12/18/2025 03:11:48.385 PM)</value>
+  </data>
 </root>
 
 

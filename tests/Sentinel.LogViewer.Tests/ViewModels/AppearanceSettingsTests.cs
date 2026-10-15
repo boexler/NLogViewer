@@ -47,7 +47,7 @@ public class AppearanceSettingsTests : IDisposable
 		var viewModel = _environment.CreateViewModel();
 		var appearance = viewModel.Category("Appearance");
 
-		Assert.Equal(2 + ThemeCatalog.Tokens.Count, appearance.Settings.Count);
+		Assert.Equal(3 + ThemeCatalog.Tokens.Count, appearance.Settings.Count);
 		Assert.Equal(ThemeCatalog.Tokens.Count, appearance.Settings.OfType<ColorSettingViewModel>().Count());
 
 		viewModel.SelectedCategory = appearance;
@@ -245,5 +245,31 @@ public class AppearanceSettingsTests : IDisposable
 
 		Assert.Equal("#D3D3D3", traceBackground.Text);
 		Assert.Equal("#3A96DD", viewModel.Setting<ColorSettingViewModel>(AccentTitle).Text);
+	}
+
+	[Fact]
+	public void TimeStampFormat_IsTheSystemFormatByDefault_AndSavedWhenChanged()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var format = viewModel.Setting<ChoiceSettingViewModel>("Timestamp format");
+		Assert.Equal("system", format.Value);
+		Assert.Equal(new[] { "system", "iso", "german", "english" }, format.Options.Select(option => option.Value));
+
+		format.Value = "german";
+
+		Assert.Equal("german", _environment.Saved.TimeStampFormat);
+		Assert.True(viewModel.HasChanges);
+	}
+
+	[Fact]
+	public void ResetCategory_AlsoTakesBackTheTimeStampFormat()
+	{
+		var viewModel = _environment.CreateViewModel();
+		viewModel.Setting<ChoiceSettingViewModel>("Timestamp format").Value = "english";
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+
+		viewModel.ResetCategoryCommand.Execute(null);
+
+		Assert.Equal("system", _environment.Saved.TimeStampFormat);
 	}
 }

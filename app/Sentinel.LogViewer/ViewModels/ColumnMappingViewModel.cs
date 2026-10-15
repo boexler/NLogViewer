@@ -22,6 +22,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	private readonly string _filePath;
 	private string _separator;
 	private bool _hasHeaderLine;
+	private DateOrder _dateOrder;
 	private bool _saveForPattern;
 	private string _filePattern = string.Empty;
 	private ObservableCollection<ColumnMappingItem> _columns = new();
@@ -35,6 +36,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 
 		_separator = format.Separator;
 		_hasHeaderLine = format.HasHeaderLine;
+		_dateOrder = format.DateOrder;
 		_filePattern = System.IO.Path.GetFileName(filePath);
 
 		InitializeColumns();
@@ -92,6 +94,33 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 			}
 		}
 	}
+
+	/// <summary>
+	/// Gets or sets how day and month are ordered in dates like 01/02/2025
+	/// </summary>
+	public DateOrder DateOrder
+	{
+		get => _dateOrder;
+		set
+		{
+			if (_dateOrder != value)
+			{
+				_dateOrder = value;
+				OnPropertyChanged();
+				UpdatePreview();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Gets the selectable orders of day and month by display name; the automatic one names what this computer uses
+	/// </summary>
+	public Dictionary<string, DateOrder> DateOrders { get; } = new()
+	{
+		{ $"Automatic ({(TimestampParser.ResolveOrder(DateOrder.Auto) == DateOrder.MonthFirst ? "month first" : "day first")} on this computer)", DateOrder.Auto },
+		{ "Day first (18/12/2025)", DateOrder.DayFirst },
+		{ "Month first (12/18/2025)", DateOrder.MonthFirst }
+	};
 
 	/// <summary>
 	/// Gets or sets whether to save the mapping for the file pattern
@@ -169,13 +198,18 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		get
 		{
 			var mapping = new ColumnMapping();
+			var timestampColumns = Columns.Where(column => column.MappedField == "Timestamp").Select(column => column.Index).OrderBy(index => index).ToList();
+			if (timestampColumns.Count > 0)
+			{
+				// Date and time can be separate columns; the ones next to the first belong to the timestamp.
+				mapping.TimestampColumn = timestampColumns[0];
+				mapping.TimestampColumnCount = timestampColumns.TakeWhile((index, position) => index == timestampColumns[0] + position).Count();
+			}
+
 			foreach (var column in Columns)
 			{
 				switch (column.MappedField)
 				{
-					case "Timestamp":
-						mapping.TimestampColumn = column.Index;
-						break;
 					case "Level":
 						mapping.LevelColumn = column.Index;
 						break;
@@ -195,7 +229,8 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 				HasHeaderLine = HasHeaderLine,
 				StartLineIndex = HasHeaderLine ? 1 : 0,
 				ColumnCount = Columns.Count,
-				ColumnMapping = mapping
+				ColumnMapping = mapping,
+				DateOrder = DateOrder
 			};
 		}
 	}
@@ -220,7 +255,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		for (int i = 0; i < parts.Length; i++)
 		{
 			var mappedField = "None";
-			if (i == mapping.TimestampColumn)
+			if (mapping.TimestampColumn >= 0 && i >= mapping.TimestampColumn && i < mapping.TimestampColumn + mapping.TimestampColumnCount)
 				mappedField = "Timestamp";
 			else if (i == mapping.LevelColumn)
 				mappedField = "Level";
@@ -276,11 +311,14 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 
 	private string? GetColumnValue(string[] parts, string fieldType)
 	{
-		var column = Columns.FirstOrDefault(c => c.MappedField == fieldType);
-		if (column == null || column.Index < 0 || column.Index >= parts.Length)
+		var columns = Columns.Where(c => c.MappedField == fieldType && c.Index >= 0 && c.Index < parts.Length).ToList();
+		if (columns.Count == 0)
 			return null;
 
-		return parts[column.Index].Trim();
+		// A timestamp can be spread over several columns, e.g. the date and the time.
+		return fieldType == "Timestamp"
+			? string.Join(" ", columns.Select(c => parts[c.Index].Trim()))
+			: parts[columns[0].Index].Trim();
 	}
 
 	private IEnumerable<string> DataLines()
