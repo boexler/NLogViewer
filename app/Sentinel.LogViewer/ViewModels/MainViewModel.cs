@@ -876,6 +876,29 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
+	/// <summary>
+	/// Opens the changelog when the application was updated since the last start, and remembers the version that runs now.
+	/// Builds that are not releases (of a branch) neither open it nor count as the version that ran last.
+	/// </summary>
+	public void AnnounceUpdate()
+	{
+		var current = UpdateService.CurrentVersion;
+		if (!WhatsNew.IsReleaseVersion(current))
+			return;
+
+		var configuration = _configService.LoadConfiguration();
+		var previous = WhatsNew.PreviousVersionToShow(configuration, current);
+		var currentText = current.ToString();
+		if (configuration.LastSeenVersion != currentText)
+		{
+			configuration.LastSeenVersion = currentText;
+			_configService.SaveConfiguration(configuration);
+		}
+
+		if (previous != null)
+			ChangelogWindow.Show(System.Windows.Application.Current.MainWindow, previous);
+	}
+
 	private void ShowAbout()
 	{
 		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");

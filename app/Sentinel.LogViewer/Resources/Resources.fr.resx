@@ -655,5 +655,53 @@
   <data name="Settings_TimeStampFormat_English" xml:space="preserve">
     <value>Anglais (12/18/2025 03:11:48.385 PM)</value>
   </data>
+  <data name="Changelog_Title" xml:space="preserve">
+    <value>Journal des modifications</value>
+  </data>
+  <data name="Changelog_Search" xml:space="preserve">
+    <value>Rechercher des versions</value>
+  </data>
+  <data name="Changelog_Since" xml:space="preserve">
+    <value>Depuis {0}</value>
+  </data>
+  <data name="Changelog_OneVersion" xml:space="preserve">
+    <value>{0} version</value>
+  </data>
+  <data name="Changelog_Versions" xml:space="preserve">
+    <value>{0} versions</value>
+  </data>
+  <data name="Changelog_New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="Changelog_Installed" xml:space="preserve">
+    <value>Installée</value>
+  </data>
+  <data name="Changelog_Prerelease" xml:space="preserve">
+    <value>Préversion</value>
+  </data>
+  <data name="Changelog_OpenOnGitHub" xml:space="preserve">
+    <value>Ouvrir sur GitHub</value>
+  </data>
+  <data name="Changelog_Loading" xml:space="preserve">
+    <value>Chargement du journal des modifications…</value>
+  </data>
+  <data name="Changelog_Offline" xml:space="preserve">
+    <value>GitHub est inaccessible. Voici la liste enregistrée le {0}.</value>
+  </data>
+  <data name="Changelog_Empty" xml:space="preserve">
+    <value>Le journal des modifications n’est pas encore disponible. Vérifiez votre connexion et rouvrez-le.</value>
+  </data>
+  <data name="Changelog_NoResults" xml:space="preserve">
+    <value>Aucune version trouvée pour « {0} ».</value>
+  </data>
+  <data name="Changelog_NoNotes" xml:space="preserve">
+    <value>Cette version n’a pas de notes de version.</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Afficher les nouveautés après une mise à jour</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
+    <value>Ouvre le journal des modifications au premier démarrage d’une nouvelle version, avec tout ce qui a changé depuis la version précédente.</value>
+  </data>
 </root>
 

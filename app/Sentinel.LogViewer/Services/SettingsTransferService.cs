@@ -32,9 +32,11 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 
 	public void Export(string path)
 	{
+		var settings = configurationService.LoadConfiguration();
+		settings.LastSeenVersion = string.Empty;
 		var bundle = new SettingsBundle
 		{
-			Settings = configurationService.LoadConfiguration(),
+			Settings = settings,
 			TextFileFormats = formatConfigService.GetAll()
 		};
 		File.WriteAllText(path, JsonSerializer.Serialize(bundle, JsonOptions));
@@ -57,6 +59,8 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 			settings.Language = string.Empty;
 		ThemeCatalog.Sanitize(settings);
 
+		// The version that ran last belongs to this computer, not to the file.
+		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;
 		configurationService.SaveConfiguration(settings);
 		formatConfigService.ReplaceAll(bundle.TextFileFormats);
 	}

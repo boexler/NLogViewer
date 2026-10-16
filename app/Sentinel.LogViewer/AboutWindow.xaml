@@ -121,7 +121,7 @@
                             <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap">
                                 <Run Text="{Binding VersionText, Mode=OneWay}"/>
                                 <Run Text="  "/>
-                                <Hyperlink NavigateUri="{Binding WhatsNewUrl}" RequestNavigate="Hyperlink_RequestNavigate"
+                                <Hyperlink Command="{Binding ShowChangelogCommand}"
                                            FontWeight="Normal">
                                     <Run Text="{helpers:Resource Key=About_WhatsNew, DefaultValue=What’s new}"/>
                                 </Hyperlink>

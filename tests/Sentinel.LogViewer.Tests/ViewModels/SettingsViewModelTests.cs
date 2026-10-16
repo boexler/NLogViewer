@@ -20,6 +20,7 @@ public class SettingsViewModelTests : IDisposable
 	private const string PortsTitle = "Ports";
 	private const string CheckForUpdatesTitle = "Automatically check for updates";
 	private const string PrereleaseTitle = "Also offer prerelease versions";
+	private const string ChangelogTitle = "Show what’s new after an update";
 
 	private readonly SettingsTestEnvironment _environment = new();
 	private readonly CultureInfo _culture = CultureInfo.CurrentCulture;
@@ -291,6 +292,21 @@ public class SettingsViewModelTests : IDisposable
 		viewModel.ResetCategoryCommand.Execute(null);
 
 		Assert.Null(_environment.Saved.IncludePrereleaseUpdates);
+	}
+
+	[Fact]
+	public void TheChangelogAfterAnUpdate_IsOnByDefault_CanBeSwitchedOff_AndIsResetWithTheUpdates()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var setting = viewModel.Setting<BoolSettingViewModel>(ChangelogTitle);
+		Assert.True(setting.Value);
+
+		setting.Value = false;
+		Assert.False(_environment.Saved.ShowChangelogAfterUpdate);
+
+		viewModel.SelectedCategory = viewModel.Category("Updates");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.True(_environment.Saved.ShowChangelogAfterUpdate);
 	}
 
 	[Fact]

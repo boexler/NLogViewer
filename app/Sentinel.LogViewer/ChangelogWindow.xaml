@@ -1,0 +1,137 @@
+<Window x:Class="Sentinel.LogViewer.ChangelogWindow"
+        Background="{DynamicResource ThemePageBackground}"
+        Foreground="{DynamicResource ThemeTextPrimary}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
+        xmlns:viewModels="clr-namespace:Sentinel.LogViewer.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance viewModels:ChangelogViewModel}"
+        Title="{helpers:Resource Key=Changelog_Title, DefaultValue=Changelog}"
+        Width="900" Height="620" MinWidth="680" MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        TextOptions.TextFormattingMode="Display">
+    <Window.Resources>
+        <Style x:Key="ChangelogChip" TargetType="Border">
+            <Setter Property="CornerRadius" Value="9"/>
+            <Setter Property="Padding" Value="7,0"/>
+            <Setter Property="Margin" Value="6,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{DynamicResource ThemeAccentSoft}"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Versions -->
+        <Border Background="{DynamicResource ThemeSurfaceAlt}" BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,0,1,0">
+            <DockPanel Margin="12">
+                <TextBox x:Name="SearchBox" DockPanel.Dock="Top" Style="{StaticResource SettingsSearchBox}"
+                         Margin="0,0,0,12" Height="32"
+                         Tag="{helpers:Resource Key=Changelog_Search, DefaultValue=Search versions}"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         AutomationProperties.Name="{helpers:Resource Key=Changelog_Search, DefaultValue=Search versions}"/>
+
+                <Grid>
+                    <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+                             ItemContainerStyle="{StaticResource SettingsNavItem}"
+                             Background="Transparent" BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="Title" Text="{Binding Title}" FontSize="13" VerticalAlignment="Center"/>
+                                        <Border x:Name="NewChip" Style="{StaticResource ChangelogChip}" Visibility="Collapsed">
+                                            <TextBlock Text="{Binding NewText}" FontSize="10" Foreground="{DynamicResource ThemeAccent}"/>
+                                        </Border>
+                                        <Border x:Name="InstalledChip" Style="{StaticResource ChangelogChip}" Visibility="Collapsed"
+                                                Background="{DynamicResource ThemeHover}">
+                                            <TextBlock Text="{Binding InstalledText}" FontSize="10" Foreground="{DynamicResource ThemeTextSecondary}"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Subtitle}" FontSize="11" Foreground="{DynamicResource ThemeTextMuted}"/>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsNew}" Value="True">
+                                        <Setter TargetName="NewChip" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsSince}" Value="True">
+                                        <Setter TargetName="NewChip" Property="Visibility" Value="Visible"/>
+                                        <Setter TargetName="Title" Property="FontWeight" Value="SemiBold"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsInstalled}" Value="True">
+                                        <Setter TargetName="InstalledChip" Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Text="{Binding EmptyText}" TextWrapping="Wrap" FontSize="12" Margin="4,8,4,0"
+                               Foreground="{DynamicResource ThemeTextSecondary}" VerticalAlignment="Top"/>
+                </Grid>
+            </DockPanel>
+        </Border>
+
+        <!-- Notes -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="32,26,32,8">
+                <TextBlock Text="{Binding NotesTitle}" FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding NotesMeta}" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource ThemeTextSecondary}"/>
+                <Border Margin="0,10,0,0" Padding="10,6" CornerRadius="6" Background="{DynamicResource ThemeWarningBackground}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding StatusText}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource ThemeWarningText}"/>
+                </Border>
+            </StackPanel>
+
+            <FlowDocumentScrollViewer x:Name="NotesViewer" Grid.Row="1" Margin="32,0,24,0"
+                                      IsToolBarVisible="False" VerticalScrollBarVisibility="Auto"
+                                      Background="Transparent" BorderThickness="0"/>
+
+            <Border Grid.Row="2" BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="32,10">
+                <Grid>
+                    <TextBlock Text="{helpers:Resource Key=Changelog_Loading, DefaultValue=Loading the changelog…}" FontSize="12"
+                               Foreground="{DynamicResource ThemeTextMuted}" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Button HorizontalAlignment="Right" Command="{Binding OpenOnGitHubCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8A7;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="12" Margin="0,1,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{helpers:Resource Key=Changelog_OpenOnGitHub, DefaultValue=Open on GitHub}"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
