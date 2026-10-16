@@ -77,10 +77,13 @@ public class AboutViewModel : INotifyPropertyChanged
 
 	public string ReleasesUrl => _update?.ReleasePageUrl ?? $"{UpdateService.RepositoryUrl}/releases";
 
-	public string ChocolateyCommand =>
-		_update?.Version.IsPrerelease == true
-			? "choco upgrade Sentinel.LogViewer --pre -y"
-			: "choco upgrade Sentinel.LogViewer -y";
+	// With the version, choco does not install an older one again while the package of the new version is not on the feed yet.
+	public string ChocolateyCommand => ChocolateyCommandFor(_update?.Version);
+
+	internal static string ChocolateyCommandFor(ReleaseVersion? version) =>
+		version == null
+			? "choco upgrade Sentinel.LogViewer -y"
+			: $"choco upgrade Sentinel.LogViewer {(version.IsPrerelease ? "--pre " : string.Empty)}-y --version {version.ChocolateyVersion}";
 
 	public UpdateState State
 	{
