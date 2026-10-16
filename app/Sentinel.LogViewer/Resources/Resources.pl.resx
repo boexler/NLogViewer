@@ -655,6 +655,57 @@
   <data name="Settings_TimeStampFormat_English" xml:space="preserve">
     <value>Angielski (12/18/2025 03:11:48.385 PM)</value>
   </data>
+  <data name="Changelog_Title" xml:space="preserve">
+    <value>Dziennik zmian</value>
+  </data>
+  <data name="Changelog_Search" xml:space="preserve">
+    <value>Szukaj wersji</value>
+  </data>
+  <data name="Changelog_Since" xml:space="preserve">
+    <value>Od {0}</value>
+  </data>
+  <data name="Changelog_OneVersion" xml:space="preserve">
+    <value>{0} wersja</value>
+  </data>
+  <data name="Changelog_Versions" xml:space="preserve">
+    <value>{0} wersji</value>
+  </data>
+  <data name="Changelog_New" xml:space="preserve">
+    <value>Nowe</value>
+  </data>
+  <data name="Changelog_Installed" xml:space="preserve">
+    <value>Zainstalowana</value>
+  </data>
+  <data name="Changelog_Prerelease" xml:space="preserve">
+    <value>Wersja przedpremierowa</value>
+  </data>
+  <data name="Changelog_OpenOnGitHub" xml:space="preserve">
+    <value>Otwórz na GitHubie</value>
+  </data>
+  <data name="Changelog_Loading" xml:space="preserve">
+    <value>Wczytywanie dziennika zmian…</value>
+  </data>
+  <data name="Changelog_Offline" xml:space="preserve">
+    <value>Nie można połączyć się z GitHubem. To lista zapisana {0}.</value>
+  </data>
+  <data name="Changelog_Empty" xml:space="preserve">
+    <value>Dziennik zmian nie jest jeszcze dostępny. Sprawdź połączenie i otwórz go ponownie.</value>
+  </data>
+  <data name="Changelog_NoResults" xml:space="preserve">
+    <value>Nie znaleziono wersji dla „{0}”.</value>
+  </data>
+  <data name="Changelog_NoNotes" xml:space="preserve">
+    <value>Ta wersja nie ma informacji o wydaniu.</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Pokaż nowości po aktualizacji</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
+    <value>Otwiera dziennik zmian przy pierwszym uruchomieniu nowej wersji, ze wszystkim, co zmieniło się od poprzedniej wersji.</value>
+  </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Dziennik zmian</value>
+  </data>
 </root>
 
 

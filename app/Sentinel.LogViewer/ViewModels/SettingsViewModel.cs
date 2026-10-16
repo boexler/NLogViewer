@@ -277,7 +277,18 @@ namespace Sentinel.LogViewer.ViewModels
                     {
                         _configuration.IncludePrereleaseUpdates = null;
                         Commit();
-                    })
+                    }),
+
+                new BoolSettingViewModel(UpdatesId, "\uE81C",
+                    Text("Settings_ShowChangelogAfterUpdate", "Show what’s new after an update"),
+                    Text("Settings_ShowChangelogAfterUpdate_Description", "Opens the changelog at the first start of a new version, with everything that changed since the version before."),
+                    get: () => _configuration.ShowChangelogAfterUpdate,
+                    set: value =>
+                    {
+                        _configuration.ShowChangelogAfterUpdate = value;
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().ShowChangelogAfterUpdate)
             };
 
             settings.AddRange(CreateAppearanceSettings());

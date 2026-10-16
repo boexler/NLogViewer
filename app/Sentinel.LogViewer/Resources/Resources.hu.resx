@@ -655,6 +655,57 @@
   <data name="Settings_TimeStampFormat_English" xml:space="preserve">
     <value>Angol (12/18/2025 03:11:48.385 PM)</value>
   </data>
+  <data name="Changelog_Title" xml:space="preserve">
+    <value>Változásnapló</value>
+  </data>
+  <data name="Changelog_Search" xml:space="preserve">
+    <value>Verziók keresése</value>
+  </data>
+  <data name="Changelog_Since" xml:space="preserve">
+    <value>{0} óta</value>
+  </data>
+  <data name="Changelog_OneVersion" xml:space="preserve">
+    <value>{0} verzió</value>
+  </data>
+  <data name="Changelog_Versions" xml:space="preserve">
+    <value>{0} verzió</value>
+  </data>
+  <data name="Changelog_New" xml:space="preserve">
+    <value>Új</value>
+  </data>
+  <data name="Changelog_Installed" xml:space="preserve">
+    <value>Telepítve</value>
+  </data>
+  <data name="Changelog_Prerelease" xml:space="preserve">
+    <value>Előzetes verzió</value>
+  </data>
+  <data name="Changelog_OpenOnGitHub" xml:space="preserve">
+    <value>Megnyitás a GitHubon</value>
+  </data>
+  <data name="Changelog_Loading" xml:space="preserve">
+    <value>A változásnapló betöltése…</value>
+  </data>
+  <data name="Changelog_Offline" xml:space="preserve">
+    <value>A GitHub nem érhető el. Ez a(z) {0} napon mentett lista.</value>
+  </data>
+  <data name="Changelog_Empty" xml:space="preserve">
+    <value>A változásnapló még nem érhető el. Ellenőrizze a kapcsolatot, és nyissa meg újra.</value>
+  </data>
+  <data name="Changelog_NoResults" xml:space="preserve">
+    <value>Nincs találat a(z) „{0}” kifejezésre.</value>
+  </data>
+  <data name="Changelog_NoNotes" xml:space="preserve">
+    <value>Ehhez a verzióhoz nincsenek kiadási megjegyzések.</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Újdonságok megjelenítése frissítés után</value>
+  </data>
+  <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
+    <value>Egy új verzió első indításakor megnyitja a változásnaplót az előző verzió óta történt összes változással.</value>
+  </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Változásnapló</value>
+  </data>
 </root>
 
 

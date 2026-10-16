@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,14 +37,17 @@ public class AboutViewModel : INotifyPropertyChanged
 	private readonly UpdateService _updateService;
 	private readonly ConfigurationService _configService;
 	private readonly LocalizationService _localizationService;
+	private readonly ChangelogService _changelogService;
 	private UpdateState _state = UpdateState.Checking;
 	private string _statusText = string.Empty;
 	private double _downloadPercentage;
 	private AvailableUpdate? _update;
 	private string? _downloadedFile;
 
-	public AboutViewModel(UpdateService updateService, ConfigurationService configService, LocalizationService localizationService)
+	public AboutViewModel(UpdateService updateService, ConfigurationService configService, LocalizationService localizationService,
+		ChangelogService changelogService)
 	{
+		_changelogService = changelogService ?? throw new ArgumentNullException(nameof(changelogService));
 		_updateService = updateService ?? throw new ArgumentNullException(nameof(updateService));
 		_configService = configService ?? throw new ArgumentNullException(nameof(configService));
 		_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
@@ -52,6 +56,7 @@ public class AboutViewModel : INotifyPropertyChanged
 		DownloadCommand = new AsyncRelayCommand(DownloadAsync);
 		RestartCommand = new RelayCommand(Restart);
 		CopyChocolateyCommand = new RelayCommand(() => Clipboard.SetText(ChocolateyCommand));
+		ShowChangelogCommand = new RelayCommand(() => ChangelogWindow.Show(Application.Current.Windows.OfType<AboutWindow>().FirstOrDefault()));
 	}
 
 	public string ProductName => ProductNames.Display;
@@ -59,14 +64,16 @@ public class AboutViewModel : INotifyPropertyChanged
 	public string VersionText =>
 		$"{UpdateService.CurrentVersion} ({(Environment.Is64BitProcess ? "64" : "32")}-{GetString("About_Bit", "bit")})";
 
-	/// <summary>Release notes of the running version</summary>
-	public string WhatsNewUrl => $"{UpdateService.RepositoryUrl}/releases/tag/v{UpdateService.CurrentVersion}";
-
 	public string ProjectUrl => UpdateService.RepositoryUrl;
 
 	public string IssuesUrl => $"{UpdateService.RepositoryUrl}/issues";
 
 	public string LicenseUrl => $"{UpdateService.RepositoryUrl}/blob/master/LICENSE.md";
+
+	/// <summary>"What's new" while an update is offered, otherwise "Changelog"</summary>
+	public string ChangelogLinkText => State is UpdateState.Checking or UpdateState.UpToDate or UpdateState.Failed
+		? GetString("About_Changelog", "Changelog")
+		: GetString("About_WhatsNew", "What’s new");
 
 	public string ReleasesUrl => _update?.ReleasePageUrl ?? $"{UpdateService.RepositoryUrl}/releases";
 
@@ -119,6 +126,9 @@ public class AboutViewModel : INotifyPropertyChanged
 	public ICommand DownloadCommand { get; }
 	public ICommand RestartCommand { get; }
 	public ICommand CopyChocolateyCommand { get; }
+
+	/// <summary>Opens the changelog of all versions</summary>
+	public ICommand ShowChangelogCommand { get; }
 
 	/// <summary>
 	/// Checks GitHub Releases for a newer version and updates the status line
@@ -180,6 +190,9 @@ public class AboutViewModel : INotifyPropertyChanged
 			ShowError(ex);
 			return;
 		}
+
+		// The notes of the new version are saved, so that they also show after the restart without a network.
+		_ = _changelogService.LoadAsync();
 
 		State = UpdateState.ReadyToInstall;
 		StatusText = Format("About_ReadyToInstall", "Update to {0} downloaded", _update.Version);

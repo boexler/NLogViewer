@@ -66,6 +66,29 @@ public class UpdateService
 	}
 
 	/// <summary>
+	/// Returns all releases of the repository, with their notes, page by page
+	/// </summary>
+	public virtual async Task<List<GitHubRelease>> GetReleasesAsync(CancellationToken cancellationToken = default)
+	{
+		const int pageSize = 100;
+		const int maxPages = 5;
+		var releases = new List<GitHubRelease>();
+		for (var page = 1; page <= maxPages; page++)
+		{
+			var pageOfReleases = await _httpClient.GetFromJsonAsync<List<GitHubRelease>>(
+				$"https://api.github.com/repos/{Repository}/releases?per_page={pageSize}&page={page}", cancellationToken).ConfigureAwait(false);
+			if (pageOfReleases == null || pageOfReleases.Count == 0)
+				break;
+
+			releases.AddRange(pageOfReleases);
+			if (pageOfReleases.Count < pageSize)
+				break;
+		}
+
+		return releases;
+	}
+
+	/// <summary>
 	/// Selects the newest applicable release that is newer than <paramref name="currentVersion"/>
 	/// </summary>
 	public static AvailableUpdate? SelectUpdate(IEnumerable<GitHubRelease> releases, ReleaseVersion currentVersion,
@@ -216,6 +239,8 @@ public sealed class GitHubRelease
 {
 	[JsonPropertyName("tag_name")] public string TagName { get; set; } = string.Empty;
 	[JsonPropertyName("html_url")] public string HtmlUrl { get; set; } = string.Empty;
+	[JsonPropertyName("body")] public string? Body { get; set; }
+	[JsonPropertyName("published_at")] public DateTimeOffset? PublishedAt { get; set; }
 	[JsonPropertyName("draft")] public bool Draft { get; set; }
 	[JsonPropertyName("prerelease")] public bool Prerelease { get; set; }
 	[JsonPropertyName("assets")] public List<GitHubAsset> Assets { get; set; } = new();

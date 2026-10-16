@@ -40,6 +40,28 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheVersionLastSeen_StaysOnThisComputer_NotExportedAndNotReplacedByAnImport()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.LastSeenVersion = "5.0.0-beta.2";
+		configuration.ShowChangelogAfterUpdate = false;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		Assert.DoesNotContain("5.0.0-beta.2", File.ReadAllText(file));
+
+		configuration.LastSeenVersion = "5.0.0-beta.3";
+		configuration.ShowChangelogAfterUpdate = true;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Import(file);
+
+		var saved = _environment.Saved;
+		Assert.Equal("5.0.0-beta.3", saved.LastSeenVersion);
+		Assert.False(saved.ShowChangelogAfterUpdate);
+	}
+
+	[Fact]
 	public void Import_DropsValuesThatWouldBreakTheApplication()
 	{
 		var file = _environment.PathOf("edited.json");

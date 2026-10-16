@@ -41,6 +41,11 @@ namespace Sentinel.LogViewer.Services
         }
 
         /// <summary>
+        /// The folder of the configuration: beside the application in portable mode, otherwise in the AppData folder of the user
+        /// </summary>
+        public string DataDirectory => Path.GetDirectoryName(_configPath)!;
+
+        /// <summary>
         /// Returns true when configuration should be stored beside the application (portable ZIP / USB) rather than in AppData.
         /// </summary>
         public static bool IsPortableMode(string applicationBaseDirectory)
@@ -176,6 +181,12 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>When true, GitHub Releases are checked for a newer version on startup.</summary>
         public bool CheckForUpdates { get; set; } = true;
+
+        /// <summary>Whether the changelog opens at the first start after an update.</summary>
+        public bool ShowChangelogAfterUpdate { get; set; } = true;
+
+        /// <summary>The release version that ran last, to see that an update happened. Stays on this computer.</summary>
+        public string LastSeenVersion { get; set; } = string.Empty;
 
         /// <summary>Whether prerelease versions are offered as updates; null follows the running version.</summary>
         public bool? IncludePrereleaseUpdates { get; set; }

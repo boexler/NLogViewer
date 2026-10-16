@@ -31,6 +31,9 @@ namespace Sentinel.LogViewer
             // Set window title with version
             SetWindowTitleWithVersion();
 
+            // After an update the changelog opens once, when the window is up.
+            Loaded += (_, _) => Dispatcher.BeginInvoke(new Action(_viewModel.AnnounceUpdate), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
             // Setup keyboard shortcuts
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenFileCommand,
                 new KeyGesture(Key.O, ModifierKeys.Control)));
