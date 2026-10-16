@@ -96,6 +96,7 @@ namespace Sentinel.LogViewer.Wpf
         private static void OnTimeStampFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             (d as LogViewerBase)?.UpdateTimeStampFormat();
+            (d as LogViewerBase)?.PublishFilterState();
         }
 
         private static void OnTimeStampResolverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -706,5 +706,41 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Registro de cambios</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>Tras reiniciar una aplicación</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Qué ocurre cuando una aplicación que envía registros vuelve a iniciarse. Cada aplicación puede configurarse de forma distinta en el menú de su pestaña.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Aplicar los filtros a las pestañas nuevas de la misma aplicación</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>Una pestaña nueva de una aplicación empieza con los filtros de su última pestaña: niveles, términos de filtro, registradores ocultos y el formato de la columna de hora. El menú de una pestaña lo cambia para una aplicación.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Abrir una pestaña nueva</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Continuar en la pestaña existente</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Abrir una pestaña nueva y cerrar la anterior</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Aplicar los filtros a las pestañas nuevas de esta aplicación</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>Tras reiniciar esta aplicación</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Se aplicaron los filtros de la pestaña anterior de esta aplicación.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Quitar filtros</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Menú de la pestaña</value>
+  </data>
 </root>
 

@@ -48,6 +48,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private TimeStampFormat _defaultTimeStampFormat;
 
 	private readonly CompositeDisposable _subscriptions = new();
+	private readonly ApplicationTabService _applicationTabs;
 
 
 	public MainViewModel(
@@ -55,13 +56,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		LogFileParserService fileParserService,
 		ConfigurationService configService,
 		LocalizationService localizationService,
-		UpdateService updateService)
+		UpdateService updateService,
+		ApplicationTabService applicationTabService)
 	{
 		_udpReceiverService = udpReceiverService ?? throw new ArgumentNullException(nameof(udpReceiverService));
 		_fileParserService = fileParserService ?? throw new ArgumentNullException(nameof(fileParserService));
 		_configService = configService ?? throw new ArgumentNullException(nameof(configService));
 		_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 		_updateService = updateService ?? throw new ArgumentNullException(nameof(updateService));
+		_applicationTabs = applicationTabService ?? throw new ArgumentNullException(nameof(applicationTabService));
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
@@ -81,6 +84,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
+		ToggleTakeOverFiltersCommand = new RelayCommand<LogTabViewModel>(ToggleTakeOverFilters, tab => tab?.SenderKey != null);
+		RemoveTakenOverFiltersCommand = new RelayCommand<LogTabViewModel>(RemoveTakenOverFilters);
 
 		// Initialize current language flag
 		UpdateLanguageFlag();
@@ -116,18 +121,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var firstEvent = logEvents[0];
 		var appInfoId = firstEvent.AppInfo.Id;
 		
-		// Find or create tab for this AppInfo
-		var tab = LogTabs.FirstOrDefault(t => t.TargetName == appInfoId);
+		// A restarted application is another process, so the tab is chosen by what the settings say about restarts
+		var route = _applicationTabs.Route(LogTabs, firstEvent.AppInfo, DateTime.UtcNow);
+		foreach (var replaced in route.TabsToClose)
+			CloseTab(replaced);
+
+		var tab = route.Tab;
 		if (tab == null)
 		{
-			tab = new LogTabViewModel
-			{
-				Header = firstEvent.AppInfo.ToString(),
-				TargetName = appInfoId,
-				MaxCount = _configService.LoadConfiguration().MaxLogEntriesPerTab
-			};
+			tab = CreateLiveTab(firstEvent.AppInfo);
 			LogTabs.Add(tab);
 			SelectedTab = tab;
+		}
+		else if (tab.TargetName != appInfoId)
+		{
+			tab.TargetName = appInfoId;
+			tab.Header = firstEvent.AppInfo.ToString();
 		}
 		
 		// Add all log events from the batch to the tab (Cache replays to LogViewer when it subscribes)
@@ -204,6 +213,79 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
 	/// </summary>
+	private LogTabViewModel CreateLiveTab(AppInfo appInfo)
+	{
+		var key = ApplicationTabService.KeyOf(appInfo);
+		var tab = new LogTabViewModel
+		{
+			Header = appInfo.ToString(),
+			TargetName = appInfo.Id,
+			MaxCount = _configService.LoadConfiguration().MaxLogEntriesPerTab,
+			SenderKey = key,
+			TakesOverFilters = _applicationTabs.TakesOverFilters(key),
+			RestartBehavior = _applicationTabs.RestartBehaviorOf(key)
+		};
+
+		var filters = _applicationTabs.FiltersForNewTab(key);
+		if (filters != null)
+		{
+			tab.FilterState = filters;
+			tab.FiltersTakenOver = true;
+		}
+
+		tab.PropertyChanged += OnLiveTabPropertyChanged;
+		return tab;
+	}
+
+	/// <summary>
+	/// Keeps the filters of a tab for the next tab of its application
+	/// </summary>
+	private void OnLiveTabPropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName != nameof(LogTabViewModel.FilterState) || sender is not LogTabViewModel { SenderKey: { } key } tab)
+			return;
+
+		_applicationTabs.RememberFilters(key, tab.FilterState);
+		if (tab.FilterState is not { IsEmpty: false })
+			tab.FiltersTakenOver = false;
+	}
+
+	private void ToggleTakeOverFilters(LogTabViewModel? tab)
+	{
+		if (tab?.SenderKey is not { } key)
+			return;
+
+		var value = !tab.TakesOverFilters;
+		_applicationTabs.SetTakesOverFilters(key, value);
+		foreach (var other in LogTabs.Where(t => t.SenderKey == key))
+			other.TakesOverFilters = value;
+
+		if (value)
+			_applicationTabs.RememberFilters(key, tab.FilterState);
+	}
+
+	/// <summary>
+	/// Sets what happens when the application of the tab starts again
+	/// </summary>
+	public void SetRestartBehavior(LogTabViewModel tab, RestartBehavior behavior)
+	{
+		if (tab.SenderKey is not { } key)
+			return;
+
+		_applicationTabs.SetRestartBehavior(key, behavior);
+		foreach (var other in LogTabs.Where(t => t.SenderKey == key))
+			other.RestartBehavior = behavior;
+	}
+
+	private void RemoveTakenOverFilters(LogTabViewModel? tab)
+	{
+		if (tab == null)
+			return;
+
+		tab.FilterState = new LogViewerFilterState();
+		tab.FiltersTakenOver = false;
+	}
+
 	private void CloseTab(LogTabViewModel? tab)
 	{
 		var index = tab == null ? -1 : LogTabs.IndexOf(tab);
@@ -388,6 +470,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand ChangeLanguageCommand { get; }
 	public ICommand ExportLogsCommand { get; }
 	public ICommand CloseTabCommand { get; }
+
+	/// <summary>Switches whether new tabs of the application of the tab take over its filters; the parameter is the tab</summary>
+	public ICommand ToggleTakeOverFiltersCommand { get; }
+
+	/// <summary>Removes the filters that the tab took over from an earlier tab; the parameter is the tab</summary>
+	public ICommand RemoveTakenOverFiltersCommand { get; }
 	public ICommand CloseOtherTabsCommand { get; }
 	public ICommand SaveFilteredListCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }

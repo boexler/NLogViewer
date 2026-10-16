@@ -124,6 +124,7 @@ namespace Sentinel.LogViewer.Services
                             config.Language = string.Empty;
                         }
                         Theming.ThemeCatalog.Sanitize(config);
+                        ApplicationTabService.Sanitize(config);
                         return config;
                     }
                 }
@@ -202,5 +203,14 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Colours the user changed: theme id, then token key, then the colour as #RRGGBB or #AARRGGBB.</summary>
         public Dictionary<string, Dictionary<string, string>> ThemeColors { get; set; } = new();
+
+        /// <summary>What happens when an application starts again: a new tab (NewTab), the existing tab (ExtendTab) or a new tab that replaces the old one (ReplaceTab).</summary>
+        public string RestartBehavior { get; set; } = nameof(Services.RestartBehavior.NewTab);
+
+        /// <summary>Whether a new tab of an application starts with the filters of its last tab.</summary>
+        public bool TakeOverFilters { get; set; } = true;
+
+        /// <summary>Per application (name and sender): the choices that differ from the settings above and the filters to take over.</summary>
+        public Dictionary<string, ApplicationTabSettings> Applications { get; set; } = new();
     }
 }

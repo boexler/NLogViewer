@@ -657,6 +657,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             if (listView != null)
                 _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter);
             ScheduleFindUpdate();
+            PublishFilterState();
         }
         
         /// <summary>

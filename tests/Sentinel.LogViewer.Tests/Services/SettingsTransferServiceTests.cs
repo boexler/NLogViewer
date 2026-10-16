@@ -62,6 +62,35 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheChoicesAndFiltersOfApplications_AreExportedAndImported_AndInvalidValuesAreDropped()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.RestartBehavior = "ExtendTab";
+		configuration.Applications["myapp;10.0.0.5"] = new ApplicationTabSettings
+		{
+			TakeOverFilters = true,
+			RestartBehavior = "ReplaceTab",
+			Filters = new Sentinel.LogViewer.Wpf.Models.LogViewerFilterState { HiddenLevels = { "Trace" } }
+		};
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+
+		var saved = _environment.Saved;
+		Assert.Equal("ExtendTab", saved.RestartBehavior);
+		var application = saved.Applications["myapp;10.0.0.5"];
+		Assert.Equal("ReplaceTab", application.RestartBehavior);
+		Assert.Equal(new[] { "Trace" }, application.Filters?.HiddenLevels);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "RestartBehavior": "sometimes" } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal("NewTab", _environment.Saved.RestartBehavior);
+	}
+
+	[Fact]
 	public void Import_DropsValuesThatWouldBreakTheApplication()
 	{
 		var file = _environment.PathOf("edited.json");

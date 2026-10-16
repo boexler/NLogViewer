@@ -230,7 +230,7 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.False(viewModel.IsSearching);
 		Assert.Equal("Receiving", viewModel.SelectedCategory?.Id);
-		Assert.Equal(1 + 3, viewModel.PageItems.Count);
+		Assert.Equal(1 + 5, viewModel.PageItems.Count);
 	}
 
 	[Fact]
@@ -307,6 +307,27 @@ public class SettingsViewModelTests : IDisposable
 		viewModel.SelectedCategory = viewModel.Category("Updates");
 		viewModel.ResetCategoryCommand.Execute(null);
 		Assert.True(_environment.Saved.ShowChangelogAfterUpdate);
+	}
+
+	[Fact]
+	public void TheReceivingSettingsForRestartedApplications_HaveDefaults_AreSaved_AndAreReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var restart = viewModel.Setting<ChoiceSettingViewModel>("After a restart of an application");
+		var takeOver = viewModel.Setting<BoolSettingViewModel>("Take over the filters into new tabs of the same application");
+		Assert.Equal("NewTab", restart.Value);
+		Assert.True(takeOver.Value);
+		Assert.Equal(new[] { "NewTab", "ExtendTab", "ReplaceTab" }, restart.Options.Select(option => option.Value));
+
+		restart.Value = "ReplaceTab";
+		takeOver.Value = false;
+		Assert.Equal("ReplaceTab", _environment.Saved.RestartBehavior);
+		Assert.False(_environment.Saved.TakeOverFilters);
+
+		viewModel.SelectedCategory = viewModel.Category("Receiving");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Equal("NewTab", _environment.Saved.RestartBehavior);
+		Assert.True(_environment.Saved.TakeOverFilters);
 	}
 
 	[Fact]

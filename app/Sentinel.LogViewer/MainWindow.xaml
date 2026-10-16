@@ -43,6 +43,12 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <!-- Arrow in the tab header that opens the menu of the tab -->
+            <Style x:Key="TabMenuButtonStyle" TargetType="Button" BasedOn="{StaticResource TabCloseButtonStyle}">
+                <Setter Property="Content" Value="▾"/>
+                <Setter Property="Margin" Value="6,0,0,0"/>
+                <Setter Property="FontSize" Value="11"/>
+            </Style>
             <!-- Tab context menu; the TabItem's Tag holds the MainViewModel -->
             <ContextMenu x:Key="TabContextMenu" x:Shared="False">
                 <MenuItem Header="{helpers:Resource Key=Tab_Close, DefaultValue=Close tab}"
@@ -55,10 +61,43 @@
                 <MenuItem Header="{helpers:Resource Key=Tab_SaveFilteredList, DefaultValue=Save filtered list...}"
                           Command="{Binding PlacementTarget.Tag.SaveFilteredListCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
+                <Separator/>
+                <MenuItem Header="{helpers:Resource Key=Tab_TakeOverFilters, DefaultValue=Take over the filters into new tabs of this application}"
+                          IsChecked="{Binding TakesOverFilters, Mode=OneWay}"
+                          Command="{Binding PlacementTarget.Tag.ToggleTakeOverFiltersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_AfterRestart, DefaultValue=After a restart of this application}"
+                          IsEnabled="{Binding IsLive}">
+                    <MenuItem Header="{helpers:Resource Key=Restart_Extend, DefaultValue=Continue in the existing tab}"
+                              Tag="ExtendTab" IsChecked="{Binding RestartExtendsTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
+                    <MenuItem Header="{helpers:Resource Key=Restart_NewTab, DefaultValue=Open a new tab}"
+                              Tag="NewTab" IsChecked="{Binding RestartsInNewTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
+                    <MenuItem Header="{helpers:Resource Key=Restart_Replace, DefaultValue=Open a new tab and close the old one}"
+                              Tag="ReplaceTab" IsChecked="{Binding RestartReplacesTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
+                </MenuItem>
             </ContextMenu>
             <DataTemplate x:Key="TabControlContentTemplate" DataType="models:LogTabViewModel">
+              <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!-- Shown while the tab has the filters that an earlier tab of the application had -->
+                <Border Background="{DynamicResource ThemeSurfaceAlt}" BorderBrush="{DynamicResource ThemeBorder}"
+                        BorderThickness="0,0,0,1" Padding="10,4"
+                        Visibility="{Binding FiltersTakenOver, Converter={StaticResource ThemeBoolToVisibility}}">
+                    <DockPanel LastChildFill="True">
+                        <Button DockPanel.Dock="Right" Padding="8,2" Margin="12,0,0,0"
+                                Content="{helpers:Resource Key=Tab_RemoveFilters, DefaultValue=Remove filters}"
+                                Command="{Binding DataContext.RemoveTakenOverFiltersCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"/>
+                        <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource ThemeTextSecondary}" TextTrimming="CharacterEllipsis"
+                                   Text="{helpers:Resource Key=Tab_FiltersTakenOver, DefaultValue=The filters of the previous tab of this application were taken over.}"/>
+                    </DockPanel>
+                </Border>
                 <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                 <dj:LogViewerBase 
+                    Grid.Row="1"
                     x:Name="LogViewer1"
                     Tag="{Binding ElementName=LogViewer1}"
                     DefaultTimeStampFormat="{Binding DataContext.DefaultTimeStampFormat, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -84,6 +123,7 @@
                     SearchHighlightBackground="{DynamicResource LogSearchHighlightBackground}"
                     FindHighlightBackground="{DynamicResource LogFindHighlightBackground}"
                     ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                    FilterState="{Binding DataContext.FilterState, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
                     <dj:LogViewerBase.Resources>
                         <!-- The buttons of the control have a fixed size, so they get less padding than the buttons of the dialogs -->
@@ -98,6 +138,7 @@
                         <helpers:FileLineIdResolver />
                     </dj:LogViewerBase.IdResolver>
                 </dj:LogViewerBase>
+              </Grid>
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -191,6 +232,8 @@
                         <TextBlock Text="{Binding LogCount}" 
                                    FontWeight="Bold"/>
                         <TextBlock Text=")" />
+                        <Button Style="{StaticResource TabMenuButtonStyle}" Click="TabMenuButton_Click"
+                                ToolTip="{helpers:Resource Key=Tab_Menu, DefaultValue=Tab menu}"/>
                         <Button Style="{StaticResource TabCloseButtonStyle}"
                                 Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
                                 CommandParameter="{Binding}"

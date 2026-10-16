@@ -706,6 +706,42 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Dziennik zmian</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>Po ponownym uruchomieniu aplikacji</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Co się dzieje, gdy aplikacja wysyłająca logi uruchamia się ponownie. Każdą aplikację można ustawić inaczej w menu jej karty.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Przenoś filtry do nowych kart tej samej aplikacji</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>Nowa karta aplikacji zaczyna z filtrami jej ostatniej karty: poziomy, wyrażenia filtra, ukryte loggery i format kolumny znacznika czasu. Menu karty przełącza to dla jednej aplikacji.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Otwórz nową kartę</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Kontynuuj w istniejącej karcie</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Otwórz nową kartę i zamknij starą</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Przenoś filtry do nowych kart tej aplikacji</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>Po ponownym uruchomieniu tej aplikacji</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Przeniesiono filtry poprzedniej karty tej aplikacji.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Usuń filtry</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Menu karty</value>
+  </data>
 </root>
 
 

@@ -706,5 +706,41 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Änderungsprotokoll</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>Nach einem Neustart einer Anwendung</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Was passiert, wenn eine Anwendung, die Logs sendet, neu startet. Jede Anwendung kann im Menü ihres Tabs anders eingestellt werden.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Filter in neue Tabs derselben Anwendung übernehmen</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>Ein neues Tab einer Anwendung startet mit den Filtern ihres letzten Tabs: Level, Filterbegriffe, versteckte Logger und das Format der Zeitstempelspalte. Das Menü eines Tabs schaltet es für eine Anwendung um.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Neues Tab öffnen</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Im bestehenden Tab weitermachen</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Neues Tab öffnen und das alte schließen</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Filter in neue Tabs dieser Anwendung übernehmen</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>Nach einem Neustart dieser Anwendung</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Die Filter des vorigen Tabs dieser Anwendung wurden übernommen.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Filter entfernen</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Tab-Menü</value>
+  </data>
 </root>
 
