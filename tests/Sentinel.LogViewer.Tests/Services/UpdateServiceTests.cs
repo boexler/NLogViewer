@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Updates;
+using Sentinel.LogViewer.ViewModels;
 using Xunit;
 
 namespace Sentinel.LogViewer.Tests.Services;
@@ -66,6 +67,30 @@ public class UpdateServiceTests
 		var version = Version(text);
 		Assert.Equal(expected, version.ToString());
 		Assert.Equal(isPrerelease, version.IsPrerelease);
+	}
+
+	[Theory]
+	[InlineData("5.0.0-beta.3", "5.0.0-beta3")]
+	[InlineData("5.0.0-rc.12", "5.0.0-rc12")]
+	[InlineData("5.0.0-alpha.1", "5.0.0-alpha1")]
+	[InlineData("5.0.0", "5.0.0")]
+	public void ChocolateyVersion_IsWrittenLikeTheNameOfThePackage(string version, string expected)
+	{
+		Assert.Equal(expected, Version(version).ChocolateyVersion);
+	}
+
+	[Theory]
+	[InlineData("5.0.0-beta.3", "choco upgrade Sentinel.LogViewer --pre -y --version 5.0.0-beta3")]
+	[InlineData("5.1.0", "choco upgrade Sentinel.LogViewer -y --version 5.1.0")]
+	public void TheChocolateyCommand_NamesTheVersion(string version, string expected)
+	{
+		Assert.Equal(expected, AboutViewModel.ChocolateyCommandFor(Version(version)));
+	}
+
+	[Fact]
+	public void TheChocolateyCommand_WithoutAKnownVersion_UpgradesToTheNewestOne()
+	{
+		Assert.Equal("choco upgrade Sentinel.LogViewer -y", AboutViewModel.ChocolateyCommandFor(null));
 	}
 
 	[Theory]

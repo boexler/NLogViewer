@@ -92,6 +92,12 @@ public sealed class ReleaseVersion : IComparable<ReleaseVersion>
 		return string.CompareOrdinal(left, right);
 	}
 
+	/// <summary>
+	/// The version the way the Chocolatey package is named: the community feed does not take the dots of a prerelease label,
+	/// so <c>5.0.0-beta.3</c> is <c>5.0.0-beta3</c> (the same rule as in the release workflow)
+	/// </summary>
+	public string ChocolateyVersion => IsPrerelease ? $"{Major}.{Minor}.{Patch}-{Prerelease.Replace(".", string.Empty)}" : ToString();
+
 	public override string ToString()
 	{
 		var version = $"{Major}.{Minor}.{Patch}";
