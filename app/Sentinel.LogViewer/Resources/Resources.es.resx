@@ -703,5 +703,8 @@
   <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
     <value>Abre el registro de cambios en el primer inicio de una versión nueva, con todo lo que cambió desde la versión anterior.</value>
   </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Registro de cambios</value>
+  </data>
 </root>
 

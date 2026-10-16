@@ -703,5 +703,8 @@
   <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
     <value>Ouvre le journal des modifications au premier démarrage d’une nouvelle version, avec tout ce qui a changé depuis la version précédente.</value>
   </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Journal des modifications</value>
+  </data>
 </root>
 

@@ -703,6 +703,9 @@
   <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
     <value>Egy új verzió első indításakor megnyitja a változásnaplót az előző verzió óta történt összes változással.</value>
   </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Változásnapló</value>
+  </data>
 </root>
 
 

@@ -70,6 +70,11 @@ public class AboutViewModel : INotifyPropertyChanged
 
 	public string LicenseUrl => $"{UpdateService.RepositoryUrl}/blob/master/LICENSE.md";
 
+	/// <summary>"What's new" while an update is offered, otherwise "Changelog"</summary>
+	public string ChangelogLinkText => State is UpdateState.Checking or UpdateState.UpToDate or UpdateState.Failed
+		? GetString("About_Changelog", "Changelog")
+		: GetString("About_WhatsNew", "What’s new");
+
 	public string ReleasesUrl => _update?.ReleasePageUrl ?? $"{UpdateService.RepositoryUrl}/releases";
 
 	public string ChocolateyCommand =>

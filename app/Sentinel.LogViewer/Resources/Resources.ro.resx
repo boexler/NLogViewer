@@ -703,6 +703,9 @@
   <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
     <value>Deschide jurnalul de modificări la prima pornire a unei versiuni noi, cu tot ce s-a schimbat față de versiunea anterioară.</value>
   </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Jurnal de modificări</value>
+  </data>
 </root>
 
 

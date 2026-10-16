@@ -83,6 +83,11 @@
                             <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" FontSize="13" FontWeight="SemiBold"/>
                             <ProgressBar Height="6" Margin="0,10,0,0" Maximum="100" Value="{Binding DownloadPercentage, Mode=OneWay}"
                                          Visibility="{Binding IsDownloading, Converter={StaticResource ThemeBoolToVisibility}}"/>
+                            <TextBlock Margin="0,10,0,0">
+                                <Hyperlink Command="{Binding ShowChangelogCommand}">
+                                    <Run Text="{Binding ChangelogLinkText, Mode=OneWay}"/>
+                                </Hyperlink>
+                            </TextBlock>
                             <Button Style="{StaticResource ActionButton}" Command="{Binding DownloadCommand}"
                                     Content="{helpers:Resource Key=About_Download, DefaultValue=Download update}"
                                     Visibility="{Binding CanDownload, Converter={StaticResource ThemeBoolToVisibility}}"/>
@@ -118,14 +123,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Style="{StaticResource AboutCardSymbol}" Text="&#xE946;"/>
                         <StackPanel Grid.Column="1">
-                            <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap">
-                                <Run Text="{Binding VersionText, Mode=OneWay}"/>
-                                <Run Text="  "/>
-                                <Hyperlink Command="{Binding ShowChangelogCommand}"
-                                           FontWeight="Normal">
-                                    <Run Text="{helpers:Resource Key=About_WhatsNew, DefaultValue=What’s new}"/>
-                                </Hyperlink>
-                            </TextBlock>
+                            <TextBlock Text="{Binding VersionText, Mode=OneWay}" FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap"/>
                             <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,3,0,0"
                                        Foreground="{DynamicResource ThemeTextSecondary}"
                                        Text="{helpers:Resource Key=About_DevelopedBy, DefaultValue=Sentinel LogViewer is developed by Dominic Böxler and published as open source under the MIT License.}"/>

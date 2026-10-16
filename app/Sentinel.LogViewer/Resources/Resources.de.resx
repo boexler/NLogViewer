@@ -703,5 +703,8 @@
   <data name="Settings_ShowChangelogAfterUpdate_Description" xml:space="preserve">
     <value>Öffnet beim ersten Start einer neuen Version das Änderungsprotokoll mit allem, was sich seit der Version davor geändert hat.</value>
   </data>
+  <data name="About_Changelog" xml:space="preserve">
+    <value>Änderungsprotokoll</value>
+  </data>
 </root>
 
