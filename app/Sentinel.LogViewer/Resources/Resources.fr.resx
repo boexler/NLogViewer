@@ -706,5 +706,41 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Journal des modifications</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>Après le redémarrage d’une application</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Ce qui se passe quand une application qui envoie des journaux redémarre. Chaque application peut être réglée différemment dans le menu de son onglet.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Reprendre les filtres dans les nouveaux onglets de la même application</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>Un nouvel onglet d’une application démarre avec les filtres de son dernier onglet : niveaux, termes de filtre, loggers masqués et format de la colonne d’horodatage. Le menu d’un onglet le modifie pour une application.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Ouvrir un nouvel onglet</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Continuer dans l’onglet existant</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Ouvrir un nouvel onglet et fermer l’ancien</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Reprendre les filtres dans les nouveaux onglets de cette application</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>Après le redémarrage de cette application</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Les filtres de l’onglet précédent de cette application ont été repris.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Supprimer les filtres</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Menu de l’onglet</value>
+  </data>
 </root>
 

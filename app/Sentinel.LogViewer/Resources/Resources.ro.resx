@@ -706,6 +706,42 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Jurnal de modificări</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>După repornirea unei aplicații</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Ce se întâmplă când o aplicație care trimite jurnale pornește din nou. Fiecare aplicație poate fi setată diferit în meniul filei sale.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Preia filtrele în filele noi ale aceleiași aplicații</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>O filă nouă a unei aplicații pornește cu filtrele ultimei sale file: niveluri, termeni de filtrare, loggere ascunse și formatul coloanei de marcaj de timp. Meniul unei file îl comută pentru o aplicație.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Deschide o filă nouă</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Continuă în fila existentă</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Deschide o filă nouă și închide-o pe cea veche</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Preia filtrele în filele noi ale acestei aplicații</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>După repornirea acestei aplicații</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Filtrele filei anterioare a acestei aplicații au fost preluate.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Elimină filtrele</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Meniul filei</value>
+  </data>
 </root>
 
 

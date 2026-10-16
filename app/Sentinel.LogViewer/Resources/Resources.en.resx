@@ -706,5 +706,41 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Changelog</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>After a restart of an application</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>What happens when an application that sends logs starts again. Each application can be set differently in the menu of its tab.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Take over the filters into new tabs of the same application</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>A new tab of an application starts with the filters of its last tab: levels, filter terms, hidden loggers and the format of the timestamp column. The menu of a tab switches it for one application.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Open a new tab</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Continue in the existing tab</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Open a new tab and close the old one</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Take over the filters into new tabs of this application</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>After a restart of this application</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>The filters of the previous tab of this application were taken over.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Remove filters</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Tab menu</value>
+  </data>
 </root>
 

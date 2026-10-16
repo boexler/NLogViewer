@@ -237,6 +237,35 @@ namespace Sentinel.LogViewer.ViewModels
                     invalidAddressMessage: Text("Settings_InvalidPort", "Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535."),
                     duplicatePortMessage: Text("Settings_DuplicatePort", "This port is already in the list.")),
 
+                new ChoiceSettingViewModel(ReceivingId, "\uE72C",
+                    Text("Settings_AfterRestart", "After a restart of an application"),
+                    Text("Settings_AfterRestart_Description", "What happens when an application that sends logs starts again. Each application can be set differently in the menu of its tab."),
+                    needsRestart: false,
+                    options: new List<ChoiceOption>
+                    {
+                        new(nameof(RestartBehavior.NewTab), Text("Restart_NewTab", "Open a new tab")),
+                        new(nameof(RestartBehavior.ExtendTab), Text("Restart_Extend", "Continue in the existing tab")),
+                        new(nameof(RestartBehavior.ReplaceTab), Text("Restart_Replace", "Open a new tab and close the old one"))
+                    },
+                    get: () => ApplicationTabService.ParseRestartBehavior(_configuration.RestartBehavior).ToString(),
+                    set: value =>
+                    {
+                        _configuration.RestartBehavior = ApplicationTabService.ParseRestartBehavior(value).ToString();
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().RestartBehavior),
+
+                new BoolSettingViewModel(ReceivingId, "\uE71C",
+                    Text("Settings_TakeOverFilters", "Take over the filters into new tabs of the same application"),
+                    Text("Settings_TakeOverFilters_Description", "A new tab of an application starts with the filters of its last tab: levels, filter terms, hidden loggers and the format of the timestamp column. The menu of a tab switches it for one application."),
+                    get: () => _configuration.TakeOverFilters,
+                    set: value =>
+                    {
+                        _configuration.TakeOverFilters = value;
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().TakeOverFilters),
+
                 new IntSettingViewModel(ReceivingId, "",
                     Text("Settings_MaxEntries", "Maximum entries per tab"),
                     Text("Settings_MaxEntries_Description", "Older entries are removed once a tab holds more. Protects memory during long live sessions. Applies to tabs opened afterwards."),

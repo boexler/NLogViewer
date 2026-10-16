@@ -58,6 +58,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		if (!string.IsNullOrEmpty(settings.Language) && !LocalizationService.AvailableLanguages.ContainsKey(settings.Language))
 			settings.Language = string.Empty;
 		ThemeCatalog.Sanitize(settings);
+		ApplicationTabService.Sanitize(settings);
 
 		// The version that ran last belongs to this computer, not to the file.
 		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;

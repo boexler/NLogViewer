@@ -53,6 +53,7 @@ namespace Sentinel.LogViewer
             services.AddSingleton<TextFileFormatConfigService>();
             services.AddSingleton<UpdateService>();
             services.AddSingleton<ChangelogService>();
+            services.AddSingleton<ApplicationTabService>();
             services.AddSingleton<SettingsTransferService>();
             services.AddSingleton<ThemeService>();
 

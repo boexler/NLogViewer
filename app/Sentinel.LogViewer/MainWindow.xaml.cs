@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
@@ -108,6 +109,33 @@ namespace Sentinel.LogViewer
 	        _viewModel.BeginImportPathsFromUi(paths);
 	        e.Handled = true;
 	        return true;
+        }
+
+        /// <summary>
+        /// Opens the menu of a tab below its header, the same menu as with a right-click
+        /// </summary>
+        private void TabMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            DependencyObject? element = sender as DependencyObject;
+            while (element != null && element is not TabItem)
+                element = VisualTreeHelper.GetParent(element);
+
+            if (element is not TabItem { ContextMenu: { } menu } tabItem)
+                return;
+
+            menu.PlacementTarget = tabItem;
+            menu.Placement = PlacementMode.Bottom;
+            menu.IsOpen = true;
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// Sets what happens when the application of a tab starts again; the Tag of the menu item names the behaviour
+        /// </summary>
+        private void RestartBehaviorMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem { DataContext: LogTabViewModel tab, Tag: string name })
+                _viewModel.SetRestartBehavior(tab, Services.ApplicationTabService.ParseRestartBehavior(name));
         }
 
         /// <summary>

@@ -706,6 +706,42 @@
   <data name="About_Changelog" xml:space="preserve">
     <value>Változásnapló</value>
   </data>
+  <data name="Settings_AfterRestart" xml:space="preserve">
+    <value>Egy alkalmazás újraindítása után</value>
+  </data>
+  <data name="Settings_AfterRestart_Description" xml:space="preserve">
+    <value>Mi történik, amikor egy naplókat küldő alkalmazás újraindul. Minden alkalmazás másképp állítható be a lapja menüjében.</value>
+  </data>
+  <data name="Settings_TakeOverFilters" xml:space="preserve">
+    <value>Szűrők átvétele ugyanazon alkalmazás új lapjaira</value>
+  </data>
+  <data name="Settings_TakeOverFilters_Description" xml:space="preserve">
+    <value>Egy alkalmazás új lapja az utolsó lapja szűrőivel indul: szintek, szűrőkifejezések, elrejtett naplózók és az időbélyeg oszlop formátuma. A lap menüje egy alkalmazásra átkapcsolja.</value>
+  </data>
+  <data name="Restart_NewTab" xml:space="preserve">
+    <value>Új lap megnyitása</value>
+  </data>
+  <data name="Restart_Extend" xml:space="preserve">
+    <value>Folytatás a meglévő lapon</value>
+  </data>
+  <data name="Restart_Replace" xml:space="preserve">
+    <value>Új lap megnyitása és a régi bezárása</value>
+  </data>
+  <data name="Tab_TakeOverFilters" xml:space="preserve">
+    <value>Szűrők átvétele az alkalmazás új lapjaira</value>
+  </data>
+  <data name="Tab_AfterRestart" xml:space="preserve">
+    <value>Az alkalmazás újraindítása után</value>
+  </data>
+  <data name="Tab_FiltersTakenOver" xml:space="preserve">
+    <value>Az alkalmazás előző lapjának szűrői át lettek véve.</value>
+  </data>
+  <data name="Tab_RemoveFilters" xml:space="preserve">
+    <value>Szűrők eltávolítása</value>
+  </data>
+  <data name="Tab_Menu" xml:space="preserve">
+    <value>Lapmenü</value>
+  </data>
 </root>
 
 
