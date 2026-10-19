@@ -20,15 +20,15 @@ using Xunit;
 namespace Sentinel.LogViewer.Tests;
 
 /// <summary>
-/// Tests of the tabs of applications in the main window: the filters that a new tab takes over, and what a restart does
+/// Tests of the tabs in the main window: the filters that a new tab takes over, what a restart does, and the logger tree of new tabs
 /// </summary>
 [Collection(WpfCollection.Name)]
-public sealed class ApplicationTabsInTheMainWindowTests : IDisposable
+public sealed class TabsInTheMainWindowTests : IDisposable
 {
 	private readonly WpfStaContextFixture _context;
 	private readonly SettingsTestEnvironment _environment = new();
 
-	public ApplicationTabsInTheMainWindowTests(WpfStaContextFixture fixture)
+	public TabsInTheMainWindowTests(WpfStaContextFixture fixture)
 	{
 		_context = fixture;
 	}
@@ -145,6 +145,75 @@ public sealed class ApplicationTabsInTheMainWindowTests : IDisposable
 			Assert.False(secondViewer.TraceFilter);
 			Assert.Empty(secondViewer.ActiveSearchTerms);
 			Assert.Null(session.Tabs.FiltersForNewTab(second.SenderKey!));
+		});
+	}
+
+	[Fact]
+	public void ANewTab_StartsWithTheLoggerTreeOfTheSettings()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.LoggerTreeOnLeft = true;
+			configuration.LoggerTreeOpen = true;
+			configuration.LoggerTreeWidth = 333;
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+
+			Send(session, App("(100)"));
+
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.True(viewer.IsLoggerTreeOnLeft);
+			Assert.True(viewer.IsLoggerTreeExpanded);
+			Assert.Equal(333, viewer.LoggerTreeWidth);
+		});
+	}
+
+	[Fact]
+	public void WhatTheUserChangesInATab_IsSaved_AndUsedByTheNextTab_WhileOpenTabsStayAsTheyAre()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var first = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.False(first.IsLoggerTreeOnLeft);
+
+			first.IsLoggerTreeOnLeft = true;
+			first.IsLoggerTreeExpanded = true;
+			first.LoggerTreeWidth = 301.6;
+
+			var saved = _environment.Saved;
+			Assert.True(saved.LoggerTreeOnLeft);
+			Assert.True(saved.LoggerTreeOpen);
+			Assert.Equal(302, saved.LoggerTreeWidth);
+
+			Send(session, App("(100)", name: "Orders"));
+			var second = ViewerOf(session, session.ViewModel.LogTabs[1]);
+			Assert.True(second.IsLoggerTreeOnLeft);
+			Assert.True(second.IsLoggerTreeExpanded);
+			Assert.Equal(302, second.LoggerTreeWidth);
+
+			second.IsLoggerTreeOnLeft = false;
+			Assert.True(ViewerOf(session, session.ViewModel.LogTabs[0]).IsLoggerTreeOnLeft);
+			Assert.False(_environment.Saved.LoggerTreeOnLeft);
+		});
+	}
+
+	[Fact]
+	public void ADraggedWidth_ThatIsOutsideTheLimits_IsSavedAsTheNearestValidWidth()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			viewer.LoggerTreeWidth = 5000;
+			Assert.Equal(SettingsRules.MaxLoggerTreeWidth, _environment.Saved.LoggerTreeWidth);
+
+			viewer.LoggerTreeWidth = 10;
+			Assert.Equal(SettingsRules.MinLoggerTreeWidth, _environment.Saved.LoggerTreeWidth);
 		});
 	}
 

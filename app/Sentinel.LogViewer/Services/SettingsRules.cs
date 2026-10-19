@@ -17,6 +17,12 @@ public static class SettingsRules
 
 	public static bool IsValidEntriesPerTab(int value) => value is >= MinEntriesPerTab and <= MaxEntriesPerTab;
 
+	public const int MinLoggerTreeWidth = (int)Wpf.LogViewerBase.MinLoggerTreeWidth;
+	public const int MaxLoggerTreeWidth = 1200;
+	public const int DefaultLoggerTreeWidth = 260;
+
+	public static bool IsValidLoggerTreeWidth(int value) => value is >= MinLoggerTreeWidth and <= MaxLoggerTreeWidth;
+
 	/// <summary>
 	/// Reads the port of an address like <c>udp://0.0.0.0:4000</c>; only the port is used for listening
 	/// </summary>

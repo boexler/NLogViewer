@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Theming;
@@ -12,6 +13,9 @@ namespace Sentinel.LogViewer.ViewModels
     /// </summary>
     public partial class SettingsViewModel
     {
+        private const string LoggerTreeLeft = "left";
+        private const string LoggerTreeRight = "right";
+
         private IEnumerable<SettingViewModel> CreateAppearanceSettings()
         {
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE790",
@@ -71,6 +75,48 @@ namespace Sentinel.LogViewer.ViewModels
                     Commit();
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
+
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8AB",
+                Text("Settings_LoggerTreeSide", "Logger tree side"),
+                Text("Settings_LoggerTreeSide_Description", "Which side of the log list the logger tree is on in new tabs. Changing it in a tab saves it here."),
+                needsRestart: false,
+                options: new[]
+                {
+                    new ChoiceOption(LoggerTreeLeft, Text("Settings_LoggerTreeSide_Left", "Left")),
+                    new ChoiceOption(LoggerTreeRight, Text("Settings_LoggerTreeSide_Right", "Right"))
+                },
+                get: () => _configuration.LoggerTreeOnLeft ? LoggerTreeLeft : LoggerTreeRight,
+                set: side =>
+                {
+                    _configuration.LoggerTreeOnLeft = side == LoggerTreeLeft;
+                    Commit();
+                },
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOnLeft ? LoggerTreeLeft : LoggerTreeRight);
+
+            yield return new BoolSettingViewModel(AppearanceId, "\uE8FD",
+                Text("Settings_LoggerTreeOpen", "Open the logger tree in new tabs"),
+                Text("Settings_LoggerTreeOpen_Description", "New tabs show the logger tree next to the log list. Opening or closing it in a tab saves it here."),
+                get: () => _configuration.LoggerTreeOpen,
+                set: value =>
+                {
+                    _configuration.LoggerTreeOpen = value;
+                    Commit();
+                },
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOpen);
+
+            yield return new IntSettingViewModel(AppearanceId, "",
+                Text("Settings_LoggerTreeWidth", "Logger tree width"),
+                Text("Settings_LoggerTreeWidth_Description", "Width of the logger tree in pixels. Dragging the splitter in a tab saves it here."),
+                get: () => _configuration.LoggerTreeWidth,
+                set: value =>
+                {
+                    _configuration.LoggerTreeWidth = value;
+                    Commit();
+                },
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeWidth,
+                isValid: SettingsRules.IsValidLoggerTreeWidth,
+                invalidMessage: string.Format(CultureInfo.CurrentCulture,
+                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth));
 
             foreach (var token in ThemeCatalog.Tokens)
                 yield return CreateColorSetting(token);

@@ -351,6 +351,8 @@ The loggers of the entries are shown as a tree on the right of the list, split a
 - Drag the splitter between the list and the tree to change its width; the arrow button in the header moves the tree to the other side of the list
 - Hidden loggers work together with the level buttons and the filter terms; an entry is shown only if all of them allow it
 
+In the desktop application the side, whether the tree is open and its width are settings (Settings → Appearance) that new tabs start with. Moving the tree, opening it or dragging the splitter in a tab saves the new value as the setting; tabs that are open stay as they are. The control itself only has the properties below, which the application hands over.
+
 **Logger Tree Properties:**
 - `ShowLoggerTree` - Whether the tree can be opened (default `true`)
 - `IsLoggerTreeExpanded` - Whether the tree is open (default `false`)

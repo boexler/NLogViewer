@@ -742,6 +742,30 @@
   <data name="Tab_Menu" xml:space="preserve">
     <value>Lapmenü</value>
   </data>
+  <data name="Settings_LoggerTreeSide" xml:space="preserve">
+    <value>Naplózófa oldala</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
+    <value>A napló listának melyik oldalán áll a naplózófa az új lapokon. A lapon végzett módosítás itt mentődik.</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Left" xml:space="preserve">
+    <value>Bal</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Right" xml:space="preserve">
+    <value>Jobb</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen" xml:space="preserve">
+    <value>Naplózófa megnyitása az új lapokon</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
+    <value>Az új lapok a napló lista mellett mutatják a naplózófát. A lapon végzett megnyitás vagy bezárás itt mentődik.</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth" xml:space="preserve">
+    <value>Naplózófa szélessége</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
+    <value>A naplózófa szélessége pixelben. Az elválasztó húzása egy lapon itt mentődik.</value>
+  </data>
 </root>
 
 

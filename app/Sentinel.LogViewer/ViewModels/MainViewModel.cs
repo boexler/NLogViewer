@@ -185,6 +185,26 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	private void OnLogTabsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
+		if (e.NewItems != null)
+		{
+			// A new tab starts with the logger tree the way the settings say, before its viewer exists. What the user changes in a tab
+			// is saved as the setting, so that the next tab and the next start use it; tabs that are open keep what they have.
+			var configuration = _configService.LoadConfiguration();
+			foreach (var tab in e.NewItems.OfType<LogTabViewModel>())
+			{
+				tab.LoggerTreeOnLeft = configuration.LoggerTreeOnLeft;
+				tab.LoggerTreeOpen = configuration.LoggerTreeOpen;
+				tab.LoggerTreeWidth = configuration.LoggerTreeWidth;
+				tab.PropertyChanged += OnTabLoggerTreeChanged;
+			}
+		}
+
+		if (e.OldItems != null)
+		{
+			foreach (var tab in e.OldItems.OfType<LogTabViewModel>())
+				tab.PropertyChanged -= OnTabLoggerTreeChanged;
+		}
+
 		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
 		((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 		((RelayCommand<LogTabViewModel>)CloseOtherTabsCommand).RaiseCanExecuteChanged();
@@ -213,6 +233,30 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
 	/// </summary>
+	private void OnTabLoggerTreeChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (sender is not LogTabViewModel tab)
+			return;
+
+		var configuration = _configService.LoadConfiguration();
+		switch (e.PropertyName)
+		{
+			case nameof(LogTabViewModel.LoggerTreeOnLeft):
+				configuration.LoggerTreeOnLeft = tab.LoggerTreeOnLeft;
+				break;
+			case nameof(LogTabViewModel.LoggerTreeOpen):
+				configuration.LoggerTreeOpen = tab.LoggerTreeOpen;
+				break;
+			case nameof(LogTabViewModel.LoggerTreeWidth):
+				configuration.LoggerTreeWidth = Math.Clamp((int)Math.Round(tab.LoggerTreeWidth), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth);
+				break;
+			default:
+				return;
+		}
+
+		_configService.SaveConfiguration(configuration);
+	}
+
 	private LogTabViewModel CreateLiveTab(AppInfo appInfo)
 	{
 		var key = ApplicationTabService.KeyOf(appInfo);

@@ -754,5 +754,29 @@
   <data name="Tab_Menu" xml:space="preserve">
     <value>Tab menu</value>
   </data>
+  <data name="Settings_LoggerTreeSide" xml:space="preserve">
+    <value>Logger tree side</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
+    <value>Which side of the log list the logger tree is on in new tabs. Changing it in a tab saves it here.</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Left" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Right" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen" xml:space="preserve">
+    <value>Open the logger tree in new tabs</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
+    <value>New tabs show the logger tree next to the log list. Opening or closing it in a tab saves it here.</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth" xml:space="preserve">
+    <value>Logger tree width</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
+    <value>Width of the logger tree in pixels. Dragging the splitter in a tab saves it here.</value>
+  </data>
 </root>
 

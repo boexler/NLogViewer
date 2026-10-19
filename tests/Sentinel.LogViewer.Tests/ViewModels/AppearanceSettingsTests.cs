@@ -47,7 +47,7 @@ public class AppearanceSettingsTests : IDisposable
 		var viewModel = _environment.CreateViewModel();
 		var appearance = viewModel.Category("Appearance");
 
-		Assert.Equal(3 + ThemeCatalog.Tokens.Count, appearance.Settings.Count);
+		Assert.Equal(6 + ThemeCatalog.Tokens.Count, appearance.Settings.Count);
 		Assert.Equal(ThemeCatalog.Tokens.Count, appearance.Settings.OfType<ColorSettingViewModel>().Count());
 
 		viewModel.SelectedCategory = appearance;

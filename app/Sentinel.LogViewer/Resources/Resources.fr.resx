@@ -742,5 +742,29 @@
   <data name="Tab_Menu" xml:space="preserve">
     <value>Menu de l’onglet</value>
   </data>
+  <data name="Settings_LoggerTreeSide" xml:space="preserve">
+    <value>Côté de l’arbre des loggers</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
+    <value>De quel côté de la liste des journaux se trouve l’arbre des loggers dans les nouveaux onglets. Une modification dans un onglet est enregistrée ici.</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Left" xml:space="preserve">
+    <value>Gauche</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Right" xml:space="preserve">
+    <value>Droite</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen" xml:space="preserve">
+    <value>Ouvrir l’arbre des loggers dans les nouveaux onglets</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
+    <value>Les nouveaux onglets affichent l’arbre des loggers à côté de la liste des journaux. L’ouvrir ou le fermer dans un onglet l’enregistre ici.</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth" xml:space="preserve">
+    <value>Largeur de l’arbre des loggers</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
+    <value>Largeur de l’arbre des loggers en pixels. Déplacer le séparateur dans un onglet l’enregistre ici.</value>
+  </data>
 </root>
 

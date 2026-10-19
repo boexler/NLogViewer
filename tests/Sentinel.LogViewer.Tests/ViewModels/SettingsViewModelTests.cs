@@ -331,6 +331,37 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheLoggerTreeSettings_HaveDefaults_AreSaved_RejectAnInvalidWidth_AndAreReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var side = viewModel.Setting<ChoiceSettingViewModel>("Logger tree side");
+		var open = viewModel.Setting<BoolSettingViewModel>("Open the logger tree in new tabs");
+		var width = viewModel.Setting<IntSettingViewModel>("Logger tree width");
+		Assert.Equal("right", side.Value);
+		Assert.False(open.Value);
+		Assert.Equal("260", width.Text);
+
+		side.Value = "left";
+		open.Value = true;
+		width.Text = "400";
+		var saved = _environment.Saved;
+		Assert.True(saved.LoggerTreeOnLeft);
+		Assert.True(saved.LoggerTreeOpen);
+		Assert.Equal(400, saved.LoggerTreeWidth);
+
+		width.Text = "20";
+		Assert.True(width.HasError);
+		Assert.Equal(400, _environment.Saved.LoggerTreeWidth);
+
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		viewModel.ResetCategoryCommand.Execute(null);
+		saved = _environment.Saved;
+		Assert.False(saved.LoggerTreeOnLeft);
+		Assert.False(saved.LoggerTreeOpen);
+		Assert.Equal(260, saved.LoggerTreeWidth);
+	}
+
+	[Fact]
 	public void ExportAndImport_MoveSettingsAndColumnMappingsToAnotherComputer()
 	{
 		var exportFile = _environment.PathOf("export.json");
