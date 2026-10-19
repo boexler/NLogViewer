@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
 
@@ -35,7 +35,7 @@ public class LogFileParserService(
 	/// <param name="progress">Progress reporter for parsing status</param>
 	/// <param name="textFormat">Format for text files; when null the saved or detected format is used</param>
 	/// <returns>List of parsed log events</returns>
-	public async Task<List<LogEventInfo>> ParseFileAsync(string filePath, IProgress<(int current, int total)>? progress = null,
+	public async Task<List<LogEntry>> ParseFileAsync(string filePath, IProgress<(int current, int total)>? progress = null,
 		TextFileFormat? textFormat = null)
 	{
 		var extension = Path.GetExtension(filePath).ToLowerInvariant();
@@ -67,16 +67,16 @@ public class LogFileParserService(
 	/// <summary>
 	/// Parses an XML file with progress reporting
 	/// </summary>
-	private List<LogEventInfo> ParseXmlFile(string filePath, string fileName, IProgress<(int current, int total)>? progress)
+	private List<LogEntry> ParseXmlFile(string filePath, string fileName, IProgress<(int current, int total)>? progress)
 	{
 		var content = File.ReadAllText(filePath);
 		var log4JEvents = ParseMultipleLog4JEvents(content, progress);
 		
-		var results = new List<LogEventInfo>();
+		var results = new List<LogEntry>();
 		foreach (var log4JEvent in log4JEvents)
 		{
 			var logEvent = log4JEvent.ToLogEvent("File");
-			results.Add(logEvent.LogEventInfo);
+			results.Add(logEvent.Entry);
 		}
 		
 		return results;
@@ -156,7 +156,7 @@ public class LogFileParserService(
 	/// <summary>
 	/// Parses a JSON file with progress reporting
 	/// </summary>
-	private List<LogEventInfo> ParseJsonFile(string filePath, string fileName, IProgress<(int current, int total)>? progress)
+	private List<LogEntry> ParseJsonFile(string filePath, string fileName, IProgress<(int current, int total)>? progress)
 	{
 		var content = File.ReadAllText(filePath);
 		var logEvents = _jsonParser.Parse(content);
@@ -199,7 +199,7 @@ public class LogFileParserService(
 	/// <summary>
 	/// Parses a text file line by line with progress reporting
 	/// </summary>
-	private List<LogEventInfo> ParseTextFile(string filePath, TextFileFormat? format, IProgress<(int current, int total)>? progress)
+	private List<LogEntry> ParseTextFile(string filePath, TextFileFormat? format, IProgress<(int current, int total)>? progress)
 	{
 		const int progressInterval = 1000;
 

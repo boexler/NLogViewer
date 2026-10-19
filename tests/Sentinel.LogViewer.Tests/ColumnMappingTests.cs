@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Helpers;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
@@ -54,8 +54,10 @@ public class ColumnMappingTests
 	[Fact]
 	public void FileLineIdResolver_ImportedEntry_ReturnsFileLine()
 	{
-		var logEvent = new LogEventInfo(LogLevel.Info, "Logger", "Message");
-		logEvent.Properties[PlainTextParser.FileLinePropertyName] = 74;
+		var logEvent = new LogEntry(LogEntryLevel.Info, "Logger", "Message")
+		{
+			Properties = new Dictionary<string, object?> { [PlainTextParser.FileLinePropertyName] = 74 }
+		};
 
 		Assert.Equal("74", new FileLineIdResolver().Resolve(logEvent));
 	}

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
 
@@ -26,10 +26,10 @@ public class LogViewerScrollPositionTests
 	/// <summary>
 	/// Shows a viewer with alternating Info and Debug entries in an off-screen window
 	/// </summary>
-	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEventInfo> Entries) ShowViewer()
+	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEntry> Entries) ShowViewer()
 	{
-		var entries = new ObservableCollection<LogEventInfo>(Enumerable.Range(0, EntryCount).Select(i =>
-			new LogEventInfo(i % 2 == 0 ? LogLevel.Info : LogLevel.Debug, "Logger", $"Entry {i}")));
+		var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, EntryCount).Select(i =>
+			new LogEntry(i % 2 == 0 ? LogEntryLevel.Info : LogEntryLevel.Debug, "Logger", $"Entry {i}")));
 		var (window, viewer) = WpfTestHelper.ShowInWindow(entries);
 		return (window, viewer, entries);
 	}
@@ -45,7 +45,7 @@ public class LogViewerScrollPositionTests
 	private static string TopMessage(LogViewerBase viewer)
 	{
 		var listView = (ListView)viewer.Template.FindName("PART_ListView", viewer);
-		return ((LogEventInfo)listView.Items[(int)ScrollViewerOf(viewer).VerticalOffset]!).FormattedMessage;
+		return ((LogEntry)listView.Items[(int)ScrollViewerOf(viewer).VerticalOffset]!).Message;
 	}
 
 	private static void ScrollToEntry(LogViewerBase viewer, int viewIndex)
@@ -114,7 +114,7 @@ public class LogViewerScrollPositionTests
 				for (var i = 0; i < EntryCount; i += 2)
 				{
 					if (i % 200 != 0)
-						entries[i].Level = LogLevel.Trace;
+						entries[i] = new LogEntry(LogEntryLevel.Trace, entries[i].LoggerName, entries[i].Message);
 				}
 				ScrollToEntry(viewer, 401);
 				Assert.Equal("Entry 401", TopMessage(viewer));

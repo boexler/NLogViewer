@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Helper;
 
 namespace Sentinel.LogViewer.Wpf
@@ -17,9 +17,9 @@ namespace Sentinel.LogViewer.Wpf
     public partial class LogViewerBase
     {
         // Hits in list order, with their index in the filtered list.
-        private readonly List<LogEventInfo> _findMatches = new();
+        private readonly List<LogEntry> _findMatches = new();
         private readonly List<int> _findMatchIndices = new();
-        private LogEventInfo? _currentFindMatch;
+        private LogEntry? _currentFindMatch;
         private bool _findUpdatePending;
 
         #region Find Properties
@@ -202,7 +202,7 @@ namespace Sentinel.LogViewer.Wpf
                 var index = 0;
                 foreach (var item in LogEvents.View)
                 {
-                    if (item is LogEventInfo logEvent &&
+                    if (item is LogEntry logEvent &&
                         (IsFindMatch(LoggerNameResolver?.Resolve(logEvent)) || IsFindMatch(MessageResolver?.Resolve(logEvent))))
                     {
                         _findMatches.Add(logEvent);

@@ -1,5 +1,5 @@
 using System.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Xunit;
 
@@ -25,7 +25,7 @@ public class LogTabClearTests
 		{
 			var tab = new LogTabViewModel();
 			foreach (var number in Enumerable.Range(0, 24))
-				tab.AddLogEvent(new LogEventInfo(LogLevel.Info, "Logger", "message " + number));
+				tab.AddLogEntry(new LogEntry(LogEntryLevel.Info, "Logger", "message " + number));
 			var (window, viewer) = WpfTestHelper.ShowInWindow(tab.LogEntries);
 			try
 			{

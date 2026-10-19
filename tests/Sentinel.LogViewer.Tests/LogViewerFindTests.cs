@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
 
@@ -26,15 +26,15 @@ public class LogViewerFindTests
 	/// <summary>
 	/// "Entry 1" is found in Entry 1, Entry 10-19 and Entry 100-199: 111 hits; even entries are Info, odd ones Debug
 	/// </summary>
-	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEventInfo> Entries, ListView List) ShowViewer()
+	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEntry> Entries, ListView List) ShowViewer()
 	{
-		var entries = new ObservableCollection<LogEventInfo>(Enumerable.Range(0, 1000).Select(i =>
-			new LogEventInfo(i % 2 == 0 ? LogLevel.Info : LogLevel.Debug, "Logger", $"Entry {i}")));
+		var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, 1000).Select(i =>
+			new LogEntry(i % 2 == 0 ? LogEntryLevel.Info : LogEntryLevel.Debug, "Logger", $"Entry {i}")));
 		var (window, viewer) = WpfTestHelper.ShowInWindow(entries);
 		return (window, viewer, entries, (ListView)viewer.Template.FindName("PART_ListView", viewer));
 	}
 
-	private static string SelectedMessage(ListView listView) => ((LogEventInfo)listView.SelectedItem).FormattedMessage;
+	private static string SelectedMessage(ListView listView) => ((LogEntry)listView.SelectedItem).Message;
 
 	[Fact]
 	public void FindText_CountsHitsWithoutHidingEntries()
@@ -130,7 +130,7 @@ public class LogViewerFindTests
 				WpfTestHelper.Settle();
 				Assert.Equal("– / 55", viewer.FindResultText);
 
-				entries.Add(new LogEventInfo(LogLevel.Info, "Logger", "Entry 1000"));
+				entries.Add(new LogEntry(LogEntryLevel.Info, "Logger", "Entry 1000"));
 				WpfTestHelper.Settle();
 				Assert.Equal("– / 56", viewer.FindResultText);
 			}

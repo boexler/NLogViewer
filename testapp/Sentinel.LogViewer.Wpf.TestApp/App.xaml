@@ -12,7 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Converters -->
             <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-            <xamlMultiValueConverter:ILogEventResolverToStringConverter x:Key="ILogEventResolverToStringConverter"/>
+            <xamlMultiValueConverter:ILogEntryResolverToStringConverter x:Key="ILogEntryResolverToStringConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

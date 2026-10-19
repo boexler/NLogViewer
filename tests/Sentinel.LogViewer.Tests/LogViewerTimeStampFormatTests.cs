@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Models;
 using Sentinel.LogViewer.Wpf.Resolver;
@@ -28,10 +28,10 @@ public class LogViewerTimeStampFormatTests
 		_context = fixture;
 	}
 
-	private static ObservableCollection<LogEventInfo> Entries() => new()
+	private static ObservableCollection<LogEntry> Entries() => new()
 	{
-		new LogEventInfo(LogLevel.Info, "Logger", "message") { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 48, 385) },
-		new LogEventInfo(LogLevel.Warn, "Logger", "other") { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 49, 100) }
+		new LogEntry(LogEntryLevel.Info, "Logger", "message") { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 48, 385) },
+		new LogEntry(LogEntryLevel.Warn, "Logger", "other") { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 49, 100) }
 	};
 
 	private static string Resolved(LogViewerBase viewer) => viewer.TimeStampResolver.Resolve(Entries()[0]);
@@ -244,8 +244,8 @@ public class LogViewerTimeStampFormatTests
 		}
 	}
 
-	private sealed class OwnResolver : ILogEventInfoResolver
+	private sealed class OwnResolver : ILogEntryResolver
 	{
-		public string Resolve(LogEventInfo logEventInfo) => logEventInfo.TimeStamp.ToString("HH:mm", CultureInfo.InvariantCulture);
+		public string Resolve(LogEntry logEventInfo) => logEventInfo.TimeStamp.ToString("HH:mm", CultureInfo.InvariantCulture);
 	}
 }

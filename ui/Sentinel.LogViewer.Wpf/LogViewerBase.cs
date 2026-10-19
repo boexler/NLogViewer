@@ -13,7 +13,7 @@ using Sentinel.LogViewer.Wpf.Models;
 using Sentinel.LogViewer.Wpf.Extensions;
 using Sentinel.LogViewer.Wpf.Helper;
 using Sentinel.LogViewer.Wpf.Resolver;
-using NLog;
+using Sentinel.LogViewer.Core;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -507,15 +507,15 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         #region LogViewer
 
         /// <summary>
-        /// When set, the viewer binds its list to this collection so callers can push <see cref="LogEventInfo"/> directly.
+        /// When set, the viewer binds its list to this collection so callers can push <see cref="LogEntry"/> directly.
         /// When null, an internal collection is used.
         /// </summary>
         [Category("LogViewer")]
         [Browsable(true)]
         [Description("Observable collection of log entries displayed by the viewer.")]
-        public ObservableCollection<LogEventInfo>? ItemsSource
+        public ObservableCollection<LogEntry>? ItemsSource
         {
-            get => (ObservableCollection<LogEventInfo>?)GetValue(ItemsSourceProperty);
+            get => (ObservableCollection<LogEntry>?)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
@@ -524,7 +524,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// </summary>
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
             nameof(ItemsSource),
-            typeof(ObservableCollection<LogEventInfo>),
+            typeof(ObservableCollection<LogEntry>),
             typeof(LogViewerBase),
             new PropertyMetadata(null, OnItemsSourceChanged));
 
@@ -592,19 +592,19 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             collectionView.Filter = item =>
             {
-                if (item is not LogEventInfo logEvent) return true;
+                if (item is not LogEntry logEvent) return true;
 
                 if (!LoggerTree.IsVisible(logEvent.LoggerName)) return false;
 
                 // Apply level filters first
-                var levelFilterPassed = logEvent.Level.Name switch
+                var levelFilterPassed = logEvent.Level switch
                 {
-                    "Trace" => !TraceFilter,  // If TraceFilter is true, hide Trace entries (!true = false)
-                    "Debug" => !DebugFilter,  // If DebugFilter is true, hide Debug entries (!true = false)
-                    "Info" => !InfoFilter,    // If InfoFilter is true, hide Info entries (!true = false)
-                    "Warn" => !WarnFilter,     // If WarnFilter is true, hide Warn entries (!true = false)
-                    "Error" => !ErrorFilter,   // If ErrorFilter is true, hide Error entries (!true = false)
-                    "Fatal" => !FatalFilter,   // If FatalFilter is true, hide Fatal entries (!true = false)
+                    LogEntryLevel.Trace => !TraceFilter,  // If TraceFilter is true, hide Trace entries (!true = false)
+                    LogEntryLevel.Debug => !DebugFilter,  // If DebugFilter is true, hide Debug entries (!true = false)
+                    LogEntryLevel.Info => !InfoFilter,    // If InfoFilter is true, hide Info entries (!true = false)
+                    LogEntryLevel.Warn => !WarnFilter,     // If WarnFilter is true, hide Warn entries (!true = false)
+                    LogEntryLevel.Error => !ErrorFilter,   // If ErrorFilter is true, hide Error entries (!true = false)
+                    LogEntryLevel.Fatal => !FatalFilter,   // If FatalFilter is true, hide Fatal entries (!true = false)
                     _ => true
                 };
 
@@ -909,64 +909,64 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         #region Resolver
         
         /// <summary>
-        /// The <see cref="ILogEventInfoResolver"/> to format the id
+        /// The <see cref="ILogEntryResolver"/> to format the id
         /// </summary>
         [Category("LogViewerResolver")]
-        public ILogEventInfoResolver IdResolver
+        public ILogEntryResolver IdResolver
         {
-            get => (ILogEventInfoResolver)GetValue(IdResolverProperty);
+            get => (ILogEntryResolver)GetValue(IdResolverProperty);
             set => SetValue(IdResolverProperty, value);
         }
 
         /// <summary>
         /// The <see cref="IdResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new IdResolver()));
+        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new IdResolver()));
         
         /// <summary>
-        /// The <see cref="ILogEventInfoResolver"/> to format the timestamp output
+        /// The <see cref="ILogEntryResolver"/> to format the timestamp output
         /// </summary>
         [Category("LogViewerResolver")]
-        public ILogEventInfoResolver TimeStampResolver
+        public ILogEntryResolver TimeStampResolver
         {
-            get => (ILogEventInfoResolver)GetValue(TimeStampResolverProperty);
+            get => (ILogEntryResolver)GetValue(TimeStampResolverProperty);
             set => SetValue(TimeStampResolverProperty, value);
         }
 
         /// <summary>
         /// The <see cref="TimeStampResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new TimeStampResolver(), OnTimeStampResolverChanged));
+        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new TimeStampResolver(), OnTimeStampResolverChanged));
         
         /// <summary>
-        /// The <see cref="ILogEventInfoResolver"/> to format the loggername
+        /// The <see cref="ILogEntryResolver"/> to format the loggername
         /// </summary>
         [Category("LogViewerResolver")]
-        public ILogEventInfoResolver LoggerNameResolver
+        public ILogEntryResolver LoggerNameResolver
         {
-            get => (ILogEventInfoResolver)GetValue(LoggerNameResolverProperty);
+            get => (ILogEntryResolver)GetValue(LoggerNameResolverProperty);
             set => SetValue(LoggerNameResolverProperty, value);
         }
 
         /// <summary>
         /// The <see cref="LoggerNameResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new LoggerNameResolver()));
+        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new LoggerNameResolver()));
         
         /// <summary>
-        /// The <see cref="ILogEventInfoResolver"/> to format the message
+        /// The <see cref="ILogEntryResolver"/> to format the message
         /// </summary>
         [Category("LogViewerResolver")]
-        public ILogEventInfoResolver MessageResolver
+        public ILogEntryResolver MessageResolver
         {
-            get => (ILogEventInfoResolver)GetValue(MessageResolverProperty);
+            get => (ILogEntryResolver)GetValue(MessageResolverProperty);
             set => SetValue(MessageResolverProperty, value);
         }
 
         /// <summary>
         /// The <see cref="MessageResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEventInfoResolver), typeof(LogViewerBase), new PropertyMetadata(new MessageResolver()));
+        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new MessageResolver()));
 
         /// <summary>
         /// The <see cref="ILogExportFormatter"/> to format log entries for export
@@ -1503,13 +1503,13 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// Gets all filtered log entries from the current view
         /// </summary>
-        /// <returns>An enumerable collection of filtered LogEventInfo entries</returns>
-        public IEnumerable<LogEventInfo> GetFilteredLogEntries()
+        /// <returns>An enumerable collection of filtered LogEntry entries</returns>
+        public IEnumerable<LogEntry> GetFilteredLogEntries()
         {
             if (LogEvents?.View == null)
-                return Enumerable.Empty<LogEventInfo>();
+                return Enumerable.Empty<LogEntry>();
 
-            return LogEvents.View.Cast<LogEventInfo>();
+            return LogEvents.View.Cast<LogEntry>();
         }
 
         /// <summary>
@@ -1560,7 +1560,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <param name="filePath">Target file path</param>
         /// <param name="logEntries">Log entries to export</param>
         /// <param name="customFormatter">Optional custom formatter to override the default formatter</param>
-        private void ExportToLogFormat(string filePath, IEnumerable<LogEventInfo> logEntries, ILogExportFormatter? customFormatter = null)
+        private void ExportToLogFormat(string filePath, IEnumerable<LogEntry> logEntries, ILogExportFormatter? customFormatter = null)
         {
             using var writer = new StreamWriter(filePath, false, System.Text.Encoding.UTF8);
             
@@ -1672,8 +1672,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         // Private Properties
         // ##########################################################################################
 
-        private readonly ObservableCollection<LogEventInfo> _internalLogEntries = new();
-        private ObservableCollection<LogEventInfo>? _collectionChangedSubscriber;
+        private readonly ObservableCollection<LogEntry> _internalLogEntries = new();
+        private ObservableCollection<LogEntry>? _collectionChangedSubscriber;
         private Window? _ParentWindow;
 
         // Store original column references and widths for restoration
@@ -1702,13 +1702,13 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// Returns the collection currently feeding <see cref="LogEvents"/> (external <see cref="ItemsSource"/> or the internal list).
         /// </summary>
-        protected ObservableCollection<LogEventInfo> GetEffectiveEntries()
+        protected ObservableCollection<LogEntry> GetEffectiveEntries()
             => ItemsSource ?? _internalLogEntries;
 
         /// <summary>
         /// Adds log entries on the UI thread batch path (used by <see cref="LogViewer"/> when subscribing to <see cref="Targets.ICacheTarget"/>).
         /// </summary>
-        protected internal void AppendLogEntriesBatch(IEnumerable<LogEventInfo> infos)
+        protected internal void AppendLogEntriesBatch(IEnumerable<LogEntry> infos)
         {
             if (LogEvents == null)
                 return;
@@ -1752,7 +1752,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
         private void OnLogEntriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (sender is not ObservableCollection<LogEventInfo> coll)
+            if (sender is not ObservableCollection<LogEntry> coll)
                 return;
 
             UpdateLoggerTree(e, coll);
@@ -1771,7 +1771,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 PART_ListView?.ScrollToEnd();
         }
 
-        private void ApplyMaxCountTrim(ObservableCollection<LogEventInfo> coll)
+        private void ApplyMaxCountTrim(ObservableCollection<LogEntry> coll)
         {
             if (MaxCount < 0 || LogEvents == null)
                 return;
@@ -1911,7 +1911,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             OnViewerLoaded();
         }
 
-        private void AddFittedColumn(GridView gridView, int index, Func<ILogEventInfoResolver?> getResolver)
+        private void AddFittedColumn(GridView gridView, int index, Func<ILogEntryResolver?> getResolver)
         {
             if (gridView.Columns.Count > index)
                 _columnWidthFitter?.AddColumn(gridView.Columns[index], logEvent => getResolver()?.Resolve(logEvent));

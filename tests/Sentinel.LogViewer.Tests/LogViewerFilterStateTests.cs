@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Models;
 using Xunit;
@@ -20,12 +20,12 @@ public class LogViewerFilterStateTests
 		_context = fixture;
 	}
 
-	private static ObservableCollection<LogEventInfo> Entries() => new()
+	private static ObservableCollection<LogEntry> Entries() => new()
 	{
-		new LogEventInfo(LogLevel.Info, "Acme.Shop.Orders", "order created"),
-		new LogEventInfo(LogLevel.Debug, "Acme.Shop.Orders", "debug detail"),
-		new LogEventInfo(LogLevel.Error, "Acme.Billing", "timeout while charging"),
-		new LogEventInfo(LogLevel.Warn, "Acme.Billing", "retrying")
+		new LogEntry(LogEntryLevel.Info, "Acme.Shop.Orders", "order created"),
+		new LogEntry(LogEntryLevel.Debug, "Acme.Shop.Orders", "debug detail"),
+		new LogEntry(LogEntryLevel.Error, "Acme.Billing", "timeout while charging"),
+		new LogEntry(LogEntryLevel.Warn, "Acme.Billing", "retrying")
 	};
 
 	private static LogViewerFilterState SampleState() => new()
@@ -122,7 +122,7 @@ public class LogViewerFilterStateTests
 				viewer.FilterState = new LogViewerFilterState { HiddenLevels = { "Debug" }, LoggerRules = { "-Acme.Billing" } };
 				WpfTestHelper.Settle();
 
-				var shown = viewer.LogEvents.View.Cast<LogEventInfo>().Select(entry => entry.FormattedMessage).ToList();
+				var shown = viewer.LogEvents.View.Cast<LogEntry>().Select(entry => entry.Message).ToList();
 				Assert.Equal(new[] { "order created" }, shown);
 			}
 			finally

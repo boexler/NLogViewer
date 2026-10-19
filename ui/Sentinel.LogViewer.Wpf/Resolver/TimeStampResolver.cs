@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using System.Globalization;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Models;
 
 namespace Sentinel.LogViewer.Wpf.Resolver
@@ -8,7 +8,7 @@ namespace Sentinel.LogViewer.Wpf.Resolver
     /// <summary>
     /// Shows the time of an entry with date and milliseconds in one of the <see cref="TimeStampFormat"/>s
     /// </summary>
-    public class TimeStampResolver : ILogEventInfoResolver
+    public class TimeStampResolver : ILogEntryResolver
     {
         private static readonly ConcurrentDictionary<string, string> SystemPatterns = new();
 
@@ -19,9 +19,9 @@ namespace Sentinel.LogViewer.Wpf.Resolver
 
         public TimeStampFormat Format { get; }
 
-        public string Resolve(LogEventInfo logEventInfo)
+        public string Resolve(LogEntry logEntry)
         {
-            var timeStamp = logEventInfo.TimeStamp;
+            var timeStamp = logEntry.TimeStamp;
             return Format switch
             {
                 TimeStampFormat.Iso => timeStamp.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture),

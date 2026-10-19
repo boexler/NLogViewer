@@ -401,19 +401,19 @@ LogViewer is built as a CustomControl with theming support:
 - **Theme Support** - Full support for custom themes through resource dictionaries
 - **Code Organization** - Separation of concerns between UI and logic
 
-### Format output (ILogEventInfoResolver)
+### Format output (ILogEntryResolver)
 
-To format the output of a `LogEventInfo`, implement a new instance of `ILogEventInfoResolver` and bind it to the `Resolver` you want to customize:
+To format the output of a `LogEntry`, implement a new instance of `ILogEntryResolver` and bind it to the `Resolver` you want to customize:
 
 ```csharp
 /// <summary>
 /// Reformat the DateTime
 /// </summary>
-public class FooTimeStampResolver : ILogEventInfoResolver
+public class FooTimeStampResolver : ILogEntryResolver
 {
-    public string Resolve(LogEventInfo logEventInfo)
+    public string Resolve(LogEntry logEntry)
     {
-        return logEventInfo.TimeStamp.ToUniversalTime().ToString();
+        return logEntry.TimeStamp.ToUniversalTime().ToString();
     }
 }
 ```
@@ -421,6 +421,27 @@ public class FooTimeStampResolver : ILogEventInfoResolver
 ```csharp
 LogViewer1.TimeStampResolver = new FooTimeStampResolver();
 ```
+
+### Log entries (LogEntry)
+
+The viewer shows `LogEntry` objects (package `Sentinel.LogViewer.Core`), which do not depend on a logging library:
+
+- `Level` - `LogEntryLevel`: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal` (ordered, so `entry.Level >= LogEntryLevel.Error` works)
+- `LoggerName`, `Message` - the message as it is shown, with its parameters filled in
+- `TimeStamp`, `Id` - the time, and a growing number that a source can replace (e.g. the line of a file)
+- `Exception` - the exception as text, `null` when there is none
+- `Properties` - further values by name (thread, class, the fields of a JSON line)
+
+Events of NLog are turned into entries by `NLogEntryConverter.ToLogEntry(logEventInfo)`; the `CacheTarget` does this for you. If you push entries into the viewer yourself (`ItemsSource`), create `LogEntry` objects:
+
+```csharp
+LogViewer1.ItemsSource = new ObservableCollection<LogEntry>
+{
+    new LogEntry(LogEntryLevel.Info, "Acme.Shop", "Order created") { Properties = new Dictionary<string, object?> { ["Thread"] = "worker-1" } }
+};
+```
+
+**Migrating from `LogEventInfo`:** `ItemsSource` takes `ObservableCollection<LogEntry>`, `ILogEventInfoResolver` is now `ILogEntryResolver` (its `Resolve` takes a `LogEntry`), `ILogEventResolverToStringConverter` is now `ILogEntryResolverToStringConverter`, `ICacheTarget.Cache` is an `IObservable<LogEntry>`, and `FormattedMessage` is `Message`, `SequenceID` is `Id` and `Level` is a `LogEntryLevel` instead of an NLog `LogLevel`.
 
 ### Subscription Management (StartListen/StopListen)
 

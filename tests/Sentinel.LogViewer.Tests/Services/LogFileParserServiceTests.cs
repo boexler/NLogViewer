@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Parsers;
 using Sentinel.LogViewer.Services;
 using Xunit;
@@ -32,7 +32,7 @@ public class LogFileParserServiceTests : IDisposable
 		Directory.Delete(_directory, recursive: true);
 	}
 
-	private async Task<List<LogEventInfo>> ParseAsync(IEnumerable<string> lines)
+	private async Task<List<LogEntry>> ParseAsync(IEnumerable<string> lines)
 	{
 		var file = Path.Combine(_directory, Guid.NewGuid().ToString("N") + ".log");
 		File.WriteAllLines(file, lines);
@@ -46,7 +46,7 @@ public class LogFileParserServiceTests : IDisposable
 	private static string PipeLine(int number, string message = "Message number") =>
 		$"2025-01-01 10:00:00.000 | INFO | My.Logger.Name | {message} {number}";
 
-	private static object? FileLine(LogEventInfo logEvent) => logEvent.Properties[PlainTextParser.FileLinePropertyName];
+	private static object? FileLine(LogEntry logEvent) => logEvent.Properties[PlainTextParser.FileLinePropertyName];
 
 	[Fact]
 	public async Task ParseFileAsync_QuotedTabSeparatedFile_ParsesEntriesWithMultiLineMessages()
@@ -64,14 +64,14 @@ public class LogFileParserServiceTests : IDisposable
 
 		Assert.Equal(4, entries.Count);
 		Assert.Equal(new DateTime(2026, 1, 1, 7, 54, 9, 928), entries[0].TimeStamp);
-		Assert.Equal(LogLevel.Debug, entries[0].Level);
+		Assert.Equal(LogEntryLevel.Debug, entries[0].Level);
 		Assert.Equal("My.App.OpcService", entries[0].LoggerName);
 		Assert.Equal("add new channel for endpoint host:4840", entries[0].Message);
 		Assert.Equal("add new handler \"Watchdog_V1\"", entries[1].Message);
 		Assert.Equal(
 			string.Join(Environment.NewLine, "{", "  \"Enabled\": true,", "  \"ClientId\": \"abc\"", "}"),
 			entries[2].Message);
-		Assert.Equal(LogLevel.Info, entries[3].Level);
+		Assert.Equal(LogEntryLevel.Info, entries[3].Level);
 		Assert.Equal("done", entries[3].Message);
 	}
 

@@ -48,7 +48,7 @@ public class TextFileFormat
 }
 
 /// <summary>
-/// Maps column indices to LogEventInfo fields
+/// Maps column indices to the fields of a log entry
 /// </summary>
 public class ColumnMapping
 {

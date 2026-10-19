@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 
 namespace Sentinel.LogViewer.Parsers;
@@ -34,7 +34,7 @@ public class PlainTextParser : IDisposable
 	/// <param name="format">Format configuration to use</param>
 	/// <returns>List of parsed log events</returns>
 	/// <param name="referenceTime">The time that dates without a year belong to, e.g. when the file was written</param>
-	public List<LogEventInfo> Parse(IEnumerable<string> lines, TextFileFormat? format, DateTime? referenceTime = null)
+	public List<LogEntry> Parse(IEnumerable<string> lines, TextFileFormat? format, DateTime? referenceTime = null)
 	{
 		if (format != null && format.ColumnMapping.IsValid())
 		{
@@ -48,66 +48,80 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses lines using regex-based detection (legacy method)
 	/// </summary>
-	public List<LogEventInfo> Parse(IEnumerable<string> lines) => ParseWithoutFormat(lines, null);
+	public List<LogEntry> Parse(IEnumerable<string> lines) => ParseWithoutFormat(lines, null);
 
-	private List<LogEventInfo> ParseWithoutFormat(IEnumerable<string> lines, DateTime? referenceTime)
+	private List<LogEntry> ParseWithoutFormat(IEnumerable<string> lines, DateTime? referenceTime)
 	{
 		var numberedLines = lines.Select((line, index) => (line, index + 1));
 		return ParseEntries(numberedLines, IsNewLogEntry, line => ParseLine(line, referenceTime));
 	}
 
 	/// <summary>
-	/// Turns records into log events; a record that does not start a new entry continues the previous message
+	/// Turns records into log entries; a record that does not start a new entry continues the previous message
 	/// </summary>
-	private static List<LogEventInfo> ParseEntries(
+	private static List<LogEntry> ParseEntries(
 		IEnumerable<(string Text, int LineNumber)> records,
 		Func<string, bool> isNewEntry,
-		Func<string, LogEventInfo?> parseEntry)
+		Func<string, LogEntry?> parseEntry)
 	{
-		var results = new List<LogEventInfo>();
-		LogEventInfo? currentEvent = null;
+		var results = new List<LogEntry>();
+		LogEntry? current = null;
+		var currentLine = 0;
+		StringBuilder? continuation = null;
+
+		void Finish()
+		{
+			if (current != null)
+				results.Add(WithFileLine(current, currentLine, continuation));
+
+			current = null;
+			continuation = null;
+		}
 
 		foreach (var (text, lineNumber) in records)
 		{
 			if (isNewEntry(text))
 			{
-				// Save previous event if exists
-				if (currentEvent != null)
-				{
-					results.Add(currentEvent);
-				}
+				Finish();
 
 				// Parse new log entry
-				currentEvent = parseEntry(text);
-				if (currentEvent != null)
-				{
-					currentEvent.Properties[FileLinePropertyName] = lineNumber;
-				}
+				current = parseEntry(text);
+				currentLine = lineNumber;
 			}
-			else if (currentEvent != null)
+			else if (current != null)
 			{
 				// This is a continuation line - append to current message
+				continuation ??= new StringBuilder();
 				if (string.IsNullOrWhiteSpace(text))
 				{
 					// Preserve empty lines in multi-line messages (e.g., stack traces)
-					currentEvent.Message += Environment.NewLine;
+					continuation.Append(Environment.NewLine);
 				}
 				else
 				{
-					currentEvent.Message += Environment.NewLine + text;
+					continuation.Append(Environment.NewLine).Append(text);
 				}
 			}
 			// If no current event and line doesn't start new entry, skip it (orphaned continuation line)
 		}
 
 		// Add the last event if exists
-		if (currentEvent != null)
-		{
-			results.Add(currentEvent);
-		}
+		Finish();
 
 		return results;
 	}
+
+	/// <summary>
+	/// Returns the entry with the number of its line in the file and the lines that continue its message
+	/// </summary>
+	private static LogEntry WithFileLine(LogEntry entry, int lineNumber, StringBuilder? continuation) =>
+		new(entry.Level, entry.LoggerName, continuation == null ? entry.Message : entry.Message + continuation)
+		{
+			TimeStamp = entry.TimeStamp,
+			Exception = entry.Exception,
+			Id = entry.Id,
+			Properties = new Dictionary<string, object?>(entry.Properties) { [FileLinePropertyName] = lineNumber }
+		};
 
 	/// <summary>
 	/// Determines if a line starts a new log entry by checking for timestamp pattern at the beginning
@@ -125,7 +139,7 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses lines using the format configuration
 	/// </summary>
-	private List<LogEventInfo> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format, DateTime? referenceTime)
+	private List<LogEntry> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format, DateTime? referenceTime)
 	{
 		return ParseEntries(
 			ReadRecords(lines, format),
@@ -202,7 +216,7 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses a single line using the format configuration
 	/// </summary>
-	private LogEventInfo? ParseLineWithFormat(string line, TextFileFormat format, DateTime? referenceTime)
+	private LogEntry? ParseLineWithFormat(string line, TextFileFormat format, DateTime? referenceTime)
 	{
 		try
 		{
@@ -219,7 +233,7 @@ public class PlainTextParser : IDisposable
 			}
 
 			// Extract level
-			var level = LogLevel.Info;
+			var level = LogEntryLevel.Info;
 			if (format.ColumnMapping.LevelColumn >= 0 && 
 			    format.ColumnMapping.LevelColumn < parts.Length)
 			{
@@ -248,7 +262,7 @@ public class PlainTextParser : IDisposable
 				message = line;
 			}
 
-			return new LogEventInfo(level, loggerName, message)
+			return new LogEntry(level, loggerName, message)
 			{
 				TimeStamp = timestamp
 			};
@@ -287,7 +301,7 @@ public class PlainTextParser : IDisposable
 			messageTakesRest ? mapping.MessageColumn + 1 : 0);
 	}
 
-	private LogEventInfo? ParseLine(string line, DateTime? referenceTime)
+	private LogEntry? ParseLine(string line, DateTime? referenceTime)
 	{
 		try
 		{
@@ -308,7 +322,7 @@ public class PlainTextParser : IDisposable
 			var levelMatch = _levelRegex.Match(line);
 			var level = levelMatch.Success
 				? ParseLogLevel(levelMatch.Value)
-				: LogLevel.Info;
+				: LogEntryLevel.Info;
 
 			// Extract logger name (try to find pattern like [LoggerName] or (LoggerName))
 			var loggerName = "Unknown";
@@ -321,7 +335,7 @@ public class PlainTextParser : IDisposable
 			// Message is the entire line (or remaining part after timestamp/level)
 			var message = line;
 
-			return new LogEventInfo(level, loggerName, message)
+			return new LogEntry(level, loggerName, message)
 			{
 				TimeStamp = timestamp
 			};
@@ -335,7 +349,7 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses a pipe-separated log line: timestamp | level | logger | message
 	/// </summary>
-	private LogEventInfo? ParsePipeSeparatedLine(string line)
+	private LogEntry? ParsePipeSeparatedLine(string line)
 	{
 		try
 		{
@@ -365,7 +379,7 @@ public class PlainTextParser : IDisposable
 			// Extract message (fourth part and beyond, in case message contains " | ")
 			var message = string.Join(" | ", parts.Skip(3)).Trim();
 
-			return new LogEventInfo(level, loggerName, message)
+			return new LogEntry(level, loggerName, message)
 			{
 				TimeStamp = timestamp
 			};
@@ -456,17 +470,17 @@ public class PlainTextParser : IDisposable
 		return false;
 	}
 
-	private LogLevel ParseLogLevel(string levelString)
+	private LogEntryLevel ParseLogLevel(string levelString)
 	{
 		return levelString.ToUpperInvariant() switch
 		{
-			"TRACE" => LogLevel.Trace,
-			"DEBUG" => LogLevel.Debug,
-			"INFO" => LogLevel.Info,
-			"WARN" or "WARNING" => LogLevel.Warn,
-			"ERROR" => LogLevel.Error,
-			"FATAL" => LogLevel.Fatal,
-			_ => LogLevel.Info
+			"TRACE" => LogEntryLevel.Trace,
+			"DEBUG" => LogEntryLevel.Debug,
+			"INFO" => LogEntryLevel.Info,
+			"WARN" or "WARNING" => LogEntryLevel.Warn,
+			"ERROR" => LogEntryLevel.Error,
+			"FATAL" => LogEntryLevel.Fatal,
+			_ => LogEntryLevel.Info
 		};
 	}
 

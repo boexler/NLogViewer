@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using WpfLogViewer = Sentinel.LogViewer.Wpf.LogViewer;
 
@@ -18,9 +18,9 @@ public static class WpfTestHelper
 	/// </summary>
 	/// <param name="testData">Log events to feed into the viewer.</param>
 	/// <returns>The viewer with CacheTarget set and events processed.</returns>
-	public static WpfLogViewer CreateViewerWithTestData(IEnumerable<LogEventInfo> testData)
+	public static WpfLogViewer CreateViewerWithTestData(IEnumerable<LogEntry> testData)
 	{
-		var list = testData?.ToList() ?? new List<LogEventInfo>();
+		var list = testData?.ToList() ?? new List<LogEntry>();
 		var viewer = new WpfLogViewer();
 		var cache = new TestCacheTarget();
 		cache.AddRange(list);
@@ -42,7 +42,7 @@ public static class WpfTestHelper
 		while (DateTime.UtcNow < deadline)
 		{
 			Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, () => { });
-			var count = viewer.LogEvents?.View?.Cast<LogEventInfo>().Count() ?? 0;
+			var count = viewer.LogEvents?.View?.Cast<LogEntry>().Count() ?? 0;
 			if (count >= expectedCount) return;
 			Thread.Sleep(50);
 		}
@@ -52,7 +52,7 @@ public static class WpfTestHelper
 	/// Shows a <see cref="LogViewerBase"/> for the given entries in an off-screen window, with the default theme applied.
 	/// Call from within RunOnSta and close the window afterwards.
 	/// </summary>
-	public static (Window Window, LogViewerBase Viewer) ShowInWindow(ObservableCollection<LogEventInfo> entries)
+	public static (Window Window, LogViewerBase Viewer) ShowInWindow(ObservableCollection<LogEntry> entries)
 	{
 		var viewer = new LogViewerBase { ItemsSource = entries, AutoScroll = false };
 		var window = new Window

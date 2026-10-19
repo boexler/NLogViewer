@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
 using Sentinel.LogViewer.Services;
@@ -59,7 +59,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Source = new Uri("pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml")
 		});
 		resources.Add("BoolToVisibilityConverter", new Sentinel.LogViewer.Wpf.XamlConverter.BoolToVisibilityConverter());
-		resources.Add("ILogEventResolverToStringConverter", new Sentinel.LogViewer.Wpf.XamlMultiValueConverter.ILogEventResolverToStringConverter());
+		resources.Add("ILogEntryResolverToStringConverter", new Sentinel.LogViewer.Wpf.XamlMultiValueConverter.ILogEntryResolverToStringConverter());
 		resources.Add("SvgImageSourceConverter", new Sentinel.LogViewer.Converters.SvgImageSourceConverter());
 	}
 
@@ -83,9 +83,9 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	private static AppInfo App(string processId, string name = "MyApp", string sender = "10.0.0.5") =>
 		new() { AppName = new AppName(name, processId), Sender = sender };
 
-	private static void Send(Session session, AppInfo app, string message = "hello", LogLevel? level = null)
+	private static void Send(Session session, AppInfo app, string message = "hello", LogEntryLevel? level = null)
 	{
-		session.Events.OnNext(new LogEvent { AppInfo = app, LogEventInfo = new LogEventInfo(level ?? LogLevel.Info, "Acme.Logger", message) });
+		session.Events.OnNext(new LogEvent { AppInfo = app, Entry = new LogEntry(level ?? LogEntryLevel.Info, "Acme.Logger", message) });
 		for (var i = 0; i < 10; i++)
 		{
 			Thread.Sleep(60);

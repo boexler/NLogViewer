@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Wpf.Models;
 
@@ -26,7 +26,7 @@ namespace Sentinel.LogViewer.Models
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewerBase.ItemsSource"/>.
         /// </summary>
-        public ObservableCollection<LogEventInfo> LogEntries { get; } = new();
+        public ObservableCollection<LogEntry> LogEntries { get; } = new();
 
         public LogTabViewModel()
         {
@@ -221,9 +221,9 @@ namespace Sentinel.LogViewer.Models
         /// <summary>
         /// Adds a log event to <see cref="LogEntries"/> (same reference the viewer binds to).
         /// </summary>
-        public void AddLogEvent(LogEventInfo logEvent)
+        public void AddLogEntry(LogEntry logEntry)
         {
-            LogEntries.Add(logEvent);
+            LogEntries.Add(logEntry);
             LastEventUtc = DateTime.UtcNow;
             while (MaxCount >= 0 && LogEntries.Count > MaxCount)
                 LogEntries.RemoveAt(0);

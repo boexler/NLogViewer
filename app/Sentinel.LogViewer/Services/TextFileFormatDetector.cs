@@ -222,7 +222,7 @@ public class TextFileFormatDetector
 		mapping.TimestampColumn >= 0 && column >= mapping.TimestampColumn && column < mapping.TimestampColumn + mapping.TimestampColumnCount;
 
 	/// <summary>
-	/// Automatically maps columns to LogEventInfo fields
+	/// Automatically maps columns to the fields of a log entry
 	/// </summary>
 	private ColumnMapping AutoMapColumns(List<string> dataLines, string separator, int columnCount)
 	{

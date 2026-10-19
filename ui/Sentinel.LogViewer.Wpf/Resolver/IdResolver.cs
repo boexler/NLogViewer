@@ -1,12 +1,12 @@
-using NLog;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Wpf.Resolver
 {
-    public class IdResolver : ILogEventInfoResolver
+    public class IdResolver : ILogEntryResolver
     {
-        public string Resolve(LogEventInfo logEventInfo)
+        public string Resolve(LogEntry logEntry)
         {
-            return logEventInfo.SequenceID.ToString();
+            return logEntry.Id.ToString();
         }
     }
 }

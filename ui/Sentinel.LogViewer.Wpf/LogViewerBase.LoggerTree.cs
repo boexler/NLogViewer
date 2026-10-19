@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Models;
 
 namespace Sentinel.LogViewer.Wpf
@@ -215,7 +215,7 @@ namespace Sentinel.LogViewer.Wpf
         /// <summary>
         /// Keeps the counters of the loggers in step with the entries
         /// </summary>
-        private void UpdateLoggerTree(NotifyCollectionChangedEventArgs e, ObservableCollection<LogEventInfo> entries)
+        private void UpdateLoggerTree(NotifyCollectionChangedEventArgs e, ObservableCollection<LogEntry> entries)
         {
             switch (e.Action)
             {
@@ -234,14 +234,14 @@ namespace Sentinel.LogViewer.Wpf
             }
         }
 
-        private static IEnumerable<LogEventInfo> OfEntries(IList? items)
+        private static IEnumerable<LogEntry> OfEntries(IList? items)
         {
             if (items == null)
                 yield break;
 
             foreach (var item in items)
             {
-                if (item is LogEventInfo entry)
+                if (item is LogEntry entry)
                     yield return entry;
             }
         }

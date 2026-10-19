@@ -2,17 +2,17 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using Sentinel.LogViewer.Wpf.Resolver;
-using NLog;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Wpf.XamlMultiValueConverter
 {
 	// ReSharper disable once InconsistentNaming
-	public class ILogEventResolverToStringConverter : IMultiValueConverter
+	public class ILogEntryResolverToStringConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values[0] is LogEventInfo logEventInfo && values[1] is ILogEventInfoResolver resolver)
-                return resolver.Resolve(logEventInfo);
+            if (values[0] is LogEntry logEntry && values[1] is ILogEntryResolver resolver)
+                return resolver.Resolve(logEntry);
             return "####";
         }
 

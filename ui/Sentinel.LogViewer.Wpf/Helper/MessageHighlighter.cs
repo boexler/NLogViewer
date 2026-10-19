@@ -18,12 +18,12 @@ namespace Sentinel.LogViewer.Wpf.Helper
     {
         public static readonly DependencyProperty ResolverProperty = DependencyProperty.RegisterAttached(
             "Resolver",
-            typeof(ILogEventInfoResolver),
+            typeof(ILogEntryResolver),
             typeof(MessageHighlighter),
             new PropertyMetadata(null, OnResolverChanged));
 
-        public static void SetResolver(DependencyObject element, ILogEventInfoResolver value) => element.SetValue(ResolverProperty, value);
-        public static ILogEventInfoResolver GetResolver(DependencyObject element) => (ILogEventInfoResolver)element.GetValue(ResolverProperty);
+        public static void SetResolver(DependencyObject element, ILogEntryResolver value) => element.SetValue(ResolverProperty, value);
+        public static ILogEntryResolver GetResolver(DependencyObject element) => (ILogEntryResolver)element.GetValue(ResolverProperty);
 
         private static void OnResolverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -78,15 +78,15 @@ namespace Sentinel.LogViewer.Wpf.Helper
             if (logViewer == null)
                 return;
 
-            var logEventInfo = textBlock.DataContext as NLog.LogEventInfo;
-            if (logEventInfo == null)
+            var logEntry = textBlock.DataContext as Sentinel.LogViewer.Core.LogEntry;
+            if (logEntry == null)
                 return;
 
             var resolver = GetResolver(textBlock);
             if (resolver == null)
                 return;
 
-            string message = resolver.Resolve(logEventInfo);
+            string message = resolver.Resolve(logEntry);
             var terms = logViewer.ActiveSearchTerms;
             var findText = logViewer.FindText;
             if (string.IsNullOrEmpty(message) || ((terms == null || terms.Count == 0) && string.IsNullOrEmpty(findText)))

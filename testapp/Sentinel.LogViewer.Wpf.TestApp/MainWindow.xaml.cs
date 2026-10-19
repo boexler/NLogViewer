@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Resolver;
 using Sentinel.LogViewer.Wpf.Targets;
@@ -163,11 +164,11 @@ namespace Sentinel.LogViewer.Wpf.TestApp
     /// <summary>
     /// Reformat the DateTime
     /// </summary>
-    public class FooTimeStampResolver : ILogEventInfoResolver
+    public class FooTimeStampResolver : ILogEntryResolver
     {
-        public string Resolve(LogEventInfo logEventInfo)
+        public string Resolve(LogEntry logEntry)
         {
-            return logEventInfo.TimeStamp.ToUniversalTime().ToString();
+            return logEntry.TimeStamp.ToUniversalTime().ToString();
         }
     }
 }
