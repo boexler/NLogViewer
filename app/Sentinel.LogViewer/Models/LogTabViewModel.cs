@@ -19,6 +19,9 @@ namespace Sentinel.LogViewer.Models
         private bool _filtersTakenOver;
         private bool _takesOverFilters = true;
         private RestartBehavior _restartBehavior;
+        private bool _loggerTreeOnLeft;
+        private bool _loggerTreeOpen;
+        private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewerBase.ItemsSource"/>.
@@ -155,6 +158,54 @@ namespace Sentinel.LogViewer.Models
         /// Whether the tab receives logs, as opposed to a tab of an imported file
         /// </summary>
         public bool IsLive => SenderKey != null;
+
+        /// <summary>
+        /// Whether the logger tree of the viewer in the tab is on the left of the list; the viewer keeps it up to date and takes it when it is set
+        /// </summary>
+        public bool LoggerTreeOnLeft
+        {
+            get => _loggerTreeOnLeft;
+            set
+            {
+                if (_loggerTreeOnLeft != value)
+                {
+                    _loggerTreeOnLeft = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Whether the logger tree of the viewer in the tab is open
+        /// </summary>
+        public bool LoggerTreeOpen
+        {
+            get => _loggerTreeOpen;
+            set
+            {
+                if (_loggerTreeOpen != value)
+                {
+                    _loggerTreeOpen = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Width of the logger tree of the viewer in the tab
+        /// </summary>
+        public double LoggerTreeWidth
+        {
+            get => _loggerTreeWidth;
+            set
+            {
+                if (_loggerTreeWidth != value)
+                {
+                    _loggerTreeWidth = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public bool RestartsInNewTab => RestartBehavior == RestartBehavior.NewTab;
         public bool RestartExtendsTab => RestartBehavior == RestartBehavior.ExtendTab;

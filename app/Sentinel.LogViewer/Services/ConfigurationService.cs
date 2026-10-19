@@ -125,6 +125,8 @@ namespace Sentinel.LogViewer.Services
                         }
                         Theming.ThemeCatalog.Sanitize(config);
                         ApplicationTabService.Sanitize(config);
+                        if (!SettingsRules.IsValidLoggerTreeWidth(config.LoggerTreeWidth))
+                            config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
                         return config;
                     }
                 }
@@ -203,6 +205,15 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Colours the user changed: theme id, then token key, then the colour as #RRGGBB or #AARRGGBB.</summary>
         public Dictionary<string, Dictionary<string, string>> ThemeColors { get; set; } = new();
+
+        /// <summary>Whether the logger tree of a new tab is on the left of the list instead of the right.</summary>
+        public bool LoggerTreeOnLeft { get; set; } = false;
+
+        /// <summary>Whether the logger tree of a new tab is open.</summary>
+        public bool LoggerTreeOpen { get; set; } = false;
+
+        /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
+        public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
 
         /// <summary>What happens when an application starts again: a new tab (NewTab), the existing tab (ExtendTab) or a new tab that replaces the old one (ReplaceTab).</summary>
         public string RestartBehavior { get; set; } = nameof(Services.RestartBehavior.NewTab);

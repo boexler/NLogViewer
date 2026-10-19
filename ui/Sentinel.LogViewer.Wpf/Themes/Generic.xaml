@@ -567,12 +567,14 @@
                                         <ToggleButton HorizontalAlignment="Right" Width="24" Height="22" Padding="0"
                                                       ToolTip="Move the logger tree to the other side"
                                                       IsChecked="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                            <TextBlock Text="&#x2192;" FontSize="14">
+                                            <TextBlock FontSize="14">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
+                                                        <!-- The arrow points to the side the tree moves to. It is set by the style, because a Text on the element would win over the trigger. -->
+                                                        <Setter Property="Text" Value="&#x2190;"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}}" Value="False">
-                                                                <Setter Property="Text" Value="&#x2190;"/>
+                                                            <DataTrigger Binding="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                                <Setter Property="Text" Value="&#x2192;"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>

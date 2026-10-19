@@ -148,7 +148,10 @@ namespace Sentinel.LogViewer.Wpf
 
         #endregion
 
-        private const double MinLoggerTreeWidth = 140;
+        /// <summary>
+        /// The smallest width of the open logger tree
+        /// </summary>
+        public const double MinLoggerTreeWidth = 140;
 
         public override void OnApplyTemplate()
         {

@@ -91,6 +91,29 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheLoggerTreeSettings_AreExportedAndImported_AndAnInvalidWidthBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.LoggerTreeOnLeft = true;
+		configuration.LoggerTreeOpen = true;
+		configuration.LoggerTreeWidth = 410;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		var saved = _environment.Saved;
+		Assert.True(saved.LoggerTreeOnLeft);
+		Assert.True(saved.LoggerTreeOpen);
+		Assert.Equal(410, saved.LoggerTreeWidth);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "LoggerTreeWidth": 7 } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal(260, _environment.Saved.LoggerTreeWidth);
+	}
+
+	[Fact]
 	public void Import_DropsValuesThatWouldBreakTheApplication()
 	{
 		var file = _environment.PathOf("edited.json");

@@ -59,6 +59,8 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 			settings.Language = string.Empty;
 		ThemeCatalog.Sanitize(settings);
 		ApplicationTabService.Sanitize(settings);
+		if (!SettingsRules.IsValidLoggerTreeWidth(settings.LoggerTreeWidth))
+			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
 
 		// The version that ran last belongs to this computer, not to the file.
 		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;

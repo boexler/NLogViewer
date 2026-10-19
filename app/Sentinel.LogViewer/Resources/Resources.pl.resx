@@ -742,6 +742,36 @@
   <data name="Tab_Menu" xml:space="preserve">
     <value>Menu karty</value>
   </data>
+  <data name="Settings_LoggerTreeSide" xml:space="preserve">
+    <value>Strona</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
+    <value>Po której stronie listy logów jest drzewo loggerów w nowych kartach. Zmiana w karcie jest zapisywana tutaj.</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Left" xml:space="preserve">
+    <value>Lewa</value>
+  </data>
+  <data name="Settings_LoggerTreeSide_Right" xml:space="preserve">
+    <value>Prawa</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen" xml:space="preserve">
+    <value>Otwarte</value>
+  </data>
+  <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
+    <value>Nowe karty pokazują drzewo loggerów obok listy logów. Otwarcie lub zamknięcie w karcie jest zapisywane tutaj.</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth" xml:space="preserve">
+    <value>Szerokość w pikselach</value>
+  </data>
+  <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
+    <value>Szerokość drzewa loggerów w pikselach. Przeciągnięcie rozdzielacza w karcie jest zapisywane tutaj.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Drzewo loggerów</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Domyślny widok nowych kart</value>
+  </data>
 </root>
 
 

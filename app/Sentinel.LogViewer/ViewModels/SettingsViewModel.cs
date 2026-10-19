@@ -159,7 +159,7 @@ namespace Sentinel.LogViewer.ViewModels
         /// <summary>
         /// Whether a search found no setting
         /// </summary>
-        public bool HasNoResults => IsSearching && !PageItems.OfType<SettingViewModel>().Any();
+        public bool HasNoResults => IsSearching && !PageItems.Any(item => item is SettingViewModel or SettingsGroupViewModel);
 
         public string NoResultsText => Format("Settings_NoResults", "No settings found for “{0}”.", _searchText.Trim());
 
@@ -354,15 +354,7 @@ namespace Sentinel.LogViewer.ViewModels
                 if (_selectedCategory != null)
                 {
                     PageItems.Add(new SettingsPageHeader(_selectedCategory.Title, _selectedCategory.Subtitle));
-                    string? section = null;
-                    foreach (var setting in _selectedCategory.Settings)
-                    {
-                        if (setting.Section != null && setting.Section != section)
-                            PageItems.Add(new SettingsSectionLabel(setting.Section));
-
-                        section = setting.Section;
-                        PageItems.Add(setting);
-                    }
+                    AddSettings(_selectedCategory.Settings, withSections: true);
                 }
             }
             else
@@ -378,13 +370,49 @@ namespace Sentinel.LogViewer.ViewModels
                         continue;
 
                     PageItems.Add(new SettingsSectionLabel(category.Title));
-                    foreach (var setting in matches)
-                        PageItems.Add(setting);
+                    AddSettings(matches);
                 }
             }
 
             OnPropertyChanged(nameof(HasNoResults));
             OnPropertyChanged(nameof(NoResultsText));
+        }
+
+        /// <summary>
+        /// Adds the settings to the page; settings of one group that follow each other share a card, and with sections
+        /// the heading of a section comes before its first setting
+        /// </summary>
+        private void AddSettings(IEnumerable<SettingViewModel> settings, bool withSections = false)
+        {
+            var group = new List<SettingViewModel>();
+            string? section = null;
+
+            void Flush()
+            {
+                if (group.Count > 0)
+                    PageItems.Add(new SettingsGroupViewModel(group[0].Group!, group.ToList()));
+                group.Clear();
+            }
+
+            foreach (var setting in settings)
+            {
+                if (setting.Group == null)
+                {
+                    Flush();
+                    if (withSections && setting.Section != null && setting.Section != section)
+                        PageItems.Add(new SettingsSectionLabel(setting.Section));
+
+                    section = setting.Section;
+                    PageItems.Add(setting);
+                    continue;
+                }
+
+                if (group.Count > 0 && group[0].Group != setting.Group)
+                    Flush();
+                group.Add(setting);
+            }
+
+            Flush();
         }
 
         private void ResetCategory()
