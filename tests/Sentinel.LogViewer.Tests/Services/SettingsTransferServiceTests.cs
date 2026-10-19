@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System;
 using System.IO;
 using Sentinel.LogViewer.Models;
@@ -71,7 +72,7 @@ public class SettingsTransferServiceTests : IDisposable
 		{
 			TakeOverFilters = true,
 			RestartBehavior = "ReplaceTab",
-			Filters = new Sentinel.LogViewer.Wpf.Models.LogViewerFilterState { HiddenLevels = { "Trace" } }
+			Filters = new Sentinel.LogViewer.Core.LogViewerFilterState { HiddenLevels = { "Trace" } }
 		};
 		_environment.Configuration.SaveConfiguration(configuration);
 		_environment.Transfer.Export(file);

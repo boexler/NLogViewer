@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sentinel.LogViewer.Wpf.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Which loggers are shown and which are hidden. A rule names a logger path like <c>Company.Product</c> and applies to that logger

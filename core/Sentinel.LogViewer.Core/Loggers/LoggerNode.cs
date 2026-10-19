@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Sentinel.LogViewer.Wpf.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// One logger in the logger tree, e.g. <c>Service</c> in <c>Company.Product.Service</c>, with the counters of its entries and of everything below it

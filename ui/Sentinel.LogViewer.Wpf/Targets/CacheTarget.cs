@@ -1,7 +1,5 @@
 using System;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Sentinel.LogViewer.Wpf.Helper;
 using NLog;
 using Sentinel.LogViewer.Core;
@@ -54,8 +52,8 @@ public class CacheTarget : Target, ILogSource
 	/// <summary>
 	/// The entries of the target. A new subscriber gets the entries that the cache still holds first.
 	/// </summary>
-	public IObservable<LogEntry> Entries => _CacheSubject.AsObservable();
-	private readonly ReplaySubject<LogEntry> _CacheSubject;
+	public IObservable<LogEntry> Entries => _Buffer.Entries;
+	private readonly LogBuffer _Buffer;
 
 	// ##########################################################################################
 	// Private Properties
@@ -75,9 +73,7 @@ public class CacheTarget : Target, ILogSource
 	/// <param name="maxCount">The maximum amount of entries held in buffer/cache. Defaults to 100 if not specified.</param>
 	public CacheTarget(int maxCount = 500)
 	{
-		if(maxCount == 0)
-			maxCount = 500;
-		_CacheSubject = new ReplaySubject<LogEntry>(maxCount);
+		_Buffer = new LogBuffer(maxCount);
 	}
 
 	#endregion
@@ -90,7 +86,7 @@ public class CacheTarget : Target, ILogSource
 
 	protected override void Write(LogEventInfo logEvent)
 	{
-		_CacheSubject.OnNext(logEvent.ToLogEntry());
+		_Buffer.Add(logEvent.ToLogEntry());
 	}
 
 	#endregion

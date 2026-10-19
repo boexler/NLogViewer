@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sentinel.LogViewer.Wpf.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// A filter term of a viewer: a text or a regular expression

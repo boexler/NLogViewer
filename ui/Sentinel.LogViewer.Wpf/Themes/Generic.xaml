@@ -7,7 +7,6 @@
     xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter"
     xmlns:helper="clr-namespace:Sentinel.LogViewer.Wpf.Helper"
     xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter"
-    xmlns:models="clr-namespace:Sentinel.LogViewer.Wpf.Models"
     x:Class="Sentinel.LogViewer.Wpf.Themes.GenericTheme">
 
     <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -20,21 +19,21 @@
     <ContextMenu x:Key="TimeStampFormatMenu" x:Shared="False">
         <MenuItem Header="Timestamp format" IsEnabled="False"/>
         <MenuItem Header="System"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.System}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.System}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.System}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.System}"/>
         <MenuItem Header="ISO  2025-12-18 15:11:48.385"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.Iso}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.Iso}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.Iso}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.Iso}"/>
         <MenuItem Header="German  18.12.2025 15:11:48.385"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.German}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.German}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.German}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.German}"/>
         <MenuItem Header="English  12/18/2025 03:11:48.385 PM"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.English}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.English}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.English}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.English}"/>
         <Separator/>
         <MenuItem Header="Default view"
                   Command="{Binding PlacementTarget.Tag.ResetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
@@ -224,7 +223,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.Resources>
                                             <!-- Template for plain text terms -->
-                                            <DataTemplate DataType="{x:Type local:TextSearchTerm}">
+                                            <DataTemplate DataType="{x:Type core:TextSearchTerm}">
                                                 <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}" 
                                                         BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}" 
                                                         BorderThickness="1" 
@@ -257,7 +256,7 @@
                                             </DataTemplate>
 
                                             <!-- Template for regex terms -->
-                                            <DataTemplate DataType="{x:Type local:RegexSearchTerm}">
+                                            <DataTemplate DataType="{x:Type core:RegexSearchTerm}">
                                                 <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}" 
                                                         BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}" 
                                                         BorderThickness="1" 
@@ -593,7 +592,7 @@
                                                 <Setter Property="Visibility" Value="{Binding IsListed, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             </Style>
-                                            <HierarchicalDataTemplate DataType="{x:Type models:LoggerNode}" ItemsSource="{Binding Children}">
+                                            <HierarchicalDataTemplate DataType="{x:Type core:LoggerNode}" ItemsSource="{Binding Children}">
                                                 <Grid Background="Transparent" Margin="0,1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>

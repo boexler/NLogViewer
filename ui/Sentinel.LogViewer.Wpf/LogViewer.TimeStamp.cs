@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;

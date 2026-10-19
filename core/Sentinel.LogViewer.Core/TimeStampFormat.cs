@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.Wpf.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// How the time stamp column shows the time of an entry. All of them have a fixed width and show milliseconds.
