@@ -79,6 +79,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\Sentinel.LogViewer.Core\Sentinel.LogViewer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Sentinel.LogViewer.Tests" />
   </ItemGroup>
   

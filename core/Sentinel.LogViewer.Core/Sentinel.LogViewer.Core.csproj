@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Sentinel.LogViewer.Core</RootNamespace>
+    <PackageId>Sentinel.LogViewer.Core</PackageId>
+    <Description>The log entry model and the logic without user interface of Sentinel.LogViewer</Description>
+    <!-- Packing runs as an explicit `dotnet pack` step. -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sentinel.LogViewer.Tests" />
+  </ItemGroup>
+
+</Project>
