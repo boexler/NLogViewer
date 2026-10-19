@@ -52,6 +52,38 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
+	public void TheLoggerTreeSettings_AreRowsInOneCard_AndTheirControlsAreConnected()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			viewModel.SelectedCategory = viewModel.Category("Appearance");
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var rows = Descendants<SettingCard>(window).Where(card => card.Setting?.Group != null).ToList();
+				Assert.Equal(new[] { "Side", "Open", "Width in pixels" }, rows.Select(row => row.Setting!.Title));
+				Assert.Contains(Descendants<TextBlock>(window), text => text.Text == "Default view for new tabs");
+				Assert.Equal(rows[0].Setting!.Description, Descendants<Border>(rows[0]).First(border => border.ToolTip != null).ToolTip);
+
+				var toggle = Descendants<ToggleButton>(rows[1]).Single();
+				toggle.IsChecked = true;
+				Assert.True(environment.Saved.LoggerTreeOpen);
+
+				var box = Descendants<TextBox>(rows[2]).Single();
+				box.Text = "333";
+				box.GetBindingExpression(TextBox.TextProperty)!.UpdateSource();
+				Assert.Equal(333, environment.Saved.LoggerTreeWidth);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void DropDown_ShowsTheNameOfTheSelectedOption()
 	{
 		_context.RunOnSta(() =>

@@ -743,7 +743,7 @@
     <value>Menu karty</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Strona drzewa loggerów</value>
+    <value>Strona</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>Po której stronie listy logów jest drzewo loggerów w nowych kartach. Zmiana w karcie jest zapisywana tutaj.</value>
@@ -755,16 +755,22 @@
     <value>Prawa</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Otwieraj drzewo loggerów w nowych kartach</value>
+    <value>Otwarte</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Nowe karty pokazują drzewo loggerów obok listy logów. Otwarcie lub zamknięcie w karcie jest zapisywane tutaj.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Szerokość drzewa loggerów</value>
+    <value>Szerokość w pikselach</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>Szerokość drzewa loggerów w pikselach. Przeciągnięcie rozdzielacza w karcie jest zapisywane tutaj.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Drzewo loggerów</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Domyślny widok nowych kart</value>
   </data>
 </root>
 

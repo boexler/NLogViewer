@@ -743,7 +743,7 @@
     <value>Lapmenü</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Naplózófa oldala</value>
+    <value>Oldal</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>A napló listának melyik oldalán áll a naplózófa az új lapokon. A lapon végzett módosítás itt mentődik.</value>
@@ -755,16 +755,22 @@
     <value>Jobb</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Naplózófa megnyitása az új lapokon</value>
+    <value>Nyitva</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Az új lapok a napló lista mellett mutatják a naplózófát. A lapon végzett megnyitás vagy bezárás itt mentődik.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Naplózófa szélessége</value>
+    <value>Szélesség pixelben</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>A naplózófa szélessége pixelben. Az elválasztó húzása egy lapon itt mentődik.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Naplózófa</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Alapértelmezett nézet az új lapokhoz</value>
   </data>
 </root>
 

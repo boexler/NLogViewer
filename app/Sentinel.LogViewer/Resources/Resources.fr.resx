@@ -743,7 +743,7 @@
     <value>Menu de l’onglet</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Côté de l’arbre des loggers</value>
+    <value>Côté</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>De quel côté de la liste des journaux se trouve l’arbre des loggers dans les nouveaux onglets. Une modification dans un onglet est enregistrée ici.</value>
@@ -755,16 +755,22 @@
     <value>Droite</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Ouvrir l’arbre des loggers dans les nouveaux onglets</value>
+    <value>Ouvert</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Les nouveaux onglets affichent l’arbre des loggers à côté de la liste des journaux. L’ouvrir ou le fermer dans un onglet l’enregistre ici.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Largeur de l’arbre des loggers</value>
+    <value>Largeur en pixels</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>Largeur de l’arbre des loggers en pixels. Déplacer le séparateur dans un onglet l’enregistre ici.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Arbre des loggers</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Vue par défaut des nouveaux onglets</value>
   </data>
 </root>
 

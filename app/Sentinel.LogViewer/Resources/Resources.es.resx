@@ -743,7 +743,7 @@
     <value>Menú de la pestaña</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Lado del árbol de registradores</value>
+    <value>Lado</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>En qué lado de la lista de registros está el árbol de registradores en las pestañas nuevas. Si lo cambia en una pestaña, se guarda aquí.</value>
@@ -755,16 +755,22 @@
     <value>Derecha</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Abrir el árbol de registradores en las pestañas nuevas</value>
+    <value>Abierto</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Las pestañas nuevas muestran el árbol de registradores junto a la lista de registros. Abrirlo o cerrarlo en una pestaña lo guarda aquí.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Ancho del árbol de registradores</value>
+    <value>Ancho en píxeles</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>Ancho del árbol de registradores en píxeles. Si arrastra el divisor en una pestaña, se guarda aquí.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Árbol de registradores</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Vista predeterminada para pestañas nuevas</value>
   </data>
 </root>
 

@@ -30,3 +30,27 @@ public sealed record SettingsPageHeader(string Title, string Subtitle);
 /// Name of a category above its settings in the search results
 /// </summary>
 public sealed record SettingsSectionLabel(string Title);
+
+/// <summary>
+/// A heading that settings belong to together, e.g. everything about the logger tree
+/// </summary>
+public sealed record SettingGroup(string Icon, string Title, string Subtitle);
+
+/// <summary>
+/// Settings of one <see cref="SettingGroup"/>, shown in one card with a row for each setting
+/// </summary>
+public sealed class SettingsGroupViewModel(SettingGroup group, IReadOnlyList<SettingViewModel> settings)
+{
+	public SettingGroup Group { get; } = group;
+
+	/// <summary>
+	/// Glyph of the Segoe MDL2 Assets font
+	/// </summary>
+	public string Icon => Group.Icon;
+
+	public string Title => Group.Title;
+
+	public string Subtitle => Group.Subtitle;
+
+	public IReadOnlyList<SettingViewModel> Settings { get; } = settings;
+}

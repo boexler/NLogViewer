@@ -743,7 +743,7 @@
     <value>Tab-Menü</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Seite des Logger-Baums</value>
+    <value>Seite</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>Auf welcher Seite der Logliste der Logger-Baum in neuen Tabs steht. Eine Änderung in einem Tab wird hier gespeichert.</value>
@@ -755,16 +755,22 @@
     <value>Rechts</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Logger-Baum in neuen Tabs öffnen</value>
+    <value>Geöffnet</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Neue Tabs zeigen den Logger-Baum neben der Logliste. Das Öffnen oder Schließen in einem Tab wird hier gespeichert.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Breite des Logger-Baums</value>
+    <value>Breite in Pixeln</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>Breite des Logger-Baums in Pixeln. Das Ziehen des Teilers in einem Tab wird hier gespeichert.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Logger-Baum</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Standardansicht für neue Tabs</value>
   </data>
 </root>
 

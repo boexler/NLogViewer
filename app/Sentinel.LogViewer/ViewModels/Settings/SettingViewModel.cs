@@ -36,6 +36,11 @@ public abstract class SettingViewModel : INotifyPropertyChanged
 	public string? Section { get; init; }
 
 	/// <summary>
+	/// The group of settings that this one is shown with in one card; settings of the same group follow each other
+	/// </summary>
+	public SettingGroup? Group { get; init; }
+
+	/// <summary>
 	/// Whether a change only takes full effect after restarting the application
 	/// </summary>
 	public bool NeedsRestart { get; }

@@ -743,7 +743,7 @@
     <value>Meniul filei</value>
   </data>
   <data name="Settings_LoggerTreeSide" xml:space="preserve">
-    <value>Partea arborelui de loggere</value>
+    <value>Partea</value>
   </data>
   <data name="Settings_LoggerTreeSide_Description" xml:space="preserve">
     <value>Pe ce parte a listei de jurnale se află arborele de loggere în filele noi. O modificare dintr-o filă se salvează aici.</value>
@@ -755,16 +755,22 @@
     <value>Dreapta</value>
   </data>
   <data name="Settings_LoggerTreeOpen" xml:space="preserve">
-    <value>Deschide arborele de loggere în filele noi</value>
+    <value>Deschis</value>
   </data>
   <data name="Settings_LoggerTreeOpen_Description" xml:space="preserve">
     <value>Filele noi afișează arborele de loggere lângă lista de jurnale. Deschiderea sau închiderea într-o filă se salvează aici.</value>
   </data>
   <data name="Settings_LoggerTreeWidth" xml:space="preserve">
-    <value>Lățimea arborelui de loggere</value>
+    <value>Lățime în pixeli</value>
   </data>
   <data name="Settings_LoggerTreeWidth_Description" xml:space="preserve">
     <value>Lățimea arborelui de loggere în pixeli. Tragerea separatorului într-o filă se salvează aici.</value>
+  </data>
+  <data name="Settings_Group_LoggerTree" xml:space="preserve">
+    <value>Arbore de loggere</value>
+  </data>
+  <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
+    <value>Vizualizare implicită pentru filele noi</value>
   </data>
 </root>
 

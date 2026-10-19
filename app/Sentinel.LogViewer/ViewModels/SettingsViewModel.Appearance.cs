@@ -76,8 +76,12 @@ namespace Sentinel.LogViewer.ViewModels
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8AB",
-                Text("Settings_LoggerTreeSide", "Logger tree side"),
+            var loggerTree = new SettingGroup("\uE8FD",
+                Text("Settings_Group_LoggerTree", "Logger tree"),
+                Text("Settings_Group_LoggerTree_Subtitle", "Default view for new tabs"));
+
+            yield return new ChoiceSettingViewModel(AppearanceId, "",
+                Text("Settings_LoggerTreeSide", "Side"),
                 Text("Settings_LoggerTreeSide_Description", "Which side of the log list the logger tree is on in new tabs. Changing it in a tab saves it here."),
                 needsRestart: false,
                 options: new[]
@@ -91,10 +95,13 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.LoggerTreeOnLeft = side == LoggerTreeLeft;
                     Commit();
                 },
-                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOnLeft ? LoggerTreeLeft : LoggerTreeRight);
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOnLeft ? LoggerTreeLeft : LoggerTreeRight)
+            {
+                Group = loggerTree
+            };
 
-            yield return new BoolSettingViewModel(AppearanceId, "\uE8FD",
-                Text("Settings_LoggerTreeOpen", "Open the logger tree in new tabs"),
+            yield return new BoolSettingViewModel(AppearanceId, "",
+                Text("Settings_LoggerTreeOpen", "Open"),
                 Text("Settings_LoggerTreeOpen_Description", "New tabs show the logger tree next to the log list. Opening or closing it in a tab saves it here."),
                 get: () => _configuration.LoggerTreeOpen,
                 set: value =>
@@ -102,10 +109,13 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.LoggerTreeOpen = value;
                     Commit();
                 },
-                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOpen);
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeOpen)
+            {
+                Group = loggerTree
+            };
 
             yield return new IntSettingViewModel(AppearanceId, "",
-                Text("Settings_LoggerTreeWidth", "Logger tree width"),
+                Text("Settings_LoggerTreeWidth", "Width in pixels"),
                 Text("Settings_LoggerTreeWidth_Description", "Width of the logger tree in pixels. Dragging the splitter in a tab saves it here."),
                 get: () => _configuration.LoggerTreeWidth,
                 set: value =>
@@ -116,7 +126,10 @@ namespace Sentinel.LogViewer.ViewModels
                 getDefault: () => ConfigurationService.CreateDefaultConfiguration().LoggerTreeWidth,
                 isValid: SettingsRules.IsValidLoggerTreeWidth,
                 invalidMessage: string.Format(CultureInfo.CurrentCulture,
-                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth));
+                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth))
+            {
+                Group = loggerTree
+            };
 
             foreach (var token in ThemeCatalog.Tokens)
                 yield return CreateColorSetting(token);

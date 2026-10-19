@@ -334,9 +334,9 @@ public class SettingsViewModelTests : IDisposable
 	public void TheLoggerTreeSettings_HaveDefaults_AreSaved_RejectAnInvalidWidth_AndAreReset()
 	{
 		var viewModel = _environment.CreateViewModel();
-		var side = viewModel.Setting<ChoiceSettingViewModel>("Logger tree side");
-		var open = viewModel.Setting<BoolSettingViewModel>("Open the logger tree in new tabs");
-		var width = viewModel.Setting<IntSettingViewModel>("Logger tree width");
+		var side = viewModel.Setting<ChoiceSettingViewModel>("Side");
+		var open = viewModel.Setting<BoolSettingViewModel>("Open");
+		var width = viewModel.Setting<IntSettingViewModel>("Width in pixels");
 		Assert.Equal("right", side.Value);
 		Assert.False(open.Value);
 		Assert.Equal("260", width.Text);
@@ -359,6 +359,33 @@ public class SettingsViewModelTests : IDisposable
 		Assert.False(saved.LoggerTreeOnLeft);
 		Assert.False(saved.LoggerTreeOpen);
 		Assert.Equal(260, saved.LoggerTreeWidth);
+	}
+
+	[Fact]
+	public void TheLoggerTreeSettings_ShareOneCard_WithTheHeadingOfTheGroup()
+	{
+		var viewModel = _environment.CreateViewModel();
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+
+		var group = Assert.Single(viewModel.PageItems.OfType<SettingsGroupViewModel>());
+
+		Assert.Equal("Logger tree", group.Title);
+		Assert.Equal("Default view for new tabs", group.Subtitle);
+		Assert.Equal(new[] { "Side", "Open", "Width in pixels" }, group.Settings.Select(setting => setting.Title));
+		Assert.DoesNotContain(viewModel.PageItems.OfType<SettingViewModel>(), setting => setting.Group != null);
+	}
+
+	[Fact]
+	public void SearchingForTheLoggerTree_ShowsTheMatchingRowsInTheirCard()
+	{
+		var viewModel = _environment.CreateViewModel();
+
+		viewModel.SearchText = "splitter";
+
+		var group = Assert.Single(viewModel.PageItems.OfType<SettingsGroupViewModel>());
+		Assert.Equal("Logger tree", group.Title);
+		Assert.Equal(new[] { "Width in pixels" }, group.Settings.Select(setting => setting.Title));
+		Assert.False(viewModel.HasNoResults);
 	}
 
 	[Fact]

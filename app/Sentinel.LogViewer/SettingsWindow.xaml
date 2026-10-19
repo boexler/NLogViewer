@@ -32,6 +32,54 @@
                            Foreground="{DynamicResource ThemeTextSecondary}"/>
             </DataTemplate>
 
+            <!-- Settings that belong together: one card with a row for each setting -->
+            <DataTemplate DataType="{x:Type settings:SettingsGroupViewModel}">
+                <Border Background="{DynamicResource ThemeSurface}" BorderBrush="{DynamicResource ThemeBorder}"
+                        BorderThickness="1" CornerRadius="8" Margin="0,0,0,8">
+                    <StackPanel>
+                        <Grid Margin="16,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Icon}" FontFamily="{DynamicResource ThemeIconFont}" FontSize="18"
+                                       Foreground="{DynamicResource ThemeTextSecondary}"
+                                       VerticalAlignment="Center" Margin="0,0,16,0"/>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource ThemeTextPrimary}"/>
+                                <TextBlock Text="{Binding Subtitle}" FontSize="12" TextWrapping="Wrap" Margin="0,3,0,0"
+                                           Foreground="{DynamicResource ThemeTextSecondary}"/>
+                            </StackPanel>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Settings}" Focusable="False">
+                            <ItemsControl.Resources>
+                                <!-- Inside the card a setting is a row: its title, and its control on the right; the description is the tooltip -->
+                                <Style TargetType="controls:SettingCard">
+                                    <Setter Property="Focusable" Value="False"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="controls:SettingCard">
+                                                <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="50,9,16,9"
+                                                        Background="Transparent"
+                                                        ToolTip="{Binding Setting.Description, RelativeSource={RelativeSource TemplatedParent}}">
+                                                    <Grid>
+                                                        <TextBlock Text="{Binding Setting.Title, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                   FontSize="13" VerticalAlignment="Center"
+                                                                   Foreground="{DynamicResource ThemeTextPrimary}"/>
+                                                        <ContentPresenter HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </DataTemplate>
+
             <!-- On / off -->
             <DataTemplate DataType="{x:Type settings:BoolSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">
