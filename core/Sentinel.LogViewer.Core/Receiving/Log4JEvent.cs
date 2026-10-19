@@ -1,9 +1,8 @@
-using Sentinel.LogViewer.Core;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 public interface ILogEvent
 {

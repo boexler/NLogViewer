@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using Sentinel.LogViewer.Models;
 
-namespace Sentinel.LogViewer.Parsers;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Parser for Log4J XML event format.

@@ -106,11 +106,11 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		}
 	}
 
-	private static LogViewerBase ViewerOf(Session session, LogTabViewModel tab)
+	private static Wpf.LogViewer ViewerOf(Session session, LogTabViewModel tab)
 	{
 		session.ViewModel.SelectedTab = tab;
 		WpfTestHelper.Settle();
-		return Descendants<LogViewerBase>(session.Window).First(viewer => ReferenceEquals(viewer.ItemsSource, tab.LogEntries));
+		return Descendants<Wpf.LogViewer>(session.Window).First(viewer => ReferenceEquals(viewer.ItemsSource, tab.LogEntries));
 	}
 
 	[Fact]

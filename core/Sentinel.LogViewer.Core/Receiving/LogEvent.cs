@@ -1,6 +1,5 @@
-using Sentinel.LogViewer.Core;
 
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 public class LogEvent
 {

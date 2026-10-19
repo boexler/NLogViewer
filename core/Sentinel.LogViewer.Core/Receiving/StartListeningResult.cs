@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Result of starting the UDP listener(s).

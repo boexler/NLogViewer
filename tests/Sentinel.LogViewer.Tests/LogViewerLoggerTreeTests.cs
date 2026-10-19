@@ -34,7 +34,7 @@ public class LogViewerLoggerTreeTests
 		Entry("System.Net", LogEntryLevel.Info)
 	};
 
-	private static int VisibleCount(LogViewerBase viewer) => viewer.LogEvents.View.Cast<LogEntry>().Count();
+	private static int VisibleCount(Wpf.LogViewer viewer) => viewer.LogEvents.View.Cast<LogEntry>().Count();
 
 	[Fact]
 	public void Tree_ListsTheLoggersOfTheEntries_AndFollowsAddedAndRemovedEntries()
@@ -240,7 +240,7 @@ public class LogViewerLoggerTreeTests
 		});
 	}
 
-	private static double ColumnWidth(LogViewerBase viewer, string name) => ((ColumnDefinition)viewer.Template.FindName(name, viewer)).Width.Value;
+	private static double ColumnWidth(Wpf.LogViewer viewer, string name) => ((ColumnDefinition)viewer.Template.FindName(name, viewer)).Width.Value;
 
 	[Fact]
 	public void Panel_GetsItsWidthOnTheSideItIsOn_AndNoneOnTheOtherSide()

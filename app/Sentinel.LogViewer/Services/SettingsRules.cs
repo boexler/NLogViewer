@@ -17,7 +17,7 @@ public static class SettingsRules
 
 	public static bool IsValidEntriesPerTab(int value) => value is >= MinEntriesPerTab and <= MaxEntriesPerTab;
 
-	public const int MinLoggerTreeWidth = (int)Wpf.LogViewerBase.MinLoggerTreeWidth;
+	public const int MinLoggerTreeWidth = (int)Wpf.LogViewer.MinLoggerTreeWidth;
 	public const int MaxLoggerTreeWidth = 1200;
 	public const int DefaultLoggerTreeWidth = 260;
 

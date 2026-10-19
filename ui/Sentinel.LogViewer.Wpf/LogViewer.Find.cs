@@ -14,7 +14,7 @@ namespace Sentinel.LogViewer.Wpf
     /// <summary>
     /// Search: finds entries in the filtered list and jumps between them without hiding anything
     /// </summary>
-    public partial class LogViewerBase
+    public partial class LogViewer
     {
         // Hits in list order, with their index in the filtered list.
         private readonly List<LogEntry> _findMatches = new();
@@ -39,11 +39,11 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="FindText"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FindTextProperty =
-            DependencyProperty.Register(nameof(FindText), typeof(string), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(FindText), typeof(string), typeof(LogViewer),
                 new PropertyMetadata(string.Empty, OnFindTextChanged));
 
         private static readonly DependencyPropertyKey FindResultTextPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(FindResultText), typeof(string), typeof(LogViewerBase),
+            DependencyProperty.RegisterReadOnly(nameof(FindResultText), typeof(string), typeof(LogViewer),
                 new PropertyMetadata(string.Empty));
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="FindHighlightBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FindHighlightBackgroundProperty =
-            DependencyProperty.Register(nameof(FindHighlightBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(FindHighlightBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFFD54F")));
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="ShowFindControls"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowFindControlsProperty =
-            DependencyProperty.Register(nameof(ShowFindControls), typeof(bool), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(ShowFindControls), typeof(bool), typeof(LogViewer),
                 new PropertyMetadata(true));
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="FindNextCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FindNextCommandProperty =
-            DependencyProperty.Register(nameof(FindNextCommand), typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(FindNextCommand), typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Selects the previous search hit (wraps around)
@@ -121,7 +121,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="FindPreviousCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FindPreviousCommandProperty =
-            DependencyProperty.Register(nameof(FindPreviousCommand), typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(FindPreviousCommand), typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         #endregion
 
@@ -168,7 +168,7 @@ namespace Sentinel.LogViewer.Wpf
 
         private static void OnFindTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not LogViewerBase viewer)
+            if (d is not LogViewer viewer)
                 return;
 
             viewer._currentFindMatch = null;

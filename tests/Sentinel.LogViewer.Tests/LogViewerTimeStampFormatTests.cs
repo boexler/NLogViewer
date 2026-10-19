@@ -34,7 +34,7 @@ public class LogViewerTimeStampFormatTests
 		new LogEntry(LogEntryLevel.Warn, "Logger", "other") { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 49, 100) }
 	};
 
-	private static string Resolved(LogViewerBase viewer) => viewer.TimeStampResolver.Resolve(Entries()[0]);
+	private static string Resolved(Wpf.LogViewer viewer) => viewer.TimeStampResolver.Resolve(Entries()[0]);
 
 	[Fact]
 	public void TheViewerFollowsTheDefault_UntilItHasAFormatOfItsOwn()

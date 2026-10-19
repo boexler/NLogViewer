@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;

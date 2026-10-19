@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System;
 using System.IO;
 using System.Windows;
@@ -62,7 +63,7 @@ namespace Sentinel.LogViewer
             services.AddScoped<LogFileParserService>();
 
             // Register parsers as transient (new instance each time)
-            services.AddTransient<Parsers.Log4JEventParser>();
+            services.AddTransient<Core.Log4JEventParser>();
             services.AddTransient<Parsers.PlainTextParser>();
             services.AddTransient<Parsers.JsonLogParser>();
 

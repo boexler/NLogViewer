@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Represents location information about where a log event was generated in the source code.

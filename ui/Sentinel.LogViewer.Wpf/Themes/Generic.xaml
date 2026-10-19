@@ -7,7 +7,6 @@
     xmlns:xamlMultiValueConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlMultiValueConverter"
     xmlns:helper="clr-namespace:Sentinel.LogViewer.Wpf.Helper"
     xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter"
-    xmlns:models="clr-namespace:Sentinel.LogViewer.Wpf.Models"
     x:Class="Sentinel.LogViewer.Wpf.Themes.GenericTheme">
 
     <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -20,30 +19,30 @@
     <ContextMenu x:Key="TimeStampFormatMenu" x:Shared="False">
         <MenuItem Header="Timestamp format" IsEnabled="False"/>
         <MenuItem Header="System"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.System}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.System}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.System}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.System}"/>
         <MenuItem Header="ISO  2025-12-18 15:11:48.385"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.Iso}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.Iso}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.Iso}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.Iso}"/>
         <MenuItem Header="German  18.12.2025 15:11:48.385"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.German}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.German}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.German}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.German}"/>
         <MenuItem Header="English  12/18/2025 03:11:48.385 PM"
-                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static models:TimeStampFormat.English}}"
+                  IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.English}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
-                  CommandParameter="{x:Static models:TimeStampFormat.English}"/>
+                  CommandParameter="{x:Static core:TimeStampFormat.English}"/>
         <Separator/>
         <MenuItem Header="Default view"
                   Command="{Binding PlacementTarget.Tag.ResetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
     </ContextMenu>
 
-    <Style TargetType="{x:Type local:LogViewerBase}">
+    <Style TargetType="{x:Type local:LogViewer}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:LogViewerBase}">
+                <ControlTemplate TargetType="{x:Type local:LogViewer}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -224,23 +223,23 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.Resources>
                                             <!-- Template for plain text terms -->
-                                            <DataTemplate DataType="{x:Type local:TextSearchTerm}">
-                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TextSearchTermBackground}" 
-                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TextSearchTermBorderBrush}" 
+                                            <DataTemplate DataType="{x:Type core:TextSearchTerm}">
+                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}" 
+                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}" 
                                                         BorderThickness="1" 
                                                         CornerRadius="3" 
                                                         Margin="2" 
                                                         Padding="4,2">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding Text}" Margin="0,0,4,0" 
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TextSearchTermForeground}"/>
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
                                                         <Button Content="✏" 
                                                                 Width="16" 
                                                                 Height="16" 
                                                                 FontSize="10" 
                                                                 Padding="0" 
                                                                 Margin="0,0,2,0"
-                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"
                                                                 ToolTip="Edit filter term"/>
                                                         <Button Content="×" 
@@ -249,7 +248,7 @@
                                                                 FontSize="10" 
                                                                 Padding="0" 
                                                                 Margin="0"
-                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"
                                                                 ToolTip="Remove filter term"/>
                                                     </StackPanel>
@@ -257,25 +256,25 @@
                                             </DataTemplate>
 
                                             <!-- Template for regex terms -->
-                                            <DataTemplate DataType="{x:Type local:RegexSearchTerm}">
-                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=RegexSearchTermBackground}" 
-                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=RegexSearchTermBorderBrush}" 
+                                            <DataTemplate DataType="{x:Type core:RegexSearchTerm}">
+                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}" 
+                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}" 
                                                         BorderThickness="1" 
                                                         CornerRadius="3" 
                                                         Margin="2" 
                                                         Padding="4,2">
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=RegexPrefixForeground}"/>
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}"/>
                                                         <TextBlock Text="{Binding Text}" Margin="0,0,4,0"
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=RegexSearchTermForeground}"/>
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermForeground}"/>
                                                         <Button Content="✏" 
                                                                 Width="16" 
                                                                 Height="16" 
                                                                 FontSize="10" 
                                                                 Padding="0" 
                                                                 Margin="0,0,2,0"
-                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"
                                                                 ToolTip="Edit filter term"/>
                                                         <Button Content="×" 
@@ -284,7 +283,7 @@
                                                                 FontSize="10" 
                                                                 Padding="0" 
                                                                 Margin="0"
-                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"
                                                                 ToolTip="Remove filter term"/>
                                                     </StackPanel>
@@ -342,7 +341,7 @@
                                     <Style.Triggers>
                                         <Trigger Property="Content" Value="TimeStamp">
                                             <Setter Property="ContextMenu" Value="{StaticResource TimeStampFormatMenu}"/>
-                                            <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"/>
+                                            <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -355,44 +354,44 @@
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Trace}">
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TraceBackground}" />
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=TraceForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TraceForeground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Debug}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=DebugForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=DebugBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=DebugBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Info}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=InfoForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=InfoBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=InfoBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Warn}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=WarnForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=WarnBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=WarnBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Error}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=ErrorBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Fatal}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=FatalForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=FatalBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=FatalBackground}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -403,7 +402,7 @@
                                             <GridViewColumn.DisplayMemberBinding>
                                                 <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
                                                     <Binding Path="."/>
-                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="IdResolver"/>
+                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}" Path="IdResolver"/>
                                                 </MultiBinding>
                                             </GridViewColumn.DisplayMemberBinding>
                                         </GridViewColumn>
@@ -453,12 +452,12 @@
                                                     <TextBlock
                                                         Background="Transparent"
                                                         ContextMenu="{StaticResource TimeStampFormatMenu}"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.Text>
                                                             <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
                                                                 <Binding Path="."/>
-                                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}" Path="TimeStampResolver"/>
+                                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}" Path="TimeStampResolver"/>
                                                             </MultiBinding>
                                                         </TextBlock.Text>
                                                     </TextBlock>
@@ -469,9 +468,9 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock
-                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=LoggerNameResolver}"
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=LoggerNameResolver}"
                                                         Background="Transparent"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>
                                                             <ContextMenu>
@@ -507,9 +506,9 @@
                                                 <DataTemplate>
                                                     <TextBlock
                                                         x:Name="TextBlock1"
-                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}, Path=MessageResolver}"
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=MessageResolver}"
                                                         Background="Transparent"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewerBase}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>
                                                             <ContextMenu>
@@ -593,7 +592,7 @@
                                                 <Setter Property="Visibility" Value="{Binding IsListed, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             </Style>
-                                            <HierarchicalDataTemplate DataType="{x:Type models:LoggerNode}" ItemsSource="{Binding Children}">
+                                            <HierarchicalDataTemplate DataType="{x:Type core:LoggerNode}" ItemsSource="{Binding Children}">
                                                 <Grid Background="Transparent" Margin="0,1">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
@@ -631,7 +630,7 @@
                                                         </TextBlock.Style>
                                                     </TextBlock>
                                                     <Border Grid.Column="2" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Warnings"
-                                                            Background="{Binding WarnBackground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}">
+                                                            Background="{Binding WarnBackground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Style.Triggers>
@@ -642,10 +641,10 @@
                                                             </Style>
                                                         </Border.Style>
                                                         <TextBlock Text="{Binding WarnCount}" FontSize="10"
-                                                                   Foreground="{Binding WarnForeground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}"/>
+                                                                   Foreground="{Binding WarnForeground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}"/>
                                                     </Border>
                                                     <Border Grid.Column="3" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Errors and fatal errors"
-                                                            Background="{Binding ErrorBackground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}">
+                                                            Background="{Binding ErrorBackground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
                                                                 <Style.Triggers>
@@ -656,7 +655,7 @@
                                                             </Style>
                                                         </Border.Style>
                                                         <TextBlock Text="{Binding ErrorCount}" FontSize="10"
-                                                                   Foreground="{Binding ErrorForeground, RelativeSource={RelativeSource AncestorType=local:LogViewerBase}}"/>
+                                                                   Foreground="{Binding ErrorForeground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}"/>
                                                     </Border>
                                                     <TextBlock Grid.Column="4" Margin="6,0,0,0" Text="{Binding TotalCount}" ToolTip="Entries"
                                                                Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" VerticalAlignment="Center"/>
@@ -698,7 +697,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!-- An implicit style does not apply to a derived class, so LogViewer takes the style of LogViewerBase by its name. -->
-    <Style TargetType="{x:Type local:LogViewer}" BasedOn="{StaticResource {x:Type local:LogViewerBase}}"/>
 </ResourceDictionary>

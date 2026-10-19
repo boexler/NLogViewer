@@ -21,102 +21,10 @@ using System.Collections.Specialized;
 namespace Sentinel.LogViewer.Wpf
 {
     /// <summary>
-    /// Base class for search terms that can match against text
+    /// The log viewer control: the entries with filter, search, logger tree and colours. Its entries come from an external
+    /// <see cref="ItemsSource"/>, from a <see cref="Source"/>, or, without either, from the logging of NLog (<see cref="Targets.CacheTarget"/>).
     /// </summary>
-    public abstract class SearchTerm
-    {
-        public string Text { get; protected set; }
-        
-        protected SearchTerm(string text)
-        {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-        }
-        
-        /// <summary>
-        /// Determines if the search term matches the given text
-        /// </summary>
-        /// <param name="text">The text to match against</param>
-        /// <returns>True if the text matches the search term</returns>
-        public abstract bool Match(string text);
-        
-        /// <summary>
-        /// Determines if the search term matches any of the given texts
-        /// </summary>
-        /// <param name="texts">The texts to match against</param>
-        /// <returns>True if any text matches the search term</returns>
-        public bool MatchAny(params string[] texts)
-        {
-            if (texts == null) return false;
-            return texts.Any(text => !string.IsNullOrEmpty(text) && Match(text));
-        }
-        
-        public override string ToString()
-        {
-            return Text;
-        }
-    }
-
-    /// <summary>
-    /// A search term that performs case-insensitive substring matching
-    /// </summary>
-    public class TextSearchTerm : SearchTerm
-    {
-        private readonly string _lowercaseText;
-        
-        public TextSearchTerm(string text) : base(text)
-        {
-            _lowercaseText = text.ToLowerInvariant();
-        }
-        
-        public override bool Match(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return false;
-            if (string.IsNullOrEmpty(_lowercaseText)) return false;
-            return text.ToLowerInvariant().Contains(_lowercaseText);
-        }
-        
-        public override string ToString()
-        {
-            return Text;
-        }
-    }
-
-    /// <summary>
-    /// A search term that performs regex pattern matching
-    /// </summary>
-    public class RegexSearchTerm : SearchTerm
-    {
-        private readonly Regex _regex;
-
-        public RegexSearchTerm(string pattern) : base(pattern)
-        {
-            try
-            {
-                _regex = new Regex(pattern, RegexOptions.Compiled);
-            }
-            catch (ArgumentException ex)
-            {
-                throw new ArgumentException($"Invalid regex pattern: {ex.Message}", nameof(pattern), ex);
-            }
-        }
-        
-        public override bool Match(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return false;
-            return _regex.IsMatch(text);
-        }
-        
-        public override string ToString()
-        {
-            return $"/{Text}/";
-        }
-    }
-
-    /// <summary>
-    /// Base log viewer control: filtering, styling, and optional external <see cref="ItemsSource"/>.
-    /// Use <see cref="LogViewer"/> to subscribe to NLog <see cref="Targets.CacheTarget"/>.
-    /// </summary>
-    public partial class LogViewerBase : Control
+    public partial class LogViewer : Control
     {
         /// <summary>
         /// Parses a brush for dependency-property default metadata (hex string).
@@ -150,7 +58,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="TraceBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TraceBackgroundProperty =
-            DependencyProperty.Register(nameof(TraceBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(TraceBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#D3D3D3")));
 
         /// <summary>
@@ -168,7 +76,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="TraceForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TraceForegroundProperty =
-            DependencyProperty.Register(nameof(TraceForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(TraceForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#042271")));
 
         /// <summary>
@@ -186,7 +94,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="DebugBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty DebugBackgroundProperty =
-            DependencyProperty.Register(nameof(DebugBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(DebugBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#90EE90")));
 
         /// <summary>
@@ -204,7 +112,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="DebugForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty DebugForegroundProperty =
-            DependencyProperty.Register(nameof(DebugForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(DebugForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#042271")));
 
         /// <summary>
@@ -222,7 +130,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="InfoBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty InfoBackgroundProperty = DependencyProperty.Register(nameof(InfoBackground),
-            typeof(Brush), typeof(LogViewerBase),
+            typeof(Brush), typeof(LogViewer),
 new PropertyMetadata(MetadataBrush("#0000FF")));
 
         /// <summary>
@@ -240,7 +148,7 @@ new PropertyMetadata(MetadataBrush("#0000FF")));
         /// The <see cref="InfoForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty InfoForegroundProperty = DependencyProperty.Register(nameof(InfoForeground),
-            typeof(Brush), typeof(LogViewerBase), new PropertyMetadata(Brushes.White));
+            typeof(Brush), typeof(LogViewer), new PropertyMetadata(Brushes.White));
 
         /// <summary>
         /// The background for the warn output
@@ -257,7 +165,7 @@ new PropertyMetadata(MetadataBrush("#0000FF")));
         /// The <see cref="WarnBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty WarnBackgroundProperty = DependencyProperty.Register(nameof(WarnBackground),
-            typeof(Brush), typeof(LogViewerBase),
+            typeof(Brush), typeof(LogViewer),
 new PropertyMetadata(MetadataBrush("#FFFF00")));
 
         /// <summary>
@@ -275,7 +183,7 @@ new PropertyMetadata(MetadataBrush("#FFFF00")));
         /// The <see cref="WarnForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty WarnForegroundProperty = DependencyProperty.Register(nameof(WarnForeground),
-            typeof(Brush), typeof(LogViewerBase),
+            typeof(Brush), typeof(LogViewer),
 new PropertyMetadata(MetadataBrush("#324B5C")));
 
         /// <summary>
@@ -293,7 +201,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ErrorBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ErrorBackgroundProperty =
-            DependencyProperty.Register(nameof(ErrorBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(ErrorBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.Red));
 
         /// <summary>
@@ -311,7 +219,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ErrorForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ErrorForegroundProperty =
-            DependencyProperty.Register(nameof(ErrorForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(ErrorForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.White));
 
         /// <summary>
@@ -329,7 +237,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="FatalBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FatalBackgroundProperty =
-            DependencyProperty.Register(nameof(FatalBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(FatalBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.Black));
 
         /// <summary>
@@ -347,7 +255,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="FatalForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FatalForegroundProperty =
-            DependencyProperty.Register(nameof(FatalForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(FatalForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.Yellow));
 
         // ------------------------------------------------------------------------------------------
@@ -369,7 +277,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="TextSearchTermBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TextSearchTermBackgroundProperty =
-            DependencyProperty.Register(nameof(TextSearchTermBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(TextSearchTermBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFFFBE6")));
 
         /// <summary>
@@ -387,7 +295,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="TextSearchTermBorderBrush"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TextSearchTermBorderBrushProperty =
-            DependencyProperty.Register(nameof(TextSearchTermBorderBrush), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(TextSearchTermBorderBrush), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFFC107")));
 
         /// <summary>
@@ -405,7 +313,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="TextSearchTermForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TextSearchTermForegroundProperty =
-            DependencyProperty.Register(nameof(TextSearchTermForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(TextSearchTermForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.Black));
 
         /// <summary>
@@ -423,7 +331,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="RegexSearchTermBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RegexSearchTermBackgroundProperty =
-            DependencyProperty.Register(nameof(RegexSearchTermBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(RegexSearchTermBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFFFBE6")));
 
         /// <summary>
@@ -441,7 +349,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="RegexSearchTermBorderBrush"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RegexSearchTermBorderBrushProperty =
-            DependencyProperty.Register(nameof(RegexSearchTermBorderBrush), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(RegexSearchTermBorderBrush), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFFC107")));
 
         /// <summary>
@@ -459,7 +367,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="RegexSearchTermForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RegexSearchTermForegroundProperty =
-            DependencyProperty.Register(nameof(RegexSearchTermForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(RegexSearchTermForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(Brushes.Black));
 
         /// <summary>
@@ -477,7 +385,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="RegexPrefixForeground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RegexPrefixForegroundProperty =
-            DependencyProperty.Register(nameof(RegexPrefixForeground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(RegexPrefixForeground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFF8F00")));
 
         /// <summary>
@@ -495,7 +403,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="SearchHighlightBackground"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty SearchHighlightBackgroundProperty =
-            DependencyProperty.Register(nameof(SearchHighlightBackground), typeof(Brush), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(SearchHighlightBackground), typeof(Brush), typeof(LogViewer),
                 new PropertyMetadata(MetadataBrush("#FFFF80C0")));
 
         #endregion
@@ -525,12 +433,12 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
             nameof(ItemsSource),
             typeof(ObservableCollection<LogEntry>),
-            typeof(LogViewerBase),
+            typeof(LogViewer),
             new PropertyMetadata(null, OnItemsSourceChanged));
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not LogViewerBase viewer)
+            if (d is not LogViewer viewer)
                 return;
             viewer.SyncItemsSourceToView();
         }
@@ -549,7 +457,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="LogEvents"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty LogEventsProperty = DependencyProperty.Register(nameof(LogEvents),
-            typeof(CollectionViewSource), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(CollectionViewSource), typeof(LogViewer), new PropertyMetadata(null));
         
         /// <summary>
         /// Automatically scroll to the newest entry
@@ -566,11 +474,11 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="AutoScroll"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty AutoScrollProperty = DependencyProperty.Register(nameof(AutoScroll), typeof(bool), typeof(LogViewerBase), new PropertyMetadata(true, AutoScrollChangedCallback));
+        public static readonly DependencyProperty AutoScrollProperty = DependencyProperty.Register(nameof(AutoScroll), typeof(bool), typeof(LogViewer), new PropertyMetadata(true, AutoScrollChangedCallback));
 
         private static void AutoScrollChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is LogViewerBase instance)
+            if (d is LogViewer instance)
             {
                 instance.OnAutoScrollChanged();
             }
@@ -676,7 +584,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ClearCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ClearCommandProperty = DependencyProperty.Register(nameof(ClearCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to add a new search term
@@ -694,7 +602,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="AddSearchTermCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty AddSearchTermCommandProperty = DependencyProperty.Register(nameof(AddSearchTermCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to clear all search terms
@@ -712,7 +620,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ClearAllSearchTermsCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ClearAllSearchTermsCommandProperty = DependencyProperty.Register(nameof(ClearAllSearchTermsCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to add a regex search term from a provided text
@@ -730,7 +638,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="AddRegexSearchTermCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty AddRegexSearchTermCommandProperty = DependencyProperty.Register(nameof(AddRegexSearchTermCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to add a regex search term as an exclude filter from a provided text
@@ -748,7 +656,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="AddRegexSearchTermExcludeCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty AddRegexSearchTermExcludeCommandProperty = DependencyProperty.Register(nameof(AddRegexSearchTermExcludeCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to remove a specific search term
@@ -766,7 +674,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="RemoveSearchTermCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RemoveSearchTermCommandProperty = DependencyProperty.Register(nameof(RemoveSearchTermCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to edit a search term by copying it to the current search text
@@ -784,7 +692,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="EditSearchTermCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty EditSearchTermCommandProperty = DependencyProperty.Register(nameof(EditSearchTermCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to copy text to clipboard
@@ -802,7 +710,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="CopyToClipboardCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty CopyToClipboardCommandProperty = DependencyProperty.Register(nameof(CopyToClipboardCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to export filtered log entries to a file
@@ -820,7 +728,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ExportCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ExportCommandProperty = DependencyProperty.Register(nameof(ExportCommand),
-            typeof(ICommand), typeof(LogViewerBase), new PropertyMetadata(null));
+            typeof(ICommand), typeof(LogViewer), new PropertyMetadata(null));
 
         /// <summary>
         /// Command to scroll to the end of the log entries
@@ -838,7 +746,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ScrollToEndCommand"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ScrollToEndCommandProperty = DependencyProperty.Register(nameof(ScrollToEndCommand),
-            typeof(ICommand), typeof(LogViewerBase), new FrameworkPropertyMetadata
+            typeof(ICommand), typeof(LogViewer), new FrameworkPropertyMetadata
             {
 	            BindsTwoWayByDefault = true,
 	            DefaultUpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
@@ -859,21 +767,14 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="Pause"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty PauseProperty = DependencyProperty.Register(nameof(Pause), typeof(bool), typeof(LogViewerBase), new PropertyMetadata(false, OnPauseChanged));
+        public static readonly DependencyProperty PauseProperty = DependencyProperty.Register(nameof(Pause), typeof(bool), typeof(LogViewer), new PropertyMetadata(false, OnPauseChanged));
 
         private static void OnPauseChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is LogViewerBase viewer && !DesignerProperties.GetIsInDesignMode(viewer))
+            if (d is LogViewer viewer && !DesignerProperties.GetIsInDesignMode(viewer))
                 viewer.OnPausePropertyChanged((bool)e.NewValue);
         }
 
-        /// <summary>
-        /// Called when <see cref="Pause"/> changes. Default does nothing (external <see cref="ItemsSource"/> is unaffected).
-        /// </summary>
-        protected virtual void OnPausePropertyChanged(bool isPaused)
-        {
-        }
-        
         /// <summary>
         /// The maximum number of entries before automatic cleaning is performed. There is a hysteresis of 100 entries which must be exceeded.
         /// Example: <see cref="MaxCount"/> is '1000'. Then after '1100' entries, everything until '1000' is deleted.
@@ -889,12 +790,12 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="MaxCount"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty MaxCountProperty = DependencyProperty.Register(nameof(MaxCount), typeof(int), typeof(LogViewerBase),
+        public static readonly DependencyProperty MaxCountProperty = DependencyProperty.Register(nameof(MaxCount), typeof(int), typeof(LogViewer),
             new PropertyMetadata(5000, OnMaxCountChanged));
 
         private static void OnMaxCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is not LogViewerBase viewer || DesignerProperties.GetIsInDesignMode(viewer))
+            if (d is not LogViewer viewer || DesignerProperties.GetIsInDesignMode(viewer))
                 return;
             viewer.ApplyMaxCountTrim(viewer.GetEffectiveEntries());
         }
@@ -921,7 +822,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="IdResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new IdResolver()));
+        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new IdResolver()));
         
         /// <summary>
         /// The <see cref="ILogEntryResolver"/> to format the timestamp output
@@ -936,7 +837,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="TimeStampResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new TimeStampResolver(), OnTimeStampResolverChanged));
+        public static readonly DependencyProperty TimeStampResolverProperty = DependencyProperty.Register(nameof(TimeStampResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new TimeStampResolver(), OnTimeStampResolverChanged));
         
         /// <summary>
         /// The <see cref="ILogEntryResolver"/> to format the loggername
@@ -951,7 +852,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="LoggerNameResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new LoggerNameResolver()));
+        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new LoggerNameResolver()));
         
         /// <summary>
         /// The <see cref="ILogEntryResolver"/> to format the message
@@ -966,7 +867,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="MessageResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEntryResolver), typeof(LogViewerBase), new PropertyMetadata(new MessageResolver()));
+        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new MessageResolver()));
 
         /// <summary>
         /// The <see cref="ILogExportFormatter"/> to format log entries for export
@@ -981,7 +882,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="ExportFormatter"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty ExportFormatterProperty = DependencyProperty.Register(nameof(ExportFormatter), typeof(ILogExportFormatter), typeof(LogViewerBase), new PropertyMetadata(new DefaultLogExportFormatter()));
+        public static readonly DependencyProperty ExportFormatterProperty = DependencyProperty.Register(nameof(ExportFormatter), typeof(ILogExportFormatter), typeof(LogViewer), new PropertyMetadata(new DefaultLogExportFormatter()));
         
         #endregion
 
@@ -1005,7 +906,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowIdColumn"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowIdColumnProperty = 
-            DependencyProperty.Register(nameof(ShowIdColumn), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowIdColumn), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true, OnColumnVisibilityChanged));
 
         /// <summary>
@@ -1022,7 +923,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowLevelColumn"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowLevelColumnProperty = 
-            DependencyProperty.Register(nameof(ShowLevelColumn), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowLevelColumn), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true, OnColumnVisibilityChanged));
 
         /// <summary>
@@ -1039,7 +940,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowTimeStampColumn"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowTimeStampColumnProperty = 
-            DependencyProperty.Register(nameof(ShowTimeStampColumn), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowTimeStampColumn), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true, OnColumnVisibilityChanged));
 
         /// <summary>
@@ -1056,13 +957,13 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowLoggerNameColumn"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowLoggerNameColumnProperty = 
-            DependencyProperty.Register(nameof(ShowLoggerNameColumn), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowLoggerNameColumn), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true, OnColumnVisibilityChanged));
 
 
         private static void OnColumnVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is LogViewerBase instance)
+            if (d is LogViewer instance)
             {
                 instance.UpdateColumnVisibility();
             }
@@ -1189,7 +1090,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="TraceFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty TraceFilterProperty = 
-            DependencyProperty.Register(nameof(TraceFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(TraceFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1208,7 +1109,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="DebugFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty DebugFilterProperty = 
-            DependencyProperty.Register(nameof(DebugFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(DebugFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1227,7 +1128,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="InfoFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty InfoFilterProperty = 
-            DependencyProperty.Register(nameof(InfoFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(InfoFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1246,7 +1147,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="WarnFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty WarnFilterProperty = 
-            DependencyProperty.Register(nameof(WarnFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(WarnFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1265,7 +1166,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ErrorFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ErrorFilterProperty = 
-            DependencyProperty.Register(nameof(ErrorFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ErrorFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1284,7 +1185,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="FatalFilter"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FatalFilterProperty = 
-            DependencyProperty.Register(nameof(FatalFilter), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(FatalFilter), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false, OnFilterChanged));
 
         /// <summary>
@@ -1303,7 +1204,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="CurrentSearchText"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty CurrentSearchTextProperty = 
-            DependencyProperty.Register(nameof(CurrentSearchText), typeof(string), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(CurrentSearchText), typeof(string), typeof(LogViewer), 
                 new PropertyMetadata(string.Empty));
 
         /// <summary>
@@ -1322,7 +1223,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="UseRegexSearch"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty UseRegexSearchProperty = 
-            DependencyProperty.Register(nameof(UseRegexSearch), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(UseRegexSearch), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(false));
 
         /// <summary>
@@ -1341,12 +1242,12 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ActiveSearchTerms"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ActiveSearchTermsProperty = 
-            DependencyProperty.Register(nameof(ActiveSearchTerms), typeof(ObservableCollection<SearchTerm>), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ActiveSearchTerms), typeof(ObservableCollection<SearchTerm>), typeof(LogViewer), 
                 new PropertyMetadata(null));
 
         private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
         {
-            if (d is LogViewerBase instance)
+            if (d is LogViewer instance)
             {
                 instance.UpdateFilter();
             }
@@ -1603,7 +1504,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowFilterButtons"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowFilterButtonsProperty = 
-            DependencyProperty.Register(nameof(ShowFilterButtons), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowFilterButtons), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true));
 
         /// <summary>
@@ -1622,7 +1523,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowSearchControls"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowSearchControlsProperty = 
-            DependencyProperty.Register(nameof(ShowSearchControls), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowSearchControls), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true));
 
         #endregion
@@ -1649,7 +1550,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ShowControlButtons"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowControlButtonsProperty = 
-            DependencyProperty.Register(nameof(ShowControlButtons), typeof(bool), typeof(LogViewerBase), 
+            DependencyProperty.Register(nameof(ShowControlButtons), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true));
 
         #endregion
@@ -1792,15 +1693,15 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
         #region Constructor
 
-        static LogViewerBase()
+        static LogViewer()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(LogViewerBase), new FrameworkPropertyMetadata(typeof(LogViewerBase)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(LogViewer), new FrameworkPropertyMetadata(typeof(LogViewer)));
         }
 
         /// <summary>
         /// Initializes a new instance of the log viewer base control.
         /// </summary>
-        public LogViewerBase()
+        public LogViewer()
         {
             DataContext = this;
 
@@ -1843,7 +1744,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         private void _OnUnloaded(object sender, RoutedEventArgs e)
         {
             var window = _ParentWindow ?? Window.GetWindow(this);
-            if (window == null || window.FindChildByUid<LogViewerBase>(Uid) == null)
+            if (window == null || window.FindChildByUid<LogViewer>(Uid) == null)
                 DisposeViewerResources();
         }
 
@@ -1852,23 +1753,24 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             DisposeViewerResources();
         }
 
-        /// <summary>
-        /// Releases listener-specific resources (overridden by <see cref="LogViewer"/> for cache subscription disposal).
-        /// </summary>
-        protected virtual void DisposeViewerResources()
-        {
-        }
-
         private void _OnLoaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= _OnLoaded;
-
             var window = Window.GetWindow(this);
             if (_ParentWindow == null && window != null)
             {
                 _ParentWindow = window;
                 _ParentWindow.Closed += _ParentWindowOnClosed;
             }
+
+            // The control is loaded again when it comes back into the window, e.g. after a change of the tab. The setup of the columns runs
+            // once, but the subscription to the source starts every time.
+            if (_columnsInitialized)
+            {
+                OnViewerLoaded();
+                return;
+            }
+
+            _columnsInitialized = true;
 
             PART_ListView?.ScrollToEnd();
 
@@ -1915,13 +1817,6 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         {
             if (gridView.Columns.Count > index)
                 _columnWidthFitter?.AddColumn(gridView.Columns[index], logEvent => getResolver()?.Resolve(logEvent));
-        }
-
-        /// <summary>
-        /// Called once after the template is applied and columns are initialized.
-        /// </summary>
-        protected virtual void OnViewerLoaded()
-        {
         }
 
         #endregion

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Sentinel.LogViewer.Services;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Resolves the process (name and PID) that is using a given port on Windows.

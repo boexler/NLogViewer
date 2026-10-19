@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Sentinel.LogViewer.Tests" />
+    <InternalsVisibleTo Include="Sentinel.LogViewer" />
   </ItemGroup>
 
 </Project>

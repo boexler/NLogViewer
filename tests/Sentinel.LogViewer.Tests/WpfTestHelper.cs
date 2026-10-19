@@ -13,16 +13,16 @@ namespace Sentinel.LogViewer.Tests;
 public static class WpfTestHelper
 {
 	/// <summary>
-	/// Creates an LogViewer, feeds it with the given log events via a TestCacheTarget,
+	/// Creates an LogViewer, feeds it with the given log events via a TestLogSource,
 	/// and waits for the viewer to process them (async pipeline + dispatcher). Call from within RunOnStaThread.
 	/// </summary>
 	/// <param name="testData">Log events to feed into the viewer.</param>
-	/// <returns>The viewer with CacheTarget set and events processed.</returns>
+	/// <returns>The viewer with the source set and events processed.</returns>
 	public static WpfLogViewer CreateViewerWithTestData(IEnumerable<LogEntry> testData)
 	{
 		var list = testData?.ToList() ?? new List<LogEntry>();
 		var viewer = new WpfLogViewer();
-		var cache = new TestCacheTarget();
+		var cache = new TestLogSource();
 		cache.AddRange(list);
 		viewer.StartListen(cache);
 		WaitForViewerEvents(viewer, list.Count);
@@ -49,12 +49,12 @@ public static class WpfTestHelper
 	}
 
 	/// <summary>
-	/// Shows a <see cref="LogViewerBase"/> for the given entries in an off-screen window, with the default theme applied.
+	/// Shows a <see cref="Wpf.LogViewer"/> for the given entries in an off-screen window, with the default theme applied.
 	/// Call from within RunOnSta and close the window afterwards.
 	/// </summary>
-	public static (Window Window, LogViewerBase Viewer) ShowInWindow(ObservableCollection<LogEntry> entries)
+	public static (Window Window, Wpf.LogViewer Viewer) ShowInWindow(ObservableCollection<LogEntry> entries)
 	{
-		var viewer = new LogViewerBase { ItemsSource = entries, AutoScroll = false };
+		var viewer = new Wpf.LogViewer { ItemsSource = entries, AutoScroll = false };
 		var window = new Window
 		{
 			Width = 900,

@@ -1,6 +1,6 @@
 using System;
 
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 public record AppName
 {

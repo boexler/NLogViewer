@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 {
     /// <summary>
     /// Attached behavior to render a TextBlock with highlighted segments based on ActiveSearchTerms.
-    /// It uses an ancestor <see cref="LogViewerBase"/> to access resolvers and highlight brush.
+    /// It uses an ancestor <see cref="LogViewer"/> to access resolvers and highlight brush.
     /// </summary>
     public static class MessageHighlighter
     {
@@ -74,7 +75,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
         /// </summary>
         private static void TryUpdate(TextBlock textBlock)
         {
-            var logViewer = FindAncestor<LogViewerBase>(textBlock);
+            var logViewer = FindAncestor<LogViewer>(textBlock);
             if (logViewer == null)
                 return;
 

@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
 using Xunit;

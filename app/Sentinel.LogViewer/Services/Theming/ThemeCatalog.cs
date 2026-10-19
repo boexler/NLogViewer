@@ -34,7 +34,7 @@ public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary
 
 /// <summary>
 /// The colours of the application: the tokens that exist, the built-in themes and the rules for custom colours.
-/// The colours of the log list are dependency properties of the <see cref="LogViewerBase"/> control, so a theme sets them
+/// The colours of the log list are dependency properties of the <see cref="Wpf.LogViewer"/> control, so a theme sets them
 /// through the resource "Log" + the name of the property.
 /// </summary>
 public static class ThemeCatalog
@@ -332,7 +332,7 @@ public static class ThemeCatalog
 		// The control keeps its colours as defaults of its dependency properties; reading them from there keeps the two in step.
 		foreach (var token in Tokens.Where(token => token.Key.StartsWith(LogPrefix, StringComparison.Ordinal)))
 		{
-			var property = (DependencyProperty)typeof(LogViewerBase)
+			var property = (DependencyProperty)typeof(Wpf.LogViewer)
 				.GetField(token.Key[LogPrefix.Length..] + "Property")!.GetValue(null)!;
 			var color = ((SolidColorBrush)property.DefaultMetadata.DefaultValue).Color;
 			colors[token.Key] = color.A == 0xFF

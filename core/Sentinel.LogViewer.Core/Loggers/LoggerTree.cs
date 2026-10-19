@@ -5,9 +5,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Sentinel.LogViewer.Core;
 
-namespace Sentinel.LogViewer.Wpf.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// The loggers of a log viewer as a tree, split at the dots of their names, with the number of entries of each, and the rules
@@ -34,14 +33,14 @@ public sealed class LoggerTree : INotifyPropertyChanged
 			RulesChanged?.Invoke(this, EventArgs.Empty);
 		};
 
-		ShowOnlyCommand = new RelayCommand<LoggerNode>(node =>
+		ShowOnlyCommand = new DelegateCommand<LoggerNode>(node =>
 		{
 			if (node != null)
 				Rules.ShowOnly(node.FullName);
 		});
-		ShowAllCommand = new RelayCommand(Rules.Clear);
-		ExpandAllCommand = new RelayCommand(() => SetExpanded(true));
-		CollapseAllCommand = new RelayCommand(() => SetExpanded(false));
+		ShowAllCommand = new DelegateCommand(Rules.Clear);
+		ExpandAllCommand = new DelegateCommand(() => SetExpanded(true));
+		CollapseAllCommand = new DelegateCommand(() => SetExpanded(false));
 	}
 
 	/// <summary>

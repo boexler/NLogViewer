@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -8,7 +9,7 @@ namespace Sentinel.LogViewer.Wpf
     /// <summary>
     /// Format of the time stamp column: a default for all viewers and a choice of this viewer, made in the context menu of the column
     /// </summary>
-    public partial class LogViewerBase
+    public partial class LogViewer
     {
         private ICommand? _setTimeStampFormatCommand;
         private ICommand? _resetTimeStampFormatCommand;
@@ -30,7 +31,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="DefaultTimeStampFormat"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty DefaultTimeStampFormatProperty =
-            DependencyProperty.Register(nameof(DefaultTimeStampFormat), typeof(TimeStampFormat), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(DefaultTimeStampFormat), typeof(TimeStampFormat), typeof(LogViewer),
                 new PropertyMetadata(TimeStampFormat.System, OnTimeStampFormatChanged));
 
         /// <summary>
@@ -48,11 +49,11 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="CustomTimeStampFormat"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty CustomTimeStampFormatProperty =
-            DependencyProperty.Register(nameof(CustomTimeStampFormat), typeof(TimeStampFormat?), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(CustomTimeStampFormat), typeof(TimeStampFormat?), typeof(LogViewer),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnTimeStampFormatChanged));
 
         private static readonly DependencyPropertyKey EffectiveTimeStampFormatPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(EffectiveTimeStampFormat), typeof(TimeStampFormat), typeof(LogViewerBase),
+            DependencyProperty.RegisterReadOnly(nameof(EffectiveTimeStampFormat), typeof(TimeStampFormat), typeof(LogViewer),
                 new PropertyMetadata(TimeStampFormat.System));
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace Sentinel.LogViewer.Wpf
         public TimeStampFormat EffectiveTimeStampFormat => (TimeStampFormat)GetValue(EffectiveTimeStampFormatProperty);
 
         private static readonly DependencyPropertyKey CanChangeTimeStampFormatPropertyKey =
-            DependencyProperty.RegisterReadOnly(nameof(CanChangeTimeStampFormat), typeof(bool), typeof(LogViewerBase),
+            DependencyProperty.RegisterReadOnly(nameof(CanChangeTimeStampFormat), typeof(bool), typeof(LogViewer),
                 new PropertyMetadata(true));
 
         /// <summary>
@@ -95,8 +96,8 @@ namespace Sentinel.LogViewer.Wpf
 
         private static void OnTimeStampFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as LogViewerBase)?.UpdateTimeStampFormat();
-            (d as LogViewerBase)?.PublishFilterState();
+            (d as LogViewer)?.UpdateTimeStampFormat();
+            (d as LogViewer)?.PublishFilterState();
         }
 
         private static void OnTimeStampResolverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

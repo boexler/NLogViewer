@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.Models;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Represents the log level values as defined in the Log4J specification.

@@ -441,70 +441,52 @@ LogViewer1.ItemsSource = new ObservableCollection<LogEntry>
 };
 ```
 
-**Migrating from `LogEventInfo`:** `ItemsSource` takes `ObservableCollection<LogEntry>`, `ILogEventInfoResolver` is now `ILogEntryResolver` (its `Resolve` takes a `LogEntry`), `ILogEventResolverToStringConverter` is now `ILogEntryResolverToStringConverter`, `ICacheTarget.Cache` is an `IObservable<LogEntry>`, and `FormattedMessage` is `Message`, `SequenceID` is `Id` and `Level` is a `LogEntryLevel` instead of an NLog `LogLevel`.
+**Migrating from `LogEventInfo`:** `ItemsSource` takes `ObservableCollection<LogEntry>`, `ILogEventInfoResolver` is now `ILogEntryResolver` (its `Resolve` takes a `LogEntry`), `ILogEventResolverToStringConverter` is now `ILogEntryResolverToStringConverter`, `ICacheTarget` is now `ILogSource` (`Cache` is `Entries`, an `IObservable<LogEntry>`), the `CacheTarget` property of `LogViewer` is `Source`, `LogViewerBase` is part of `LogViewer`, and `FormattedMessage` is `Message`, `SequenceID` is `Id` and `Level` is a `LogEntryLevel` instead of an NLog `LogLevel`.
 
-### Subscription Management (StartListen/StopListen)
+### The core (Sentinel.LogViewer.Core)
 
-The `LogViewer` provides manual control over log event subscriptions through the `StartListen()` and `StopListen()` methods. These methods are particularly useful in docking systems or scenarios where the control's lifecycle needs to be managed manually.
+The package `Sentinel.LogViewer.Core` targets plain `net8.0` and has no WPF in it, so a server or another kind of user interface can use it too. The `Sentinel.LogViewer.Wpf` package brings it along. It holds:
 
-**Purpose:**
-These methods were implemented to address [Issue #90](https://github.com/dojo90/LogViewer/issues/90) - subscription disposal when undocking the viewer parent container. The issue occurred when LogViewer controls were used in docking systems where the control would be moved between different parent windows, causing subscription leaks and improper disposal.
+- `LogEntry`, `LogEntryLevel` and `ILogSource`, and `LogBuffer`, a source that keeps the last entries in memory and sends them to every new subscriber
+- the filters as a value (`LogViewerFilterState`), the search terms (`TextSearchTerm`, `RegexSearchTerm`) and the format of the time stamp (`TimeStampFormat`)
+- the logger tree as a model (`LoggerTree`, `LoggerNode`, `LoggerVisibilityRules`)
+- the receiving of log messages over UDP (`UdpLogReceiverService`) with the Log4J XML parser (`Log4JEventParser`, `Log4JEvent`)
 
-**Root Cause:**
-When undocking a control from a docking system, the `Unloaded` event is triggered, which automatically disposes the subscription. This means that after undocking, the control is no longer listening for log events. Therefore, `StartListen()` must always be called in the `DockChanged` event handler to restore the subscription after undocking.
+### Sources of the entries (Source)
 
-**Method Details:**
+There is one control, `LogViewer`. Its entries come from one of these, in this order:
 
-#### `StartListen()`
-- **Purpose:** Starts listening for log events by subscribing to the cache target
-- **When to use:** 
-  - When undocking from a docking system
-  - When the window loads again after being hidden
-  - When resuming log monitoring after pausing
-- **Behavior:** 
-  - Subscribes to the CacheTarget's observable stream
-  - Buffers log events for 100ms intervals for better performance
-  - Automatically manages parent window references for proper disposal
-  - Prevents duplicate subscriptions if already listening
+1. **`ItemsSource`** - a collection of `LogEntry` that you fill yourself (the desktop application does this).
+2. **`Source`** - an `ILogSource`, anything that produces `LogEntry` objects.
+3. **The logging of NLog** - without either of them the viewer shows the logging of the application through a `CacheTarget` (see above), so dropping `<dj:LogViewer />` into a window is enough. `TargetName` picks one of several `CacheTarget`s.
 
-#### `StopListen()`
-- **Purpose:** Stops listening for log events by disposing the subscription
-- **When to use:**
-  - When docking in a docking system
-  - When the window is being unloaded
-  - When pausing log monitoring temporarily
-- **Behavior:**
-  - Disposes the current subscription
-  - Clears the listening state
-  - Prevents memory leaks from orphaned subscriptions
-
-**Usage Example:**
+An `ILogSource` (package `Sentinel.LogViewer.Core`) has one member, an observable of the entries. A source that keeps entries sends the ones it holds to every new subscriber first, so a viewer that comes back gets the whole log. `CacheTarget` is such a source.
 
 ```csharp
-// Manual control in docking scenarios
-private void OnDockChanged(object sender, DockChangedEventArgs e)
+public class MySource : ILogSource
 {
-    // Control is being undocked - MUST call StartListen() because 
-    // the Unloaded event was triggered and disposed the subscription
-    logViewer.StartListen();
-}
+    private readonly ReplaySubject<LogEntry> _entries = new(bufferSize: 1000);
 
-// Pause/Resume functionality
-private void ToggleLogging()
-{
-    if (logViewer.IsListening)
-    {
-        logViewer.StopListen();
-    }
-    else
-    {
-        logViewer.StartListen();
-    }
+    public IObservable<LogEntry> Entries => _entries;
+
+    public void Add(LogEntry entry) => _entries.OnNext(entry);
 }
 ```
 
-**Automatic Management:**
-The control automatically calls `StartListen()` when loaded and `StopListen()` when properly disposed. The methods are designed to be safe to call multiple times and handle edge cases like design-time mode and missing parent windows.
+```csharp
+LogViewer1.Source = new MySource();
+```
+
+### Subscription (StartListen/StopListen)
+
+The viewer subscribes to its source every time it is loaded and ends the subscription when it is unloaded, so it keeps working when a tab or a docking panel takes it out of the window and puts it back ([Issue #109](https://github.com/boexler/NLogViewer/issues/109)). While `Pause` is on it does not listen. Each time it subscribes it shows what the source holds, without showing entries twice.
+
+`StartListen()` and `StopListen()` are there for the cases that the viewer cannot see, e.g. a docking system that keeps the control in the window but hides it. They are safe to call several times, and `StartListen()` does nothing when the entries come from an `ItemsSource`.
+
+```csharp
+logViewer.StopListen();   // e.g. when the panel is hidden
+logViewer.StartListen();  // and when it is shown again
+```
 
 ## Samples
 

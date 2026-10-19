@@ -16,7 +16,7 @@ namespace Sentinel.LogViewer.Wpf
     /// <summary>
     /// Logger tree: the loggers of the entries as a tree on the right of the list, to show or hide them
     /// </summary>
-    public partial class LogViewerBase
+    public partial class LogViewer
     {
         private bool _syncingLoggerFilterRules;
         private GridSplitter? _loggerTreeSplitter;
@@ -59,7 +59,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="ShowLoggerTree"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ShowLoggerTreeProperty =
-            DependencyProperty.Register(nameof(ShowLoggerTree), typeof(bool), typeof(LogViewerBase), new PropertyMetadata(true, OnLoggerTreeLayoutChanged));
+            DependencyProperty.Register(nameof(ShowLoggerTree), typeof(bool), typeof(LogViewer), new PropertyMetadata(true, OnLoggerTreeLayoutChanged));
 
         /// <summary>
         /// Whether the logger tree is open
@@ -76,7 +76,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="IsLoggerTreeExpanded"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty IsLoggerTreeExpandedProperty =
-            DependencyProperty.Register(nameof(IsLoggerTreeExpanded), typeof(bool), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(IsLoggerTreeExpanded), typeof(bool), typeof(LogViewer),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="LoggerTreeWidth"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty LoggerTreeWidthProperty =
-            DependencyProperty.Register(nameof(LoggerTreeWidth), typeof(double), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(LoggerTreeWidth), typeof(double), typeof(LogViewer),
                 new FrameworkPropertyMetadata(260d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
 
         /// <summary>
@@ -112,12 +112,12 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="IsLoggerTreeOnLeft"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty IsLoggerTreeOnLeftProperty =
-            DependencyProperty.Register(nameof(IsLoggerTreeOnLeft), typeof(bool), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(IsLoggerTreeOnLeft), typeof(bool), typeof(LogViewer),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerTreeLayoutChanged));
 
         private static void OnLoggerTreeLayoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as LogViewerBase)?.ApplyLoggerTreeLayout();
+            (d as LogViewer)?.ApplyLoggerTreeLayout();
         }
 
         /// <summary>
@@ -137,12 +137,12 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="LoggerFilterRules"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty LoggerFilterRulesProperty =
-            DependencyProperty.Register(nameof(LoggerFilterRules), typeof(IReadOnlyList<string>), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(LoggerFilterRules), typeof(IReadOnlyList<string>), typeof(LogViewer),
                 new FrameworkPropertyMetadata(Array.Empty<string>(), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnLoggerFilterRulesChanged));
 
         private static void OnLoggerFilterRulesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is LogViewerBase { _syncingLoggerFilterRules: false } viewer)
+            if (d is LogViewer { _syncingLoggerFilterRules: false } viewer)
                 viewer.LoggerTree.Rules.Load(e.NewValue as IEnumerable<string>);
         }
 

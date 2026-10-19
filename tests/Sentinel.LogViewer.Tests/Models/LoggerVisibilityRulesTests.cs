@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System.Linq;
 using Sentinel.LogViewer.Wpf.Models;
 using Xunit;

@@ -1132,7 +1132,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// Finds the LogViewer instance in the currently selected tab's visual tree
 	/// </summary>
 	/// <returns>The LogViewer instance if found, null otherwise</returns>
-	private LogViewerBase? FindLogViewerInTab(LogTabViewModel tab)
+	private Wpf.LogViewer? FindLogViewerInTab(LogTabViewModel tab)
 	{
 		// Get the main window to access the TabControl
 		var mainWindow = System.Windows.Application.Current.MainWindow;
@@ -1155,14 +1155,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			if (contentControl != null && contentControl.DataContext == tab)
 			{
 				// Found the content control for the selected tab, now find LogViewer
-				var logViewer = FindVisualChild<LogViewerBase>(contentControl);
+				var logViewer = FindVisualChild<Wpf.LogViewer>(contentControl);
 				if (logViewer != null)
 					return logViewer;
 			}
 		}
 
 		// Fallback: Search directly in TabControl for LogViewer; only the selected tab's viewer is certain to be there
-		return ReferenceEquals(tab, SelectedTab) ? FindVisualChild<LogViewerBase>(tabControl) : null;
+		return ReferenceEquals(tab, SelectedTab) ? FindVisualChild<Wpf.LogViewer>(tabControl) : null;
 	}
 
 	/// <summary>
