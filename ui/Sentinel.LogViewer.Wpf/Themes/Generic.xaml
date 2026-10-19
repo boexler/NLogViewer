@@ -698,4 +698,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- An implicit style does not apply to a derived class, so LogViewer takes the style of LogViewerBase by its name. -->
+    <Style TargetType="{x:Type local:LogViewer}" BasedOn="{StaticResource {x:Type local:LogViewerBase}}"/>
 </ResourceDictionary>
