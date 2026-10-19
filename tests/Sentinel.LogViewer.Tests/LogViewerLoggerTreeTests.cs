@@ -274,6 +274,34 @@ public class LogViewerLoggerTreeTests
 	}
 
 	[Fact]
+	public void TheArrowOfTheSwitch_PointsToTheSideTheTreeMovesTo()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.IsLoggerTreeExpanded = true;
+				viewer.UpdateLayout();
+				var panel = (DependencyObject)viewer.Template.FindName("PART_LoggerTreePanel", viewer);
+				var arrow = Descendants<TextBlock>(panel).First(text => text.Text is "←" or "→");
+
+				Assert.Equal("←", arrow.Text);
+
+				viewer.IsLoggerTreeOnLeft = true;
+				Assert.Equal("→", arrow.Text);
+
+				viewer.IsLoggerTreeOnLeft = false;
+				Assert.Equal("←", arrow.Text);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void Switching_MovesThePanelTheSplitterAndTheHandleToTheOtherSideOfTheList()
 	{
 		_context.RunOnSta(() =>
