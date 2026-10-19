@@ -26,7 +26,7 @@ public class LogViewerScrollPositionTests
 	/// <summary>
 	/// Shows a viewer with alternating Info and Debug entries in an off-screen window
 	/// </summary>
-	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEntry> Entries) ShowViewer()
+	private static (Window Window, Wpf.LogViewer Viewer, ObservableCollection<LogEntry> Entries) ShowViewer()
 	{
 		var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, EntryCount).Select(i =>
 			new LogEntry(i % 2 == 0 ? LogEntryLevel.Info : LogEntryLevel.Debug, "Logger", $"Entry {i}")));
@@ -36,19 +36,19 @@ public class LogViewerScrollPositionTests
 
 	private static void Settle() => WpfTestHelper.Settle();
 
-	private static ScrollViewer ScrollViewerOf(LogViewerBase viewer)
+	private static ScrollViewer ScrollViewerOf(Wpf.LogViewer viewer)
 	{
 		var listView = (ListView)viewer.Template.FindName("PART_ListView", viewer);
 		return (ScrollViewer)ScrollingHelper.GetDescendantByType(listView, typeof(ScrollViewer))!;
 	}
 
-	private static string TopMessage(LogViewerBase viewer)
+	private static string TopMessage(Wpf.LogViewer viewer)
 	{
 		var listView = (ListView)viewer.Template.FindName("PART_ListView", viewer);
 		return ((LogEntry)listView.Items[(int)ScrollViewerOf(viewer).VerticalOffset]!).Message;
 	}
 
-	private static void ScrollToEntry(LogViewerBase viewer, int viewIndex)
+	private static void ScrollToEntry(Wpf.LogViewer viewer, int viewIndex)
 	{
 		ScrollViewerOf(viewer).ScrollToVerticalOffset(viewIndex);
 		Settle();

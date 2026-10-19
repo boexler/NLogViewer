@@ -11,7 +11,7 @@ namespace Sentinel.LogViewer.Wpf
     /// <summary>
     /// The filters of the viewer as one value that can be read, saved and set on another viewer
     /// </summary>
-    public partial class LogViewerBase
+    public partial class LogViewer
     {
         private static readonly string[] LevelNames = { "Trace", "Debug", "Info", "Warn", "Error", "Fatal" };
 
@@ -34,12 +34,12 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="FilterState"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty FilterStateProperty =
-            DependencyProperty.Register(nameof(FilterState), typeof(LogViewerFilterState), typeof(LogViewerBase),
+            DependencyProperty.Register(nameof(FilterState), typeof(LogViewerFilterState), typeof(LogViewer),
                 new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnFilterStateChanged));
 
         private static void OnFilterStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is LogViewerBase { _publishingFilterState: false } viewer && e.NewValue is LogViewerFilterState state)
+            if (d is LogViewer { _publishingFilterState: false } viewer && e.NewValue is LogViewerFilterState state)
                 viewer.ApplyFilterState(state);
         }
 

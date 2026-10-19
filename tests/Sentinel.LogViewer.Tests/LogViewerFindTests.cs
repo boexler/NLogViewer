@@ -26,7 +26,7 @@ public class LogViewerFindTests
 	/// <summary>
 	/// "Entry 1" is found in Entry 1, Entry 10-19 and Entry 100-199: 111 hits; even entries are Info, odd ones Debug
 	/// </summary>
-	private static (Window Window, LogViewerBase Viewer, ObservableCollection<LogEntry> Entries, ListView List) ShowViewer()
+	private static (Window Window, Wpf.LogViewer Viewer, ObservableCollection<LogEntry> Entries, ListView List) ShowViewer()
 	{
 		var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, 1000).Select(i =>
 			new LogEntry(i % 2 == 0 ? LogEntryLevel.Info : LogEntryLevel.Debug, "Logger", $"Entry {i}")));

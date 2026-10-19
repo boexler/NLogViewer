@@ -10,13 +10,8 @@ using NLog.Targets;
 
 namespace Sentinel.LogViewer.Wpf.Targets;
 
-public interface ICacheTarget
-{
-	IObservable<LogEntry> Cache { get; }
-}
-
 [Target(nameof(CacheTarget))]
-public class CacheTarget : Target, ICacheTarget
+public class CacheTarget : Target, ILogSource
 {
 	/// <summary>
 	/// Look in the NLog.config if any target is already defined and returns it, otherwise a new one is registered
@@ -56,7 +51,10 @@ public class CacheTarget : Target, ICacheTarget
 	// Public Properties
 	// ##########################################################################################
 
-	public IObservable<LogEntry> Cache => _CacheSubject.AsObservable();
+	/// <summary>
+	/// The entries of the target. A new subscriber gets the entries that the cache still holds first.
+	/// </summary>
+	public IObservable<LogEntry> Entries => _CacheSubject.AsObservable();
 	private readonly ReplaySubject<LogEntry> _CacheSubject;
 
 	// ##########################################################################################

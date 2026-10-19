@@ -70,7 +70,6 @@
     <None Remove="Images\Small\Trace.png" />
     <None Remove="Images\Small\Unknown.png" />
     <None Remove="Images\Small\Warning.png" />
-    <None Remove="LogViewer.xaml" />
   </ItemGroup>
 
   <ItemGroup>

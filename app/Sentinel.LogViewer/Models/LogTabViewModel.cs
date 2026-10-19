@@ -24,7 +24,7 @@ namespace Sentinel.LogViewer.Models
         private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
 
         /// <summary>
-        /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewerBase.ItemsSource"/>.
+        /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewer.ItemsSource"/>.
         /// </summary>
         public ObservableCollection<LogEntry> LogEntries { get; } = new();
 

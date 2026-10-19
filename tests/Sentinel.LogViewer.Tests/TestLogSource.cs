@@ -1,20 +1,19 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Sentinel.LogViewer.Core;
-using Sentinel.LogViewer.Wpf.Targets;
 
 namespace Sentinel.LogViewer.Tests;
 
 /// <summary>
-/// Test double for ICacheTarget. Exposes an observable cache and allows pre-filling events
+/// Test double for ILogSource. Exposes an observable cache and allows pre-filling events
 /// so that subscribers (e.g. LogViewer) receive them when they subscribe (ReplaySubject).
 /// </summary>
-public class TestCacheTarget : ICacheTarget
+public class TestLogSource : ILogSource
 {
 	private readonly ReplaySubject<LogEntry> _subject = new ReplaySubject<LogEntry>(bufferSize: 1000);
 
 	/// <inheritdoc />
-	public IObservable<LogEntry> Cache => _subject.AsObservable();
+	public IObservable<LogEntry> Entries => _subject.AsObservable();
 
 	/// <summary>
 	/// Pushes a single log event into the cache. Subscribers receive it; late subscribers get it replayed.
