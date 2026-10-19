@@ -1,6 +1,6 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Targets;
 
 namespace Sentinel.LogViewer.Tests;
@@ -11,15 +11,15 @@ namespace Sentinel.LogViewer.Tests;
 /// </summary>
 public class TestCacheTarget : ICacheTarget
 {
-	private readonly ReplaySubject<LogEventInfo> _subject = new ReplaySubject<LogEventInfo>(bufferSize: 1000);
+	private readonly ReplaySubject<LogEntry> _subject = new ReplaySubject<LogEntry>(bufferSize: 1000);
 
 	/// <inheritdoc />
-	public IObservable<LogEventInfo> Cache => _subject.AsObservable();
+	public IObservable<LogEntry> Cache => _subject.AsObservable();
 
 	/// <summary>
 	/// Pushes a single log event into the cache. Subscribers receive it; late subscribers get it replayed.
 	/// </summary>
-	public void Add(LogEventInfo logEvent)
+	public void Add(LogEntry logEvent)
 	{
 		_subject.OnNext(logEvent);
 	}
@@ -27,7 +27,7 @@ public class TestCacheTarget : ICacheTarget
 	/// <summary>
 	/// Pushes multiple log events into the cache. Subscribers receive them; late subscribers get them replayed.
 	/// </summary>
-	public void AddRange(IEnumerable<LogEventInfo> logEvents)
+	public void AddRange(IEnumerable<LogEntry> logEvents)
 	{
 		if (logEvents == null) return;
 		foreach (var logEvent in logEvents)

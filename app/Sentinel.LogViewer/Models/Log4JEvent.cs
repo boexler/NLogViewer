@@ -1,4 +1,4 @@
-using NLog;
+using Sentinel.LogViewer.Core;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -90,30 +90,17 @@ public class Log4JEvent : ILogEvent
 			? $"{machineName} ({sender})" 
 			: sender;
 
-		// Convert Log4J level to NLog LogLevel
-		var nlogLevel = ConvertLog4JLevelToNLogLevel(Level);
-
 		// Convert timestamp from milliseconds since epoch to DateTime
-		var timestamp = Timestamp > 0 
-			? DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime 
+		var timestamp = Timestamp > 0
+			? DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime
 			: DateTime.Now;
 
-		// Create LogEventInfo with core properties
-		var logEventInfo = new LogEventInfo(nlogLevel, Logger ?? "Unknown", Message ?? string.Empty)
-		{
-			TimeStamp = timestamp
-		};
+		var properties = new Dictionary<string, object?>();
 
 		// Add thread information if available
 		if (!string.IsNullOrEmpty(Thread))
 		{
-			logEventInfo.Properties["Thread"] = Thread;
-		}
-
-		// Add exception information if throwable data is present
-		if (!string.IsNullOrEmpty(Throwable))
-		{
-			logEventInfo.Exception = new Exception(Throwable);
+			properties["Thread"] = Thread;
 		}
 
 		// Add location information if available
@@ -121,31 +108,39 @@ public class Log4JEvent : ILogEvent
 		{
 			if (!string.IsNullOrEmpty(LocationInfo.Class))
 			{
-				logEventInfo.Properties["ClassName"] = LocationInfo.Class;
+				properties["ClassName"] = LocationInfo.Class;
 			}
 			if (!string.IsNullOrEmpty(LocationInfo.Method))
 			{
-				logEventInfo.Properties["MethodName"] = LocationInfo.Method;
+				properties["MethodName"] = LocationInfo.Method;
 			}
 			if (!string.IsNullOrEmpty(LocationInfo.File))
 			{
-				logEventInfo.Properties["FileName"] = LocationInfo.File;
+				properties["FileName"] = LocationInfo.File;
 			}
 			if (LocationInfo.Line.HasValue)
 			{
-				logEventInfo.Properties["LineNumber"] = LocationInfo.Line.Value;
+				properties["LineNumber"] = LocationInfo.Line.Value;
 			}
 		}
 
-		// Copy all additional properties from Log4J event to LogEventInfo
+		// Copy all additional properties from Log4J event
 		foreach (var property in Properties)
 		{
 			// Skip properties that are already handled explicitly
 			if (property.Key != "log4japp" && property.Key != "log4jmachinename")
 			{
-				logEventInfo.Properties[property.Key] = property.Value ?? string.Empty;
+				properties[property.Key] = property.Value ?? string.Empty;
 			}
 		}
+
+		var entry = new LogEntry(ConvertLog4JLevel(Level), Logger ?? "Unknown", Message ?? string.Empty)
+		{
+			TimeStamp = timestamp,
+			// Add exception information if throwable data is present
+			Exception = string.IsNullOrEmpty(Throwable) ? null : Throwable,
+			Properties = properties
+		};
 
 		// Create and return the complete LogEvent
 		var logEvent = new LogEvent
@@ -155,7 +150,7 @@ public class Log4JEvent : ILogEvent
 				AppName = appName,
 				Sender = combinedSender
 			},
-			LogEventInfo = logEventInfo
+			Entry = entry
 		};
 
 		return logEvent;
@@ -186,24 +181,23 @@ public class Log4JEvent : ILogEvent
 	}
 
 	/// <summary>
-	/// Converts a Log4JLevel enum value to the corresponding NLog LogLevel.
-	/// Maps Log4J-specific levels (All, Off) to appropriate NLog equivalents.
+	/// Converts a Log4JLevel enum value to the level of a log entry.
 	/// </summary>
 	/// <param name="log4JLevel">The Log4J level to convert.</param>
-	/// <returns>The corresponding NLog LogLevel. Defaults to LogLevel.Info for unknown or unmappable levels.</returns>
-	private static LogLevel ConvertLog4JLevelToNLogLevel(Log4JLevel log4JLevel)
+	/// <returns>The corresponding level. Unknown levels become Info, <c>All</c> becomes Trace and <c>Off</c> becomes Fatal.</returns>
+	private static LogEntryLevel ConvertLog4JLevel(Log4JLevel log4JLevel)
 	{
 		return log4JLevel switch
 		{
-			Log4JLevel.Trace => LogLevel.Trace,
-			Log4JLevel.Debug => LogLevel.Debug,
-			Log4JLevel.Info => LogLevel.Info,
-			Log4JLevel.Warn => LogLevel.Warn,
-			Log4JLevel.Error => LogLevel.Error,
-			Log4JLevel.Fatal => LogLevel.Fatal,
-			Log4JLevel.All => LogLevel.Trace, // Map All to most verbose level
-			Log4JLevel.Off => LogLevel.Off,
-			_ => LogLevel.Info // Default fallback for Unknown or unexpected values
+			Log4JLevel.Trace => LogEntryLevel.Trace,
+			Log4JLevel.Debug => LogEntryLevel.Debug,
+			Log4JLevel.Info => LogEntryLevel.Info,
+			Log4JLevel.Warn => LogEntryLevel.Warn,
+			Log4JLevel.Error => LogEntryLevel.Error,
+			Log4JLevel.Fatal => LogEntryLevel.Fatal,
+			Log4JLevel.All => LogEntryLevel.Trace, // Map All to most verbose level
+			Log4JLevel.Off => LogEntryLevel.Fatal,
+			_ => LogEntryLevel.Info // Default fallback for Unknown or unexpected values
 		};
 	}
 }

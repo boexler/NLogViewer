@@ -18,7 +18,7 @@ using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Updates;
@@ -142,7 +142,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Add all log events from the batch to the tab (Cache replays to LogViewer when it subscribes)
 		foreach (var logEvent in logEvents)
 		{
-			tab.AddLogEvent(logEvent.LogEventInfo);
+			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName?.Name}";
@@ -891,7 +891,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			dispatcher.Invoke(() => { LoadingProgress = FormatParseProgress(filePath, index, total, p.current, p.total, percentage); });
 		});
 
-		List<LogEventInfo> logEvents;
+		List<LogEntry> logEvents;
 		try
 		{
 			logEvents = await _fileParserService.ParseFileAsync(filePath, progress, textFormat).ConfigureAwait(false);
@@ -936,7 +936,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Appends parsed rows to the tab chosen for this import batch.
 	/// </summary>
-	private void ApplyParsedLogs(List<LogEventInfo> logEvents, string filePath, LogFileImportBatchContext ctx)
+	private void ApplyParsedLogs(List<LogEntry> logEvents, string filePath, LogFileImportBatchContext ctx)
 	{
 		if (logEvents == null || logEvents.Count == 0)
 			return;
@@ -980,7 +980,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			var batch = logEvents.Skip(i).Take(batchSize).ToList();
 			foreach (var logEvent in batch)
-				tab.AddLogEvent(logEvent);
+				tab.AddLogEntry(logEvent);
 
 			if (i + batchSize < logEvents.Count)
 			{

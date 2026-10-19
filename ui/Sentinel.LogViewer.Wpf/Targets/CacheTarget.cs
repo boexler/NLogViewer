@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Sentinel.LogViewer.Wpf.Helper;
 using NLog;
+using Sentinel.LogViewer.Core;
 using NLog.Config;
 using NLog.Targets;
 
@@ -11,7 +12,7 @@ namespace Sentinel.LogViewer.Wpf.Targets;
 
 public interface ICacheTarget
 {
-	IObservable<LogEventInfo> Cache { get; }
+	IObservable<LogEntry> Cache { get; }
 }
 
 [Target(nameof(CacheTarget))]
@@ -55,8 +56,8 @@ public class CacheTarget : Target, ICacheTarget
 	// Public Properties
 	// ##########################################################################################
 
-	public IObservable<LogEventInfo> Cache => _CacheSubject.AsObservable();
-	private readonly ReplaySubject<LogEventInfo> _CacheSubject;
+	public IObservable<LogEntry> Cache => _CacheSubject.AsObservable();
+	private readonly ReplaySubject<LogEntry> _CacheSubject;
 
 	// ##########################################################################################
 	// Private Properties
@@ -78,7 +79,7 @@ public class CacheTarget : Target, ICacheTarget
 	{
 		if(maxCount == 0)
 			maxCount = 500;
-		_CacheSubject = new ReplaySubject<LogEventInfo>(maxCount);
+		_CacheSubject = new ReplaySubject<LogEntry>(maxCount);
 	}
 
 	#endregion
@@ -91,7 +92,7 @@ public class CacheTarget : Target, ICacheTarget
 
 	protected override void Write(LogEventInfo logEvent)
 	{
-		_CacheSubject.OnNext(logEvent);
+		_CacheSubject.OnNext(logEvent.ToLogEntry());
 	}
 
 	#endregion

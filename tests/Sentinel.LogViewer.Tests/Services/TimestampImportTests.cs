@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
 using Sentinel.LogViewer.Services;
@@ -54,7 +54,7 @@ public class TimestampImportTests : IDisposable
 		return format;
 	}
 
-	private async Task<List<LogEventInfo>> ImportAsync(IEnumerable<string> lines, DateTime? written = null)
+	private async Task<List<LogEntry>> ImportAsync(IEnumerable<string> lines, DateTime? written = null)
 	{
 		var file = Write(lines, written);
 		var format = _detector.DetectFormat(file);
@@ -84,9 +84,9 @@ public class TimestampImportTests : IDisposable
 		Assert.Equal(6, entries.Count);
 		Assert.Equal(new DateTime(2025, 12, 18, 15, 11, 40, 385), entries[0].TimeStamp);
 		Assert.Equal(new DateTime(2025, 12, 18, 15, 11, 45, 385), entries[5].TimeStamp);
-		Assert.Equal(LogLevel.Error, entries[1].Level);
+		Assert.Equal(LogEntryLevel.Error, entries[1].Level);
 		Assert.Equal("Acme.Shop.Orders.Service", entries[0].LoggerName);
-		Assert.Equal("Message number 0", entries[0].FormattedMessage);
+		Assert.Equal("Message number 0", entries[0].Message);
 	}
 
 	[Fact]
@@ -113,7 +113,7 @@ public class TimestampImportTests : IDisposable
 		var entries = await ImportAsync(Lines("12/18/2025 3:11:4{0} AM", " | "));
 
 		Assert.Equal(new DateTime(2025, 12, 18, 3, 11, 40), entries[0].TimeStamp);
-		Assert.Equal(LogLevel.Info, entries[0].Level);
+		Assert.Equal(LogEntryLevel.Info, entries[0].Level);
 	}
 
 	[Fact]
@@ -208,7 +208,7 @@ public class TimestampImportTests : IDisposable
 		var entries = await ImportAsync(Lines("18 Dec 2025 15:11:4{0}"));
 
 		Assert.Equal(new DateTime(2025, 12, 18, 15, 11, 40), entries[0].TimeStamp);
-		Assert.Equal(LogLevel.Info, entries[0].Level);
+		Assert.Equal(LogEntryLevel.Info, entries[0].Level);
 	}
 
 	[Fact]
@@ -224,8 +224,8 @@ public class TimestampImportTests : IDisposable
 		});
 
 		Assert.Equal(3, entries.Count);
-		Assert.Contains("Orders.cs:line 12", entries[0].FormattedMessage);
-		Assert.Contains("Program.cs:line 5", entries[0].FormattedMessage);
+		Assert.Contains("Orders.cs:line 12", entries[0].Message);
+		Assert.Contains("Program.cs:line 5", entries[0].Message);
 		Assert.Equal(new DateTime(2025, 12, 18, 15, 11, 41), entries[1].TimeStamp);
 	}
 
@@ -306,7 +306,7 @@ public class TimestampImportTests : IDisposable
 		Assert.Equal(new DateTime(year, month, day, hour, 11, 40).Date, entries[0].TimeStamp.Date);
 		Assert.Equal(new[] { 40, 41, 42, 43, 44, 45 }, entries.Select(entry => entry.TimeStamp.Second));
 		Assert.All(entries, entry => Assert.Equal(hour, entry.TimeStamp.Hour));
-		Assert.Equal(LogLevel.Error, entries[1].Level);
+		Assert.Equal(LogEntryLevel.Error, entries[1].Level);
 	}
 
 	[Fact]

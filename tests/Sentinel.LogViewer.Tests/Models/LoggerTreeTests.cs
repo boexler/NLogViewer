@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Models;
 using Xunit;
 
@@ -12,9 +12,9 @@ namespace Sentinel.LogViewer.Tests.Models;
 /// </summary>
 public class LoggerTreeTests
 {
-	private static LogEventInfo Entry(string logger, LogLevel? level = null) => new(level ?? LogLevel.Info, logger, "message");
+	private static LogEntry Entry(string logger, LogEntryLevel? level = null) => new(level ?? LogEntryLevel.Info, logger, "message");
 
-	private static LoggerTree CreateTree(params (string Logger, LogLevel Level)[] entries)
+	private static LoggerTree CreateTree(params (string Logger, LogEntryLevel Level)[] entries)
 	{
 		var tree = new LoggerTree();
 		foreach (var (logger, level) in entries)
@@ -36,8 +36,8 @@ public class LoggerTreeTests
 	[Fact]
 	public void Loggers_AreSplitAtTheDots_AndSortedByName()
 	{
-		var tree = CreateTree(("Company.Product.Service", LogLevel.Info), ("company.product.alpha", LogLevel.Info),
-			("Company.Beta", LogLevel.Info), ("Other", LogLevel.Info));
+		var tree = CreateTree(("Company.Product.Service", LogEntryLevel.Info), ("company.product.alpha", LogEntryLevel.Info),
+			("Company.Beta", LogEntryLevel.Info), ("Other", LogEntryLevel.Info));
 
 		Assert.Equal(new[] { "Company", "company", "Other" }, tree.Roots.Select(root => root.Name));
 		var product = Node(tree, "Company.Product");
@@ -51,10 +51,10 @@ public class LoggerTreeTests
 	public void Counters_CountOwnEntriesAndEverythingBelow_WithWarningsAndErrorsSeparately()
 	{
 		var tree = CreateTree(
-			("A", LogLevel.Info),
-			("A.B", LogLevel.Warn), ("A.B", LogLevel.Warn),
-			("A.B.C", LogLevel.Error), ("A.B.C", LogLevel.Fatal), ("A.B.C", LogLevel.Debug),
-			("A.D", LogLevel.Trace));
+			("A", LogEntryLevel.Info),
+			("A.B", LogEntryLevel.Warn), ("A.B", LogEntryLevel.Warn),
+			("A.B.C", LogEntryLevel.Error), ("A.B.C", LogEntryLevel.Fatal), ("A.B.C", LogEntryLevel.Debug),
+			("A.D", LogEntryLevel.Trace));
 
 		var a = Node(tree, "A");
 		var b = Node(tree, "A.B");
@@ -69,9 +69,9 @@ public class LoggerTreeTests
 	public void Remove_TakesTheEntryOutOfTheCounters()
 	{
 		var tree = new LoggerTree();
-		var warning = Entry("A.B", LogLevel.Warn);
+		var warning = Entry("A.B", LogEntryLevel.Warn);
 		tree.Add(warning);
-		tree.Add(Entry("A.B", LogLevel.Info));
+		tree.Add(Entry("A.B", LogEntryLevel.Info));
 
 		tree.Remove(warning);
 
@@ -82,14 +82,14 @@ public class LoggerTreeTests
 	[Fact]
 	public void Rebuild_ReplacesTheTreeWithTheLoggersOfTheEntries()
 	{
-		var tree = CreateTree(("Old.Logger", LogLevel.Info));
+		var tree = CreateTree(("Old.Logger", LogEntryLevel.Info));
 
 		tree.Rebuild(new[] { Entry("New.Logger"), Entry("New.Logger"), Entry("New.Other") });
 
 		Assert.Equal(new[] { "New" }, tree.Roots.Select(root => root.Name));
 		Assert.Equal(3, Node(tree, "New").TotalCount);
 
-		tree.Rebuild(new List<LogEventInfo>());
+		tree.Rebuild(new List<LogEntry>());
 		Assert.Empty(tree.Roots);
 	}
 
@@ -130,7 +130,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void CheckState_IsTrueForAll_FalseForNone_AndNullForSome()
 	{
-		var tree = CreateTree(("Company.Product.Service", LogLevel.Info), ("Company.Product.Other", LogLevel.Info), ("Company.Elsewhere", LogLevel.Info));
+		var tree = CreateTree(("Company.Product.Service", LogEntryLevel.Info), ("Company.Product.Other", LogEntryLevel.Info), ("Company.Elsewhere", LogEntryLevel.Info));
 		var company = Node(tree, "Company");
 		var product = Node(tree, "Company.Product");
 		Assert.True(company.IsChecked);
@@ -154,7 +154,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void UncheckingAParent_AlsoHidesLoggersThatAppearBelowItLater()
 	{
-		var tree = CreateTree(("Company.Product", LogLevel.Info));
+		var tree = CreateTree(("Company.Product", LogEntryLevel.Info));
 
 		Node(tree, "Company").IsChecked = false;
 		tree.Add(Entry("Company.Product.New"));
@@ -166,7 +166,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void ACheckStateChange_IsAnnouncedForAllLoggers_AndRulesChangedIsRaised()
 	{
-		var tree = CreateTree(("A.B", LogLevel.Info));
+		var tree = CreateTree(("A.B", LogEntryLevel.Info));
 		var announced = new List<string>();
 		foreach (var name in new[] { "A", "A.B" })
 		{
@@ -189,7 +189,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void ShowOnlyCommand_HidesAllOtherLoggers_AndShowAllCommandShowsThemAgain()
 	{
-		var tree = CreateTree(("A.B", LogLevel.Info), ("A.C", LogLevel.Info), ("D", LogLevel.Info));
+		var tree = CreateTree(("A.B", LogEntryLevel.Info), ("A.C", LogEntryLevel.Info), ("D", LogEntryLevel.Info));
 
 		tree.ShowOnlyCommand.Execute(Node(tree, "A.B"));
 
@@ -207,7 +207,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void ExpandAllAndCollapseAll_ChangeEveryLogger()
 	{
-		var tree = CreateTree(("A.B.C", LogLevel.Info), ("D.E", LogLevel.Info));
+		var tree = CreateTree(("A.B.C", LogEntryLevel.Info), ("D.E", LogEntryLevel.Info));
 		var all = new[] { "A", "A.B", "A.B.C", "D", "D.E" }.Select(name => Node(tree, name)).ToList();
 		Assert.All(all, node => Assert.True(node.IsExpanded));
 
@@ -221,7 +221,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void Search_ListsMatchingLoggersAndTheOnesAboveThem_AndOpensThem()
 	{
-		var tree = CreateTree(("Company.Product.Service", LogLevel.Info), ("Company.Product.Other", LogLevel.Info), ("Brand.Thing", LogLevel.Info));
+		var tree = CreateTree(("Company.Product.Service", LogEntryLevel.Info), ("Company.Product.Other", LogEntryLevel.Info), ("Brand.Thing", LogEntryLevel.Info));
 		tree.CollapseAllCommand.Execute(null);
 
 		tree.SearchText = "serv";
@@ -241,7 +241,7 @@ public class LoggerTreeTests
 	[Fact]
 	public void Search_AlsoAppliesToLoggersThatAppearWhileSearching()
 	{
-		var tree = CreateTree(("Company.Product", LogLevel.Info));
+		var tree = CreateTree(("Company.Product", LogEntryLevel.Info));
 		tree.SearchText = "service";
 		Assert.False(Node(tree, "Company").IsListed);
 

@@ -68,7 +68,9 @@ public class LogEntryTests
 		Assert.Equal("Acme.Shop", entry.LoggerName);
 		Assert.Equal("3 orders in 12 ms", entry.Message);
 		Assert.Equal(time, entry.TimeStamp);
+#pragma warning disable CS0618 // NLog 6 marks SequenceID as obsolete; the library uses NLog 5, where it is the number of the event
 		Assert.Equal(logEvent.SequenceID, entry.Id);
+#pragma warning restore CS0618
 		Assert.Null(entry.Exception);
 		Assert.Empty(entry.Properties);
 	}

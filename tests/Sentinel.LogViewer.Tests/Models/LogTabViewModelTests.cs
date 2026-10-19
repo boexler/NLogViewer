@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Xunit;
 
@@ -11,7 +11,7 @@ namespace Sentinel.LogViewer.Tests.Models;
 /// </summary>
 public class LogTabViewModelTests
 {
-	private static LogEventInfo Entry(int number) => new(LogLevel.Info, "Logger", "message " + number);
+	private static LogEntry Entry(int number) => new(LogEntryLevel.Info, "Logger", "message " + number);
 
 	[Fact]
 	public void LogCount_FollowsTheAddedEntries()
@@ -19,7 +19,7 @@ public class LogTabViewModelTests
 		var tab = new LogTabViewModel();
 
 		foreach (var number in Enumerable.Range(0, 3))
-			tab.AddLogEvent(Entry(number));
+			tab.AddLogEntry(Entry(number));
 
 		Assert.Equal(3, tab.LogCount);
 	}
@@ -29,7 +29,7 @@ public class LogTabViewModelTests
 	{
 		var tab = new LogTabViewModel();
 		foreach (var number in Enumerable.Range(0, 24))
-			tab.AddLogEvent(Entry(number));
+			tab.AddLogEntry(Entry(number));
 
 		tab.LogEntries.Clear();
 
@@ -41,7 +41,7 @@ public class LogTabViewModelTests
 	{
 		var tab = new LogTabViewModel();
 		foreach (var number in Enumerable.Range(0, 5))
-			tab.AddLogEvent(Entry(number));
+			tab.AddLogEntry(Entry(number));
 
 		tab.LogEntries.RemoveAt(0);
 
@@ -54,10 +54,10 @@ public class LogTabViewModelTests
 		var tab = new LogTabViewModel { MaxCount = 10 };
 
 		foreach (var number in Enumerable.Range(0, 25))
-			tab.AddLogEvent(Entry(number));
+			tab.AddLogEntry(Entry(number));
 
 		Assert.Equal(10, tab.LogCount);
-		Assert.Equal("message 15", tab.LogEntries[0].FormattedMessage);
+		Assert.Equal("message 15", tab.LogEntries[0].Message);
 	}
 
 	[Fact]
@@ -67,7 +67,7 @@ public class LogTabViewModelTests
 		var announced = new List<string?>();
 		tab.PropertyChanged += (_, e) => announced.Add(e.PropertyName);
 
-		tab.AddLogEvent(Entry(1));
+		tab.AddLogEntry(Entry(1));
 		tab.LogEntries.Clear();
 
 		Assert.Equal(2, announced.Count(name => name == nameof(LogTabViewModel.LogCount)));

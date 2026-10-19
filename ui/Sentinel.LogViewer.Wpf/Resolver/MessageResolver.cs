@@ -1,18 +1,18 @@
 using System.Text;
-using NLog;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Wpf.Resolver
 {
-    public class MessageResolver : ILogEventInfoResolver
+    public class MessageResolver : ILogEntryResolver
     {
-        public string Resolve(LogEventInfo logEventInfo)
+        public string Resolve(LogEntry logEntry)
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append(logEventInfo.FormattedMessage);
+            builder.Append(logEntry.Message);
 
-            if (logEventInfo.Exception != null)
+            if (logEntry.Exception != null)
             {
-                builder.AppendLine().Append(logEventInfo.Exception);
+                builder.AppendLine().Append(logEntry.Exception);
             }
 
             return builder.ToString();

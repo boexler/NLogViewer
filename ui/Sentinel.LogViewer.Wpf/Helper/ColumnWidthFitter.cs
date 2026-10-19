@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Helper.ListViewLayoutManager;
 
 namespace Sentinel.LogViewer.Wpf.Helper
@@ -32,7 +32,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _typeface = new Typeface(listView.FontFamily, listView.FontStyle, listView.FontWeight, listView.FontStretch);
         }
 
-        public void AddColumn(GridViewColumn column, Func<LogEventInfo, string?> getText)
+        public void AddColumn(GridViewColumn column, Func<LogEntry, string?> getText)
         {
             _columns.Add(new FittedColumn(column, getText));
         }
@@ -45,7 +45,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             var grown = false;
             foreach (var item in items)
             {
-                if (item is not LogEventInfo logEvent)
+                if (item is not LogEntry logEvent)
                     continue;
 
                 foreach (var column in _columns)
@@ -163,7 +163,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
         private sealed class FittedColumn
         {
-            public FittedColumn(GridViewColumn column, Func<LogEventInfo, string?> getText)
+            public FittedColumn(GridViewColumn column, Func<LogEntry, string?> getText)
             {
                 Column = column;
                 GetText = getText;
@@ -171,7 +171,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             }
 
             public GridViewColumn Column { get; }
-            public Func<LogEventInfo, string?> GetText { get; }
+            public Func<LogEntry, string?> GetText { get; }
             public double InitialWidth { get; }
             public double TextWidth { get; set; }
         }

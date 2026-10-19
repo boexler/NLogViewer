@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using NLog;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Wpf.Models;
 
@@ -97,7 +97,7 @@ public sealed class LoggerTree : INotifyPropertyChanged
 	/// <summary>
 	/// Counts an entry
 	/// </summary>
-	public void Add(LogEventInfo entry)
+	public void Add(LogEntry entry)
 	{
 		Count(entry, 1);
 		Flush();
@@ -106,7 +106,7 @@ public sealed class LoggerTree : INotifyPropertyChanged
 	/// <summary>
 	/// Takes an entry out of the counters again, e.g. when the oldest entries are removed
 	/// </summary>
-	public void Remove(LogEventInfo entry)
+	public void Remove(LogEntry entry)
 	{
 		Count(entry, -1);
 		Flush();
@@ -115,7 +115,7 @@ public sealed class LoggerTree : INotifyPropertyChanged
 	/// <summary>
 	/// Counts all entries anew
 	/// </summary>
-	public void Rebuild(IEnumerable<LogEventInfo> entries)
+	public void Rebuild(IEnumerable<LogEntry> entries)
 	{
 		Roots.Clear();
 		_nodes.Clear();
@@ -157,7 +157,7 @@ public sealed class LoggerTree : INotifyPropertyChanged
 			CountVisibility(child, ref visible, ref hidden);
 	}
 
-	private void Count(LogEventInfo entry, int change)
+	private void Count(LogEntry entry, int change)
 	{
 		var name = entry.LoggerName;
 		if (string.IsNullOrEmpty(name))
@@ -173,8 +173,8 @@ public sealed class LoggerTree : INotifyPropertyChanged
 			node.HasHadEntries = true;
 
 		node.OwnCount += change;
-		var warn = entry.Level == LogLevel.Warn ? change : 0;
-		var error = entry.Level >= LogLevel.Error ? change : 0;
+		var warn = entry.Level == LogEntryLevel.Warn ? change : 0;
+		var error = entry.Level >= LogEntryLevel.Error ? change : 0;
 		for (var current = node; current != null; current = current.Parent)
 		{
 			current.TotalCount += change;

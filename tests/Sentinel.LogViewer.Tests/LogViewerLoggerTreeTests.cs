@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
 
@@ -22,19 +22,19 @@ public class LogViewerLoggerTreeTests
 		_context = fixture;
 	}
 
-	private static LogEventInfo Entry(string logger, LogLevel level) => new(level, logger, "message");
+	private static LogEntry Entry(string logger, LogEntryLevel level) => new(level, logger, "message");
 
-	private static ObservableCollection<LogEventInfo> Entries() => new()
+	private static ObservableCollection<LogEntry> Entries() => new()
 	{
-		Entry("Acme.Shop.Orders", LogLevel.Info),
-		Entry("Acme.Shop.Orders", LogLevel.Error),
-		Entry("Acme.Shop.Payments", LogLevel.Warn),
-		Entry("Acme.Core.Db", LogLevel.Info),
-		Entry("Acme.Core.Db", LogLevel.Debug),
-		Entry("System.Net", LogLevel.Info)
+		Entry("Acme.Shop.Orders", LogEntryLevel.Info),
+		Entry("Acme.Shop.Orders", LogEntryLevel.Error),
+		Entry("Acme.Shop.Payments", LogEntryLevel.Warn),
+		Entry("Acme.Core.Db", LogEntryLevel.Info),
+		Entry("Acme.Core.Db", LogEntryLevel.Debug),
+		Entry("System.Net", LogEntryLevel.Info)
 	};
 
-	private static int VisibleCount(LogViewerBase viewer) => viewer.LogEvents.View.Cast<LogEventInfo>().Count();
+	private static int VisibleCount(LogViewerBase viewer) => viewer.LogEvents.View.Cast<LogEntry>().Count();
 
 	[Fact]
 	public void Tree_ListsTheLoggersOfTheEntries_AndFollowsAddedAndRemovedEntries()
@@ -49,7 +49,7 @@ public class LogViewerLoggerTreeTests
 				Assert.Equal(new[] { "Acme", "System" }, viewer.LoggerTree.Roots.Select(root => root.Name));
 				Assert.Equal((5, 1, 1), (acme.TotalCount, acme.WarnCount, acme.ErrorCount));
 
-				entries.Add(Entry("Acme.Core.Cache", LogLevel.Fatal));
+				entries.Add(Entry("Acme.Core.Cache", LogEntryLevel.Fatal));
 				Assert.Equal((6, 2), (acme.TotalCount, acme.ErrorCount));
 				Assert.Contains(acme.Children.Single(child => child.Name == "Core").Children, child => child.Name == "Cache");
 
@@ -100,7 +100,7 @@ public class LogViewerLoggerTreeTests
 					.Single(child => child.Name == "Shop").Children.Single(child => child.Name == "Orders");
 
 				viewer.LoggerTree.ShowOnlyCommand.Execute(orders);
-				entries.Add(Entry("Brand.New", LogLevel.Info));
+				entries.Add(Entry("Brand.New", LogEntryLevel.Info));
 
 				Assert.Equal(2, VisibleCount(viewer));
 

@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Models;
 using Sentinel.LogViewer.Wpf.Resolver;
 using Xunit;
@@ -17,8 +17,8 @@ public class TimeStampResolverTests : IDisposable
 
 	public void Dispose() => CultureInfo.CurrentCulture = _culture;
 
-	private static LogEventInfo Entry(int hour, int minute, int second, int millisecond) =>
-		new(LogLevel.Info, "Logger", "message") { TimeStamp = new DateTime(2025, 12, 18, hour, minute, second, millisecond) };
+	private static LogEntry Entry(int hour, int minute, int second, int millisecond) =>
+		new(LogEntryLevel.Info, "Logger", "message") { TimeStamp = new DateTime(2025, 12, 18, hour, minute, second, millisecond) };
 
 	[Theory]
 	[InlineData(15, 11, 48, 385, "2025-12-18 15:11:48.385")]

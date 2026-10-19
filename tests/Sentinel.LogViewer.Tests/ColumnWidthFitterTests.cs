@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Helper;
 using Xunit;
 
@@ -24,7 +24,7 @@ public class ColumnWidthFitterTests
 		_context = fixture;
 	}
 
-	private static LogEventInfo Event(string message) => new(LogLevel.Info, "Logger", message);
+	private static LogEntry Event(string message) => new(LogEntryLevel.Info, "Logger", message);
 
 	private static double TextWidth(ListView listView, string text)
 	{
@@ -69,7 +69,7 @@ public class ColumnWidthFitterTests
 			fitter.Include(new[] { Event("a text that is wider than the initial column width") });
 			fitter.Apply();
 
-			fitter.Reset(Array.Empty<LogEventInfo>());
+			fitter.Reset(Array.Empty<LogEntry>());
 			Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, () => { });
 
 			Assert.Equal(InitialWidth, column.Width);

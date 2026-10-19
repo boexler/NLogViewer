@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
 using WpfLogViewer = Sentinel.LogViewer.Wpf.LogViewer;
@@ -50,11 +50,11 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message 1"),
-					new(LogLevel.Info, "MyAppLogger", "Test message 2"),
-					new(LogLevel.Info, "MyApp.Other", "Test message 3")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message 1"),
+					new(LogEntryLevel.Info, "MyAppLogger", "Test message 2"),
+					new(LogEntryLevel.Info, "MyApp.Other", "Test message 3")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -63,7 +63,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should only match "MyApp.Logger", not "MyAppLogger" or "MyApp.Other"
 				Assert.Single(visibleItems);
@@ -99,11 +99,11 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message 1"),
-					new(LogLevel.Info, "OtherLogger", "Test message 2"),
-					new(LogLevel.Info, "MyApp.Other", "Test message 3")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message 1"),
+					new(LogEntryLevel.Info, "OtherLogger", "Test message 2"),
+					new(LogEntryLevel.Info, "MyApp.Other", "Test message 3")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -112,7 +112,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should exclude "MyApp.Logger" but show others
 				Assert.Equal(2, visibleItems.Count);
@@ -128,10 +128,10 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message 1"),
-					new(LogLevel.Info, "OtherLogger", "Test message 2")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message 1"),
+					new(LogEntryLevel.Info, "OtherLogger", "Test message 2")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -140,7 +140,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should show "OtherLogger" but hide "MyApp.Logger"
 				Assert.Single(visibleItems);
@@ -154,12 +154,12 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Error occurred"),
-					new(LogLevel.Info, "MyApp.Logger", "Info message"),
-					new(LogLevel.Info, "OtherLogger", "Error occurred"),
-					new(LogLevel.Info, "OtherLogger", "Info message")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Error occurred"),
+					new(LogEntryLevel.Info, "MyApp.Logger", "Info message"),
+					new(LogEntryLevel.Info, "OtherLogger", "Error occurred"),
+					new(LogEntryLevel.Info, "OtherLogger", "Info message")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -169,7 +169,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should show only "OtherLogger" with "Error" (matches include AND doesn't match exclude)
 				Assert.Single(visibleItems);
@@ -184,12 +184,12 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Error occurred"),
-					new(LogLevel.Info, "MyApp.Logger", "Warning message"),
-					new(LogLevel.Info, "OtherLogger", "Error occurred"),
-					new(LogLevel.Info, "OtherLogger", "Warning message")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Error occurred"),
+					new(LogEntryLevel.Info, "MyApp.Logger", "Warning message"),
+					new(LogEntryLevel.Info, "OtherLogger", "Error occurred"),
+					new(LogEntryLevel.Info, "OtherLogger", "Warning message")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -199,7 +199,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should show only entries that match BOTH "Error" AND "MyApp"
 				Assert.Single(visibleItems);
@@ -214,11 +214,11 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message 1"),
-					new(LogLevel.Info, "OtherLogger", "Test message 2"),
-					new(LogLevel.Info, "ThirdLogger", "Test message 3")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message 1"),
+					new(LogEntryLevel.Info, "OtherLogger", "Test message 2"),
+					new(LogEntryLevel.Info, "ThirdLogger", "Test message 3")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -228,7 +228,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should hide entries matching ANY exclude term
 				Assert.Single(visibleItems);
@@ -242,10 +242,10 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message 1"),
-					new(LogLevel.Info, "OtherLogger", "Test message 2")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message 1"),
+					new(LogEntryLevel.Info, "OtherLogger", "Test message 2")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -253,7 +253,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should show all entries when no filters are active
 				Assert.Equal(2, visibleItems.Count);
@@ -314,9 +314,9 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Test message")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Test message")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -325,7 +325,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Entry matching exclude pattern should be hidden
 				Assert.Empty(visibleItems);
@@ -338,9 +338,9 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "OtherLogger", "Test message")
+					new(LogEntryLevel.Info, "OtherLogger", "Test message")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -349,7 +349,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Entry not matching exclude pattern should be shown
 				Assert.Single(visibleItems);
@@ -363,10 +363,10 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "MyApp.Logger", "Error occurred"),
-					new(LogLevel.Info, "OtherLogger", "Info message")
+					new(LogEntryLevel.Info, "MyApp.Logger", "Error occurred"),
+					new(LogEntryLevel.Info, "OtherLogger", "Info message")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -375,7 +375,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should match in message field
 				Assert.Single(visibleItems);
@@ -389,12 +389,12 @@ namespace Sentinel.LogViewer.Tests
 			_context.RunOnSta(() =>
 			{
 				// Arrange
-				var testData = new ObservableCollection<LogEventInfo>
+				var testData = new ObservableCollection<LogEntry>
 				{
-					new(LogLevel.Info, "OtherLogger1", "Error occurred"),
-					new(LogLevel.Info, "OtherLogger2", "Info message"),
-					new(LogLevel.Info, "OtherLogger3", "error"),
-					new(LogLevel.Info, "OtherLogger4", "Error")
+					new(LogEntryLevel.Info, "OtherLogger1", "Error occurred"),
+					new(LogEntryLevel.Info, "OtherLogger2", "Info message"),
+					new(LogEntryLevel.Info, "OtherLogger3", "error"),
+					new(LogEntryLevel.Info, "OtherLogger4", "Error")
 				};
 				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
 
@@ -403,7 +403,7 @@ namespace Sentinel.LogViewer.Tests
 
 				// Assert
 				var collectionView = (CollectionView)viewer.LogEvents.View;
-				var visibleItems = collectionView.Cast<LogEventInfo>().ToList();
+				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
 				// Should exclude the last item
 				Assert.Equal(3, visibleItems.Count);

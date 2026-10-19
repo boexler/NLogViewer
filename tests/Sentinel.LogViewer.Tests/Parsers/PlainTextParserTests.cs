@@ -1,4 +1,4 @@
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Parsers;
 using Xunit;
 
@@ -37,7 +37,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("MyLogger", logEvent.LoggerName);
             Assert.Contains("Application started successfully", logEvent.Message);
         }
@@ -69,37 +69,37 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, results[0].TimeStamp.Hour);
             Assert.Equal(30, results[0].TimeStamp.Minute);
             Assert.Equal(45, results[0].TimeStamp.Second);
-            Assert.Equal(LogLevel.Trace, results[0].Level);
+            Assert.Equal(LogEntryLevel.Trace, results[0].Level);
             Assert.Equal("Logger", results[0].LoggerName);
             Assert.Contains("Trace message", results[0].Message);
             
             // Second entry
             Assert.Equal(46, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Debug, results[1].Level);
+            Assert.Equal(LogEntryLevel.Debug, results[1].Level);
             Assert.Equal("Logger", results[1].LoggerName);
             Assert.Contains("Debug message", results[1].Message);
             
             // Third entry
             Assert.Equal(47, results[2].TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, results[2].Level);
+            Assert.Equal(LogEntryLevel.Info, results[2].Level);
             Assert.Equal("Logger", results[2].LoggerName);
             Assert.Contains("Info message", results[2].Message);
             
             // Fourth entry
             Assert.Equal(48, results[3].TimeStamp.Second);
-            Assert.Equal(LogLevel.Warn, results[3].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[3].Level);
             Assert.Equal("Logger", results[3].LoggerName);
             Assert.Contains("Warn message", results[3].Message);
             
             // Fifth entry
             Assert.Equal(49, results[4].TimeStamp.Second);
-            Assert.Equal(LogLevel.Error, results[4].Level);
+            Assert.Equal(LogEntryLevel.Error, results[4].Level);
             Assert.Equal("Logger", results[4].LoggerName);
             Assert.Contains("Error message", results[4].Message);
             
             // Sixth entry
             Assert.Equal(50, results[5].TimeStamp.Second);
-            Assert.Equal(LogLevel.Fatal, results[5].Level);
+            Assert.Equal(LogEntryLevel.Fatal, results[5].Level);
             Assert.Equal("Logger", results[5].LoggerName);
             Assert.Contains("Fatal message", results[5].Message);
         }
@@ -128,7 +128,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
             
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("Logger", logEvent.LoggerName);
             Assert.Contains("Message with ISO timestamp", logEvent.Message);
         }
@@ -154,7 +154,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("Logger", logEvent.LoggerName);
             Assert.Contains("Message without level", logEvent.Message);
         }
@@ -180,7 +180,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("MyApp.Services.DataService", logEvent.LoggerName);
             Assert.Contains("Processing request", logEvent.Message);
         }
@@ -206,7 +206,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("MyApp.Controllers.HomeController", logEvent.LoggerName);
             Assert.Contains("Processing request", logEvent.Message);
         }
@@ -232,7 +232,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("Unknown", logEvent.LoggerName);
             Assert.Contains("Simple log message", logEvent.Message);
         }
@@ -261,7 +261,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("Logger", logEvent.LoggerName);
             Assert.Contains("Valid message", logEvent.Message);
         }
@@ -290,19 +290,19 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, results[0].TimeStamp.Hour);
             Assert.Equal(30, results[0].TimeStamp.Minute);
             Assert.Equal(45, results[0].TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, results[0].Level);
+            Assert.Equal(LogEntryLevel.Info, results[0].Level);
             Assert.Equal("Logger1", results[0].LoggerName);
             Assert.Contains("First message", results[0].Message);
             
             // Second entry
             Assert.Equal(46, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Warn, results[1].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[1].Level);
             Assert.Equal("Logger2", results[1].LoggerName);
             Assert.Contains("Second message", results[1].Message);
             
             // Third entry
             Assert.Equal(47, results[2].TimeStamp.Second);
-            Assert.Equal(LogLevel.Error, results[2].Level);
+            Assert.Equal(LogEntryLevel.Error, results[2].Level);
             Assert.Equal("Logger3", results[2].LoggerName);
             Assert.Contains("Third message", results[2].Message);
         }
@@ -328,7 +328,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(30, logEvent.TimeStamp.Minute);
             Assert.Equal(45, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Warn, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Warn, logEvent.Level);
             Assert.Equal("Logger", logEvent.LoggerName);
             Assert.Contains("Warning message", logEvent.Message);
         }
@@ -354,7 +354,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(58, logEvent.TimeStamp.Minute);
             Assert.Equal(37, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Fatal, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Fatal, logEvent.Level);
             Assert.Equal("Sentinel.LogViewer.TestApp", logEvent.LoggerName);
             Assert.Contains("Background task completed (Message #735)", logEvent.Message);
         }
@@ -384,13 +384,13 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(37, results[0].TimeStamp.Second);
             // Milliseconds should be parsed (may be 896 from 8960 or similar)
             Assert.True(results[0].TimeStamp.Millisecond >= 0 && results[0].TimeStamp.Millisecond < 1000);
-            Assert.Equal(LogLevel.Fatal, results[0].Level);
+            Assert.Equal(LogEntryLevel.Fatal, results[0].Level);
             Assert.Equal("Logger", results[0].LoggerName);
             Assert.Contains("Message", results[0].Message);
             
             // Second entry
             Assert.Equal(38, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Warn, results[1].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[1].Level);
             Assert.Equal("Logger", results[1].LoggerName);
             Assert.Contains("Message", results[1].Message);
         }
@@ -418,13 +418,13 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, results[0].TimeStamp.Hour);
             Assert.Equal(58, results[0].TimeStamp.Minute);
             Assert.Equal(37, results[0].TimeStamp.Second);
-            Assert.Equal(LogLevel.Fatal, results[0].Level);
+            Assert.Equal(LogEntryLevel.Fatal, results[0].Level);
             Assert.Equal("Sentinel.LogViewer.TestApp", results[0].LoggerName);
             Assert.Contains("Background task completed (Message #735)", results[0].Message);
             
             // Second entry
             Assert.Equal(38, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Warn, results[1].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[1].Level);
             Assert.Equal("Sentinel.LogViewer.TestApp.Models", results[1].LoggerName);
             Assert.Contains("User authentication successful (Message #736)", results[1].Message);
         }
@@ -454,7 +454,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, results[0].TimeStamp.Hour);
             Assert.Equal(30, results[0].TimeStamp.Minute);
             Assert.Equal(45, results[0].TimeStamp.Second);
-            Assert.Equal(LogLevel.Error, results[0].Level);
+            Assert.Equal(LogEntryLevel.Error, results[0].Level);
             Assert.Equal("Logger", results[0].LoggerName);
             Assert.Contains("First line of error", results[0].Message);
             Assert.Contains("This is a continuation line", results[0].Message);
@@ -463,7 +463,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             
             // Second entry
             Assert.Equal(46, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, results[1].Level);
+            Assert.Equal(LogEntryLevel.Info, results[1].Level);
             Assert.Equal("Logger", results[1].LoggerName);
             Assert.Contains("New log entry", results[1].Message);
         }
@@ -491,7 +491,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, logEvent.TimeStamp.Hour);
             Assert.Equal(58, logEvent.TimeStamp.Minute);
             Assert.Equal(39, logEvent.TimeStamp.Second);
-            Assert.Equal(LogLevel.Error, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Error, logEvent.Level);
             Assert.Equal("Sentinel.LogViewer.TestApp.Controllers.HomeController", logEvent.LoggerName);
             Assert.Contains("Error exception: Invalid operation occurred at 11:58:39", logEvent.Message);
             Assert.Contains("System.Exception: System.InvalidOperationException: Invalid operation occurred at 11:58:39", logEvent.Message);
@@ -524,7 +524,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(10, results[0].TimeStamp.Hour);
             Assert.Equal(30, results[0].TimeStamp.Minute);
             Assert.Equal(45, results[0].TimeStamp.Second);
-            Assert.Equal(LogLevel.Error, results[0].Level);
+            Assert.Equal(LogEntryLevel.Error, results[0].Level);
             Assert.Equal("Logger", results[0].LoggerName);
             Assert.Contains("Stack trace:", results[0].Message);
             Assert.Contains("at SomeMethod()", results[0].Message);
@@ -533,7 +533,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             
             // Second entry
             Assert.Equal(46, results[1].TimeStamp.Second);
-            Assert.Equal(LogLevel.Info, results[1].Level);
+            Assert.Equal(LogEntryLevel.Info, results[1].Level);
             Assert.Equal("Logger", results[1].LoggerName);
             Assert.Contains("Next entry", results[1].Message);
         }

@@ -1,25 +1,23 @@
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Parsers;
 using Sentinel.LogViewer.Wpf.Resolver;
 
 namespace Sentinel.LogViewer.Helpers;
 
 /// <summary>
-/// Shows the line number of entries imported from a text file as ID, and the NLog sequence id otherwise
+/// Shows the line number of entries imported from a text file as ID, and the number of the entry otherwise
 /// </summary>
-public class FileLineIdResolver : ILogEventInfoResolver
+public class FileLineIdResolver : ILogEntryResolver
 {
 	private readonly IdResolver _sequenceIdResolver = new();
 
-	public string Resolve(LogEventInfo logEventInfo)
+	public string Resolve(LogEntry logEntry)
 	{
-		// HasProperties avoids allocating the property dictionary for every live event.
-		if (logEventInfo.HasProperties &&
-		    logEventInfo.Properties.TryGetValue(PlainTextParser.FileLinePropertyName, out var fileLine))
+		if (logEntry.Properties.TryGetValue(PlainTextParser.FileLinePropertyName, out var fileLine))
 		{
 			return fileLine?.ToString() ?? string.Empty;
 		}
 
-		return _sequenceIdResolver.Resolve(logEventInfo);
+		return _sequenceIdResolver.Resolve(logEntry);
 	}
 }

@@ -1,4 +1,4 @@
-using NLog;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Parsers;
 using Xunit;
 
@@ -17,7 +17,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
         }
 
         [Fact]
-        public void Parse_ValidJsonObject_ReturnsLogEventInfo()
+        public void Parse_ValidJsonObject_ReturnsLogEntry()
         {
             // Arrange
             var json = @"{
@@ -34,7 +34,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Single(results);
             var logEvent = results[0];
             Assert.Equal("TestLogger", logEvent.LoggerName);
-            Assert.Equal(LogLevel.Info, logEvent.Level);
+            Assert.Equal(LogEntryLevel.Info, logEvent.Level);
             Assert.Equal("Test message", logEvent.Message);
         }
 
@@ -64,15 +64,15 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Equal(2, results.Count);
             Assert.Equal("Logger1", results[0].LoggerName);
             Assert.Equal("Logger2", results[1].LoggerName);
-            Assert.Equal(LogLevel.Info, results[0].Level);
-            Assert.Equal(LogLevel.Warn, results[1].Level);
+            Assert.Equal(LogEntryLevel.Info, results[0].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[1].Level);
         }
 
         [Fact]
         public void Parse_JsonWithAllLevels_ParsesLevelsCorrectly()
         {
             var levels = new[] { "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL" };
-            var expectedLogLevels = new[] { LogLevel.Trace, LogLevel.Debug, LogLevel.Info, LogLevel.Warn, LogLevel.Error, LogLevel.Fatal };
+            var expectedLogLevels = new[] { LogEntryLevel.Trace, LogEntryLevel.Debug, LogEntryLevel.Info, LogEntryLevel.Warn, LogEntryLevel.Error, LogEntryLevel.Fatal };
 
             for (int i = 0; i < levels.Length; i++)
             {
@@ -134,7 +134,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
             Assert.Single(results);
             var exception = results[0].Exception;
             Assert.NotNull(exception);
-            Assert.Contains("Test exception message", exception.Message);
+            Assert.Contains("Test exception message", exception);
         }
 
         [Fact]
@@ -240,7 +240,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
 
             // Assert
             Assert.Single(results);
-            Assert.Equal(LogLevel.Info, results[0].Level);
+            Assert.Equal(LogEntryLevel.Info, results[0].Level);
         }
 
         [Fact]
@@ -285,7 +285,7 @@ namespace Sentinel.LogViewer.Tests.Parsers
 
             // Assert
             Assert.Single(results);
-            Assert.Equal(LogLevel.Warn, results[0].Level);
+            Assert.Equal(LogEntryLevel.Warn, results[0].Level);
         }
 
         public void Dispose()

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using NLog;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Parsers
 {
@@ -13,9 +13,9 @@ namespace Sentinel.LogViewer.Parsers
     {
         private bool _disposed;
 
-        public List<LogEventInfo> Parse(string json)
+        public List<LogEntry> Parse(string json)
         {
-            var results = new List<LogEventInfo>();
+            var results = new List<LogEntry>();
 
             try
             {
@@ -50,7 +50,7 @@ namespace Sentinel.LogViewer.Parsers
             return results;
         }
 
-        private LogEventInfo? ParseJsonElement(JsonElement element)
+        private LogEntry? ParseJsonElement(JsonElement element)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace Sentinel.LogViewer.Parsers
 
                 var level = element.TryGetProperty("level", out var levelProp)
                     ? ParseLogLevel(levelProp.GetString())
-                    : LogLevel.Info;
+                    : LogEntryLevel.Info;
 
                 var loggerName = element.TryGetProperty("logger", out var loggerProp)
                     ? loggerProp.GetString() ?? "Unknown"
@@ -75,32 +75,36 @@ namespace Sentinel.LogViewer.Parsers
                         ? msgProp2.GetString() ?? string.Empty
                         : string.Empty;
 
-                var logEvent = new LogEventInfo(level, loggerName, message)
-                {
-                    TimeStamp = timestamp
-                };
-
                 // Parse exception if present
+                string? exception = null;
                 if (element.TryGetProperty("exception", out var exProp))
                 {
                     var exMessage = exProp.GetString();
                     if (!string.IsNullOrEmpty(exMessage))
                     {
-                        logEvent.Exception = new Exception(exMessage);
+                        exception = exMessage;
                     }
                 }
 
                 // Add all other properties
+                var properties = new Dictionary<string, object?>();
                 foreach (var prop in element.EnumerateObject())
                 {
-                    if (prop.Name != "timestamp" && prop.Name != "level" && 
+                    if (prop.Name != "timestamp" && prop.Name != "level" &&
                         prop.Name != "logger" && prop.Name != "loggerName" &&
                         prop.Name != "message" && prop.Name != "msg" &&
                         prop.Name != "exception")
                     {
-                        logEvent.Properties[prop.Name] = prop.Value.GetString() ?? prop.Value.ToString();
+                        properties[prop.Name] = prop.Value.GetString() ?? prop.Value.ToString();
                     }
                 }
+
+                var logEvent = new LogEntry(level, loggerName, message)
+                {
+                    TimeStamp = timestamp,
+                    Exception = exception,
+                    Properties = properties
+                };
 
                 return logEvent;
             }
@@ -127,20 +131,20 @@ namespace Sentinel.LogViewer.Parsers
             return DateTime.Now;
         }
 
-        private LogLevel ParseLogLevel(string? levelString)
+        private LogEntryLevel ParseLogLevel(string? levelString)
         {
             if (string.IsNullOrEmpty(levelString))
-                return LogLevel.Info;
+                return LogEntryLevel.Info;
 
             return levelString.ToUpperInvariant() switch
             {
-                "TRACE" => LogLevel.Trace,
-                "DEBUG" => LogLevel.Debug,
-                "INFO" => LogLevel.Info,
-                "WARN" or "WARNING" => LogLevel.Warn,
-                "ERROR" => LogLevel.Error,
-                "FATAL" => LogLevel.Fatal,
-                _ => LogLevel.Info
+                "TRACE" => LogEntryLevel.Trace,
+                "DEBUG" => LogEntryLevel.Debug,
+                "INFO" => LogEntryLevel.Info,
+                "WARN" or "WARNING" => LogEntryLevel.Warn,
+                "ERROR" => LogEntryLevel.Error,
+                "FATAL" => LogEntryLevel.Fatal,
+                _ => LogEntryLevel.Info
             };
         }
 
