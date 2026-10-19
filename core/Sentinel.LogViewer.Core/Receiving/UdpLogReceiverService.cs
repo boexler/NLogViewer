@@ -5,10 +5,8 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Sentinel.LogViewer.Models;
-using Sentinel.LogViewer.Parsers;
 
-namespace Sentinel.LogViewer.Services;
+namespace Sentinel.LogViewer.Core;
 
 /// <summary>
 /// Service for receiving UDP log messages and parsing them

@@ -443,6 +443,15 @@ LogViewer1.ItemsSource = new ObservableCollection<LogEntry>
 
 **Migrating from `LogEventInfo`:** `ItemsSource` takes `ObservableCollection<LogEntry>`, `ILogEventInfoResolver` is now `ILogEntryResolver` (its `Resolve` takes a `LogEntry`), `ILogEventResolverToStringConverter` is now `ILogEntryResolverToStringConverter`, `ICacheTarget` is now `ILogSource` (`Cache` is `Entries`, an `IObservable<LogEntry>`), the `CacheTarget` property of `LogViewer` is `Source`, `LogViewerBase` is part of `LogViewer`, and `FormattedMessage` is `Message`, `SequenceID` is `Id` and `Level` is a `LogEntryLevel` instead of an NLog `LogLevel`.
 
+### The core (Sentinel.LogViewer.Core)
+
+The package `Sentinel.LogViewer.Core` targets plain `net8.0` and has no WPF in it, so a server or another kind of user interface can use it too. The `Sentinel.LogViewer.Wpf` package brings it along. It holds:
+
+- `LogEntry`, `LogEntryLevel` and `ILogSource`, and `LogBuffer`, a source that keeps the last entries in memory and sends them to every new subscriber
+- the filters as a value (`LogViewerFilterState`), the search terms (`TextSearchTerm`, `RegexSearchTerm`) and the format of the time stamp (`TimeStampFormat`)
+- the logger tree as a model (`LoggerTree`, `LoggerNode`, `LoggerVisibilityRules`)
+- the receiving of log messages over UDP (`UdpLogReceiverService`) with the Log4J XML parser (`Log4JEventParser`, `Log4JEvent`)
+
 ### Sources of the entries (Source)
 
 There is one control, `LogViewer`. Its entries come from one of these, in this order:

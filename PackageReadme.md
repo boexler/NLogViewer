@@ -3,6 +3,7 @@
 WPF controls and themes to visualize NLog log output in desktop applications.
 
 - **Sentinel.LogViewer.Wpf** — the viewer control (targets `net8-windows`).
+- **Sentinel.LogViewer.Core** — the log entry, the sources of entries and the logic without user interface (targets `net8.0`, no WPF). The Wpf package brings it along.
 
 ```xml
 <PackageReference Include="Sentinel.LogViewer.Wpf" Version="…" />
