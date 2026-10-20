@@ -323,7 +323,7 @@
     <value>Remove port</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535.</value>
+    <value>Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535. Only UDP is supported for now.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>This port is already in the list.</value>
@@ -998,10 +998,10 @@
     <value>S_top listening</value>
   </data>
   <data name="Summary_Entries" xml:space="preserve">
-    <value>Entries: {0}</value>
+    <value>Entries: {0:N0}</value>
   </data>
   <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Entries: {0} of {1}</value>
+    <value>Entries: {0:N0} of {1:N0}</value>
   </data>
   <data name="Summary_LevelsOff" xml:space="preserve">
     <value>Levels off: {0}</value>

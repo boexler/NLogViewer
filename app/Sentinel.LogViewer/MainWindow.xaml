@@ -343,8 +343,19 @@
         </Border>
 
         <StatusBar Grid.Row="3">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
             <!-- Receiving: the state opens the sources panel, the button starts or stops all sources -->
-            <StatusBarItem>
+            <StatusBarItem Grid.Column="0">
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource ThemeIconButton}" Padding="8,2" Margin="0,0,4,0"
                             FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="12"
@@ -363,6 +374,8 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                         <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8FD;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource ThemeTextSecondary}"/>
                             <Ellipse Width="8" Height="8" Margin="0,0,7,0" VerticalAlignment="Center">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
@@ -382,8 +395,6 @@
                                 </Ellipse.Style>
                             </Ellipse>
                             <TextBlock Text="{Binding ReceiveStatusText}"/>
-                            <TextBlock Text="&#xE70E;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="9" Margin="8,2,0,0" VerticalAlignment="Center"
-                                       Foreground="{DynamicResource ThemeTextSecondary}"/>
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource ThemeIconButton}" Width="26" Height="24" Padding="0"
@@ -396,7 +407,7 @@
                                     <Setter Property="Text" Value="&#xE768;"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsListening}" Value="True">
-                                            <Setter Property="Text" Value="&#xE71A;"/>
+                                            <Setter Property="Text" Value="&#xE769;"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -405,9 +416,8 @@
                     </Button>
                 </StackPanel>
             </StatusBarItem>
-            <Separator />
             <!-- The selected tab: entries and what filters them -->
-            <StatusBarItem>
+            <StatusBarItem Grid.Column="1" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding TabSummary}" VerticalAlignment="Center"/>
                     <TextBlock Margin="10,0,0,0" VerticalAlignment="Center"
@@ -418,27 +428,23 @@
                     </TextBlock>
                 </StackPanel>
             </StatusBarItem>
-            <Separator />
-            <!-- Update notice -->
-            <StatusBarItem>
-                <StatusBarItem.Style>
-                    <Style TargetType="StatusBarItem">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding UpdateNotice}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StatusBarItem.Style>
-                <TextBlock>
-                    <Hyperlink Command="{Binding AboutCommand}">
-                        <Run Text="{Binding UpdateNotice, Mode=OneWay}" />
-                    </Hyperlink>
-                </TextBlock>
-            </StatusBarItem>
             <!-- Timestamp and language (Right) -->
-            <StatusBarItem HorizontalAlignment="Right">
+            <StatusBarItem Grid.Column="2">
                 <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Margin="0,0,14,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding UpdateNotice}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                        <Hyperlink Command="{Binding AboutCommand}">
+                            <Run Text="{Binding UpdateNotice, Mode=OneWay}" />
+                        </Hyperlink>
+                    </TextBlock>
                     <TextBlock Text="{Binding LastLogTimestamp}" VerticalAlignment="Center" Margin="0,0,10,0" />
                     <Button x:Name="LanguageButton" Style="{StaticResource ThemeIconButton}"
                             Padding="5,2"

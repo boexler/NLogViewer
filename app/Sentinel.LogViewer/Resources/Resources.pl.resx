@@ -323,7 +323,7 @@
     <value>Usuń port</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Podaj adres w postaci udp://0.0.0.0:4000 z portem od 1 do 65535.</value>
+    <value>Podaj adres w postaci udp://0.0.0.0:4000 z portem od 1 do 65535. Na razie obsługiwany jest tylko UDP.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ten port jest już na liście.</value>
@@ -998,10 +998,10 @@
     <value>_Zatrzymaj nasłuchiwanie</value>
   </data>
   <data name="Summary_Entries" xml:space="preserve">
-    <value>Wpisy: {0}</value>
+    <value>Wpisy: {0:N0}</value>
   </data>
   <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Wpisy: {0} z {1}</value>
+    <value>Wpisy: {0:N0} z {1:N0}</value>
   </data>
   <data name="Summary_LevelsOff" xml:space="preserve">
     <value>Ukryte poziomy: {0}</value>

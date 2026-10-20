@@ -323,7 +323,7 @@
     <value>Port eltávolítása</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal.</value>
+    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal. Egyelőre csak az UDP támogatott.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ez a port már szerepel a listában.</value>
@@ -998,10 +998,10 @@
     <value>Figyelés _leállítása</value>
   </data>
   <data name="Summary_Entries" xml:space="preserve">
-    <value>Bejegyzések: {0}</value>
+    <value>Bejegyzések: {0:N0}</value>
   </data>
   <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Bejegyzések: {0} / {1}</value>
+    <value>Bejegyzések: {0:N0} / {1:N0}</value>
   </data>
   <data name="Summary_LevelsOff" xml:space="preserve">
     <value>Elrejtett szintek: {0}</value>

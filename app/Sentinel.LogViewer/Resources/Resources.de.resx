@@ -323,7 +323,7 @@
     <value>Port entfernen</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Geben Sie eine Adresse wie udp://0.0.0.0:4000 mit einem Port von 1 bis 65535 ein.</value>
+    <value>Geben Sie eine Adresse wie udp://0.0.0.0:4000 mit einem Port von 1 bis 65535 ein. Zurzeit wird nur UDP unterstützt.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Dieser Port steht bereits in der Liste.</value>
@@ -998,16 +998,16 @@
     <value>Empfang _beenden</value>
   </data>
   <data name="Summary_Entries" xml:space="preserve">
-    <value>Einträge: {0}</value>
+    <value>Einträge: {0:N0}</value>
   </data>
   <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Einträge: {0} von {1}</value>
+    <value>Einträge: {0:N0} von {1:N0}</value>
   </data>
   <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Level aus: {0}</value>
+    <value>Level ausgeblendet: {0}</value>
   </data>
   <data name="Summary_Terms" xml:space="preserve">
-    <value>Terme: {0}</value>
+    <value>Suchbegriffe: {0}</value>
   </data>
   <data name="Summary_Loggers" xml:space="preserve">
     <value>Logger-Regeln: {0}</value>

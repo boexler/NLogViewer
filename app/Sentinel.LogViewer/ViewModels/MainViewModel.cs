@@ -641,8 +641,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var parts = new List<string>
 		{
 			filtered
-				? Text("Summary_EntriesOf", "Entries: {0} of {1}", tab.VisibleEntryCount, tab.LogCount)
-				: Text("Summary_Entries", "Entries: {0}", tab.LogCount)
+				? Text("Summary_EntriesOf", "Entries: {0:N0} of {1:N0}", tab.VisibleEntryCount, tab.LogCount)
+				: Text("Summary_Entries", "Entries: {0:N0}", tab.LogCount)
 		};
 		if (levels > 0)
 			parts.Add(Text("Summary_LevelsOff", "Levels off: {0}", levels));

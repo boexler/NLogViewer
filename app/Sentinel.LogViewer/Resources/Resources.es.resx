@@ -323,7 +323,7 @@
     <value>Quitar puerto</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Introduzca una dirección como udp://0.0.0.0:4000 con un puerto de 1 a 65535.</value>
+    <value>Introduzca una dirección como udp://0.0.0.0:4000 con un puerto de 1 a 65535. Por ahora solo se admite UDP.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Este puerto ya está en la lista.</value>
@@ -998,10 +998,10 @@
     <value>_Detener escucha</value>
   </data>
   <data name="Summary_Entries" xml:space="preserve">
-    <value>Entradas: {0}</value>
+    <value>Entradas: {0:N0}</value>
   </data>
   <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Entradas: {0} de {1}</value>
+    <value>Entradas: {0:N0} de {1:N0}</value>
   </data>
   <data name="Summary_LevelsOff" xml:space="preserve">
     <value>Niveles ocultos: {0}</value>
