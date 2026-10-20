@@ -61,6 +61,7 @@
                                     <ToggleButton
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Scroll to the newest entry when new entries arrive"
                                         IsChecked="{Binding Path=AutoScroll, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -75,6 +76,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Remove all entries from the list"
                                         Command="{Binding Path=ClearCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <Button.Content>
                                             <StackPanel Orientation="Vertical">
@@ -89,6 +91,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Pause: no new entries are added to the list while it is pressed"
                                         IsChecked="{Binding Path=Pause, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -109,6 +112,7 @@
                                         Margin="0,0,2,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Trace entries (press again to show them)"
                                         IsChecked="{Binding Path=TraceFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -124,6 +128,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Debug entries (press again to show them)"
                                         IsChecked="{Binding Path=DebugFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -139,6 +144,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Info entries (press again to show them)"
                                         IsChecked="{Binding Path=InfoFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -154,6 +160,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Warn entries (press again to show them)"
                                         IsChecked="{Binding Path=WarnFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -169,6 +176,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Error entries (press again to show them)"
                                         IsChecked="{Binding Path=ErrorFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
@@ -184,6 +192,7 @@
                                         Margin="2,0,0,0"
                                         Width="60"
                                         Height="40"
+                                        ToolTip="Hide the Fatal entries (press again to show them)"
                                         IsChecked="{Binding Path=FatalFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <ToggleButton.Content>
                                             <StackPanel Orientation="Vertical">
