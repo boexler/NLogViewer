@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Sigur doriți să închideți toate filele?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Începe ascultarea</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Oprește ascultarea</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Gata</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Ascultă</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Oprit</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -901,15 +886,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Selectați limba</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Începe ascultarea pe porturile configurate</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Oprește ascultarea pe toate porturile</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Stare:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filtru</value>
   </data>
@@ -960,6 +936,81 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Există deja o presetare cu acest nume.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Gata</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Ascultă</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Ascultă · {0} surse</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Ascultă · {0} din {1} surse</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Ascultare oprită</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Pornirea a eșuat</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Nicio sursă</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Afișează sursele care primesc jurnale</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Pornește sau oprește ascultarea pe toate sursele</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Ascultă</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Oprită</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Port ocupat</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Port ocupat de {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Pornirea a eșuat</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Reîncearcă</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Surse</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Gestionează sursele...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Sursă</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Stare</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Intrări</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Ultima intrare</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Pornit</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>Începe _ascultarea</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>_Oprește ascultarea</value>
   </data>
 </root>
 

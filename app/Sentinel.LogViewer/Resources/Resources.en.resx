@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Do you really want to close all tabs?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Start Listening</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Stop Listening</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Ready</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Listening</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Stopped</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -901,15 +886,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Select Language</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Start listening on configured ports</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Stop listening on all ports</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Status:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filter</value>
   </data>
@@ -960,6 +936,81 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>A preset with this name already exists.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Listening</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Listening · {0} sources</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Listening · {0} of {1} sources</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Could not start</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>No sources</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Show the sources that receive logs</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Start or stop listening on all sources</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Listening</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Port in use</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Port in use by {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Could not start</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Sources</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Manage sources...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Entries</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Last entry</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>_Start listening</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>S_top listening</value>
   </data>
 </root>
 

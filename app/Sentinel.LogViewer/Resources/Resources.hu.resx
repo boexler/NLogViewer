@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Biztosan bezárja az összes lapot?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Figyelés indítása</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Figyelés leállítása</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Kész</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Figyel</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Leállítva</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -901,15 +886,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Nyelv kiválasztása</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Figyelés indítása a beállított portokon</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Figyelés leállítása az összes porton</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Állapot:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Szűrő</value>
   </data>
@@ -960,6 +936,81 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Már létezik ilyen nevű előbeállítás.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Figyel</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Figyel · {0} forrás</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Figyel · {0}/{1} forrás</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Figyelés leállítva</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Az indítás sikertelen</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Nincs forrás</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>A naplókat fogadó források megjelenítése</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Figyelés indítása vagy leállítása az összes forráson</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Figyel</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>A port foglalt</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>A portot használja: {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Az indítás sikertelen</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Újra</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Források</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Források kezelése...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Bejegyzések</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Utolsó bejegyzés</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Be</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>Figyelés _indítása</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>Figyelés _leállítása</value>
   </data>
 </root>
 

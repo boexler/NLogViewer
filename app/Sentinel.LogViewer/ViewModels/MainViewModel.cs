@@ -39,7 +39,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private readonly UpdateService _updateService;
 	private string? _updateNotice;
 	private bool _isListening;
-	private string _listeningStatus = string.Empty;
+	private bool _hasStarted;
+	private bool _sourcesPanelOpen;
+	private string _receiveStatusText = string.Empty;
+	private ReceiveStatus _receiveStatus;
+	private readonly System.Windows.Threading.DispatcherTimer _sourcesTimer = new() { Interval = TimeSpan.FromSeconds(1) };
 	private string _statusMessage = "Ready";
 	private string _lastLogTimestamp = string.Empty;
 	private LogTabViewModel? _selectedTab;
@@ -76,6 +80,19 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		// Initialize commands
 		StartListeningCommand = new AsyncRelayCommand(StartListeningAsync, () => !_isListening);
+		ToggleReceivingCommand = new RelayCommand(() =>
+		{
+			if (_isListening)
+				StopListening();
+			else
+				_ = StartListeningAsync();
+		});
+		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
+		ManageSourcesCommand = new RelayCommand(() =>
+		{
+			IsSourcesPanelOpen = false;
+			OpenSettings(SettingsViewModel.ReceivingId);
+		});
 		StopListeningCommand = new RelayCommand(StopListening, () => _isListening);
 		OpenFileCommand = new RelayCommand(() => OpenFile(askColumnMapping: false));
 		OpenFileWithMappingCommand = new RelayCommand(() => OpenFile(askColumnMapping: true));
@@ -98,8 +115,13 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Initialize current language flag
 		UpdateLanguageFlag();
 
-		// Initialize listening status with translated value
-		ListeningStatus = _localizationService.GetString("Status_Stopped", "Stopped");
+		// The sources of the receiver follow its changes; their numbers are read again while the panel is open
+		_udpReceiverService.SourcesChanged += OnSourcesChanged;
+		_sourcesTimer.Tick += (_, _) =>
+		{
+			foreach (var source in Sources)
+				source.Refresh();
+		};
 
 		// Subscribe to log events
 		// Buffer events for 250ms, filter empty batches, group by AppInfo.Id, and process each group as a batch
@@ -466,16 +488,152 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
-	public string ListeningStatus
+	/// <summary>
+	/// The sources that receive logs, for the panel of the status bar
+	/// </summary>
+	public ObservableCollection<ReceiveSourceViewModel> Sources { get; } = new();
+
+	/// <summary>
+	/// What the status bar says about receiving, e.g. "Receiving · 2 of 3 sources"
+	/// </summary>
+	public string ReceiveStatusText
 	{
-		get => _listeningStatus;
-		set
+		get => _receiveStatusText;
+		private set
 		{
-			if (_listeningStatus != value)
+			if (_receiveStatusText != value)
 			{
-				_listeningStatus = value;
+				_receiveStatusText = value;
 				OnPropertyChanged();
 			}
+		}
+	}
+
+	public ReceiveStatus ReceiveStatus
+	{
+		get => _receiveStatus;
+		private set
+		{
+			if (_receiveStatus != value)
+			{
+				_receiveStatus = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the panel with the sources is open above the status bar
+	/// </summary>
+	public bool IsSourcesPanelOpen
+	{
+		get => _sourcesPanelOpen;
+		set
+		{
+			if (_sourcesPanelOpen == value)
+				return;
+
+			_sourcesPanelOpen = value;
+			if (value)
+			{
+				RefreshSources();
+				_sourcesTimer.Start();
+			}
+			else
+			{
+				_sourcesTimer.Stop();
+			}
+
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>
+	/// Starts all sources, or stops them when some receive
+	/// </summary>
+	public ICommand ToggleReceivingCommand { get; }
+
+	public ICommand ToggleSourcesPanelCommand { get; }
+
+	/// <summary>
+	/// Opens the settings where the addresses are
+	/// </summary>
+	public ICommand ManageSourcesCommand { get; }
+
+	private void OnSourcesChanged(object? sender, EventArgs e)
+	{
+		var dispatcher = System.Windows.Application.Current?.Dispatcher;
+		if (dispatcher == null || dispatcher.CheckAccess())
+			RefreshSources();
+		else
+			dispatcher.InvokeAsync(RefreshSources);
+	}
+
+	/// <summary>
+	/// Makes the rows of the panel the sources of the receiver and works out what the status bar says
+	/// </summary>
+	private void RefreshSources()
+	{
+		var current = _udpReceiverService.Sources;
+		for (var i = Sources.Count - 1; i >= 0; i--)
+		{
+			if (!current.Contains(Sources[i].Source))
+				Sources.RemoveAt(i);
+		}
+
+		for (var i = 0; i < current.Count; i++)
+		{
+			var existing = Sources.FirstOrDefault(row => ReferenceEquals(row.Source, current[i]));
+			if (existing == null)
+			{
+				Sources.Insert(i, new ReceiveSourceViewModel(current[i], _udpReceiverService, _localizationService));
+				continue;
+			}
+
+			var index = Sources.IndexOf(existing);
+			if (index != i)
+				Sources.Move(index, i);
+
+			existing.Refresh();
+		}
+
+		var listening = current.Count(source => source.State == ReceiveSourceState.Listening);
+		IsListening = listening > 0;
+		if (current.Count == 0)
+		{
+			ReceiveStatus = ReceiveStatus.Stopped;
+			ReceiveStatusText = _localizationService.GetString("Receive_NoSources", "No sources");
+		}
+		else if (listening == 0)
+		{
+			if (current.Any(source => source.State == ReceiveSourceState.Failed))
+			{
+				ReceiveStatus = ReceiveStatus.Failed;
+				ReceiveStatusText = _localizationService.GetString("Receive_Failed", "Could not start");
+			}
+			else if (_hasStarted)
+			{
+				ReceiveStatus = ReceiveStatus.Stopped;
+				ReceiveStatusText = _localizationService.GetString("Receive_Stopped", "Stopped");
+			}
+			else
+			{
+				ReceiveStatus = ReceiveStatus.Ready;
+				ReceiveStatusText = _localizationService.GetString("Receive_Ready", "Ready");
+			}
+		}
+		else if (listening == current.Count)
+		{
+			ReceiveStatus = ReceiveStatus.Active;
+			ReceiveStatusText = current.Count == 1
+				? _localizationService.GetString("Receive_Active", "Listening")
+				: string.Format(CultureInfo.CurrentCulture, _localizationService.GetString("Receive_ActiveMany", "Listening · {0} sources"), current.Count);
+		}
+		else
+		{
+			ReceiveStatus = ReceiveStatus.Partial;
+			ReceiveStatusText = string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Receive_ActivePartial", "Listening · {0} of {1} sources"), listening, current.Count);
 		}
 	}
 
@@ -614,6 +772,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
+		_udpReceiverService.Configure(config.Ports);
 
 		if (config.CheckForUpdates && UpdateNotice == null)
 			_ = CheckForUpdatesInBackgroundAsync(UpdateService.IncludesPrereleases(config));
@@ -629,40 +788,27 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// Starts the UDP listener asynchronously. On failure (e.g. port in use), shows a MessageBox and keeps the listener inactive.
+	/// Starts all sources. A source that cannot be started (e.g. the port is in use) shows why in the panel; when none can be started,
+	/// a message says so.
 	/// </summary>
 	private async Task StartListeningAsync()
 	{
 		try
 		{
+			_hasStarted = true;
 			var config = _configService.LoadConfiguration();
 			var result = await _udpReceiverService.StartListeningAsync(config.Ports);
+			RefreshSources();
 
-			if (result.AnyStarted)
+			if (!result.AnyStarted && !string.IsNullOrEmpty(result.ErrorMessage))
 			{
-				IsListening = true;
-				ListeningStatus = _localizationService.GetString("Status_Listening", "Listening");
-				StatusMessage = _localizationService.GetString("Status_ListeningOnPorts", $"Listening on {config.Ports.Count} port(s)");
-				if (!string.IsNullOrEmpty(result.ErrorMessage))
-				{
-					// Partial failure: some ports failed
-					StatusMessage += " " + _localizationService.GetString("Status_SomePortsFailed", "(Some ports could not be opened.)");
-				}
-			}
-			else
-			{
-				IsListening = false;
-				ListeningStatus = _localizationService.GetString("Status_Error", "Error");
-				StatusMessage = result.ErrorMessage;
 				var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
 				MessageDialogWindow.Show(null, result.ErrorMessage, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 		catch (Exception ex)
 		{
-			IsListening = false;
-			ListeningStatus = _localizationService.GetString("Status_Error", "Error");
-			StatusMessage = _localizationService.GetString("Error_StartingListener", $"Error starting listener: {ex.Message}");
+			RefreshSources();
 			var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
 			MessageDialogWindow.Show(null, ex.Message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 		}
@@ -673,9 +819,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		try
 		{
 			_udpReceiverService.StopListening();
-			IsListening = false;
-			ListeningStatus = _localizationService.GetString("Status_Stopped", "Stopped");
-			StatusMessage = _localizationService.GetString("Status_StoppedListening", "Stopped listening");
+			RefreshSources();
 		}
 		catch (Exception ex)
 		{
@@ -1334,6 +1478,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public void Dispose()
 	{
 		LogTabs.CollectionChanged -= OnLogTabsCollectionChanged;
+		_udpReceiverService.SourcesChanged -= OnSourcesChanged;
+		_sourcesTimer.Stop();
 		StopListening();
 		//_udpReceiverService.LogReceived -= OnLogReceived;
 		//_fileParserService.LogParsed -= OnLogReceived;

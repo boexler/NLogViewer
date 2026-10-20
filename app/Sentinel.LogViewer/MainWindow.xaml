@@ -150,6 +150,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <StackPanel Grid.Row="0">
@@ -191,6 +192,11 @@
                           Command="{Binding ManageFilterPresetsCommand}"/>
             </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Logs, DefaultValue=_Logs}">
+                <MenuItem Header="{helpers:Resource Key=Menu_StartReceiving, DefaultValue=_Start receiving}"
+                          Command="{Binding StartListeningCommand}"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_StopReceiving, DefaultValue=S_top receiving}"
+                          Command="{Binding StopListeningCommand}"/>
+                <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
                     <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
                               Command="{Binding CloseCurrentTabCommand}"/>
@@ -208,21 +214,6 @@
             </MenuItem>
         </Menu>
         
-        <!-- Toolbar -->
-        <ToolBar>
-            <Button Content="{helpers:Resource Key=Button_StartListening, DefaultValue=Start Listening}" 
-                    Command="{Binding StartListeningCommand}" 
-                    ToolTip="{helpers:Resource Key=ToolTip_StartListening, DefaultValue=Start listening on configured ports}"/>
-            <Button Content="{helpers:Resource Key=Button_StopListening, DefaultValue=Stop Listening}" 
-                    Command="{Binding StopListeningCommand}" 
-                    ToolTip="{helpers:Resource Key=ToolTip_StopListening, DefaultValue=Stop listening on all ports}"/>
-            <Separator />
-            <TextBlock Text="{helpers:Resource Key=Status_Label, DefaultValue=Status:}" VerticalAlignment="Center" Margin="5,0"/>
-            <Border Background="{DynamicResource ThemeHover}" CornerRadius="10" Padding="9,2" Margin="5,0"
-                    VerticalAlignment="Center">
-                <TextBlock Text="{Binding ListeningStatus}" FontWeight="SemiBold"/>
-            </Border>
-        </ToolBar>
         </StackPanel>
         
         <!-- Main Content: TabControl with LogViewers -->
@@ -268,21 +259,150 @@
         </TabControl>
         
         <!-- Status Bar -->
-        <StatusBar Grid.Row="2">
-            <!-- Language Selector (Left) -->
-            <StatusBarItem HorizontalAlignment="Left">
-                <Button x:Name="LanguageButton" Style="{StaticResource ThemeIconButton}" 
-                        Padding="5,2"
-                        Cursor="Hand"
-                        ToolTip="{helpers:Resource Key=Main_ChangeLanguage, DefaultValue=Change language}"
-                        Click="LanguageButton_Click">
-                    <Button.Content>
-                        <Image Source="{Binding CurrentLanguageFlag, Converter={StaticResource SvgImageSourceConverter}}" 
-                               Width="20" 
-                               Height="15" 
-                               Stretch="Uniform"/>
-                    </Button.Content>
-                </Button>
+        <!-- Sources panel: grows from the status bar and pushes the list up -->
+        <Border Grid.Row="2" Background="{DynamicResource ThemeSurface}" BorderBrush="{DynamicResource ThemeBorder}"
+                BorderThickness="0,1,0,0" Padding="14,8,14,10"
+                Visibility="{Binding IsSourcesPanelOpen, Converter={StaticResource ThemeBoolToVisibility}}">
+            <StackPanel Grid.IsSharedSizeScope="True">
+                <DockPanel Margin="0,0,0,6">
+                    <TextBlock Text="{helpers:Resource Key=Sources_Title, DefaultValue=Sources}" FontWeight="SemiBold" DockPanel.Dock="Left"/>
+                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right">
+                        <Hyperlink Command="{Binding ManageSourcesCommand}">
+                            <Run Text="{helpers:Resource Key=Sources_Manage, DefaultValue=Manage sources...}"/>
+                        </Hyperlink>
+                    </TextBlock>
+                </DockPanel>
+                <Grid Margin="0,0,0,4" TextElement.Foreground="{DynamicResource ThemeTextMuted}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcName" MinWidth="110"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcKind" MinWidth="60"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcState" MinWidth="220"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcCount" MinWidth="90"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcLast" MinWidth="120"/>
+                            <ColumnDefinition Width="*" SharedSizeGroup="SrcOn" MinWidth="190"/>
+                        </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{helpers:Resource Key=Sources_ColumnSource, DefaultValue=Source}"/>
+                    <TextBlock Grid.Column="1" Text="{helpers:Resource Key=Sources_ColumnKind, DefaultValue=Kind}"/>
+                    <TextBlock Grid.Column="2" Text="{helpers:Resource Key=Sources_ColumnState, DefaultValue=State}"/>
+                    <TextBlock Grid.Column="3" Text="{helpers:Resource Key=Sources_ColumnEntries, DefaultValue=Entries}" HorizontalAlignment="Right" Margin="0,0,16,0"/>
+                    <TextBlock Grid.Column="4" Text="{helpers:Resource Key=Sources_ColumnLastEntry, DefaultValue=Last entry}"/>
+                    <TextBlock Grid.Column="5" Text="{helpers:Resource Key=Sources_ColumnOn, DefaultValue=On}" HorizontalAlignment="Right"/>
+                </Grid>
+                <ItemsControl ItemsSource="{Binding Sources}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:ReceiveSourceViewModel}">
+                            <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="0,6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcName" MinWidth="110"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcKind" MinWidth="60"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcState" MinWidth="220"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcCount" MinWidth="90"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SrcLast" MinWidth="120"/>
+                            <ColumnDefinition Width="*" SharedSizeGroup="SrcOn" MinWidth="190"/>
+                        </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Kind}" VerticalAlignment="Center" Foreground="{DynamicResource ThemeTextSecondary}"/>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Ellipse Width="8" Height="8" Margin="0,0,7,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="{DynamicResource ThemeTextMuted}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding State}" Value="Listening">
+                                                <Setter Property="Fill" Value="{DynamicResource ThemeSuccess}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding State}" Value="Failed">
+                                                <Setter Property="Fill" Value="{DynamicResource ThemeError}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                                        <TextBlock Text="{Binding StateText}" ToolTip="{Binding ErrorDetail}"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="3" Text="{Binding EntryCountText}" HorizontalAlignment="Right" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="4" Text="{Binding LastEntryText}" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="5" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock Margin="0,0,12,0" VerticalAlignment="Center"
+                                                   Visibility="{Binding CanRetry, Converter={StaticResource ThemeBoolToVisibility}}">
+                                            <Hyperlink Command="{Binding RetryCommand}">
+                                                <Run Text="{helpers:Resource Key=Source_Retry, DefaultValue=Try again}"/>
+                                            </Hyperlink>
+                                        </TextBlock>
+                                        <ToggleButton Style="{StaticResource SettingsToggleSwitch}" IsChecked="{Binding IsOn}"
+                                                      AutomationProperties.Name="{Binding Name}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <StatusBar Grid.Row="3">
+            <!-- Receiving: the state opens the sources panel, the button starts or stops all sources -->
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource ThemeIconButton}" Padding="8,2" Margin="0,0,4,0"
+                            FontFamily="{Binding FontFamily, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="12"
+                            Foreground="{DynamicResource ThemeTextPrimary}"
+                            Command="{Binding ToggleSourcesPanelCommand}"
+                            ToolTip="{helpers:Resource Key=Receive_ToolTip, DefaultValue=Show the sources that receive logs}">
+                        <Button.ContextMenu>
+                            <ContextMenu ItemsSource="{Binding PlacementTarget.DataContext.Sources, RelativeSource={RelativeSource Self}}" Placement="Top">
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                        <Setter Property="Header" Value="{Binding Name}"/>
+                                        <Setter Property="IsCheckable" Value="True"/>
+                                        <Setter Property="IsChecked" Value="{Binding IsOn, Mode=TwoWay}"/>
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="8" Height="8" Margin="0,0,7,0" VerticalAlignment="Center">
+                                <Ellipse.Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Fill" Value="{DynamicResource ThemeTextMuted}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ReceiveStatus}" Value="Active">
+                                                <Setter Property="Fill" Value="{DynamicResource ThemeSuccess}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ReceiveStatus}" Value="Partial">
+                                                <Setter Property="Fill" Value="{DynamicResource ThemeWarningText}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ReceiveStatus}" Value="Failed">
+                                                <Setter Property="Fill" Value="{DynamicResource ThemeError}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Ellipse.Style>
+                            </Ellipse>
+                            <TextBlock Text="{Binding ReceiveStatusText}"/>
+                            <TextBlock Text="&#xE70E;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="9" Margin="8,2,0,0" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource ThemeTextSecondary}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource ThemeIconButton}" Width="26" Height="24" Padding="0"
+                            Command="{Binding ToggleReceivingCommand}"
+                            AutomationProperties.Name="{helpers:Resource Key=Receive_ToggleToolTip, DefaultValue=Start or stop receiving on all sources}"
+                            ToolTip="{helpers:Resource Key=Receive_ToggleToolTip, DefaultValue=Start or stop receiving on all sources}">
+                        <TextBlock FontFamily="{DynamicResource ThemeIconFont}" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="&#xE768;"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsListening}" Value="True">
+                                            <Setter Property="Text" Value="&#xE71A;"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+                </StackPanel>
             </StatusBarItem>
             <Separator />
             <!-- Status Message (Center) -->
@@ -307,14 +427,28 @@
                     </Hyperlink>
                 </TextBlock>
             </StatusBarItem>
-            <!-- Timestamp (Right) -->
+            <!-- Timestamp and language (Right) -->
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="{Binding LastLogTimestamp}" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding LastLogTimestamp}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <Button x:Name="LanguageButton" Style="{StaticResource ThemeIconButton}"
+                            Padding="5,2"
+                            Cursor="Hand"
+                            ToolTip="{helpers:Resource Key=Main_ChangeLanguage, DefaultValue=Change language}"
+                            Click="LanguageButton_Click">
+                        <Button.Content>
+                            <Image Source="{Binding CurrentLanguageFlag, Converter={StaticResource SvgImageSourceConverter}}"
+                                   Width="20"
+                                   Height="15"
+                                   Stretch="Uniform"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
         
         <!-- Loading Overlay -->
-        <Grid Grid.Row="0" Grid.RowSpan="3" d:Visibility="Collapsed">
+        <Grid Grid.Row="0" Grid.RowSpan="4" d:Visibility="Collapsed">
             <Grid Background="#80000000" 
                   Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
                   Panel.ZIndex="1000">

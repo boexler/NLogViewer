@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Voulez-vous vraiment fermer tous les onglets ?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Démarrer l'écoute</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Arrêter l'écoute</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Prêt</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>En écoute</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Arrêté</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -901,15 +886,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Sélectionner la langue</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Commencer l'écoute sur les ports configurés</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Arrêter l'écoute sur tous les ports</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>État :</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filtre</value>
   </data>
@@ -960,6 +936,81 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Un préréglage portant ce nom existe déjà.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Prêt</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>En écoute</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>En écoute · {0} sources</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>En écoute · {0} sur {1} sources</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Écoute arrêtée</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Échec du démarrage</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Aucune source</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Afficher les sources qui reçoivent des journaux</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Démarrer ou arrêter l'écoute sur toutes les sources</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>En écoute</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Arrêtée</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Port utilisé</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Port utilisé par {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Échec du démarrage</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Réessayer</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Sources</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Gérer les sources...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>État</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Entrées</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Dernière entrée</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Activée</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>_Démarrer l'écoute</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>_Arrêter l'écoute</value>
   </data>
 </root>
 

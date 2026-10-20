@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Czy na pewno chcesz zamknąć wszystkie karty?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Rozpocznij nasłuchiwanie</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Zatrzymaj nasłuchiwanie</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Gotowy</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Nasłuchuje</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Zatrzymany</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -901,15 +886,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Wybierz język</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Rozpocznij nasłuchiwanie na skonfigurowanych portach</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Zatrzymaj nasłuchiwanie na wszystkich portach</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Stan:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filtr</value>
   </data>
@@ -960,6 +936,81 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Ustawienie wstępne o tej nazwie już istnieje.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Gotowy</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Nasłuchuje</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Nasłuchuje · źródła: {0}</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Nasłuchuje · {0} z {1} źródeł</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Nasłuchiwanie zatrzymane</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Nie udało się uruchomić</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Brak źródeł</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Pokaż źródła odbierające logi</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Rozpocznij lub zatrzymaj nasłuchiwanie na wszystkich źródłach</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Nasłuchuje</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Zatrzymane</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Port zajęty</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Port zajęty przez {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Nie udało się uruchomić</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Spróbuj ponownie</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Źródła</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Zarządzaj źródłami...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Źródło</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Rodzaj</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Stan</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Wpisy</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Ostatni wpis</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Włączone</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>_Rozpocznij nasłuchiwanie</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>_Zatrzymaj nasłuchiwanie</value>
   </data>
 </root>
 
