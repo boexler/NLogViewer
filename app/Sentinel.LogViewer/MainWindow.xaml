@@ -15,6 +15,7 @@
         Height="600" 
         Width="1000"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         d:DataContext="{d:DesignInstance viewModels:MainViewModel}">
     <Grid>
         <Grid.Resources>

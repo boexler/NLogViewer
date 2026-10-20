@@ -185,7 +185,7 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         private void ScheduleFindUpdate()
         {
-            if (_findTerm == null || _findUpdatePending)
+            if (_findUpdatePending)
                 return;
 
             _findUpdatePending = true;
@@ -193,6 +193,7 @@ namespace Sentinel.LogViewer.Wpf
             {
                 _findUpdatePending = false;
                 UpdateFindMatches();
+                UpdateFilterHits();
             }, DispatcherPriority.Background);
         }
 
