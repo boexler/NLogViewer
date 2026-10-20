@@ -1012,6 +1012,24 @@
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Figyelés _leállítása</value>
   </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Bejegyzések: {0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Bejegyzések: {0} / {1}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Elrejtett szintek: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Kifejezések: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Naplózó-szabályok: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Szűrő visszaállítása</value>
+  </data>
 </root>
 
 

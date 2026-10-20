@@ -23,6 +23,7 @@ namespace Sentinel.LogViewer.Models
         private bool _loggerTreeOpen;
         private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
         private SearchFields _searchFields = SearchFields.Default;
+        private int _visibleEntryCount;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewer.ItemsSource"/>.
@@ -32,6 +33,22 @@ namespace Sentinel.LogViewer.Models
         public LogTabViewModel()
         {
             LogEntries.CollectionChanged += (_, _) => OnPropertyChanged(nameof(LogCount));
+        }
+
+        /// <summary>
+        /// How many entries the viewer in the tab shows after its filters; the viewer keeps it up to date
+        /// </summary>
+        public int VisibleEntryCount
+        {
+            get => _visibleEntryCount;
+            set
+            {
+                if (_visibleEntryCount != value)
+                {
+                    _visibleEntryCount = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public string Header

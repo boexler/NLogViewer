@@ -1012,5 +1012,23 @@
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Arrêter l'écoute</value>
   </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Entrées : {0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Entrées : {0} sur {1}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Niveaux masqués : {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Termes : {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Règles de logger : {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Réinitialiser le filtre</value>
+  </data>
 </root>
 

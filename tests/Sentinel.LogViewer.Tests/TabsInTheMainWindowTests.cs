@@ -311,6 +311,47 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheStatusBar_SummarizesTheSelectedTab_AndTheFilterCanBeReset()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Assert.Equal(string.Empty, viewModel.TabSummary);
+			Assert.False(viewModel.HasActiveFilter);
+
+			Send(session, App("(100)"), "alpha");
+			Send(session, App("(100)"), "beta", LogEntryLevel.Error);
+			Send(session, App("(100)"), "beta again");
+			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
+			Assert.Equal("Entries: 3", viewModel.TabSummary);
+			Assert.False(viewModel.HasActiveFilter);
+
+			viewer.AddRegexSearchTerm("beta");
+			viewer.InfoFilter = true;
+			WpfTestHelper.Settle();
+
+			Assert.True(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 1 of 3 · Levels off: 1 · Terms: 1", viewModel.TabSummary);
+			Assert.Equal(1, viewModel.LogTabs[0].VisibleEntryCount);
+
+			viewer.SearchFields = SearchFields.All;
+			viewer.CustomTimeStampFormat = TimeStampFormat.German;
+			viewModel.ResetFilterCommand.Execute(null);
+			WpfTestHelper.Settle();
+
+			Assert.False(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 3", viewModel.TabSummary);
+			Assert.Empty(viewer.ActiveSearchTerms);
+			Assert.False(viewer.InfoFilter);
+			Assert.Equal((SearchFields.All, TimeStampFormat.German), (viewer.SearchFields, viewer.CustomTimeStampFormat));
+
+			viewModel.LogTabs.Clear();
+			Assert.Equal(string.Empty, viewModel.TabSummary);
+		});
+	}
+
+	[Fact]
 	public void TheSourcesOfTheStatusBar_FollowTheAddressesOfTheSettings()
 	{
 		_context.RunOnSta(() =>

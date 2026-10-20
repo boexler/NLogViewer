@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf.Helper;
@@ -198,6 +199,32 @@ namespace Sentinel.LogViewer.Wpf
             }
 
             SetValue(FilterHitTextPropertyKey, text);
+        }
+
+        #endregion
+
+        #region Visible entries
+
+        /// <summary>
+        /// How many entries the list shows after the filters; the control keeps it up to date, so a host can bind it with
+        /// <c>Mode=OneWayToSource</c> to show it next to the total
+        /// </summary>
+        [Category("LogViewer")]
+        public int VisibleEntryCount
+        {
+            get => (int)GetValue(VisibleEntryCountProperty);
+            set => SetValue(VisibleEntryCountProperty, value);
+        }
+
+        public static readonly DependencyProperty VisibleEntryCountProperty =
+            DependencyProperty.Register(nameof(VisibleEntryCount), typeof(int), typeof(LogViewer),
+                new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        private void UpdateVisibleEntryCount()
+        {
+            var count = LogEvents?.View is CollectionView view ? view.Count : 0;
+            if (VisibleEntryCount != count)
+                SetCurrentValue(VisibleEntryCountProperty, count);
         }
 
         #endregion

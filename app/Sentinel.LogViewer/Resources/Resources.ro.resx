@@ -1012,6 +1012,24 @@
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Oprește ascultarea</value>
   </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Intrări: {0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Intrări: {0} din {1}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Niveluri ascunse: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Termeni: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Reguli de logger: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Resetează filtrul</value>
+  </data>
 </root>
 
 

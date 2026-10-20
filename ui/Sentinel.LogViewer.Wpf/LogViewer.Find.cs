@@ -194,6 +194,7 @@ namespace Sentinel.LogViewer.Wpf
                 _findUpdatePending = false;
                 UpdateFindMatches();
                 UpdateFilterHits();
+                UpdateVisibleEntryCount();
             }, DispatcherPriority.Background);
         }
 

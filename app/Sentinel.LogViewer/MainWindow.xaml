@@ -128,6 +128,7 @@
                     IsLoggerTreeOnLeft="{Binding DataContext.LoggerTreeOnLeft, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeExpanded="{Binding DataContext.LoggerTreeOpen, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     LoggerTreeWidth="{Binding DataContext.LoggerTreeWidth, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    VisibleEntryCount="{Binding DataContext.VisibleEntryCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
                     SearchFields="{Binding DataContext.SearchFields, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
                     <dj:LogViewer.Resources>
@@ -402,6 +403,19 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </Button>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <!-- The selected tab: entries and what filters them -->
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding TabSummary}" VerticalAlignment="Center"/>
+                    <TextBlock Margin="10,0,0,0" VerticalAlignment="Center"
+                               Visibility="{Binding HasActiveFilter, Converter={StaticResource ThemeBoolToVisibility}}">
+                        <Hyperlink Command="{Binding ResetFilterCommand}">
+                            <Run Text="{helpers:Resource Key=Summary_Reset, DefaultValue=Reset filter}"/>
+                        </Hyperlink>
+                    </TextBlock>
                 </StackPanel>
             </StatusBarItem>
             <Separator />

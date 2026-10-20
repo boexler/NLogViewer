@@ -1012,5 +1012,23 @@
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Empfang _beenden</value>
   </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Einträge: {0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Einträge: {0} von {1}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Level aus: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Terme: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Logger-Regeln: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Filter zurücksetzen</value>
+  </data>
 </root>
 

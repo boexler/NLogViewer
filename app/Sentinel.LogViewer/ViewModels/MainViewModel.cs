@@ -40,6 +40,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string? _updateNotice;
 	private bool _isListening;
 	private bool _hasStarted;
+	private LogTabViewModel? _summaryTab;
+	private string _tabSummary = string.Empty;
+	private bool _hasActiveFilter;
 	private bool _sourcesPanelOpen;
 	private string _receiveStatusText = string.Empty;
 	private ReceiveStatus _receiveStatus;
@@ -88,6 +91,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				_ = StartListeningAsync();
 		});
 		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
+		ResetFilterCommand = new RelayCommand(ResetFilter, () => HasActiveFilter);
 		ManageSourcesCommand = new RelayCommand(() =>
 		{
 			IsSourcesPanelOpen = false;
@@ -211,6 +215,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 				((RelayCommand)SaveFilterPresetCommand).RaiseCanExecuteChanged();
 				((RelayCommand<FilterPreset>)ApplyFilterPresetCommand).RaiseCanExecuteChanged();
+				FollowSummaryOfSelectedTab();
 			}
 		}
 	}
@@ -546,6 +551,110 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 			OnPropertyChanged();
 		}
+	}
+
+	/// <summary>
+	/// What the status bar says about the selected tab, e.g. "Entries: 1,204 of 27,851 · Levels off: 2 · Terms: 1"; empty without a tab
+	/// </summary>
+	public string TabSummary
+	{
+		get => _tabSummary;
+		private set
+		{
+			if (_tabSummary != value)
+			{
+				_tabSummary = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the selected tab has a filter: a level that is hidden, a term or a rule for loggers
+	/// </summary>
+	public bool HasActiveFilter
+	{
+		get => _hasActiveFilter;
+		private set
+		{
+			if (_hasActiveFilter != value)
+			{
+				_hasActiveFilter = value;
+				OnPropertyChanged();
+				((RelayCommand)ResetFilterCommand).RaiseCanExecuteChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Takes the levels, terms and logger rules off the selected tab; the fields and the time stamp format stay
+	/// </summary>
+	public ICommand ResetFilterCommand { get; }
+
+	private void ResetFilter()
+	{
+		if (SelectedTab is not { } tab)
+			return;
+
+		var current = tab.FilterState;
+		tab.FilterState = new LogViewerFilterState
+		{
+			SearchFields = current?.SearchFields ?? SearchFields.Default,
+			TimeStampFormat = current?.TimeStampFormat
+		};
+	}
+
+	private void FollowSummaryOfSelectedTab()
+	{
+		if (_summaryTab != null)
+			_summaryTab.PropertyChanged -= OnSummaryTabChanged;
+
+		_summaryTab = _selectedTab;
+		if (_summaryTab != null)
+			_summaryTab.PropertyChanged += OnSummaryTabChanged;
+
+		UpdateTabSummary();
+	}
+
+	private void OnSummaryTabChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName is nameof(LogTabViewModel.LogCount) or nameof(LogTabViewModel.VisibleEntryCount) or nameof(LogTabViewModel.FilterState))
+			UpdateTabSummary();
+	}
+
+	private void UpdateTabSummary()
+	{
+		if (_summaryTab is not { } tab)
+		{
+			TabSummary = string.Empty;
+			HasActiveFilter = false;
+			return;
+		}
+
+		var state = tab.FilterState;
+		var levels = state?.HiddenLevels.Count ?? 0;
+		var terms = state?.Terms.Count ?? 0;
+		var loggers = state?.LoggerRules.Count ?? 0;
+		var filtered = levels + terms + loggers > 0;
+
+		string Text(string key, string defaultValue, params object[] arguments) =>
+			string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, defaultValue), arguments);
+
+		var parts = new List<string>
+		{
+			filtered
+				? Text("Summary_EntriesOf", "Entries: {0} of {1}", tab.VisibleEntryCount, tab.LogCount)
+				: Text("Summary_Entries", "Entries: {0}", tab.LogCount)
+		};
+		if (levels > 0)
+			parts.Add(Text("Summary_LevelsOff", "Levels off: {0}", levels));
+		if (terms > 0)
+			parts.Add(Text("Summary_Terms", "Terms: {0}", terms));
+		if (loggers > 0)
+			parts.Add(Text("Summary_Loggers", "Logger rules: {0}", loggers));
+
+		TabSummary = string.Join(" · ", parts);
+		HasActiveFilter = filtered;
 	}
 
 	/// <summary>
