@@ -20,7 +20,7 @@ public class ThemeService : IDisposable
 	private static bool _darkTitleBars;
 	private static bool _titleBarHandlerRegistered;
 
-	private const string ThemeDictionaryFolder = "/Styles/Themes/";
+	private const string ThemeDictionaryFolder = "Styles/Themes/";
 
 	private readonly Func<bool> _systemUsesLightTheme;
 	private readonly Dictionary<string, ResourceDictionary> _themeDictionaries = new();
@@ -62,7 +62,7 @@ public class ThemeService : IDisposable
 		configuration.ThemeColors.TryGetValue(theme.Id, out var customColors);
 
 		if (!_themeDictionaries.TryGetValue(theme.Id, out var dictionary))
-			_themeDictionaries[theme.Id] = dictionary = new ResourceDictionary { Source = theme.Source };
+			_themeDictionaries[theme.Id] = dictionary = new ResourceDictionary { Source = new Uri($"pack://application:,,,/Sentinel.LogViewer;component/{ThemeDictionaryFolder}{theme.Dictionary}.xaml") };
 
 		// The dictionary that App.xaml merges for the designer goes as well as the one of the earlier theme.
 		var merged = application.Resources.MergedDictionaries;

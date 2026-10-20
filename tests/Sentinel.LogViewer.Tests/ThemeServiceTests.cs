@@ -85,6 +85,28 @@ public class ThemeServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void Apply_ReplacesTheDictionaryThatAppXamlMergesForTheDesigner()
+	{
+		_context.RunOnSta(() =>
+		{
+			// App.xaml merges the default theme with a relative address, so that the designer knows the brushes.
+			var designTime = new ResourceDictionary { Source = new Uri("pack://application:,,,/Sentinel.LogViewer;component/Styles/Themes/NewschoolLight.xaml") };
+			Application.Current.Resources.MergedDictionaries.Add(designTime);
+			try
+			{
+				new ThemeService(() => true).Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight, Theme = ThemeCatalog.OldschoolId });
+
+				Assert.DoesNotContain(designTime, Application.Current.Resources.MergedDictionaries);
+				Assert.Equal(1, ThemeDictionaries());
+			}
+			finally
+			{
+				Application.Current.Resources.MergedDictionaries.Remove(designTime);
+			}
+		});
+	}
+
+	[Fact]
 	public void TheCustomColours_AreAnOverrideBehindTheTheme_AndGoWhenTheyAreRemoved()
 	{
 		_context.RunOnSta(() =>

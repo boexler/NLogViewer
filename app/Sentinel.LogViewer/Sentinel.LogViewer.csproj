@@ -30,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The theme dictionaries are also embedded as they are, so the colours of a theme can be read without WPF. -->
+    <EmbeddedResource Include="Styles\Themes\*.xaml" LogicalName="Themes/%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\flags\*.svg" />
     <Resource Include="Resources\icons\icons8-analysieren-64.ico" />
     <Resource Include="Resources\icons\icons8-analysieren-64.png" />

@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO.Packaging;
 using System.Linq;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Sentinel.LogViewer.Wpf;
@@ -30,7 +29,7 @@ public sealed record ThemeToken(string Key, ThemeSection Section, string Name, s
 
 /// <summary>
 /// A set of colours with a name. The colours are the brushes of a XAML dictionary (Styles/Themes), which <see cref="ThemeService"/>
-/// merges into the application resources; <see cref="Colors"/> reads them from there.
+/// merges into the application resources; <see cref="Colors"/> reads them from the same file.
 /// </summary>
 public sealed class ThemeDefinition
 {
@@ -43,10 +42,8 @@ public sealed class ThemeDefinition
 		Id = id;
 		Name = name;
 		IsDark = isDark;
-		// A pack address needs the pack scheme; touching it registers it when there is no application yet, e.g. in a unit test.
-		_ = PackUriHelper.UriSchemePack;
-		Source = new Uri($"pack://application:,,,/Sentinel.LogViewer;component/Styles/Themes/{dictionary}.xaml");
-		_colors = new Lazy<IReadOnlyDictionary<string, string>>(() => ThemeCatalog.ReadColors(Source));
+		Dictionary = dictionary;
+		_colors = new Lazy<IReadOnlyDictionary<string, string>>(() => ThemeCatalog.ReadColors(dictionary));
 	}
 
 	public string Id { get; }
@@ -56,9 +53,9 @@ public sealed class ThemeDefinition
 	public bool IsDark { get; }
 
 	/// <summary>
-	/// Where the XAML dictionary of the theme is
+	/// Name of the XAML dictionary of the theme in Styles/Themes, without the extension
 	/// </summary>
-	public Uri Source { get; }
+	public string Dictionary { get; }
 
 	/// <summary>
 	/// The colour of every token as #RRGGBB or #AARRGGBB, by the key of the token
@@ -239,21 +236,24 @@ public static class ThemeCatalog
 	};
 
 	/// <summary>
-	/// Reads the brushes of a theme dictionary as colour texts by the key of the brush
+	/// Reads the brushes of a theme dictionary as colour texts by the key of the brush. The XAML file is embedded in the assembly as it is,
+	/// so it can be read without WPF and without an application, e.g. in a unit test; there is no need to load the dictionary.
 	/// </summary>
-	internal static IReadOnlyDictionary<string, string> ReadColors(Uri source)
+	internal static IReadOnlyDictionary<string, string> ReadColors(string dictionary)
 	{
+		var assembly = typeof(ThemeCatalog).Assembly;
+		using var stream = assembly.GetManifestResourceStream($"Themes/{dictionary}.xaml")
+		                   ?? throw new InvalidOperationException($"The theme dictionary {dictionary} is not part of the assembly.");
+
+		XNamespace presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+		var key = XName.Get("Key", "http://schemas.microsoft.com/winfx/2006/xaml");
 		var colors = new Dictionary<string, string>();
-		foreach (DictionaryEntry entry in new ResourceDictionary { Source = source })
+		foreach (var brush in XDocument.Load(stream).Descendants(presentation + "SolidColorBrush"))
 		{
-			if (entry is { Key: string key, Value: SolidColorBrush brush })
-				colors[key] = ToText(brush.Color);
+			if (brush.Attribute(key)?.Value is { } name && TryNormalize(brush.Attribute("Color")?.Value, out var color))
+				colors[name] = color;
 		}
 
 		return colors;
 	}
-
-	private static string ToText(Color color) => color.A == 0xFF
-		? $"#{color.R:X2}{color.G:X2}{color.B:X2}"
-		: $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
 }
