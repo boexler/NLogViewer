@@ -201,6 +201,30 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheSearchFields_StartAsTheSettingsSay_AndWhatTheUserChoosesInATab_IsSaved()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.SearchFields = (SearchFields.Message | SearchFields.Thread).ToString();
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+
+			Send(session, App("(100)"));
+			var first = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.Equal(SearchFields.Message | SearchFields.Thread, first.SearchFields);
+
+			first.SearchFields = SearchFields.All;
+			Assert.Equal(SearchFields.All, SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+
+			Send(session, App("(100)", name: "Orders"));
+			var second = ViewerOf(session, session.ViewModel.LogTabs[1]);
+			Assert.Equal(SearchFields.All, second.SearchFields);
+			Assert.Equal(SearchFields.All, ViewerOf(session, session.ViewModel.LogTabs[0]).SearchFields);
+		});
+	}
+
+	[Fact]
 	public void ADraggedWidth_ThatIsOutsideTheLimits_IsSavedAsTheNearestValidWidth()
 	{
 		_context.RunOnSta(() =>

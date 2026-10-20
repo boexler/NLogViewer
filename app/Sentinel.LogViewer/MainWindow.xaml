@@ -128,6 +128,7 @@
                     IsLoggerTreeOnLeft="{Binding DataContext.LoggerTreeOnLeft, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeExpanded="{Binding DataContext.LoggerTreeOpen, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     LoggerTreeWidth="{Binding DataContext.LoggerTreeWidth, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    SearchFields="{Binding DataContext.SearchFields, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
                     <dj:LogViewer.Resources>
                         <!-- The buttons of the control have a fixed size, so they get less padding than the buttons of the dialogs -->

@@ -61,6 +61,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		ApplicationTabService.Sanitize(settings);
 		if (!SettingsRules.IsValidLoggerTreeWidth(settings.LoggerTreeWidth))
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
 
 		// The version that ran last belongs to this computer, not to the file.
 		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;

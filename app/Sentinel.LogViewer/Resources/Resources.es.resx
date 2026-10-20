@@ -772,5 +772,29 @@
   <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
     <value>Vista predeterminada para pestañas nuevas</value>
   </data>
+  <data name="Settings_Group_Search" xml:space="preserve">
+    <value>Búsqueda y filtro</value>
+  </data>
+  <data name="Settings_Group_Search_Subtitle" xml:space="preserve">
+    <value>Campos predeterminados de las pestañas nuevas</value>
+  </data>
+  <data name="Settings_SearchField_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="Settings_SearchField_Logger" xml:space="preserve">
+    <value>Nombre del logger</value>
+  </data>
+  <data name="Settings_SearchField_Exception" xml:space="preserve">
+    <value>Excepción</value>
+  </data>
+  <data name="Settings_SearchField_Thread" xml:space="preserve">
+    <value>Hilo</value>
+  </data>
+  <data name="Settings_SearchField_Properties" xml:space="preserve">
+    <value>Otras propiedades</value>
+  </data>
+  <data name="Settings_SearchField_Description" xml:space="preserve">
+    <value>El filtro y la búsqueda examinan el campo «{0}» en las pestañas nuevas. Si cambia los campos en una pestaña, se guardan aquí.</value>
+  </data>
 </root>
 

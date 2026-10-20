@@ -772,6 +772,30 @@
   <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
     <value>Alapértelmezett nézet az új lapokhoz</value>
   </data>
+  <data name="Settings_Group_Search" xml:space="preserve">
+    <value>Keresés és szűrő</value>
+  </data>
+  <data name="Settings_Group_Search_Subtitle" xml:space="preserve">
+    <value>Az új lapok alapértelmezett mezői</value>
+  </data>
+  <data name="Settings_SearchField_Message" xml:space="preserve">
+    <value>Üzenet</value>
+  </data>
+  <data name="Settings_SearchField_Logger" xml:space="preserve">
+    <value>Naplózó neve</value>
+  </data>
+  <data name="Settings_SearchField_Exception" xml:space="preserve">
+    <value>Kivétel</value>
+  </data>
+  <data name="Settings_SearchField_Thread" xml:space="preserve">
+    <value>Szál</value>
+  </data>
+  <data name="Settings_SearchField_Properties" xml:space="preserve">
+    <value>Egyéb tulajdonságok</value>
+  </data>
+  <data name="Settings_SearchField_Description" xml:space="preserve">
+    <value>A szűrő és a keresés az új lapokon a(z) „{0}” mezőben keres. Ha egy lapon módosítja a mezőket, itt mentődnek.</value>
+  </data>
 </root>
 
 

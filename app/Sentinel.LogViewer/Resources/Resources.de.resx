@@ -772,5 +772,29 @@
   <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
     <value>Standardansicht für neue Tabs</value>
   </data>
+  <data name="Settings_Group_Search" xml:space="preserve">
+    <value>Suche und Filter</value>
+  </data>
+  <data name="Settings_Group_Search_Subtitle" xml:space="preserve">
+    <value>Standardfelder für neue Tabs</value>
+  </data>
+  <data name="Settings_SearchField_Message" xml:space="preserve">
+    <value>Meldung</value>
+  </data>
+  <data name="Settings_SearchField_Logger" xml:space="preserve">
+    <value>Loggername</value>
+  </data>
+  <data name="Settings_SearchField_Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="Settings_SearchField_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Settings_SearchField_Properties" xml:space="preserve">
+    <value>Weitere Eigenschaften</value>
+  </data>
+  <data name="Settings_SearchField_Description" xml:space="preserve">
+    <value>Filter und Suche durchsuchen in neuen Tabs das Feld „{0}“. Ändert man die Felder in einem Tab, wird das hier gespeichert.</value>
+  </data>
 </root>
 
