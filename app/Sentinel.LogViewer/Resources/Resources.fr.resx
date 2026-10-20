@@ -148,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Starting...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Importing...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Error importing {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import finished.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Error detecting file format</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>Loaded {0} log entries from {1}</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Adding to view: {0}%</value>
@@ -907,12 +898,6 @@
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Un préréglage nommé « {0} » existe déjà. Le remplacer ?</value>
   </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>Préréglage de filtre « {0} » enregistré</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>Préréglage de filtre « {0} » appliqué</value>
-  </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Préréglages de filtre</value>
   </data>
@@ -1029,6 +1014,24 @@
   </data>
   <data name="Summary_Reset" xml:space="preserve">
     <value>Réinitialiser le filtre</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>Langue modifiée. Redémarrez l'application pour que le changement soit complet.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>Impossible de changer la langue : {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exporté vers {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>L'exportation n'est pas disponible pour cet onglet.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>La vue des journaux de l'onglet est introuvable.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Fermer</value>
   </data>
 </root>
 

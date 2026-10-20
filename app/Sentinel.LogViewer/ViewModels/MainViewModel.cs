@@ -47,7 +47,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string _receiveStatusText = string.Empty;
 	private ReceiveStatus _receiveStatus;
 	private readonly System.Windows.Threading.DispatcherTimer _sourcesTimer = new() { Interval = TimeSpan.FromSeconds(1) };
-	private string _statusMessage = "Ready";
 	private string _lastLogTimestamp = string.Empty;
 	private LogTabViewModel? _selectedTab;
 	private string _currentLanguageFlag = "🇬🇧";
@@ -179,7 +178,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
-		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName?.Name}";
 	}
 
 	/// <summary>
@@ -746,18 +744,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
-	public string StatusMessage
-	{
-		get => _statusMessage;
-		set
-		{
-			if (_statusMessage != value)
-			{
-				_statusMessage = value;
-				OnPropertyChanged();
-			}
-		}
-	}
+	/// <summary>
+	/// The card at the bottom of the window for hints and errors
+	/// </summary>
+	public SnackbarViewModel Snackbar { get; } = new();
 
 	public string LastLogTimestamp
 	{
@@ -932,7 +922,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 		catch (Exception ex)
 		{
-			StatusMessage = _localizationService.GetString("Error_StoppingListener", $"Error stopping listener: {ex.Message}");
+			Snackbar.ShowError(_localizationService.GetString("Error_StoppingListener", $"Error stopping listener: {ex.Message}"));
 		}
 	}
 
@@ -963,7 +953,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		if (filtered.Count == 0)
 		{
-			StatusMessage = _localizationService.GetString("Import_NoSupportedFiles", "No supported log files were found.");
+			Snackbar.Show(_localizationService.GetString("Import_NoSupportedFiles", "No supported log files were found."));
 			return;
 		}
 
@@ -1072,7 +1062,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		IsLoading = true;
 		LoadingProgress = _localizationService.GetString("Import_Starting", "Starting...");
-		StatusMessage = _localizationService.GetString("Import_InProgress", "Importing...");
 
 		try
 		{
@@ -1089,11 +1078,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				var tpl = _localizationService.GetString(
 					"Import_FileError_Format",
 					"Error importing {0}: {1}");
-				StatusMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, pathName, ex.Message);
+				Snackbar.ShowError(string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, pathName, ex.Message));
 			}
 			}
-
-			StatusMessage = _localizationService.GetString("Import_BatchComplete", "Import finished.");
 		}
 		finally
 		{
@@ -1132,8 +1119,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			await dispatcher.InvokeAsync(() =>
 			{
-				StatusMessage = _localizationService.GetString("Import_FormatDetectError", "Error detecting file format") +
-				                $": {ex.Message}";
+				Snackbar.ShowError(_localizationService.GetString("Import_FormatDetectError", "Error detecting file format") + $": {ex.Message}");
 			}).Task.ConfigureAwait(false);
 		}
 
@@ -1185,7 +1171,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			await dispatcher.InvokeAsync(() =>
 			{
-				StatusMessage = _localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}";
+				Snackbar.ShowError(_localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}");
 			}).Task.ConfigureAwait(false);
 			return;
 		}
@@ -1193,7 +1179,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		await dispatcher.InvokeAsync(() =>
 		{
 			ApplyParsedLogs(logEvents, filePath, ctx);
-			StatusMessage = FormatLoadedStatus(filePath, logEvents.Count);
 			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 		}).Task.ConfigureAwait(false);
 	}
@@ -1207,15 +1192,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			"File {0}/{1} — {2}: {3} / {4} ({5}%)");
 		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, fileIndex, fileTotal, name,
 			current, parsedTotal, percentage);
-	}
-
-	private string FormatLoadedStatus(string filePath, int count)
-	{
-		var name = Path.GetFileName(filePath);
-		var tpl = _localizationService.GetString(
-			"Import_LoadedFromFile_Format",
-			"Loaded {0} log entries from {1}");
-		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, count, name);
 	}
 
 	/// <summary>
@@ -1291,7 +1267,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Settings are saved as they change, so the window has nothing to confirm.
 		if (settingsWindow.HasChanges)
 		{
-			StatusMessage = "Settings saved";
 			LoadConfiguration();
 			RefreshFilterPresets();
 		}
@@ -1334,8 +1309,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		_filterPresets.Save(name, SelectedTab.FilterState ?? new LogViewerFilterState());
 		RefreshFilterPresets();
-		StatusMessage = string.Format(CultureInfo.CurrentCulture,
-			_localizationService.GetString("FilterPreset_Saved", "Filter preset “{0}” saved"), name);
 	}
 
 	/// <summary>
@@ -1360,8 +1333,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			_applyingFilterPreset = false;
 		}
 
-		StatusMessage = string.Format(CultureInfo.CurrentCulture,
-			_localizationService.GetString("FilterPreset_Applied", "Filter preset “{0}” applied"), preset.Name);
 	}
 
 	/// <summary>
@@ -1425,11 +1396,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			UpdateLanguageFlag();
                 
 			// Notify that language has changed - this will require app restart for full effect
-			StatusMessage = "Language changed. Please restart the application for full effect.";
+			Snackbar.Show(_localizationService.GetString("Message_LanguageChanged", "Language changed. Restart the application for the change to take full effect."));
 		}
 		catch (Exception ex)
 		{
-			StatusMessage = $"Error changing language: {ex.Message}";
+			Snackbar.ShowError(string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Message_LanguageChangeError", "Could not change the language: {0}"), ex.Message));
 		}
 	}
 
@@ -1461,7 +1433,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 			if (logViewer == null)
 			{
-				StatusMessage = "Could not find LogViewer instance in selected tab.";
+				Snackbar.ShowError(_localizationService.GetString("Message_ViewerNotFound", "The log view of the tab could not be found."));
 				return;
 			}
 
@@ -1475,11 +1447,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			if (logViewer.ExportCommand?.CanExecute(exportParameter) == true)
 			{
 				logViewer.ExportCommand.Execute(exportParameter);
-				StatusMessage = $"Exported logs to {Path.GetFileName(filePath)}";
+				Snackbar.Show(string.Format(CultureInfo.CurrentCulture,
+					_localizationService.GetString("Message_Exported", "Exported to {0}"), Path.GetFileName(filePath)));
 			}
 			else
 			{
-				StatusMessage = "Export command is not available.";
+				Snackbar.ShowError(_localizationService.GetString("Message_ExportUnavailable", "Export is not available for this tab."));
 			}
 		}
 	}

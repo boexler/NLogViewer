@@ -419,11 +419,6 @@
                 </StackPanel>
             </StatusBarItem>
             <Separator />
-            <!-- Status Message (Center) -->
-            <StatusBarItem>
-                <TextBlock Text="{Binding StatusMessage}" />
-            </StatusBarItem>
-            <Separator />
             <!-- Update notice -->
             <StatusBarItem>
                 <StatusBarItem.Style>
@@ -489,6 +484,103 @@
                 </Border>
             </Grid>
         </Grid>
+
+        <!-- Hints and errors: a card that springs in at the bottom right, above the status bar -->
+        <Border Grid.Row="0" Grid.RowSpan="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,44"
+                Panel.ZIndex="900" CornerRadius="8" BorderThickness="1" Padding="14,9" RenderTransformOrigin="1,1"
+                DataContext="{Binding Snackbar}" d:Visibility="Collapsed">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    <TranslateTransform Y="0"/>
+                </TransformGroup>
+            </Border.RenderTransform>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="{DynamicResource ThemeSurface}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ThemeBorderStrong}"/>
+                    <Setter Property="Opacity" Value="0"/>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsError}" Value="True">
+                            <Setter Property="BorderBrush" Value="{DynamicResource ThemeError}"/>
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsOpen}" Value="True"/>
+                                <Condition Binding="{Binding AnimationsEnabled}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsHitTestVisible" Value="True"/>
+                            <MultiDataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
+                                                         From="0.85" To="1" Duration="0:0:0.35">
+                                            <DoubleAnimation.EasingFunction>
+                                                <BackEase EasingMode="EaseOut" Amplitude="0.6"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
+                                                         From="0.85" To="1" Duration="0:0:0.35">
+                                            <DoubleAnimation.EasingFunction>
+                                                <BackEase EasingMode="EaseOut" Amplitude="0.6"/>
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[1].(TranslateTransform.Y)"
+                                                         From="10" To="0" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiDataTrigger.EnterActions>
+                            <MultiDataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiDataTrigger.ExitActions>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsOpen}" Value="True"/>
+                                <Condition Binding="{Binding AnimationsEnabled}" Value="False"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Opacity" Value="1"/>
+                            <Setter Property="IsHitTestVisible" Value="True"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="{DynamicResource ThemeIconFont}" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="&#xE73E;"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ThemeSuccess}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsError}" Value="True">
+                                    <Setter Property="Text" Value="&#xE7BA;"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ThemeError}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{Binding Message}" TextWrapping="Wrap" MaxWidth="420" VerticalAlignment="Center"
+                           AutomationProperties.LiveSetting="Polite"/>
+                <TextBlock Margin="14,0,0,0" VerticalAlignment="Center"
+                           Visibility="{Binding HasUndo, Converter={StaticResource ThemeBoolToVisibility}}">
+                    <Hyperlink Command="{Binding UndoCommand}">
+                        <Run Text="{Binding UndoText, Mode=OneWay}"/>
+                    </Hyperlink>
+                </TextBlock>
+                <Button Style="{StaticResource ThemeIconButton}" Content="&#xE711;" Width="24" Height="24" Margin="12,0,-6,0" FontSize="11"
+                        Command="{Binding CloseCommand}" VerticalAlignment="Center"
+                        ToolTip="{helpers:Resource Key=Snackbar_Close, DefaultValue=Close}"
+                        AutomationProperties.Name="{helpers:Resource Key=Snackbar_Close, DefaultValue=Close}"
+                        Visibility="{Binding IsError, Converter={StaticResource ThemeBoolToVisibility}}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
 

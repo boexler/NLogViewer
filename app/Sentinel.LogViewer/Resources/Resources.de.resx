@@ -148,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Wird gestartet...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Import läuft...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Fehler beim Importieren von {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import abgeschlossen.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Fehler bei der Formerkennung</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>Datei {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>{0} Logeinträge aus {1} geladen</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Ansicht wird befüllt: {0}%</value>
@@ -907,12 +898,6 @@
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Ein Preset namens „{0}“ existiert bereits. Ersetzen?</value>
   </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>Filter-Preset „{0}“ gespeichert</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>Filter-Preset „{0}“ angewendet</value>
-  </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Filter-Presets</value>
   </data>
@@ -1029,6 +1014,24 @@
   </data>
   <data name="Summary_Reset" xml:space="preserve">
     <value>Filter zurücksetzen</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>Sprache geändert. Starten Sie die Anwendung neu, damit die Änderung vollständig wirkt.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>Die Sprache konnte nicht geändert werden: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportiert nach {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>Der Export ist für diesen Tab nicht verfügbar.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>Die Logansicht des Tabs wurde nicht gefunden.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Schließen</value>
   </data>
 </root>
 

@@ -148,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Starting...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Importing...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Error importing {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import finished.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Error detecting file format</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>Loaded {0} log entries from {1}</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Adding to view: {0}%</value>
@@ -907,12 +898,6 @@
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Már létezik „{0}” nevű előbeállítás. Lecseréli?</value>
   </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>A(z) „{0}” szűrő-előbeállítás mentve</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>A(z) „{0}” szűrő-előbeállítás alkalmazva</value>
-  </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Szűrő-előbeállítások</value>
   </data>
@@ -1029,6 +1014,24 @@
   </data>
   <data name="Summary_Reset" xml:space="preserve">
     <value>Szűrő visszaállítása</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>A nyelv megváltozott. Indítsa újra az alkalmazást, hogy a módosítás teljesen érvényesüljön.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>A nyelvet nem sikerült módosítani: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportálva ide: {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>Az exportálás ehhez a laphoz nem érhető el.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>A lap naplónézete nem található.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Bezárás</value>
   </data>
 </root>
 

@@ -148,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Starting...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Importing...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Error importing {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import finished.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Error detecting file format</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>Loaded {0} log entries from {1}</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Adding to view: {0}%</value>
@@ -907,12 +898,6 @@
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Există deja o presetare numită „{0}”. O înlocuiți?</value>
   </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>Presetarea de filtru „{0}” a fost salvată</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>Presetarea de filtru „{0}” a fost aplicată</value>
-  </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Presetări de filtre</value>
   </data>
@@ -1029,6 +1014,24 @@
   </data>
   <data name="Summary_Reset" xml:space="preserve">
     <value>Resetează filtrul</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>Limba a fost schimbată. Reporniți aplicația pentru ca modificarea să aibă efect complet.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>Limba nu a putut fi schimbată: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportat în {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>Exportul nu este disponibil pentru această filă.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>Vizualizarea jurnalelor filei nu a fost găsită.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Închide</value>
   </data>
 </root>
 
