@@ -5,8 +5,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
         mc:Ignorable="d"
-        Title="Column Mapping Configuration" 
+        Title="{helpers:Resource Key=ColumnMapping_Title, DefaultValue=Column Mapping Configuration}" 
         Height="600" 
         Width="800"
         WindowStartupLocation="CenterOwner"
@@ -21,21 +22,21 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Text="Configure Column Mapping" 
+        <TextBlock Text="{helpers:Resource Key=ColumnMapping_Heading, DefaultValue=Configure Column Mapping}" 
                    FontSize="18" 
                    FontWeight="Bold"
                    Margin="0,0,0,15"
                    Grid.Row="0"/>
 
         <!-- Column Mapping Section -->
-        <GroupBox Header="Column Mapping" Grid.Row="1" Margin="0,0,0,10">
+        <GroupBox Header="{helpers:Resource Key=ColumnMapping_GroupMapping, DefaultValue=Column Mapping}" Grid.Row="1" Margin="0,0,0,10">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Map each detected column to a log field:" 
+                <TextBlock Text="{helpers:Resource Key=ColumnMapping_Intro, DefaultValue=Map each detected column to a log field:}" 
                            Margin="0,0,0,10"
                            Grid.Row="0"/>
 
@@ -49,19 +50,21 @@
                           HeadersVisibility="Column"
                           MinHeight="150">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Column" 
+                        <DataGridTextColumn Header="{helpers:Resource Key=ColumnMapping_ColumnHeader, DefaultValue=Column}" 
                                           Binding="{Binding Index}"
                                           IsReadOnly="True"
                                           Width="60" />
-                        <DataGridTextColumn Header="Sample Data" 
+                        <DataGridTextColumn Header="{helpers:Resource Key=ColumnMapping_SampleHeader, DefaultValue=Sample Data}" 
                                           Binding="{Binding SampleData}"
                                           IsReadOnly="True"
                                           Width="*" />
-                        <DataGridTemplateColumn Header="Map To">
+                        <DataGridTemplateColumn Header="{helpers:Resource Key=ColumnMapping_MapToHeader, DefaultValue=Map To}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox ItemsSource="{Binding DataContext.FieldTypes, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            SelectedItem="{Binding MappedField, UpdateSourceTrigger=PropertyChanged}"
+                                            DisplayMemberPath="Display"
+                                            SelectedValuePath="Value"
+                                            SelectedValue="{Binding MappedField, UpdateSourceTrigger=PropertyChanged}"
                                             Margin="2"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -72,10 +75,10 @@
         </GroupBox>
 
         <!-- Options Section -->
-        <GroupBox Header="Options" Grid.Row="2" Margin="0,0,0,10">
+        <GroupBox Header="{helpers:Resource Key=ColumnMapping_GroupOptions, DefaultValue=Options}" Grid.Row="2" Margin="0,0,0,10">
             <StackPanel Margin="5">
                 <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <Label Content="Separator:" VerticalAlignment="Center" Padding="0,0,5,0" />
+                    <Label Content="{helpers:Resource Key=ColumnMapping_Separator, DefaultValue=Separator:}" VerticalAlignment="Center" Padding="0,0,5,0" />
                     <ComboBox ItemsSource="{Binding Separators}"
                               DisplayMemberPath="Key"
                               SelectedValuePath="Value"
@@ -83,18 +86,18 @@
                               MinWidth="180" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <Label Content="Date order:" VerticalAlignment="Center" Padding="0,0,5,0" />
+                    <Label Content="{helpers:Resource Key=ColumnMapping_DateOrder, DefaultValue=Date order:}" VerticalAlignment="Center" Padding="0,0,5,0" />
                     <ComboBox ItemsSource="{Binding DateOrders}"
                               DisplayMemberPath="Key"
                               SelectedValuePath="Value"
                               SelectedValue="{Binding DateOrder}"
                               MinWidth="180"
-                              ToolTip="How day and month are ordered in dates like 01/02/2025. Dates with a day above 12 tell it by themselves." />
+                              ToolTip="{helpers:Resource Key=ColumnMapping_DateOrder_Tooltip, DefaultValue=How day and month are ordered in dates like 01/02/2025. Dates with a day above 12 tell it by themselves.}" />
                 </StackPanel>
-                <CheckBox Content="First line is a header/info line"
+                <CheckBox Content="{helpers:Resource Key=ColumnMapping_HasHeaderLine, DefaultValue=First line is a header/info line}"
                           IsChecked="{Binding HasHeaderLine}"
                           Margin="0,5"/>
-                <CheckBox Content="Save this mapping for files matching pattern" 
+                <CheckBox Content="{helpers:Resource Key=ColumnMapping_SaveForPattern, DefaultValue=Save this mapping for files matching pattern}" 
                           IsChecked="{Binding SaveForPattern}"
                           Margin="0,5"/>
                 <Grid Margin="0,5,0,0" IsEnabled="{Binding SaveForPattern}">
@@ -102,7 +105,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Label Content="File Pattern:" Grid.Column="0" VerticalAlignment="Center" />
+                    <Label Content="{helpers:Resource Key=ColumnMapping_FilePattern, DefaultValue=File Pattern:}" Grid.Column="0" VerticalAlignment="Center" />
                     <TextBox Grid.Column="1" 
                              Text="{Binding FilePattern, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5,0,0,0" />
@@ -111,7 +114,7 @@
         </GroupBox>
 
         <!-- Preview Section -->
-        <GroupBox Header="Preview" Grid.Row="3" Margin="0,0,0,10">
+        <GroupBox Header="{helpers:Resource Key=ColumnMapping_GroupPreview, DefaultValue=Preview}" Grid.Row="3" Margin="0,0,0,10">
             <DataGrid ItemsSource="{Binding PreviewResults}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
@@ -129,13 +132,13 @@
         <StackPanel Grid.Row="4" 
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right">
-            <Button Content="OK" 
+            <Button Content="{helpers:Resource Key=MessageBox_OK, DefaultValue=OK}" 
                     Command="{Binding SaveCommand}"
                     IsDefault="True"
                     Margin="0,0,5,0"
                     Padding="20,5"
                     MinWidth="80"/>
-            <Button Content="Cancel" 
+            <Button Content="{helpers:Resource Key=MessageBox_Cancel, DefaultValue=Cancel}" 
                     Command="{Binding CancelCommand}"
                     IsCancel="True"
                     Padding="20,5"

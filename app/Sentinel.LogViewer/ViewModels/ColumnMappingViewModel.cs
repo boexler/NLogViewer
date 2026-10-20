@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Globalization;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Parsers;
@@ -20,6 +21,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	private readonly TextFileFormat _format;
 	private readonly List<string> _sampleLines;
 	private readonly string _filePath;
+	private readonly LocalizationService? _localization;
 	private string _separator;
 	private bool _hasHeaderLine;
 	private DateOrder _dateOrder;
@@ -28,8 +30,10 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	private ObservableCollection<ColumnMappingItem> _columns = new();
 	private ObservableCollection<ColumnMappingItem> _previewResults = new();
 
-	public ColumnMappingViewModel(TextFileFormat format, List<string> sampleLines, string filePath)
+	/// <param name="localization">Gives the texts in the language that is set; without it they are English</param>
+	public ColumnMappingViewModel(TextFileFormat format, List<string> sampleLines, string filePath, LocalizationService? localization = null)
 	{
+		_localization = localization;
 		_format = format ?? throw new ArgumentNullException(nameof(format));
 		_sampleLines = sampleLines ?? throw new ArgumentNullException(nameof(sampleLines));
 		_filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
@@ -38,6 +42,10 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		_hasHeaderLine = format.HasHeaderLine;
 		_dateOrder = format.DateOrder;
 		_filePattern = System.IO.Path.GetFileName(filePath);
+
+		FieldTypes = FieldNames.Select(field => new FieldTypeOption(field, Text("ColumnMapping_Field_" + field, field))).ToList();
+		DateOrders = CreateDateOrders();
+		Separators = CreateSeparators();
 
 		InitializeColumns();
 		UpdatePreview();
@@ -115,12 +123,20 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	/// <summary>
 	/// Gets the selectable orders of day and month by display name; the automatic one names what this computer uses
 	/// </summary>
-	public Dictionary<string, DateOrder> DateOrders { get; } = new()
+	public Dictionary<string, DateOrder> DateOrders { get; }
+
+	private Dictionary<string, DateOrder> CreateDateOrders()
 	{
-		{ $"Automatic ({(TimestampParser.ResolveOrder(DateOrder.Auto) == DateOrder.MonthFirst ? "month first" : "day first")} on this computer)", DateOrder.Auto },
-		{ "Day first (18/12/2025)", DateOrder.DayFirst },
-		{ "Month first (12/18/2025)", DateOrder.MonthFirst }
-	};
+		var computer = TimestampParser.ResolveOrder(DateOrder.Auto) == DateOrder.MonthFirst
+			? Text("ColumnMapping_DateOrder_MonthFirstName", "month first")
+			: Text("ColumnMapping_DateOrder_DayFirstName", "day first");
+		return new Dictionary<string, DateOrder>
+		{
+			{ string.Format(CultureInfo.CurrentCulture, Text("ColumnMapping_DateOrder_Auto", "Automatic ({0} on this computer)"), computer), DateOrder.Auto },
+			{ Text("ColumnMapping_DateOrder_DayFirst", "Day first (18/12/2025)"), DateOrder.DayFirst },
+			{ Text("ColumnMapping_DateOrder_MonthFirst", "Month first (12/18/2025)"), DateOrder.MonthFirst }
+		};
+	}
 
 	/// <summary>
 	/// Gets or sets whether to save the mapping for the file pattern
@@ -154,23 +170,29 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		}
 	}
 
+	private static readonly string[] FieldNames = { "None", "Timestamp", "Level", "Logger", "Message" };
+
 	/// <summary>
-	/// Gets the available field types for mapping
+	/// Gets the available field types for mapping; the value is what <see cref="ColumnMappingItem.MappedField"/> holds, the display is the name in the language that is set
 	/// </summary>
-	public List<string> FieldTypes { get; } = new() { "None", "Timestamp", "Level", "Logger", "Message" };
+	public IReadOnlyList<FieldTypeOption> FieldTypes { get; }
 
 	/// <summary>
 	/// Gets the selectable separators by display name
 	/// </summary>
-	public Dictionary<string, string> Separators { get; } = new()
+	public Dictionary<string, string> Separators { get; }
+
+	private Dictionary<string, string> CreateSeparators() => new()
 	{
-		{ "Tab", "\t" },
-		{ "Pipe with spaces ( | )", " | " },
-		{ "Pipe (|)", "|" },
-		{ "Comma (,)", "," },
-		{ "Semicolon (;)", ";" },
-		{ "Spaces", TextLineSplitter.SpacesSeparator }
+		{ Text("ColumnMapping_Sep_Tab", "Tab"), "\t" },
+		{ Text("ColumnMapping_Sep_PipeSpaces", "Pipe with spaces ( | )"), " | " },
+		{ Text("ColumnMapping_Sep_Pipe", "Pipe (|)"), "|" },
+		{ Text("ColumnMapping_Sep_Comma", "Comma (,)"), "," },
+		{ Text("ColumnMapping_Sep_Semicolon", "Semicolon (;)"), ";" },
+		{ Text("ColumnMapping_Sep_Spaces", "Spaces"), TextLineSplitter.SpacesSeparator }
 	};
+
+	private string Text(string key, string defaultValue) => _localization?.GetString(key, defaultValue) ?? defaultValue;
 
 	/// <summary>
 	/// Gets or sets the separator; changing it re-splits the columns and clears their mapping
@@ -294,20 +316,23 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		foreach (var line in DataLines().Take(5))
 		{
 			var parts = PlainTextParser.SplitLine(line, format);
-			var timestamp = GetColumnValue(parts, "Timestamp");
-			var level = GetColumnValue(parts, "Level");
-			var logger = GetColumnValue(parts, "Logger");
-			var message = GetColumnValue(parts, "Message");
+			var notAvailable = Text("ColumnMapping_NotAvailable", "N/A");
+			var timestamp = GetColumnValue(parts, "Timestamp") ?? notAvailable;
+			var level = GetColumnValue(parts, "Level") ?? notAvailable;
+			var logger = GetColumnValue(parts, "Logger") ?? notAvailable;
+			var message = GetColumnValue(parts, "Message") ?? notAvailable;
 
 			preview.Add(new ColumnMappingItem
 			{
 				Index = -1,
-				SampleData = $"Timestamp: {timestamp ?? "N/A"} | Level: {level ?? "N/A"} | Logger: {logger ?? "N/A"} | Message: {message ?? "N/A"}"
+				SampleData = $"{FieldName("Timestamp")}: {timestamp} | {FieldName("Level")}: {level} | {FieldName("Logger")}: {logger} | {FieldName("Message")}: {message}"
 			});
 		}
 
 		PreviewResults = preview;
 	}
+
+	private string FieldName(string field) => FieldTypes.First(type => type.Value == field).Display;
 
 	private string? GetColumnValue(string[] parts, string fieldType)
 	{
@@ -344,6 +369,13 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 	}
 }
+
+/// <summary>
+/// A field that a column can be mapped to
+/// </summary>
+/// <param name="Value">The identifier, e.g. <c>Timestamp</c></param>
+/// <param name="Display">The name in the language that is set</param>
+public sealed record FieldTypeOption(string Value, string Display);
 
 /// <summary>
 /// Represents a column mapping item in the UI
