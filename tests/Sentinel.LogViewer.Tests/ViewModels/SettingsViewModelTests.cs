@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Core;
 using System;
 using System.Globalization;
 using System.IO;
@@ -367,13 +368,70 @@ public class SettingsViewModelTests : IDisposable
 		var viewModel = _environment.CreateViewModel();
 		viewModel.SelectedCategory = viewModel.Category("Appearance");
 
-		var group = Assert.Single(viewModel.PageItems.OfType<SettingsGroupViewModel>());
+		var group = viewModel.PageItems.OfType<SettingsGroupViewModel>().Single(candidate => candidate.Title == "Logger tree");
 
-		Assert.Equal("Logger tree", group.Title);
 		Assert.Equal("Default view for new tabs", group.Subtitle);
 		Assert.Equal(new[] { "Side", "Open", "Width in pixels" }, group.Settings.Select(setting => setting.Title));
 		Assert.DoesNotContain(viewModel.PageItems.OfType<SettingViewModel>(), setting => setting.Group != null);
 	}
+
+	[Fact]
+	public void TheSearchFieldSettings_HaveDefaults_AreSaved_KeepAtLeastOneField_AndAreReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var message = viewModel.Setting<BoolSettingViewModel>("Message");
+		var logger = viewModel.Setting<BoolSettingViewModel>("Logger name");
+		var exception = viewModel.Setting<BoolSettingViewModel>("Exception");
+		var properties = viewModel.Setting<BoolSettingViewModel>("Other properties");
+		Assert.True(message.Value);
+		Assert.True(logger.Value);
+		Assert.False(exception.Value);
+		Assert.False(properties.Value);
+		Assert.Equal("Default", _environment.Saved.SearchFields);
+
+		exception.Value = true;
+		properties.Value = true;
+		Assert.Equal(SearchFields.Message | SearchFields.LoggerName | SearchFields.Exception | SearchFields.Properties,
+			SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+
+		message.Value = false;
+		logger.Value = false;
+		exception.Value = false;
+		Assert.Equal(SearchFields.Properties, SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+
+		// The last field cannot be switched off: something has to be searched.
+		properties.Value = false;
+		Assert.Equal(SearchFields.Properties, SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+		Assert.True(properties.Value);
+
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Equal(SearchFields.Default, SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+	}
+
+	[Fact]
+	public void TheSearchFieldSettings_ShareOneCard_NextToTheLoggerTree()
+	{
+		var viewModel = _environment.CreateViewModel();
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+
+		var group = viewModel.PageItems.OfType<SettingsGroupViewModel>().Single(candidate => candidate.Title == "Search and filter");
+
+		Assert.Equal("Default fields for new tabs", group.Subtitle);
+		Assert.Equal(new[] { "Message", "Logger name", "Exception", "Thread", "Other properties" }, group.Settings.Select(setting => setting.Title));
+	}
+
+	[Theory]
+	[InlineData("Default", SearchFields.Default)]
+	[InlineData("Message, Exception", SearchFields.Message | SearchFields.Exception)]
+	[InlineData("all", SearchFields.All)]
+	[InlineData("None", SearchFields.Default)]
+	[InlineData("", SearchFields.Default)]
+	[InlineData(null, SearchFields.Default)]
+	[InlineData("Nonsense", SearchFields.Default)]
+	[InlineData("99", SearchFields.Default)]
+	public void TheSearchFieldsOfTheSettings_AreReadLeniently(string? value, SearchFields expected) =>
+		Assert.Equal(expected, SettingsRules.ParseSearchFields(value));
 
 	[Fact]
 	public void SearchingForTheLoggerTree_ShowsTheMatchingRowsInTheirCard()

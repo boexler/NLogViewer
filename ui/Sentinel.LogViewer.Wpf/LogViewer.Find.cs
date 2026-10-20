@@ -126,14 +126,6 @@ namespace Sentinel.LogViewer.Wpf
         #endregion
 
         /// <summary>
-        /// Returns whether a text contains the search text
-        /// </summary>
-        internal bool IsFindMatch(string? text)
-        {
-            return !string.IsNullOrEmpty(FindText) && text?.Contains(FindText, StringComparison.InvariantCultureIgnoreCase) == true;
-        }
-
-        /// <summary>
         /// Selects the next (or previous) hit, starting after the selected entry or at the top of the view
         /// </summary>
         public void FindNext(bool forward = true)
@@ -171,10 +163,21 @@ namespace Sentinel.LogViewer.Wpf
             if (d is not LogViewer viewer)
                 return;
 
-            viewer._currentFindMatch = null;
-            viewer.UpdateFindMatches();
+            viewer.OnFindChanged();
             if (viewer.PART_ListView != null)
                 MessageHighlighter.Refresh(viewer.PART_ListView);
+        }
+
+        /// <summary>
+        /// The search text or one of its options changed: builds the term again and looks for the hits
+        /// </summary>
+        private void OnFindChanged()
+        {
+            _currentFindMatch = null;
+            RebuildFindTerm();
+            UpdateFindMatches();
+            if (PART_ListView != null)
+                MessageHighlighter.Refresh(PART_ListView);
         }
 
         /// <summary>
@@ -182,7 +185,7 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         private void ScheduleFindUpdate()
         {
-            if (string.IsNullOrEmpty(FindText) || _findUpdatePending)
+            if (_findUpdatePending)
                 return;
 
             _findUpdatePending = true;
@@ -190,6 +193,7 @@ namespace Sentinel.LogViewer.Wpf
             {
                 _findUpdatePending = false;
                 UpdateFindMatches();
+                UpdateFilterHits();
             }, DispatcherPriority.Background);
         }
 
@@ -197,13 +201,13 @@ namespace Sentinel.LogViewer.Wpf
         {
             _findMatches.Clear();
             _findMatchIndices.Clear();
-            if (!string.IsNullOrEmpty(FindText) && LogEvents?.View != null)
+            if (_findTerm != null && LogEvents?.View != null)
             {
+                var fields = SearchFields;
                 var index = 0;
                 foreach (var item in LogEvents.View)
                 {
-                    if (item is LogEntry logEvent &&
-                        (IsFindMatch(LoggerNameResolver?.Resolve(logEvent)) || IsFindMatch(MessageResolver?.Resolve(logEvent))))
+                    if (item is LogEntry logEvent && _findTerm.Matches(logEvent, fields))
                     {
                         _findMatches.Add(logEvent);
                         _findMatchIndices.Add(index);
@@ -224,6 +228,8 @@ namespace Sentinel.LogViewer.Wpf
             string text;
             if (string.IsNullOrEmpty(FindText))
                 text = string.Empty;
+            else if (FindError != null)
+                text = "Invalid pattern";
             else if (_findMatches.Count == 0)
                 text = "No results";
             else

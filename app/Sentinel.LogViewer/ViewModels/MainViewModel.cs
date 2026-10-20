@@ -187,7 +187,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		if (e.NewItems != null)
 		{
-			// A new tab starts with the logger tree the way the settings say, before its viewer exists. What the user changes in a tab
+			// A new tab starts with the logger tree and the search fields the way the settings say, before its viewer exists. What the user changes in a tab
 			// is saved as the setting, so that the next tab and the next start use it; tabs that are open keep what they have.
 			var configuration = _configService.LoadConfiguration();
 			foreach (var tab in e.NewItems.OfType<LogTabViewModel>())
@@ -195,14 +195,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				tab.LoggerTreeOnLeft = configuration.LoggerTreeOnLeft;
 				tab.LoggerTreeOpen = configuration.LoggerTreeOpen;
 				tab.LoggerTreeWidth = configuration.LoggerTreeWidth;
-				tab.PropertyChanged += OnTabLoggerTreeChanged;
+				tab.SearchFields = SettingsRules.ParseSearchFields(configuration.SearchFields);
+				tab.PropertyChanged += OnTabViewSettingsChanged;
 			}
 		}
 
 		if (e.OldItems != null)
 		{
 			foreach (var tab in e.OldItems.OfType<LogTabViewModel>())
-				tab.PropertyChanged -= OnTabLoggerTreeChanged;
+				tab.PropertyChanged -= OnTabViewSettingsChanged;
 		}
 
 		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
@@ -233,7 +234,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
 	/// </summary>
-	private void OnTabLoggerTreeChanged(object? sender, PropertyChangedEventArgs e)
+	private void OnTabViewSettingsChanged(object? sender, PropertyChangedEventArgs e)
 	{
 		if (sender is not LogTabViewModel tab)
 			return;
@@ -249,6 +250,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				break;
 			case nameof(LogTabViewModel.LoggerTreeWidth):
 				configuration.LoggerTreeWidth = Math.Clamp((int)Math.Round(tab.LoggerTreeWidth), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth);
+				break;
+			case nameof(LogTabViewModel.SearchFields):
+				configuration.SearchFields = tab.SearchFields.ToString();
 				break;
 			default:
 				return;

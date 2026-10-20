@@ -1,4 +1,5 @@
 using System;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Services;
 
@@ -22,6 +23,15 @@ public static class SettingsRules
 	public const int DefaultLoggerTreeWidth = 260;
 
 	public static bool IsValidLoggerTreeWidth(int value) => value is >= MinLoggerTreeWidth and <= MaxLoggerTreeWidth;
+
+	/// <summary>
+	/// Reads the fields that filter and search look into from the settings; anything that is not a combination of the known fields
+	/// (or no field at all) gives the default
+	/// </summary>
+	public static SearchFields ParseSearchFields(string? value) =>
+		Enum.TryParse<SearchFields>(value, true, out var fields) && fields != SearchFields.None && (fields & ~SearchFields.All) == 0
+			? fields
+			: SearchFields.Default;
 
 	/// <summary>
 	/// Reads the port of an address like <c>udp://0.0.0.0:4000</c>; only the port is used for listening

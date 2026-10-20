@@ -132,6 +132,39 @@ namespace Sentinel.LogViewer.ViewModels
                 Group = loggerTree
             };
 
+            var search = new SettingGroup("\uE721",
+                Text("Settings_Group_Search", "Search and filter"),
+                Text("Settings_Group_Search_Subtitle", "Default fields for new tabs"));
+
+            foreach (var (field, key, title) in new[]
+            {
+                (SearchFields.Message, "Settings_SearchField_Message", "Message"),
+                (SearchFields.LoggerName, "Settings_SearchField_Logger", "Logger name"),
+                (SearchFields.Exception, "Settings_SearchField_Exception", "Exception"),
+                (SearchFields.Thread, "Settings_SearchField_Thread", "Thread"),
+                (SearchFields.Properties, "Settings_SearchField_Properties", "Other properties")
+            })
+            {
+                var searchField = field;
+                yield return new BoolSettingViewModel(AppearanceId, "",
+                    Text(key, title),
+                    Format("Settings_SearchField_Description", "The filter and the search look into the field \"{0}\" in new tabs. Changing the fields in a tab saves them here.", Text(key, title)),
+                    get: () => SettingsRules.ParseSearchFields(_configuration.SearchFields).HasFlag(searchField),
+                    set: value =>
+                    {
+                        var fields = SettingsRules.ParseSearchFields(_configuration.SearchFields);
+                        fields = value ? fields | searchField : fields & ~searchField;
+
+                        // At least one field has to be searched; the last one cannot be switched off.
+                        _configuration.SearchFields = (fields == SearchFields.None ? SettingsRules.ParseSearchFields(_configuration.SearchFields) : fields).ToString();
+                        Commit();
+                    },
+                    getDefault: () => SearchFields.Default.HasFlag(searchField))
+                {
+                    Group = search
+                };
+            }
+
             foreach (var token in ThemeCatalog.Tokens)
                 yield return CreateColorSetting(token);
         }

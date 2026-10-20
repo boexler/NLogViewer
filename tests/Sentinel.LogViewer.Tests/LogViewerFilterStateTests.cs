@@ -31,7 +31,7 @@ public class LogViewerFilterStateTests
 	private static LogViewerFilterState SampleState() => new()
 	{
 		HiddenLevels = { "Trace", "Debug" },
-		Terms = { new LogViewerFilterTerm { Text = "timeout", IsRegex = false }, new LogViewerFilterTerm { Text = "^(?!.*retry)", IsRegex = true } },
+		Terms = { new LogViewerFilterTerm { Text = "timeout", IsRegex = false }, new LogViewerFilterTerm { Text = "retry", IsExclude = true, MatchCase = true, WholeWord = true, Level = LogEntryLevel.Error } },
 		LoggerRules = { "-Acme.Shop" },
 		TimeStampFormat = TimeStampFormat.Iso
 	};
@@ -73,8 +73,8 @@ public class LogViewerFilterStateTests
 				Assert.False(viewerB.InfoFilter);
 				Assert.Equal(TimeStampFormat.Iso, viewerB.CustomTimeStampFormat);
 				Assert.Equal(new[] { "-Acme.Shop" }, viewerB.LoggerTree.Rules.ToList());
-				Assert.Equal(new[] { "timeout", "^(?!.*retry)" }, viewerB.ActiveSearchTerms.Select(term => term.Text));
-				Assert.IsType<RegexSearchTerm>(viewerB.ActiveSearchTerms[1]);
+				Assert.Equal(new[] { "timeout", "retry" }, viewerB.ActiveSearchTerms.Select(term => term.Text));
+				Assert.True(viewerB.ActiveSearchTerms[1].IsExclude);
 			}
 			finally
 			{

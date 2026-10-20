@@ -772,6 +772,36 @@
   <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
     <value>Vizualizare implicită pentru filele noi</value>
   </data>
+  <data name="Settings_Group_Search" xml:space="preserve">
+    <value>Căutare și filtru</value>
+  </data>
+  <data name="Settings_Group_Search_Subtitle" xml:space="preserve">
+    <value>Câmpuri implicite pentru filele noi</value>
+  </data>
+  <data name="Settings_SearchField_Message" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="Settings_SearchField_Logger" xml:space="preserve">
+    <value>Numele logger-ului</value>
+  </data>
+  <data name="Settings_SearchField_Exception" xml:space="preserve">
+    <value>Excepție</value>
+  </data>
+  <data name="Settings_SearchField_Thread" xml:space="preserve">
+    <value>Fir de execuție</value>
+  </data>
+  <data name="Settings_SearchField_Properties" xml:space="preserve">
+    <value>Alte proprietăți</value>
+  </data>
+  <data name="Settings_SearchField_Description" xml:space="preserve">
+    <value>Filtrul și căutarea examinează câmpul „{0}” în filele noi. Dacă schimbați câmpurile într-o filă, ele se salvează aici.</value>
+  </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Se încarcă fișierul...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Schimbă limba</value>
+  </data>
 </root>
 
 

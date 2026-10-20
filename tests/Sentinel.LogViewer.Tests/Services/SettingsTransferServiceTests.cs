@@ -115,6 +115,24 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheSearchFields_AreExportedAndImported_AndInvalidOnesBecomeTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.SearchFields = (SearchFields.Message | SearchFields.Exception).ToString();
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal(SearchFields.Message | SearchFields.Exception, SettingsRules.ParseSearchFields(_environment.Saved.SearchFields));
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "SearchFields": "Nonsense" } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal("Default", _environment.Saved.SearchFields);
+	}
+
+	[Fact]
 	public void Import_DropsValuesThatWouldBreakTheApplication()
 	{
 		var file = _environment.PathOf("edited.json");

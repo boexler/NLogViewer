@@ -128,6 +128,7 @@ namespace Sentinel.LogViewer.Services
                         ApplicationTabService.Sanitize(config);
                         if (!SettingsRules.IsValidLoggerTreeWidth(config.LoggerTreeWidth))
                             config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+                        config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
                         return config;
                     }
                 }
@@ -215,6 +216,9 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
         public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
+
+        /// <summary>The fields that the filter and the search of a new tab look into, as the names of <see cref="Core.SearchFields"/> (default: Message and logger name).</summary>
+        public string SearchFields { get; set; } = nameof(Core.SearchFields.Default);
 
         /// <summary>What happens when an application starts again: a new tab (NewTab), the existing tab (ExtendTab) or a new tab that replaces the old one (ReplaceTab).</summary>
         public string RestartBehavior { get; set; } = nameof(Services.RestartBehavior.NewTab);

@@ -772,5 +772,35 @@
   <data name="Settings_Group_LoggerTree_Subtitle" xml:space="preserve">
     <value>Default view for new tabs</value>
   </data>
+  <data name="Settings_Group_Search" xml:space="preserve">
+    <value>Search and filter</value>
+  </data>
+  <data name="Settings_Group_Search_Subtitle" xml:space="preserve">
+    <value>Default fields for new tabs</value>
+  </data>
+  <data name="Settings_SearchField_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Settings_SearchField_Logger" xml:space="preserve">
+    <value>Logger name</value>
+  </data>
+  <data name="Settings_SearchField_Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="Settings_SearchField_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Settings_SearchField_Properties" xml:space="preserve">
+    <value>Other properties</value>
+  </data>
+  <data name="Settings_SearchField_Description" xml:space="preserve">
+    <value>The filter and the search look into the field “{0}” in new tabs. Changing the fields in a tab saves them here.</value>
+  </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Loading file...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Change language</value>
+  </data>
 </root>
 

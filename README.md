@@ -281,62 +281,83 @@ logViewer.ShowFilterButtons = false;
 - The filter buttons are ToggleButtons that automatically bind to these properties
 - The entire filter group can be hidden using `ShowFilterButtons = false`
 
-### Search Functionality
+### Filter and Search
 
-The LogViewer includes search capabilities that filter log entries based on text patterns or regular expressions. Search terms are displayed as chips/tags and can be managed through the UI or programmatically.
+The **Filter** hides the entries that do not match its terms; the **Search** finds entries without hiding any (Enter / F3 and Shift+Enter / Shift+F3 jump to the next and the previous hit, the hits are highlighted and counted). Both use the same matching, so they offer the same options:
 
-**Search Features:**
-- **Text Search** - Case-insensitive substring matching
-- **Regex Search** - Full regular expression pattern matching
-- **AND Logic** - All search terms must match for an entry to be displayed
-- **Search Highlighting** - Matched text is highlighted in both message and logger name columns
-- **Context Menu** - Right-click search terms for edit/remove options
+- **Match case** and **Whole word**
+- **Regex** - full .NET regular expressions; a pattern that is not valid gets a red frame and the reason is shown next to the box (the filter adds nothing, the search finds nothing)
+- **Level** - the term only matches entries of that level
+- **Patterns** - a menu of ready-made regular expressions (date, GUID, IPv4 address, URL, e-mail address, HTTP error status, exception type, one of several words) that are put into the box
+- **Fields** - where to look: message, logger name, exception, thread and the other properties of the entry (default: message and logger name). The choice counts for the filter and the search together.
 
-**Search Properties:**
-- `CurrentSearchText` - The text currently being typed in the search box
-- `UseRegexSearch` - Toggle between text search and regex search modes
-- `ActiveSearchTerms` - Collection of active search terms (read-only)
+The filter also has **Show / Hide**: a term that hides removes the entries that match it. Every term is shown as a chip (an `−` in front of the ones that hide, `Aa` for match case, `W` for whole word, the level) that can be edited or removed. The filter shows how many of the entries it would match while you type.
+
+**All** terms of the filter have to allow an entry (AND); a term that includes must match, a term that excludes must not.
+
+In the desktop application the fields are a setting (Settings → Appearance → Search and filter) that new tabs start with. Choosing other fields in a tab saves them as the setting; tabs that are open stay as they are.
+
+**Properties of the filter:**
+- `CurrentSearchText` - The text in the filter box
+- `UseRegexSearch`, `FilterMatchCase`, `FilterWholeWord`, `FilterIsExclude`, `FilterLevel` - The options of the next term
+- `FilterError` - Why the text is not valid (read-only, `null` when it is), `FilterHitText` - e.g. "12 hits" (read-only)
+- `ActiveSearchTerms` - The terms (`FilterTerm`), read-only
 - `SearchHighlightBackground` - Brush used to highlight matched text
+
+**Properties of the search:**
+- `FindText`, `FindUseRegex`, `FindMatchCase`, `FindWholeWord`, `FindLevel` - The text and its options
+- `FindError`, `FindResultText` - Why the text is not valid, and the count of the hits (read-only)
+- `ShowFindControls` - Whether the search is shown
+
+**Property of both:**
+- `SearchFields` - The fields to look into (`SearchFields`, a combination of `Message`, `LoggerName`, `Exception`, `Thread` and `Properties`; default `Message | LoggerName`)
 
 **Usage:**
 
 ```csharp
-// Programmatically add search terms
+// Add a term that includes: entries whose message or logger contains "error", whole words only
 logViewer.CurrentSearchText = "error";
-logViewer.AddSearchTerm(); // Adds as text search
+logViewer.FilterWholeWord = true;
+logViewer.AddSearchTerm();
 
-// Enable regex mode and add regex pattern
+// Add a regex that hides the entries it matches
 logViewer.UseRegexSearch = true;
+logViewer.FilterIsExclude = true;
 logViewer.CurrentSearchText = @"\d{4}-\d{2}-\d{2}";
-logViewer.AddSearchTerm(); // Adds as regex search
+logViewer.AddSearchTerm();
 
-// Remove specific search term
-var searchTerm = logViewer.ActiveSearchTerms.First();
-logViewer.RemoveSearchTerm(searchTerm);
+// Add a term without the input: includes, or hides, a plain text
+logViewer.AddRegexSearchTerm("timeout");
+logViewer.AddRegexSearchTermExclude("heartbeat");
 
-// Clear all search terms
+// Remove a term, or all of them
+logViewer.RemoveSearchTerm(logViewer.ActiveSearchTerms.First());
 logViewer.ClearAllSearchTerms();
 
-// Customize search highlight color
-logViewer.SearchHighlightBackground = Brushes.Yellow;
+// Look into the exception and the other properties as well
+logViewer.SearchFields = SearchFields.All;
+
+// Find without hiding anything
+logViewer.FindText = "timeout";
+logViewer.FindMatchCase = true;
 ```
 
 **XAML Binding:**
 
 ```xaml
-<dj:LogViewer 
+<dj:LogViewer
     CurrentSearchText="{Binding SearchText}"
     UseRegexSearch="{Binding IsRegexMode}"
+    SearchFields="{Binding SearchFields, Mode=TwoWay}"
     SearchHighlightBackground="{Binding HighlightBrush}" />
 ```
 
-**Search Logic:**
-- Search terms are applied to both the **message** and **logger name** columns
-- **AND logic**: ALL active search terms must match for a log entry to be displayed
-- Text search is case-insensitive and performs substring matching
-- Regex search uses full .NET regular expression patterns
-- Invalid regex patterns show a warning dialog and are not added
-- Search highlighting works in real-time as you add/remove terms
+**Matching:**
+- A text matches when an entry contains it in one of the chosen fields; without **Regex** it is a plain text, not a pattern
+- The `Message` field is the message of the entry; the exception is a field of its own
+- **Whole word** means that no letter, digit or underscore stands right before or after the match
+- With a level, the entry has to be of exactly that level
+- The matching code is `FilterTerm` in `Sentinel.LogViewer.Core`, so a server or another user interface can filter in the same way
 
 ### Logger Tree
 
@@ -448,7 +469,7 @@ LogViewer1.ItemsSource = new ObservableCollection<LogEntry>
 The package `Sentinel.LogViewer.Core` targets plain `net8.0` and has no WPF in it, so a server or another kind of user interface can use it too. The `Sentinel.LogViewer.Wpf` package brings it along. It holds:
 
 - `LogEntry`, `LogEntryLevel` and `ILogSource`, and `LogBuffer`, a source that keeps the last entries in memory and sends them to every new subscriber
-- the filters as a value (`LogViewerFilterState`), the search terms (`TextSearchTerm`, `RegexSearchTerm`) and the format of the time stamp (`TimeStampFormat`)
+- the filters as a value (`LogViewerFilterState`), the filter term with its options and the fields it looks into (`FilterTerm`, `SearchFields`) and the format of the time stamp (`TimeStampFormat`)
 - the logger tree as a model (`LoggerTree`, `LoggerNode`, `LoggerVisibilityRules`)
 - the receiving of log messages over UDP (`UdpLogReceiverService`) with the Log4J XML parser (`Log4JEventParser`, `Log4JEvent`)
 

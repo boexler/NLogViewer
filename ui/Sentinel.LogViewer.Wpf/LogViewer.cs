@@ -2,7 +2,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -518,43 +517,16 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
                 if (!levelFilterPassed) return false;
 
-                // Apply search filters if any active search terms exist
-                if (ActiveSearchTerms?.Count > 0)
+                // The filter terms: every term that includes must match, and no term that excludes may match.
+                var terms = ActiveSearchTerms;
+                if (terms != null)
                 {
-                    var loggerName = logEvent.LoggerName ?? string.Empty;
-                    var message = MessageResolver?.Resolve(logEvent) ?? string.Empty;
-                    
-                    // Separate include and exclude terms based on regex pattern
-                    // Exclude patterns start with "^(?!.*" (negative lookahead)
-                    var includeTerms = ActiveSearchTerms.Where(t => 
-                        !(t is RegexSearchTerm regexTerm && regexTerm.Text.StartsWith("^(?!.*", StringComparison.Ordinal))).ToList();
-                    var excludeTerms = ActiveSearchTerms.Where(t => 
-                        t is RegexSearchTerm regexTerm && regexTerm.Text.StartsWith("^(?!.*", StringComparison.Ordinal)).ToList();
-                    
-                    // AND logic: ALL include terms must match
-                    foreach (var searchTerm in includeTerms)
+                    var fields = SearchFields;
+                    foreach (var term in terms)
                     {
-                        if (!searchTerm.MatchAny(loggerName, message))
+                        if (term.Matches(logEvent, fields) == term.IsExclude)
                             return false;
                     }
-                    
-                    // Exclude logic: Hide entry if ANY string (loggerName OR message) contains the excluded pattern
-                    // Note: For exclude patterns (negative lookahead ^(?!.*pattern)), if the pattern matches,
-                    // it means the text does NOT contain the excluded pattern. If it doesn't match, the text contains it.
-                    // We need to check each string individually because MatchAny would return true if ANY string matches,
-                    // but we want to hide if ANY string contains the pattern.
-                    foreach (var searchTerm in excludeTerms)
-                    {
-                        // Check each string individually: if either contains the pattern, hide the entry
-                        var loggerContainsPattern = !searchTerm.Match(loggerName);
-                        var messageContainsPattern = !searchTerm.Match(message);
-                        
-                        if (loggerContainsPattern || messageContainsPattern)
-                            return false; // Hide entry if either string contains the excluded pattern
-                    }
-                    
-                    // All include terms matched and no exclude terms matched
-                    return true;
                 }
 
                 return true;
@@ -1205,7 +1177,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// </summary>
         public static readonly DependencyProperty CurrentSearchTextProperty = 
             DependencyProperty.Register(nameof(CurrentSearchText), typeof(string), typeof(LogViewer), 
-                new PropertyMetadata(string.Empty));
+                new PropertyMetadata(string.Empty, (d, _) => (d as LogViewer)?.UpdateFilterError()));
 
         /// <summary>
         /// Whether to use regex pattern matching for search
@@ -1224,7 +1196,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// </summary>
         public static readonly DependencyProperty UseRegexSearchProperty = 
             DependencyProperty.Register(nameof(UseRegexSearch), typeof(bool), typeof(LogViewer), 
-                new PropertyMetadata(false));
+                new PropertyMetadata(false, (d, _) => (d as LogViewer)?.UpdateFilterError()));
 
         /// <summary>
         /// Collection of active search terms
@@ -1232,9 +1204,9 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         [Category("LogViewerFilters")]
         [Browsable(false)]
         [Description("Collection of active search terms")]
-        public ObservableCollection<SearchTerm> ActiveSearchTerms
+        public ObservableCollection<FilterTerm> ActiveSearchTerms
         {
-            get => (ObservableCollection<SearchTerm>)GetValue(ActiveSearchTermsProperty);
+            get => (ObservableCollection<FilterTerm>)GetValue(ActiveSearchTermsProperty);
             private set => SetValue(ActiveSearchTermsProperty, value);
         }
 
@@ -1242,7 +1214,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// The <see cref="ActiveSearchTerms"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty ActiveSearchTermsProperty = 
-            DependencyProperty.Register(nameof(ActiveSearchTerms), typeof(ObservableCollection<SearchTerm>), typeof(LogViewer), 
+            DependencyProperty.Register(nameof(ActiveSearchTerms), typeof(ObservableCollection<FilterTerm>), typeof(LogViewer), 
                 new PropertyMetadata(null));
 
         private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
@@ -1255,53 +1227,34 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
 
         /// <summary>
-        /// Adds a new search term to the active search terms collection
+        /// Adds the text of the filter input as a filter term, with the options of the input. Nothing happens while the text is empty or is
+        /// not a valid regular expression (<see cref="FilterError"/> says why).
         /// </summary>
         public void AddSearchTerm()
         {
-            if (string.IsNullOrWhiteSpace(CurrentSearchText))
+            if (string.IsNullOrWhiteSpace(CurrentSearchText) || FilterTerm.Validate(CurrentSearchText, UseRegexSearch) != null)
                 return;
 
-            SearchTerm searchTerm;
-            
-            if (UseRegexSearch)
-            {
-                try
-                {
-                    searchTerm = new RegexSearchTerm(CurrentSearchText);
-                }
-                catch (ArgumentException ex)
-                {
-                    MessageBox.Show($"Invalid regex pattern: {ex.Message}", "Regex Error", 
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
-            }
-            else
-            {
-                searchTerm = new TextSearchTerm(CurrentSearchText);
-            }
-            
-            ActiveSearchTerms.Add(searchTerm);
-            
+            ActiveSearchTerms.Add(new FilterTerm(CurrentSearchText, FilterIsExclude, FilterMatchCase, FilterWholeWord, UseRegexSearch, FilterLevel));
+
             // Clear the input
             CurrentSearchText = string.Empty;
-            
+
             // Update filter
             UpdateFilter();
         }
 
         /// <summary>
-        /// Removes a search term from the active search terms collection
+        /// Removes a filter term from the active filter terms
         /// </summary>
-        public void RemoveSearchTerm(SearchTerm searchTerm)
+        public void RemoveSearchTerm(FilterTerm searchTerm)
         {
             ActiveSearchTerms.Remove(searchTerm);
             UpdateFilter();
         }
 
         /// <summary>
-        /// Clears all active search terms
+        /// Clears all active filter terms
         /// </summary>
         public void ClearAllSearchTerms()
         {
@@ -1310,73 +1263,47 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         }
 
         /// <summary>
-        /// Adds a RegexSearchTerm from a provided text and updates the filter
-        /// Special regex characters are escaped to treat the text as a literal string
+        /// Adds the text as a filter term that shows only the entries that contain it (a plain text, without regard to case)
         /// </summary>
-        /// <param name="text">The text to use as regex pattern (will be escaped)</param>
+        /// <param name="text">The text to look for</param>
         public void AddRegexSearchTerm(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            try
-            {
-                // Escape special regex characters to treat the text as a literal string
-                var escapedPattern = Regex.Escape(text);
-                var term = new RegexSearchTerm(escapedPattern);
-                ActiveSearchTerms.Add(term);
-                UpdateFilter();
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show($"Invalid regex pattern: {ex.Message}", "Regex Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            ActiveSearchTerms.Add(new FilterTerm(text));
+            UpdateFilter();
         }
 
         /// <summary>
-        /// Adds a RegexSearchTerm as an exclude filter from a provided text and updates the filter
-        /// Special regex characters are escaped and wrapped in a negative lookahead pattern
+        /// Adds the text as a filter term that hides the entries that contain it (a plain text, without regard to case)
         /// </summary>
-        /// <param name="text">The text to use as regex pattern (will be escaped and wrapped in negative lookahead)</param>
+        /// <param name="text">The text to look for</param>
         public void AddRegexSearchTermExclude(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            try
-            {
-                // Escape special regex characters to treat the text as a literal string
-                var escapedPattern = Regex.Escape(text);
-                // Wrap in negative lookahead: matches any text that does NOT contain the pattern
-                var negativeLookaheadPattern = $"^(?!.*{escapedPattern}$)";
-                var term = new RegexSearchTerm(negativeLookaheadPattern);
-                ActiveSearchTerms.Add(term);
-                UpdateFilter();
-            }
-            catch (ArgumentException ex)
-            {
-                MessageBox.Show($"Invalid regex pattern: {ex.Message}", "Regex Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            ActiveSearchTerms.Add(new FilterTerm(text, isExclude: true));
+            UpdateFilter();
         }
 
         /// <summary>
-        /// Edits a search term by copying its text to the current search text field
+        /// Edits a filter term by moving its text and options to the filter input; the term itself is removed
         /// </summary>
-        /// <param name="searchTerm">The search term to edit</param>
-        public void EditSearchTerm(SearchTerm searchTerm)
+        /// <param name="searchTerm">The filter term to edit</param>
+        public void EditSearchTerm(FilterTerm searchTerm)
         {
             if (searchTerm == null)
                 return;
 
-            // Copy the search term text to the current search text field
             CurrentSearchText = searchTerm.Text;
-            
-            // Set the regex checkbox based on the search term type
-            UseRegexSearch = searchTerm is RegexSearchTerm;
-            
-            // Remove the original search term
+            UseRegexSearch = searchTerm.IsRegex;
+            FilterIsExclude = searchTerm.IsExclude;
+            FilterMatchCase = searchTerm.MatchCase;
+            FilterWholeWord = searchTerm.WholeWord;
+            FilterLevel = searchTerm.Level;
+
             ActiveSearchTerms.Remove(searchTerm);
             UpdateFilter();
         }
@@ -1714,7 +1641,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 return;
 
             LogEvents = new CollectionViewSource { Source = _internalLogEntries };
-            ActiveSearchTerms = new ObservableCollection<SearchTerm>();
+            ActiveSearchTerms = new ObservableCollection<FilterTerm>();
             UpdateFilter();
 
             AttachEffectiveCollectionChangedHandler();
@@ -1725,10 +1652,10 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             ClearCommand = new RelayCommand(() => GetEffectiveEntries().Clear());
             AddSearchTermCommand = new RelayCommand(AddSearchTerm);
             ClearAllSearchTermsCommand = new RelayCommand(ClearAllSearchTerms);
-            RemoveSearchTermCommand = new RelayCommand<SearchTerm>(RemoveSearchTerm);
+            RemoveSearchTermCommand = new RelayCommand<FilterTerm>(RemoveSearchTerm);
             AddRegexSearchTermCommand = new RelayCommand<string>(AddRegexSearchTerm);
             AddRegexSearchTermExcludeCommand = new RelayCommand<string>(AddRegexSearchTermExclude);
-            EditSearchTermCommand = new RelayCommand<SearchTerm>(EditSearchTerm);
+            EditSearchTermCommand = new RelayCommand<FilterTerm>(EditSearchTerm);
             CopyToClipboardCommand = new RelayCommand<string>(CopyToClipboard);
             ExportCommand = new RelayCommand<ExportParameter>(ExportLogs);
             FindNextCommand = new RelayCommand(() => FindNext());

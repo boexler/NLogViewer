@@ -22,6 +22,7 @@ namespace Sentinel.LogViewer.Models
         private bool _loggerTreeOnLeft;
         private bool _loggerTreeOpen;
         private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
+        private SearchFields _searchFields = SearchFields.Default;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewer.ItemsSource"/>.
@@ -202,6 +203,22 @@ namespace Sentinel.LogViewer.Models
                 if (_loggerTreeWidth != value)
                 {
                     _loggerTreeWidth = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The fields that the filter and the search of the viewer in the tab look into; the viewer keeps it up to date and takes it when it is set
+        /// </summary>
+        public SearchFields SearchFields
+        {
+            get => _searchFields;
+            set
+            {
+                if (_searchFields != value)
+                {
+                    _searchFields = value;
                     OnPropertyChanged();
                 }
             }

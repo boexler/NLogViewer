@@ -31,6 +31,10 @@ public class LogViewerScrollPositionTests
 		var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, EntryCount).Select(i =>
 			new LogEntry(i % 2 == 0 ? LogEntryLevel.Info : LogEntryLevel.Debug, "Logger", $"Entry {i}")));
 		var (window, viewer) = WpfTestHelper.ShowInWindow(entries);
+
+		// The tests count rows, so the list has room for some below the controls on top of it.
+		window.Height = 800;
+		Settle();
 		return (window, viewer, entries);
 	}
 

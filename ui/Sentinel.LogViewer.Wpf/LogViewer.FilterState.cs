@@ -50,7 +50,11 @@ namespace Sentinel.LogViewer.Wpf
         public LogViewerFilterState GetFilterState() => new()
         {
             HiddenLevels = LevelNames.Where(IsLevelHidden).ToList(),
-            Terms = ActiveSearchTerms.Select(term => new LogViewerFilterTerm { Text = term.Text, IsRegex = term is RegexSearchTerm }).ToList(),
+            Terms = ActiveSearchTerms.Select(term => new LogViewerFilterTerm
+            {
+                Text = term.Text, IsRegex = term.IsRegex, IsExclude = term.IsExclude, MatchCase = term.MatchCase, WholeWord = term.WholeWord, Level = term.Level
+            }).ToList(),
+            SearchFields = SearchFields,
             LoggerRules = new List<string>(LoggerTree.Rules.ToList()),
             TimeStampFormat = CustomTimeStampFormat
         };
@@ -68,12 +72,12 @@ namespace Sentinel.LogViewer.Wpf
                 foreach (var level in LevelNames)
                     SetLevelHidden(level, state.HiddenLevels.Contains(level, StringComparer.Ordinal));
 
-                var terms = new ObservableCollection<SearchTerm>();
+                var terms = new ObservableCollection<FilterTerm>();
                 foreach (var term in state.Terms)
                 {
                     try
                     {
-                        terms.Add(term.IsRegex ? new RegexSearchTerm(term.Text) : new TextSearchTerm(term.Text));
+                        terms.Add(new FilterTerm(term.Text, term.IsExclude, term.MatchCase, term.WholeWord, term.IsRegex, term.Level));
                     }
                     catch (ArgumentException)
                     {
@@ -81,6 +85,7 @@ namespace Sentinel.LogViewer.Wpf
                 }
 
                 ActiveSearchTerms = terms;
+                SearchFields = state.SearchFields;
                 LoggerTree.Rules.Load(state.LoggerRules);
                 CustomTimeStampFormat = state.TimeStampFormat;
             }
