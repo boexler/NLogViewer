@@ -802,5 +802,113 @@
   <data name="Main_ChangeLanguage" xml:space="preserve">
     <value>Cambiar idioma</value>
   </data>
+  <data name="ColumnMapping_Title" xml:space="preserve">
+    <value>Configuración de la asignación de columnas</value>
+  </data>
+  <data name="ColumnMapping_Heading" xml:space="preserve">
+    <value>Configurar la asignación de columnas</value>
+  </data>
+  <data name="ColumnMapping_GroupMapping" xml:space="preserve">
+    <value>Asignación de columnas</value>
+  </data>
+  <data name="ColumnMapping_Intro" xml:space="preserve">
+    <value>Asigne cada columna detectada a un campo del registro:</value>
+  </data>
+  <data name="ColumnMapping_ColumnHeader" xml:space="preserve">
+    <value>Columna</value>
+  </data>
+  <data name="ColumnMapping_SampleHeader" xml:space="preserve">
+    <value>Datos de ejemplo</value>
+  </data>
+  <data name="ColumnMapping_MapToHeader" xml:space="preserve">
+    <value>Asignar a</value>
+  </data>
+  <data name="ColumnMapping_GroupOptions" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="ColumnMapping_Separator" xml:space="preserve">
+    <value>Separador:</value>
+  </data>
+  <data name="ColumnMapping_DateOrder" xml:space="preserve">
+    <value>Orden de la fecha:</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_Tooltip" xml:space="preserve">
+    <value>Cómo se ordenan el día y el mes en fechas como 01/02/2025. Las fechas con un día superior a 12 lo indican por sí mismas.</value>
+  </data>
+  <data name="ColumnMapping_HasHeaderLine" xml:space="preserve">
+    <value>La primera línea es una línea de encabezado o información</value>
+  </data>
+  <data name="ColumnMapping_SaveForPattern" xml:space="preserve">
+    <value>Guardar esta asignación para los archivos que coincidan con el patrón</value>
+  </data>
+  <data name="ColumnMapping_FilePattern" xml:space="preserve">
+    <value>Patrón de archivo:</value>
+  </data>
+  <data name="ColumnMapping_GroupPreview" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="ColumnMapping_NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="ColumnMapping_Field_None" xml:space="preserve">
+    <value>Ninguno</value>
+  </data>
+  <data name="ColumnMapping_Field_Timestamp" xml:space="preserve">
+    <value>Marca de tiempo</value>
+  </data>
+  <data name="ColumnMapping_Field_Level" xml:space="preserve">
+    <value>Nivel</value>
+  </data>
+  <data name="ColumnMapping_Field_Logger" xml:space="preserve">
+    <value>Logger</value>
+  </data>
+  <data name="ColumnMapping_Field_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="ColumnMapping_Sep_Tab" xml:space="preserve">
+    <value>Tabulador</value>
+  </data>
+  <data name="ColumnMapping_Sep_PipeSpaces" xml:space="preserve">
+    <value>Barra vertical con espacios ( | )</value>
+  </data>
+  <data name="ColumnMapping_Sep_Pipe" xml:space="preserve">
+    <value>Barra vertical (|)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Comma" xml:space="preserve">
+    <value>Coma (,)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Semicolon" xml:space="preserve">
+    <value>Punto y coma (;)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Spaces" xml:space="preserve">
+    <value>Espacios</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_Auto" xml:space="preserve">
+    <value>Automático ({0} en este equipo)</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_MonthFirstName" xml:space="preserve">
+    <value>mes primero</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_DayFirstName" xml:space="preserve">
+    <value>día primero</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_DayFirst" xml:space="preserve">
+    <value>Día primero (18/12/2025)</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_MonthFirst" xml:space="preserve">
+    <value>Mes primero (12/18/2025)</value>
+  </data>
+  <data name="LanguageSelection_Title" xml:space="preserve">
+    <value>Seleccionar idioma</value>
+  </data>
+  <data name="ToolTip_StartListening" xml:space="preserve">
+    <value>Empezar a escuchar en los puertos configurados</value>
+  </data>
+  <data name="ToolTip_StopListening" xml:space="preserve">
+    <value>Dejar de escuchar en todos los puertos</value>
+  </data>
+  <data name="Status_Label" xml:space="preserve">
+    <value>Estado:</value>
+  </data>
 </root>
 

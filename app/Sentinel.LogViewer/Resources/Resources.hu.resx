@@ -802,6 +802,114 @@
   <data name="Main_ChangeLanguage" xml:space="preserve">
     <value>Nyelv módosítása</value>
   </data>
+  <data name="ColumnMapping_Title" xml:space="preserve">
+    <value>Oszlophozzárendelés konfigurálása</value>
+  </data>
+  <data name="ColumnMapping_Heading" xml:space="preserve">
+    <value>Oszlophozzárendelés beállítása</value>
+  </data>
+  <data name="ColumnMapping_GroupMapping" xml:space="preserve">
+    <value>Oszlophozzárendelés</value>
+  </data>
+  <data name="ColumnMapping_Intro" xml:space="preserve">
+    <value>Rendelje hozzá az észlelt oszlopokat egy naplómezőhöz:</value>
+  </data>
+  <data name="ColumnMapping_ColumnHeader" xml:space="preserve">
+    <value>Oszlop</value>
+  </data>
+  <data name="ColumnMapping_SampleHeader" xml:space="preserve">
+    <value>Mintaadat</value>
+  </data>
+  <data name="ColumnMapping_MapToHeader" xml:space="preserve">
+    <value>Hozzárendelés</value>
+  </data>
+  <data name="ColumnMapping_GroupOptions" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="ColumnMapping_Separator" xml:space="preserve">
+    <value>Elválasztó:</value>
+  </data>
+  <data name="ColumnMapping_DateOrder" xml:space="preserve">
+    <value>Dátumsorrend:</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_Tooltip" xml:space="preserve">
+    <value>A nap és a hónap sorrendje az olyan dátumokban, mint 01/02/2025. A 12-nél nagyobb napot tartalmazó dátumok maguktól elárulják.</value>
+  </data>
+  <data name="ColumnMapping_HasHeaderLine" xml:space="preserve">
+    <value>Az első sor fejléc-/információs sor</value>
+  </data>
+  <data name="ColumnMapping_SaveForPattern" xml:space="preserve">
+    <value>A hozzárendelés mentése a mintának megfelelő fájlokhoz</value>
+  </data>
+  <data name="ColumnMapping_FilePattern" xml:space="preserve">
+    <value>Fájlminta:</value>
+  </data>
+  <data name="ColumnMapping_GroupPreview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="ColumnMapping_NotAvailable" xml:space="preserve">
+    <value>n/a</value>
+  </data>
+  <data name="ColumnMapping_Field_None" xml:space="preserve">
+    <value>Nincs</value>
+  </data>
+  <data name="ColumnMapping_Field_Timestamp" xml:space="preserve">
+    <value>Időbélyeg</value>
+  </data>
+  <data name="ColumnMapping_Field_Level" xml:space="preserve">
+    <value>Szint</value>
+  </data>
+  <data name="ColumnMapping_Field_Logger" xml:space="preserve">
+    <value>Naplózó</value>
+  </data>
+  <data name="ColumnMapping_Field_Message" xml:space="preserve">
+    <value>Üzenet</value>
+  </data>
+  <data name="ColumnMapping_Sep_Tab" xml:space="preserve">
+    <value>Tabulátor</value>
+  </data>
+  <data name="ColumnMapping_Sep_PipeSpaces" xml:space="preserve">
+    <value>Függőleges vonal szóközökkel ( | )</value>
+  </data>
+  <data name="ColumnMapping_Sep_Pipe" xml:space="preserve">
+    <value>Függőleges vonal (|)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Comma" xml:space="preserve">
+    <value>Vessző (,)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Semicolon" xml:space="preserve">
+    <value>Pontosvessző (;)</value>
+  </data>
+  <data name="ColumnMapping_Sep_Spaces" xml:space="preserve">
+    <value>Szóközök</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_Auto" xml:space="preserve">
+    <value>Automatikus ({0} ezen a számítógépen)</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_MonthFirstName" xml:space="preserve">
+    <value>hónap először</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_DayFirstName" xml:space="preserve">
+    <value>nap először</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_DayFirst" xml:space="preserve">
+    <value>Nap először (18/12/2025)</value>
+  </data>
+  <data name="ColumnMapping_DateOrder_MonthFirst" xml:space="preserve">
+    <value>Hónap először (12/18/2025)</value>
+  </data>
+  <data name="LanguageSelection_Title" xml:space="preserve">
+    <value>Nyelv kiválasztása</value>
+  </data>
+  <data name="ToolTip_StartListening" xml:space="preserve">
+    <value>Figyelés indítása a beállított portokon</value>
+  </data>
+  <data name="ToolTip_StopListening" xml:space="preserve">
+    <value>Figyelés leállítása az összes porton</value>
+  </data>
+  <data name="Status_Label" xml:space="preserve">
+    <value>Állapot:</value>
+  </data>
 </root>
 
 

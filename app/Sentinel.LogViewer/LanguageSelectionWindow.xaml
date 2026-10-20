@@ -5,8 +5,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
         mc:Ignorable="d"
-        Title="Select Language" 
+        Title="{helpers:Resource Key=LanguageSelection_Title, DefaultValue=Select Language}" 
         Height="400" 
         Width="350"
         WindowStartupLocation="CenterOwner"
@@ -19,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Text="Select Language" 
+        <TextBlock Text="{helpers:Resource Key=LanguageSelection_Title, DefaultValue=Select Language}" 
                    FontSize="18" 
                    FontWeight="Bold"
                    Margin="0,0,0,15"
@@ -51,13 +52,13 @@
         <StackPanel Grid.Row="2" 
                     Orientation="Horizontal" 
                     HorizontalAlignment="Right">
-            <Button Content="OK" 
+            <Button Content="{helpers:Resource Key=MessageBox_OK, DefaultValue=OK}" 
                     IsDefault="True"
                     Click="OkButton_Click"
                     Margin="0,0,5,0"
                     Padding="20,5"
                     MinWidth="80"/>
-            <Button Content="Cancel" 
+            <Button Content="{helpers:Resource Key=MessageBox_Cancel, DefaultValue=Cancel}" 
                     IsCancel="True"
                     Padding="20,5"
                     MinWidth="80"/>

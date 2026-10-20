@@ -864,7 +864,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		return await dispatcher.InvokeAsync(() =>
 		{
-			var viewModel = new ColumnMappingViewModel(format, sampleLines, filePath);
+			var viewModel = new ColumnMappingViewModel(format, sampleLines, filePath, _localizationService);
 			var mappingWindow = new ColumnMappingWindow(viewModel);
 			var mainWindow = System.Windows.Application.Current.MainWindow;
 
