@@ -225,6 +225,41 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void AFilterPreset_IsAppliedToTheSelectedTab_WithoutChangingTheDefaultFieldsOrTheTimeStampFormat()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			viewer.CustomTimeStampFormat = TimeStampFormat.German;
+			var service = new FilterPresetService(_environment.Configuration);
+			service.Save("Timeouts", new LogViewerFilterState
+			{
+				HiddenLevels = { "Debug" },
+				Terms = { new LogViewerFilterTerm { Text = "timeout", IsExclude = true, MatchCase = true } },
+				SearchFields = SearchFields.All,
+				TimeStampFormat = TimeStampFormat.Iso
+			});
+			session.ViewModel.RefreshFilterPresets();
+			var preset = Assert.Single(session.ViewModel.FilterPresets);
+
+			session.ViewModel.ApplyFilterPresetCommand.Execute(preset);
+
+			Assert.True(viewer.DebugFilter);
+			var term = Assert.Single(viewer.ActiveSearchTerms);
+			Assert.Equal(("timeout", true, true), (term.Text, term.IsExclude, term.MatchCase));
+			Assert.Equal(SearchFields.All, viewer.SearchFields);
+			Assert.Equal(TimeStampFormat.German, viewer.CustomTimeStampFormat);
+			Assert.Equal("Default", _environment.Saved.SearchFields);
+
+			// A choice that the user makes in the tab is still saved as the default.
+			viewer.SearchFields = SearchFields.Message;
+			Assert.Equal("Message", _environment.Saved.SearchFields);
+		});
+	}
+
+	[Fact]
 	public void ADraggedWidth_ThatIsOutsideTheLimits_IsSavedAsTheNearestValidWidth()
 	{
 		_context.RunOnSta(() =>

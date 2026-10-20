@@ -922,5 +922,56 @@
   <data name="Status_Label" xml:space="preserve">
     <value>Status:</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filter</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Apply preset</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>_Save current filter as preset...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>_Manage presets...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Save filter preset</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Name of the preset:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>A preset named “{0}” exists. Replace it?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Filter preset “{0}” saved</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Filter preset “{0}” applied</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Filter presets</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Saved combinations of filters that you can apply to a tab.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>The saved filter presets. Save one with Filter → Save current filter as preset. Rename it here or remove it.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>No presets yet.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Remove preset</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Enter a name.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>A preset with this name already exists.</value>
+  </data>
 </root>
 

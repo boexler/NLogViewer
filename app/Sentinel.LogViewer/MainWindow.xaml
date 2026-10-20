@@ -171,6 +171,25 @@
                           Command="{Binding OpenSettingsCommand}" 
                           InputGestureText="Ctrl+,"/>
             </MenuItem>
+            <MenuItem Header="{helpers:Resource Key=Menu_Filter, DefaultValue=_Filter}">
+                <MenuItem Header="{helpers:Resource Key=Menu_FilterApplyPreset, DefaultValue=_Apply preset}"
+                          IsEnabled="{Binding HasFilterPresets}"
+                          ItemsSource="{Binding FilterPresets}"
+                          Tag="{Binding}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Tag.ApplyFilterPresetCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="{helpers:Resource Key=Menu_FilterSavePreset, DefaultValue=_Save current filter as preset...}"
+                          Command="{Binding SaveFilterPresetCommand}"/>
+                <Separator />
+                <MenuItem Header="{helpers:Resource Key=Menu_FilterManagePresets, DefaultValue=_Manage presets...}"
+                          Command="{Binding ManageFilterPresetsCommand}"/>
+            </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Logs, DefaultValue=_Logs}">
                 <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
                     <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"

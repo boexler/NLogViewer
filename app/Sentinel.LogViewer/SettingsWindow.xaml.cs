@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,6 +27,12 @@ namespace Sentinel.LogViewer
         /// Whether any setting was changed while the window was open
         /// </summary>
         public bool HasChanges => _viewModel.HasChanges;
+
+        /// <summary>
+        /// Opens the page of a category, e.g. <see cref="SettingsViewModel.FilterPresetsId"/>
+        /// </summary>
+        internal void ShowCategory(string categoryId) =>
+            _viewModel.SelectedCategory = _viewModel.Categories.FirstOrDefault(category => category.Id == categoryId) ?? _viewModel.SelectedCategory;
 
         public bool? ShowDialog(Window owner)
         {

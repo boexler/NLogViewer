@@ -49,7 +49,7 @@ public class SettingsViewModelTests : IDisposable
 	{
 		var viewModel = _environment.CreateViewModel();
 
-		Assert.Equal(new[] { "General", "Receiving", "Appearance", "Updates" }, viewModel.Categories.Select(category => category.Id));
+		Assert.Equal(new[] { "General", "Receiving", "Appearance", "FilterPresets", "Updates" }, viewModel.Categories.Select(category => category.Id));
 		Assert.Equal("General", viewModel.SelectedCategory?.Id);
 		Assert.Equal(1 + viewModel.SelectedCategory!.Settings.Count, viewModel.PageItems.Count);
 		Assert.IsType<SettingsPageHeader>(viewModel.PageItems[0]);
@@ -432,6 +432,39 @@ public class SettingsViewModelTests : IDisposable
 	[InlineData("99", SearchFields.Default)]
 	public void TheSearchFieldsOfTheSettings_AreReadLeniently(string? value, SearchFields expected) =>
 		Assert.Equal(expected, SettingsRules.ParseSearchFields(value));
+
+	[Fact]
+	public void TheFilterPresets_AreListed_RenamedAndRemoved_AndHaveNoReset()
+	{
+		var service = new FilterPresetService(_environment.Configuration);
+		service.Save("Timeouts", new LogViewerFilterState());
+		service.Save("Errors", new LogViewerFilterState());
+		var viewModel = _environment.CreateViewModel();
+		var list = viewModel.Setting<PresetListSettingViewModel>("Presets");
+		Assert.Equal(new[] { "Timeouts", "Errors" }, list.Items.Select(item => item.Name));
+		Assert.False(list.IsEmpty);
+
+		list.Items[0].Name = "  Slow calls ";
+		Assert.Equal(new[] { "Slow calls", "Errors" }, _environment.Saved.FilterPresets.Select(preset => preset.Name));
+		Assert.False(list.Items[0].HasError);
+
+		list.Items[1].Name = "slow CALLS";
+		Assert.True(list.Items[1].HasError);
+		list.Items[1].Name = "";
+		Assert.True(list.Items[1].HasError);
+		Assert.Equal(new[] { "Slow calls", "Errors" }, _environment.Saved.FilterPresets.Select(preset => preset.Name));
+
+		viewModel.SelectedCategory = viewModel.Category("FilterPresets");
+		Assert.False(viewModel.CanResetCategory);
+		list.ResetToDefault();
+		Assert.Equal(2, _environment.Saved.FilterPresets.Count);
+
+		list.Items[0].RemoveCommand.Execute(null);
+		Assert.Equal(new[] { "Errors" }, _environment.Saved.FilterPresets.Select(preset => preset.Name));
+		list.Items[0].RemoveCommand.Execute(null);
+		Assert.True(list.IsEmpty);
+		Assert.Empty(_environment.Saved.FilterPresets);
+	}
 
 	[Fact]
 	public void SearchingForTheLoggerTree_ShowsTheMatchingRowsInTheirCard()

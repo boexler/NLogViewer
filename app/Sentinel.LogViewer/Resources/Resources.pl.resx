@@ -910,6 +910,57 @@
   <data name="Status_Label" xml:space="preserve">
     <value>Stan:</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filtr</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Zastosuj ustawienie wstępne</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>_Zapisz bieżący filtr jako ustawienie wstępne...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>_Zarządzaj ustawieniami wstępnymi...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Zapisz ustawienie wstępne filtra</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Nazwa ustawienia wstępnego:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Ustawienie wstępne o nazwie „{0}” już istnieje. Zastąpić je?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Zapisano ustawienie wstępne filtra „{0}”</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Zastosowano ustawienie wstępne filtra „{0}”</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Ustawienia wstępne filtrów</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Zapisane kombinacje filtrów, które można zastosować do karty.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Ustawienia wstępne</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>Zapisane ustawienia wstępne filtrów. Zapisuje się je poleceniem Filtr → Zapisz bieżący filtr jako ustawienie wstępne. Tutaj można zmienić nazwę ustawienia lub je usunąć.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Brak ustawień wstępnych.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Usuń ustawienie wstępne</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Wprowadź nazwę.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Ustawienie wstępne o tej nazwie już istnieje.</value>
+  </data>
 </root>
 
 
