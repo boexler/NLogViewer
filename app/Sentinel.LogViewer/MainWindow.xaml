@@ -255,7 +255,7 @@
                 <Button x:Name="LanguageButton" Style="{StaticResource ThemeIconButton}" 
                         Padding="5,2"
                         Cursor="Hand"
-                        ToolTip="Change Language"
+                        ToolTip="{helpers:Resource Key=Main_ChangeLanguage, DefaultValue=Change language}"
                         Click="LanguageButton_Click">
                     <Button.Content>
                         <Image Source="{Binding CurrentLanguageFlag, Converter={StaticResource SvgImageSourceConverter}}" 
@@ -306,7 +306,7 @@
                         VerticalAlignment="Center"
                         MinWidth="300">
                     <StackPanel>
-                        <TextBlock Text="Loading File..." 
+                        <TextBlock Text="{helpers:Resource Key=Import_LoadingFile, DefaultValue=Loading file...}" 
                                    FontSize="18" 
                                    FontWeight="Bold"
                                    HorizontalAlignment="Center"

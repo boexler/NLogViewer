@@ -796,6 +796,12 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>A szűrő és a keresés az új lapokon a(z) „{0}” mezőben keres. Ha egy lapon módosítja a mezőket, itt mentődnek.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Fájl betöltése...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Nyelv módosítása</value>
+  </data>
 </root>
 
 

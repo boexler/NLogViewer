@@ -796,5 +796,11 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>Filter und Suche durchsuchen in neuen Tabs das Feld „{0}“. Ändert man die Felder in einem Tab, wird das hier gespeichert.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Datei wird geladen...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Sprache ändern</value>
+  </data>
 </root>
 

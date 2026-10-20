@@ -808,5 +808,11 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>The filter and the search look into the field “{0}” in new tabs. Changing the fields in a tab saves them here.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Loading file...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Change language</value>
+  </data>
 </root>
 

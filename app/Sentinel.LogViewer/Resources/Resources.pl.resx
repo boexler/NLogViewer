@@ -796,6 +796,12 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>Filtr i wyszukiwanie przeszukują w nowych kartach pole „{0}”. Zmiana pól na karcie zapisuje je tutaj.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Ładowanie pliku...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Zmień język</value>
+  </data>
 </root>
 
 

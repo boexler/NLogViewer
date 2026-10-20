@@ -796,5 +796,11 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>El filtro y la búsqueda examinan el campo «{0}» en las pestañas nuevas. Si cambia los campos en una pestaña, se guardan aquí.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Cargando archivo...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Cambiar idioma</value>
+  </data>
 </root>
 

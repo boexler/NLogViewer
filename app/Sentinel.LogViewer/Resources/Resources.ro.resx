@@ -796,6 +796,12 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>Filtrul și căutarea examinează câmpul „{0}” în filele noi. Dacă schimbați câmpurile într-o filă, ele se salvează aici.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Se încarcă fișierul...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Schimbă limba</value>
+  </data>
 </root>
 
 

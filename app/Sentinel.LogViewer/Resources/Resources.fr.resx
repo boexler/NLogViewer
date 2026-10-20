@@ -796,5 +796,11 @@
   <data name="Settings_SearchField_Description" xml:space="preserve">
     <value>Le filtre et la recherche examinent le champ « {0} » dans les nouveaux onglets. Modifier les champs dans un onglet les enregistre ici.</value>
   </data>
+  <data name="Import_LoadingFile" xml:space="preserve">
+    <value>Chargement du fichier...</value>
+  </data>
+  <data name="Main_ChangeLanguage" xml:space="preserve">
+    <value>Changer de langue</value>
+  </data>
 </root>
 
