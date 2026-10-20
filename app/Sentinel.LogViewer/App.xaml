@@ -9,7 +9,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- LogViewer Design Styles -->
                 <ResourceDictionary Source="pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml"/>
-                <!-- Look of the application: colours first, then the styles that use them -->
+                <!-- The colours of the default theme. ThemeService replaces them with the theme in use; here they let the designer show the windows. -->
+                <ResourceDictionary Source="Styles/Themes/NewschoolLight.xaml"/>
+                <!-- Look of the application: the styles that use the colours -->
                 <ResourceDictionary Source="Styles/Theme.xaml"/>
                 <ResourceDictionary Source="Styles/AppStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ShellStyles.xaml"/>

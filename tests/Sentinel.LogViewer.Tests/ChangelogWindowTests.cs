@@ -105,12 +105,12 @@ public class ChangelogWindowTests
 			try
 			{
 				Assert.IsType<SolidColorBrush>(document.Foreground);
-				Assert.Equal(Application.Current.Resources["ThemeTextPrimary"], document.Foreground);
-				Assert.Equal(Application.Current.Resources["ThemeAccent"], link.Foreground);
+				Assert.Equal(Application.Current.FindResource("ThemeTextPrimary"), document.Foreground);
+				Assert.Equal(Application.Current.FindResource("ThemeAccent"), link.Foreground);
 
 				new Sentinel.LogViewer.Services.Theming.ThemeService(() => false).Apply(new AppConfiguration { ThemeMode = "dark" });
-				Assert.Equal(Application.Current.Resources["ThemeAccent"], link.Foreground);
-				Assert.Equal(Application.Current.Resources["ThemeTextPrimary"], document.Foreground);
+				Assert.Equal(Application.Current.FindResource("ThemeAccent"), link.Foreground);
+				Assert.Equal(Application.Current.FindResource("ThemeTextPrimary"), document.Foreground);
 			}
 			finally
 			{

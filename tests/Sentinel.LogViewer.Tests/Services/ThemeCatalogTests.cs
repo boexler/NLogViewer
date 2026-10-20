@@ -146,6 +146,22 @@ public class ThemeCatalogTests
 	}
 
 	[Fact]
+	public void Oldschool_HasTheColoursThatTheLogViewerControlHasAsDefaults()
+	{
+		var oldschool = ThemeCatalog.Find(ThemeCatalog.OldschoolId);
+
+		foreach (var token in ThemeCatalog.Tokens.Where(token => token.Key.StartsWith("Log")))
+		{
+			var property = (System.Windows.DependencyProperty)typeof(Sentinel.LogViewer.Wpf.LogViewer)
+				.GetField(token.Key["Log".Length..] + "Property")!.GetValue(null)!;
+			var color = ((System.Windows.Media.SolidColorBrush)property.DefaultMetadata.DefaultValue).Color;
+			var text = color.A == 0xFF ? $"#{color.R:X2}{color.G:X2}{color.B:X2}" : $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+
+			Assert.True(oldschool.Colors[token.Key] == text, $"{token.Key}: the dictionary has {oldschool.Colors[token.Key]}, the control {text}");
+		}
+	}
+
+	[Fact]
 	public void OldschoolDark_HasDarkSurfacesAndTheClassicColoursOfTheLogList()
 	{
 		var light = ThemeCatalog.Find(ThemeCatalog.OldschoolId).Colors;
