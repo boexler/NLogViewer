@@ -23,6 +23,7 @@ namespace Sentinel.LogViewer.ViewModels
         internal const string GeneralId = "General";
         internal const string ReceivingId = "Receiving";
         internal const string AppearanceId = "Appearance";
+        internal const string FilterPresetsId = "FilterPresets";
         internal const string UpdatesId = "Updates";
 
         /// <summary>
@@ -38,6 +39,8 @@ namespace Sentinel.LogViewer.ViewModels
                 "Settings_Category_Receiving_Subtitle", "How and where logs reach the application."),
             new(AppearanceId, 30, "\uE790", "Settings_Category_Appearance", "Appearance",
                 "Settings_Category_Appearance_Subtitle", "Theme and colours of the interface and the log list."),
+            new(FilterPresetsId, 35, "\uE71C", "Settings_Category_FilterPresets", "Filter presets",
+                "Settings_Category_FilterPresets_Subtitle", "Saved combinations of filters that you can apply to a tab."),
             new(UpdatesId, 90, "", "Settings_Category_Updates", "Updates",
                 "Settings_Category_Updates_Subtitle", "How the application looks for new versions.")
         };
@@ -163,7 +166,10 @@ namespace Sentinel.LogViewer.ViewModels
 
         public string NoResultsText => Format("Settings_NoResults", "No settings found for “{0}”.", _searchText.Trim());
 
-        public bool CanResetCategory => _selectedCategory != null;
+        /// <summary>
+        /// The presets are the user's own work, not settings with a default, so their page has nothing to reset
+        /// </summary>
+        public bool CanResetCategory => _selectedCategory != null && _selectedCategory.Id != FilterPresetsId;
 
         public string ResetButtonText => _selectedCategory == null
             ? string.Empty
@@ -321,6 +327,13 @@ namespace Sentinel.LogViewer.ViewModels
             };
 
             settings.AddRange(CreateAppearanceSettings());
+            settings.Add(new PresetListSettingViewModel(FilterPresetsId, "",
+                Text("Settings_FilterPresets", "Presets"),
+                Text("Settings_FilterPresets_Description", "The saved filter presets. Save one with Filter → Save current filter as preset. Rename it here or remove it."),
+                get: () => _configuration.FilterPresets,
+                save: Commit,
+                emptyNameMessage: Text("Settings_PresetNameEmpty", "Enter a name."),
+                nameInUseMessage: Text("Settings_PresetNameInUse", "A preset with this name already exists.")));
             return settings;
         }
 

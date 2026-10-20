@@ -173,6 +173,54 @@
                     </controls:SettingCard.Details>
                 </controls:SettingCard>
             </DataTemplate>
+
+            <!-- List of filter presets -->
+            <DataTemplate DataType="{x:Type settings:PresetListSettingViewModel}">
+                <controls:SettingCard Setting="{Binding}">
+                    <controls:SettingCard.Details>
+                        <StackPanel>
+                            <TextBlock Text="{helpers:Resource Key=Settings_FilterPresets_Empty, DefaultValue=No presets yet.}"
+                                       Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,4,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEmpty}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="0,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBox Style="{StaticResource ThemeValidatedTextBox}"
+                                                             Text="{Binding Name, UpdateSourceTrigger=LostFocus}"/>
+                                                    <TextBlock Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Style="{StaticResource ThemeIconButton}"
+                                                        Content="&#xE74D;" Width="32" Height="30" Margin="8,0,0,0"
+                                                        VerticalAlignment="Top"
+                                                        Command="{Binding RemoveCommand}"
+                                                        ToolTip="{helpers:Resource Key=Settings_RemovePreset, DefaultValue=Remove preset}"
+                                                        AutomationProperties.Name="{helpers:Resource Key=Settings_RemovePreset, DefaultValue=Remove preset}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </controls:SettingCard.Details>
+                </controls:SettingCard>
+            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
 

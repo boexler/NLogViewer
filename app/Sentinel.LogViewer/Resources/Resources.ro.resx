@@ -910,6 +910,57 @@
   <data name="Status_Label" xml:space="preserve">
     <value>Stare:</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filtru</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Aplică presetarea</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>_Salvează filtrul curent ca presetare...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>_Gestionează presetările...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Salvare presetare de filtru</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Numele presetării:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Există deja o presetare numită „{0}”. O înlocuiți?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Presetarea de filtru „{0}” a fost salvată</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Presetarea de filtru „{0}” a fost aplicată</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Presetări de filtre</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Combinații de filtre salvate pe care le puteți aplica unei file.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Presetări</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>Presetările de filtre salvate. Salvați una cu Filtru → Salvează filtrul curent ca presetare. Aici o puteți redenumi sau elimina.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Nu există încă presetări.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Elimină presetarea</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Introduceți un nume.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Există deja o presetare cu acest nume.</value>
+  </data>
 </root>
 
 

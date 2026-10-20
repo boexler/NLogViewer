@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -49,6 +50,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
+	private readonly FilterPresetService _filterPresets;
+	private bool _applyingFilterPreset;
 
 
 	public MainViewModel(
@@ -65,6 +68,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_localizationService = localizationService ?? throw new ArgumentNullException(nameof(localizationService));
 		_updateService = updateService ?? throw new ArgumentNullException(nameof(updateService));
 		_applicationTabs = applicationTabService ?? throw new ArgumentNullException(nameof(applicationTabService));
+		_filterPresets = new FilterPresetService(_configService);
+		RefreshFilterPresets();
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
@@ -74,7 +79,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		StopListeningCommand = new RelayCommand(StopListening, () => _isListening);
 		OpenFileCommand = new RelayCommand(() => OpenFile(askColumnMapping: false));
 		OpenFileWithMappingCommand = new RelayCommand(() => OpenFile(askColumnMapping: true));
-		OpenSettingsCommand = new RelayCommand(OpenSettings);
+		OpenSettingsCommand = new RelayCommand(() => OpenSettings());
+		ManageFilterPresetsCommand = new RelayCommand(() => OpenSettings(SettingsViewModel.FilterPresetsId));
+		SaveFilterPresetCommand = new RelayCommand(SaveFilterPreset, () => SelectedTab != null);
+		ApplyFilterPresetCommand = new RelayCommand<FilterPreset>(ApplyFilterPreset, _ => SelectedTab != null);
 		ExitCommand = new RelayCommand(() => System.Windows.Application.Current.Shutdown());
 		AboutCommand = new RelayCommand(ShowAbout);
 		ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
@@ -179,6 +187,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				((RelayCommand)ExportLogsCommand).RaiseCanExecuteChanged();
 				((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
 				((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
+				((RelayCommand)SaveFilterPresetCommand).RaiseCanExecuteChanged();
+				((RelayCommand<FilterPreset>)ApplyFilterPresetCommand).RaiseCanExecuteChanged();
 			}
 		}
 	}
@@ -252,6 +262,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				configuration.LoggerTreeWidth = Math.Clamp((int)Math.Round(tab.LoggerTreeWidth), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth);
 				break;
 			case nameof(LogTabViewModel.SearchFields):
+				if (_applyingFilterPreset)
+					return;
+
 				configuration.SearchFields = tab.SearchFields.ToString();
 				break;
 			default:
@@ -497,6 +510,21 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand OpenFileCommand { get; }
 	public ICommand OpenFileWithMappingCommand { get; }
 	public ICommand OpenSettingsCommand { get; }
+
+	/// <summary>
+	/// The saved filter presets, for the menu
+	/// </summary>
+	public ObservableCollection<FilterPreset> FilterPresets { get; } = new();
+
+	public bool HasFilterPresets => FilterPresets.Count > 0;
+
+	public ICommand ManageFilterPresetsCommand { get; }
+	public ICommand SaveFilterPresetCommand { get; }
+
+	/// <summary>
+	/// Applies a preset to the selected tab; the parameter is the <see cref="FilterPreset"/>
+	/// </summary>
+	public ICommand ApplyFilterPresetCommand { get; }
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
 
@@ -997,11 +1025,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 	}
 
-	private void OpenSettings()
+	private void OpenSettings(string? categoryId = null)
 	{
 		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
 		using var scope = provider.CreateScope();
 		var settingsWindow = scope.ServiceProvider.GetRequiredService<SettingsWindow>();
+		if (categoryId != null)
+			settingsWindow.ShowCategory(categoryId);
+
 		settingsWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
 
 		// Settings are saved as they change, so the window has nothing to confirm.
@@ -1009,7 +1040,75 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			StatusMessage = "Settings saved";
 			LoadConfiguration();
+			RefreshFilterPresets();
 		}
+	}
+
+	/// <summary>
+	/// Reads the saved presets again, e.g. after they were changed in the settings
+	/// </summary>
+	public void RefreshFilterPresets()
+	{
+		FilterPresets.Clear();
+		foreach (var preset in _filterPresets.GetAll())
+			FilterPresets.Add(preset);
+
+		OnPropertyChanged(nameof(HasFilterPresets));
+	}
+
+	/// <summary>
+	/// Asks for a name and saves the filters of the selected tab as a preset
+	/// </summary>
+	private void SaveFilterPreset()
+	{
+		if (SelectedTab == null)
+			return;
+
+		var owner = System.Windows.Application.Current.MainWindow;
+		var caption = _localizationService.GetString("FilterPreset_SaveTitle", "Save filter preset");
+		var name = FilterPresetService.CleanName(TextPromptWindow.Show(owner,
+			_localizationService.GetString("FilterPreset_SaveMessage", "Name of the preset:"), caption));
+		if (name.Length == 0)
+			return;
+
+		if (_filterPresets.Exists(name))
+		{
+			var question = string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("FilterPreset_Overwrite", "A preset named “{0}” exists. Replace it?"), name);
+			if (MessageDialogWindow.Show(owner, question, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+				return;
+		}
+
+		_filterPresets.Save(name, SelectedTab.FilterState ?? new LogViewerFilterState());
+		RefreshFilterPresets();
+		StatusMessage = string.Format(CultureInfo.CurrentCulture,
+			_localizationService.GetString("FilterPreset_Saved", "Filter preset “{0}” saved"), name);
+	}
+
+	/// <summary>
+	/// Sets the filters of the selected tab to the ones of the preset. The format of the time stamp stays, and the fields of the preset
+	/// are not saved as the default of new tabs: only a choice that the user makes in a tab does that.
+	/// </summary>
+	private void ApplyFilterPreset(FilterPreset? preset)
+	{
+		if (SelectedTab is not { } tab || preset == null)
+			return;
+
+		var filters = preset.Filters.Clone();
+		filters.TimeStampFormat = tab.FilterState?.TimeStampFormat;
+
+		_applyingFilterPreset = true;
+		try
+		{
+			tab.FilterState = filters;
+		}
+		finally
+		{
+			_applyingFilterPreset = false;
+		}
+
+		StatusMessage = string.Format(CultureInfo.CurrentCulture,
+			_localizationService.GetString("FilterPreset_Applied", "Filter preset “{0}” applied"), preset.Name);
 	}
 
 	/// <summary>

@@ -910,6 +910,57 @@
   <data name="Status_Label" xml:space="preserve">
     <value>Állapot:</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Szűrő</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Előbeállítás alkalmazása</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>Az aktuális szűrő _mentése előbeállításként...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>Előbeállítások _kezelése...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Szűrő-előbeállítás mentése</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Az előbeállítás neve:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Már létezik „{0}” nevű előbeállítás. Lecseréli?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>A(z) „{0}” szűrő-előbeállítás mentve</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>A(z) „{0}” szűrő-előbeállítás alkalmazva</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Szűrő-előbeállítások</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Mentett szűrőkombinációk, amelyek egy lapra alkalmazhatók.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Előbeállítások</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>A mentett szűrő-előbeállítások. Mentsen egyet a Szűrő → Az aktuális szűrő mentése előbeállításként menüponttal. Itt átnevezheti vagy eltávolíthatja.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Még nincs előbeállítás.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Előbeállítás eltávolítása</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Adjon meg egy nevet.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Már létezik ilyen nevű előbeállítás.</value>
+  </data>
 </root>
 
 

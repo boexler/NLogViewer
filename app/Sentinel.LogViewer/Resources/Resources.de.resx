@@ -812,7 +812,7 @@
     <value>Spaltenzuordnung</value>
   </data>
   <data name="ColumnMapping_Intro" xml:space="preserve">
-    <value>Ordne jede erkannte Spalte einem Logfeld zu:</value>
+    <value>Ordnen Sie jede erkannte Spalte einem Logfeld zu:</value>
   </data>
   <data name="ColumnMapping_ColumnHeader" xml:space="preserve">
     <value>Spalte</value>
@@ -909,6 +909,57 @@
   </data>
   <data name="Status_Label" xml:space="preserve">
     <value>Status:</value>
+  </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filter</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>Preset _anwenden</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>Aktuellen Filter als Preset _speichern...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>Presets _verwalten...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Filter-Preset speichern</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Name des Presets:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Ein Preset namens „{0}“ existiert bereits. Ersetzen?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Filter-Preset „{0}“ gespeichert</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Filter-Preset „{0}“ angewendet</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Filter-Presets</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Gespeicherte Filterkombinationen, die auf einen Tab angewendet werden können.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Presets</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>Die gespeicherten Filter-Presets. Ein Preset speichern Sie über Filter → Aktuellen Filter als Preset speichern. Hier können Sie es umbenennen oder entfernen.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Noch keine Presets.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Preset entfernen</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Geben Sie einen Namen ein.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Ein Preset mit diesem Namen existiert bereits.</value>
   </data>
 </root>
 

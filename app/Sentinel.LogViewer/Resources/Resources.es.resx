@@ -910,5 +910,56 @@
   <data name="Status_Label" xml:space="preserve">
     <value>Estado:</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filtro</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Aplicar preajuste</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>_Guardar el filtro actual como preajuste...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>_Administrar preajustes...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Guardar preajuste de filtro</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Nombre del preajuste:</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Ya existe un preajuste llamado «{0}». ¿Reemplazarlo?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Preajuste de filtro «{0}» guardado</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Preajuste de filtro «{0}» aplicado</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Preajustes de filtro</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Combinaciones de filtros guardadas que se pueden aplicar a una pestaña.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Preajustes</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>Los preajustes de filtro guardados. Guarde uno con Filtro → Guardar el filtro actual como preajuste. Aquí puede cambiarle el nombre o quitarlo.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Aún no hay preajustes.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Quitar preajuste</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Introduzca un nombre.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Ya existe un preajuste con este nombre.</value>
+  </data>
 </root>
 

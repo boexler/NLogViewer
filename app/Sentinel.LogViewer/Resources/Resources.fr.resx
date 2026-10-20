@@ -910,5 +910,56 @@
   <data name="Status_Label" xml:space="preserve">
     <value>État :</value>
   </data>
+  <data name="Menu_Filter" xml:space="preserve">
+    <value>_Filtre</value>
+  </data>
+  <data name="Menu_FilterApplyPreset" xml:space="preserve">
+    <value>_Appliquer un préréglage</value>
+  </data>
+  <data name="Menu_FilterSavePreset" xml:space="preserve">
+    <value>_Enregistrer le filtre actuel comme préréglage...</value>
+  </data>
+  <data name="Menu_FilterManagePresets" xml:space="preserve">
+    <value>_Gérer les préréglages...</value>
+  </data>
+  <data name="FilterPreset_SaveTitle" xml:space="preserve">
+    <value>Enregistrer le préréglage de filtre</value>
+  </data>
+  <data name="FilterPreset_SaveMessage" xml:space="preserve">
+    <value>Nom du préréglage :</value>
+  </data>
+  <data name="FilterPreset_Overwrite" xml:space="preserve">
+    <value>Un préréglage nommé « {0} » existe déjà. Le remplacer ?</value>
+  </data>
+  <data name="FilterPreset_Saved" xml:space="preserve">
+    <value>Préréglage de filtre « {0} » enregistré</value>
+  </data>
+  <data name="FilterPreset_Applied" xml:space="preserve">
+    <value>Préréglage de filtre « {0} » appliqué</value>
+  </data>
+  <data name="Settings_Category_FilterPresets" xml:space="preserve">
+    <value>Préréglages de filtre</value>
+  </data>
+  <data name="Settings_Category_FilterPresets_Subtitle" xml:space="preserve">
+    <value>Combinaisons de filtres enregistrées que vous pouvez appliquer à un onglet.</value>
+  </data>
+  <data name="Settings_FilterPresets" xml:space="preserve">
+    <value>Préréglages</value>
+  </data>
+  <data name="Settings_FilterPresets_Description" xml:space="preserve">
+    <value>Les préréglages de filtre enregistrés. Enregistrez-en un avec Filtre → Enregistrer le filtre actuel comme préréglage. Vous pouvez le renommer ou le supprimer ici.</value>
+  </data>
+  <data name="Settings_FilterPresets_Empty" xml:space="preserve">
+    <value>Aucun préréglage pour le moment.</value>
+  </data>
+  <data name="Settings_RemovePreset" xml:space="preserve">
+    <value>Supprimer le préréglage</value>
+  </data>
+  <data name="Settings_PresetNameEmpty" xml:space="preserve">
+    <value>Saisissez un nom.</value>
+  </data>
+  <data name="Settings_PresetNameInUse" xml:space="preserve">
+    <value>Un préréglage portant ce nom existe déjà.</value>
+  </data>
 </root>
 
