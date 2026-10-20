@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO.Packaging;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -27,10 +29,42 @@ public enum ThemeSection
 public sealed record ThemeToken(string Key, ThemeSection Section, string Name, string? Level = null, bool IsBackground = false);
 
 /// <summary>
-/// A set of colours with a name
+/// A set of colours with a name. The colours are the brushes of a XAML dictionary (Styles/Themes), which <see cref="ThemeService"/>
+/// merges into the application resources; <see cref="Colors"/> reads them from there.
 /// </summary>
-/// <param name="IsDark">Whether the theme is for dark mode; the title bars of the windows follow it</param>
-public sealed record ThemeDefinition(string Id, string Name, IReadOnlyDictionary<string, string> Colors, bool IsDark = false);
+public sealed class ThemeDefinition
+{
+	private readonly Lazy<IReadOnlyDictionary<string, string>> _colors;
+
+	/// <param name="dictionary">Name of the XAML dictionary in Styles/Themes, without the extension</param>
+	/// <param name="isDark">Whether the theme is for dark mode; the title bars of the windows follow it</param>
+	public ThemeDefinition(string id, string name, string dictionary, bool isDark = false)
+	{
+		Id = id;
+		Name = name;
+		IsDark = isDark;
+		// A pack address needs the pack scheme; touching it registers it when there is no application yet, e.g. in a unit test.
+		_ = PackUriHelper.UriSchemePack;
+		Source = new Uri($"pack://application:,,,/Sentinel.LogViewer;component/Styles/Themes/{dictionary}.xaml");
+		_colors = new Lazy<IReadOnlyDictionary<string, string>>(() => ThemeCatalog.ReadColors(Source));
+	}
+
+	public string Id { get; }
+
+	public string Name { get; }
+
+	public bool IsDark { get; }
+
+	/// <summary>
+	/// Where the XAML dictionary of the theme is
+	/// </summary>
+	public Uri Source { get; }
+
+	/// <summary>
+	/// The colour of every token as #RRGGBB or #AARRGGBB, by the key of the token
+	/// </summary>
+	public IReadOnlyDictionary<string, string> Colors => _colors.Value;
+}
 
 /// <summary>
 /// The colours of the application: the tokens that exist, the built-in themes and the rules for custom colours.
@@ -198,148 +232,28 @@ public static class ThemeCatalog
 
 	private static IReadOnlyList<ThemeDefinition> CreateThemes() => new[]
 	{
-		new ThemeDefinition(NewschoolId, "Newschool", new Dictionary<string, string>
-		{
-			["ThemePageBackground"] = "#F1F3F5",
-			["ThemeSurface"] = "#FFFFFF",
-			["ThemeSurfaceAlt"] = "#E6E9ED",
-			["ThemeBorder"] = "#C9CED6",
-			["ThemeBorderStrong"] = "#8A929D",
-			["ThemeTextPrimary"] = "#101418",
-			["ThemeTextSecondary"] = "#3F4854",
-			["ThemeTextMuted"] = "#69727E",
-			["ThemeAccent"] = "#0A5CB8",
-			["ThemeAccentSoft"] = "#D2E3F7",
-			["ThemeOnAccent"] = "#FFFFFF",
-			["ThemeHover"] = "#DDE1E6",
-			["ThemeSuccess"] = "#0B6A0B",
-			["ThemeError"] = "#B5271A",
-			["ThemeWarningBackground"] = "#FFE69C",
-			["ThemeWarningText"] = "#5A4300",
-
-			["LogTraceBackground"] = "#E4E7EB",
-			["LogTraceForeground"] = "#4A5360",
-			["LogDebugBackground"] = "#CDEBD3",
-			["LogDebugForeground"] = "#12501F",
-			["LogInfoBackground"] = "#CFE3F8",
-			["LogInfoForeground"] = "#083E78",
-			["LogWarnBackground"] = "#FFE69C",
-			["LogWarnForeground"] = "#5A4300",
-			["LogErrorBackground"] = "#F9C6CA",
-			["LogErrorForeground"] = "#8A1C22",
-			["LogFatalBackground"] = "#8A1C22",
-			["LogFatalForeground"] = "#FFFFFF",
-
-			["LogTextSearchTermBackground"] = "#FFE69C",
-			["LogTextSearchTermBorderBrush"] = "#D9A400",
-			["LogTextSearchTermForeground"] = "#101418",
-			["LogRegexSearchTermBackground"] = "#D2E3F7",
-			["LogRegexSearchTermBorderBrush"] = "#4F8FD6",
-			["LogRegexSearchTermForeground"] = "#101418",
-			["LogRegexPrefixForeground"] = "#0A5CB8",
-			["LogSearchHighlightBackground"] = "#FFD54F",
-			["LogFindHighlightBackground"] = "#F58CC0"
-		}),
-		new ThemeDefinition(OldschoolId, "Oldschool", CreateOldschoolColors(dark: false)),
-		new ThemeDefinition(NewschoolDarkId, "Newschool dark", new Dictionary<string, string>
-		{
-			["ThemePageBackground"] = "#1E2024",
-			["ThemeSurface"] = "#2A2D33",
-			["ThemeSurfaceAlt"] = "#17191C",
-			["ThemeBorder"] = "#3A3F47",
-			["ThemeBorderStrong"] = "#6A727E",
-			["ThemeTextPrimary"] = "#ECEFF3",
-			["ThemeTextSecondary"] = "#B6BDC8",
-			["ThemeTextMuted"] = "#8A929E",
-			["ThemeAccent"] = "#5AA2F0",
-			["ThemeAccentSoft"] = "#1F3A5C",
-			["ThemeOnAccent"] = "#0B1220",
-			["ThemeHover"] = "#353A42",
-			["ThemeSuccess"] = "#5FD068",
-			["ThemeError"] = "#FF6B5E",
-			["ThemeWarningBackground"] = "#4A3B10",
-			["ThemeWarningText"] = "#FFD97A",
-
-			["LogTraceBackground"] = "#2B2E34",
-			["LogTraceForeground"] = "#A0A8B4",
-			["LogDebugBackground"] = "#1F3B28",
-			["LogDebugForeground"] = "#8FE0A0",
-			["LogInfoBackground"] = "#1C3552",
-			["LogInfoForeground"] = "#9CC9F8",
-			["LogWarnBackground"] = "#4A3B10",
-			["LogWarnForeground"] = "#FFD97A",
-			["LogErrorBackground"] = "#4F2226",
-			["LogErrorForeground"] = "#FF9EA3",
-			["LogFatalBackground"] = "#B3262E",
-			["LogFatalForeground"] = "#FFFFFF",
-
-			["LogTextSearchTermBackground"] = "#4A3B10",
-			["LogTextSearchTermBorderBrush"] = "#B38A00",
-			["LogTextSearchTermForeground"] = "#ECEFF3",
-			["LogRegexSearchTermBackground"] = "#1F3A5C",
-			["LogRegexSearchTermBorderBrush"] = "#3F78B8",
-			["LogRegexSearchTermForeground"] = "#ECEFF3",
-			["LogRegexPrefixForeground"] = "#5AA2F0",
-			["LogSearchHighlightBackground"] = "#8A6A00",
-			["LogFindHighlightBackground"] = "#A63D7B"
-		}, IsDark: true),
-		new ThemeDefinition(OldschoolDarkId, "Oldschool dark", CreateOldschoolColors(dark: true), IsDark: true)
+		new ThemeDefinition(NewschoolId, "Newschool", "NewschoolLight"),
+		new ThemeDefinition(OldschoolId, "Oldschool", "OldschoolLight"),
+		new ThemeDefinition(NewschoolDarkId, "Newschool dark", "NewschoolDark", isDark: true),
+		new ThemeDefinition(OldschoolDarkId, "Oldschool dark", "OldschoolDark", isDark: true)
 	};
 
 	/// <summary>
-	/// The classic look: grey surfaces and the colours that the log list control brings along, also in the dark version
+	/// Reads the brushes of a theme dictionary as colour texts by the key of the brush
 	/// </summary>
-	private static Dictionary<string, string> CreateOldschoolColors(bool dark)
+	internal static IReadOnlyDictionary<string, string> ReadColors(Uri source)
 	{
-		var colors = dark ? new Dictionary<string, string>
+		var colors = new Dictionary<string, string>();
+		foreach (DictionaryEntry entry in new ResourceDictionary { Source = source })
 		{
-			["ThemePageBackground"] = "#1F1F1F",
-			["ThemeSurface"] = "#2D2D2D",
-			["ThemeSurfaceAlt"] = "#383838",
-			["ThemeBorder"] = "#4A4A4A",
-			["ThemeBorderStrong"] = "#7A7A7A",
-			["ThemeTextPrimary"] = "#F0F0F0",
-			["ThemeTextSecondary"] = "#C8C8C8",
-			["ThemeTextMuted"] = "#999999",
-			["ThemeAccent"] = "#3A96DD",
-			["ThemeAccentSoft"] = "#26425E",
-			["ThemeOnAccent"] = "#FFFFFF",
-			["ThemeHover"] = "#444444",
-			["ThemeSuccess"] = "#5FD068",
-			["ThemeError"] = "#FF6B5E",
-			["ThemeWarningBackground"] = "#4A3B10",
-			["ThemeWarningText"] = "#FFD97A"
-		} : new Dictionary<string, string>
-		{
-			["ThemePageBackground"] = "#FFFFFF",
-			["ThemeSurface"] = "#FFFFFF",
-			["ThemeSurfaceAlt"] = "#F0F0F0",
-			["ThemeBorder"] = "#D0D0D0",
-			["ThemeBorderStrong"] = "#ABABAB",
-			["ThemeTextPrimary"] = "#000000",
-			["ThemeTextSecondary"] = "#444444",
-			["ThemeTextMuted"] = "#777777",
-			["ThemeAccent"] = "#0078D7",
-			["ThemeAccentSoft"] = "#CCE4F7",
-			["ThemeOnAccent"] = "#FFFFFF",
-			["ThemeHover"] = "#E5E5E5",
-			["ThemeSuccess"] = "#107C10",
-			["ThemeError"] = "#C42B1C",
-			["ThemeWarningBackground"] = "#FFF4CE",
-			["ThemeWarningText"] = "#6D5200"
-		};
-
-		// The control keeps its colours as defaults of its dependency properties; reading them from there keeps the two in step.
-		foreach (var token in Tokens.Where(token => token.Key.StartsWith(LogPrefix, StringComparison.Ordinal)))
-		{
-			var property = (DependencyProperty)typeof(Wpf.LogViewer)
-				.GetField(token.Key[LogPrefix.Length..] + "Property")!.GetValue(null)!;
-			var color = ((SolidColorBrush)property.DefaultMetadata.DefaultValue).Color;
-			colors[token.Key] = color.A == 0xFF
-				? $"#{color.R:X2}{color.G:X2}{color.B:X2}"
-				: $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
+			if (entry is { Key: string key, Value: SolidColorBrush brush })
+				colors[key] = ToText(brush.Color);
 		}
 
 		return colors;
 	}
+
+	private static string ToText(Color color) => color.A == 0xFF
+		? $"#{color.R:X2}{color.G:X2}{color.B:X2}"
+		: $"#{color.A:X2}{color.R:X2}{color.G:X2}{color.B:X2}";
 }

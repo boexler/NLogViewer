@@ -1,0 +1,51 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    mc:Ignorable="po">
+
+    <!-- The colours of the theme "Newschool dark". Every theme defines the same keys, see ThemeCatalog.Tokens; a theme is swapped in by ThemeService. -->
+
+    <!-- Interface -->
+    <SolidColorBrush x:Key="ThemePageBackground" po:Freeze="True" Color="#1E2024"/>
+    <SolidColorBrush x:Key="ThemeSurface" po:Freeze="True" Color="#2A2D33"/>
+    <SolidColorBrush x:Key="ThemeSurfaceAlt" po:Freeze="True" Color="#17191C"/>
+    <SolidColorBrush x:Key="ThemeBorder" po:Freeze="True" Color="#3A3F47"/>
+    <SolidColorBrush x:Key="ThemeBorderStrong" po:Freeze="True" Color="#6A727E"/>
+    <SolidColorBrush x:Key="ThemeTextPrimary" po:Freeze="True" Color="#ECEFF3"/>
+    <SolidColorBrush x:Key="ThemeTextSecondary" po:Freeze="True" Color="#B6BDC8"/>
+    <SolidColorBrush x:Key="ThemeTextMuted" po:Freeze="True" Color="#8A929E"/>
+    <SolidColorBrush x:Key="ThemeAccent" po:Freeze="True" Color="#5AA2F0"/>
+    <SolidColorBrush x:Key="ThemeAccentSoft" po:Freeze="True" Color="#1F3A5C"/>
+    <SolidColorBrush x:Key="ThemeOnAccent" po:Freeze="True" Color="#0B1220"/>
+    <SolidColorBrush x:Key="ThemeHover" po:Freeze="True" Color="#353A42"/>
+    <SolidColorBrush x:Key="ThemeSuccess" po:Freeze="True" Color="#5FD068"/>
+    <SolidColorBrush x:Key="ThemeError" po:Freeze="True" Color="#FF6B5E"/>
+    <SolidColorBrush x:Key="ThemeWarningBackground" po:Freeze="True" Color="#4A3B10"/>
+    <SolidColorBrush x:Key="ThemeWarningText" po:Freeze="True" Color="#FFD97A"/>
+
+    <!-- LogLevels -->
+    <SolidColorBrush x:Key="LogTraceBackground" po:Freeze="True" Color="#2B2E34"/>
+    <SolidColorBrush x:Key="LogTraceForeground" po:Freeze="True" Color="#A0A8B4"/>
+    <SolidColorBrush x:Key="LogDebugBackground" po:Freeze="True" Color="#1F3B28"/>
+    <SolidColorBrush x:Key="LogDebugForeground" po:Freeze="True" Color="#8FE0A0"/>
+    <SolidColorBrush x:Key="LogInfoBackground" po:Freeze="True" Color="#1C3552"/>
+    <SolidColorBrush x:Key="LogInfoForeground" po:Freeze="True" Color="#9CC9F8"/>
+    <SolidColorBrush x:Key="LogWarnBackground" po:Freeze="True" Color="#4A3B10"/>
+    <SolidColorBrush x:Key="LogWarnForeground" po:Freeze="True" Color="#FFD97A"/>
+    <SolidColorBrush x:Key="LogErrorBackground" po:Freeze="True" Color="#4F2226"/>
+    <SolidColorBrush x:Key="LogErrorForeground" po:Freeze="True" Color="#FF9EA3"/>
+    <SolidColorBrush x:Key="LogFatalBackground" po:Freeze="True" Color="#B3262E"/>
+    <SolidColorBrush x:Key="LogFatalForeground" po:Freeze="True" Color="#FFFFFF"/>
+
+    <!-- Highlighting -->
+    <SolidColorBrush x:Key="LogTextSearchTermBackground" po:Freeze="True" Color="#4A3B10"/>
+    <SolidColorBrush x:Key="LogTextSearchTermBorderBrush" po:Freeze="True" Color="#B38A00"/>
+    <SolidColorBrush x:Key="LogTextSearchTermForeground" po:Freeze="True" Color="#ECEFF3"/>
+    <SolidColorBrush x:Key="LogRegexSearchTermBackground" po:Freeze="True" Color="#1F3A5C"/>
+    <SolidColorBrush x:Key="LogRegexSearchTermBorderBrush" po:Freeze="True" Color="#3F78B8"/>
+    <SolidColorBrush x:Key="LogRegexSearchTermForeground" po:Freeze="True" Color="#ECEFF3"/>
+    <SolidColorBrush x:Key="LogRegexPrefixForeground" po:Freeze="True" Color="#5AA2F0"/>
+    <SolidColorBrush x:Key="LogSearchHighlightBackground" po:Freeze="True" Color="#8A6A00"/>
+    <SolidColorBrush x:Key="LogFindHighlightBackground" po:Freeze="True" Color="#A63D7B"/>
+</ResourceDictionary>

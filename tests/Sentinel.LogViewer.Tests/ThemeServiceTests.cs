@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Sentinel.LogViewer.Services;
@@ -32,7 +33,7 @@ public class ThemeServiceTests : IDisposable
 
 			foreach (var token in ThemeCatalog.Tokens)
 			{
-				var brush = Assert.IsType<SolidColorBrush>(Application.Current.Resources[token.Key]);
+				var brush = Assert.IsType<SolidColorBrush>(Application.Current.FindResource(token.Key));
 				Assert.True(brush.IsFrozen);
 				Assert.Equal(ThemeCatalog.ToColor(ThemeCatalog.Find(ThemeCatalog.OldschoolId).Colors[token.Key]), brush.Color);
 			}
@@ -57,9 +58,48 @@ public class ThemeServiceTests : IDisposable
 
 			new ThemeService(() => true).Apply(configuration);
 
-			Assert.Equal(Color.FromRgb(0x11, 0x22, 0x33), ((SolidColorBrush)Application.Current.Resources["ThemeAccent"]).Color);
-			Assert.Equal(Color.FromArgb(0x80, 0xFF, 0, 0), ((SolidColorBrush)Application.Current.Resources["LogTraceBackground"]).Color);
-			Assert.Equal(Color.FromRgb(0xD0, 0xD0, 0xD0), ((SolidColorBrush)Application.Current.Resources["ThemeBorder"]).Color);
+			Assert.Equal(Color.FromRgb(0x11, 0x22, 0x33), ((SolidColorBrush)Application.Current.FindResource("ThemeAccent")).Color);
+			Assert.Equal(Color.FromArgb(0x80, 0xFF, 0, 0), ((SolidColorBrush)Application.Current.FindResource("LogTraceBackground")).Color);
+			Assert.Equal(Color.FromRgb(0xD0, 0xD0, 0xD0), ((SolidColorBrush)Application.Current.FindResource("ThemeBorder")).Color);
+		});
+	}
+
+	private static int ThemeDictionaries() => Application.Current.Resources.MergedDictionaries.Count(
+		dictionary => dictionary.Source?.OriginalString.Contains("/Styles/Themes/") == true);
+
+	[Fact]
+	public void Apply_MergesTheDictionaryOfTheTheme_AndSwapsItWhenTheThemeChanges()
+	{
+		_context.RunOnSta(() =>
+		{
+			var service = new ThemeService(() => true);
+			service.Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight, Theme = ThemeCatalog.OldschoolId });
+			Assert.Equal(1, ThemeDictionaries());
+			Assert.Equal(Color.FromRgb(0xF0, 0xF0, 0xF0), ((SolidColorBrush)Application.Current.FindResource("ThemeSurfaceAlt")).Color);
+
+			service.Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeDark, Theme = ThemeCatalog.NewschoolId });
+
+			Assert.Equal(1, ThemeDictionaries());
+			Assert.Equal(Color.FromRgb(0x17, 0x19, 0x1C), ((SolidColorBrush)Application.Current.FindResource("ThemeSurfaceAlt")).Color);
+		});
+	}
+
+	[Fact]
+	public void TheCustomColours_AreAnOverrideBehindTheTheme_AndGoWhenTheyAreRemoved()
+	{
+		_context.RunOnSta(() =>
+		{
+			var service = new ThemeService(() => true);
+			var theme = ThemeCatalog.Find(ThemeCatalog.NewschoolId);
+			var configuration = new AppConfiguration { ThemeColors = new() { [ThemeCatalog.NewschoolId] = new() { ["ThemeAccent"] = "#112233" } } };
+
+			service.Apply(configuration);
+			Assert.Equal(Color.FromRgb(0x11, 0x22, 0x33), ((SolidColorBrush)Application.Current.FindResource("ThemeAccent")).Color);
+			Assert.Equal(1, ThemeDictionaries());
+
+			configuration.ThemeColors.Clear();
+			service.Apply(configuration);
+			Assert.Equal(ThemeCatalog.ToColor(theme.Colors["ThemeAccent"]), ((SolidColorBrush)Application.Current.FindResource("ThemeAccent")).Color);
 		});
 	}
 
