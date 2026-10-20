@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Subjects;
 using System.Text;
@@ -9,19 +11,70 @@ using System.Threading.Tasks;
 namespace Sentinel.LogViewer.Core;
 
 /// <summary>
-/// Service for receiving UDP log messages and parsing them
+/// Service for receiving UDP log messages and parsing them. It keeps a <see cref="ReceiveSource"/> for every address, which can be
+/// started and stopped one by one.
 /// </summary>
 public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 {
 	private const int WSAEADDRINUSE = 10048;
 
-	private readonly List<UdpClient> _udpClients = new();
-	private readonly List<CancellationTokenSource> _cancellationTokens = new();
+	private sealed class Listener(ReceiveSource source)
+	{
+		public ReceiveSource Source { get; } = source;
+		public UdpClient? Client { get; set; }
+		public CancellationTokenSource? Cancellation { get; set; }
+	}
+
+	private readonly object _lock = new();
+	private List<Listener> _listeners = new();
 	private readonly Log4JEventParser _xmlParser = xmlParser ?? throw new ArgumentNullException(nameof(xmlParser));
 	private bool _disposed;
 
 	public IObservable<LogEvent> Log4JEventObservable => _log4JEventObservable;
 	private readonly Subject<LogEvent> _log4JEventObservable = new();
+
+	/// <summary>
+	/// The sources of the configured addresses, in the order of the addresses
+	/// </summary>
+	public IReadOnlyList<ReceiveSource> Sources
+	{
+		get
+		{
+			lock (_lock)
+				return _listeners.Select(listener => listener.Source).ToList();
+		}
+	}
+
+	/// <summary>
+	/// Raised when a source was added, removed, started or stopped; not for the counters, which change all the time
+	/// </summary>
+	public event EventHandler? SourcesChanged;
+
+	/// <summary>
+	/// Makes the sources the ones of the addresses: a source of an address that is in the list stays as it is, a new address gets a source
+	/// that is stopped, and a source of an address that is no longer in the list is stopped and removed. Addresses that are not UDP are left out.
+	/// </summary>
+	public void Configure(IReadOnlyList<string> addresses)
+	{
+		lock (_lock)
+		{
+			var next = new List<Listener>();
+			foreach (var address in addresses)
+			{
+				if (!Uri.TryCreate(address, UriKind.Absolute, out var uri) || uri.Scheme != "udp" || next.Any(listener => listener.Source.Address == address))
+					continue;
+
+				next.Add(_listeners.FirstOrDefault(listener => listener.Source.Address == address) ?? new Listener(new ReceiveSource(address, "UDP", uri.Port)));
+			}
+
+			foreach (var removed in _listeners.Except(next))
+				StopListener(removed);
+
+			_listeners = next;
+		}
+
+		SourcesChanged?.Invoke(this, EventArgs.Empty);
+	}
 
 	/// <summary>
 	/// Starts listening on the given UDP addresses. Returns a result indicating success and any error messages.
@@ -32,92 +85,146 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 	public async Task<StartListeningResult> StartListeningAsync(IReadOnlyList<string> addresses, CancellationToken cancellationToken = default)
 	{
 		StopListening();
+		Configure(addresses);
 		var errors = new List<string>();
 
-		foreach (var address in addresses)
+		foreach (var source in Sources)
 		{
 			if (cancellationToken.IsCancellationRequested)
 				break;
-			var uri = new Uri(address);
 
-			try
-			{
-				if (uri.Scheme != "udp")
-					continue;
-
-				var port = uri.Port;
-				var udpClient = new UdpClient(port);
-				_udpClients.Add(udpClient);
-
-				var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-				_cancellationTokens.Add(cts);
-
-				_ = Task.Run(() => ReceiveLoop(udpClient, port, cts.Token), cts.Token);
-			}
-			catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.NativeErrorCode == WSAEADDRINUSE)
-			{
-				var msg = $"Error starting listener on {address}: {ex.Message}";
-				var portForResolver = GetPortFromAddress(address);
-				if (portForResolver != null)
-				{
-					var (processName, pid) = PortProcessResolver.TryGetProcessUsingPort(portForResolver.Value, udp: true);
-					if (pid != null)
-						msg += processName != null
-							? $"\n\nProcess using port {uri.Port}: {processName} (PID: {pid})"
-							: $"\n\nPort {uri.Port} in use by process PID: {pid}";
-				}
-				errors.Add(msg);
-				System.Diagnostics.Debug.WriteLine(msg);
-			}
-			catch (Exception ex)
-			{
-				var msg = $"Error starting listener on {address}: {ex.Message}";
-				errors.Add(msg);
-				System.Diagnostics.Debug.WriteLine(msg);
-			}
+			var error = TryStart(source, cancellationToken);
+			if (error != null)
+				errors.Add(error);
 		}
 
-		var anyStarted = _udpClients.Count > 0;
+		SourcesChanged?.Invoke(this, EventArgs.Empty);
+		var anyStarted = Sources.Any(source => source.State == ReceiveSourceState.Listening);
 		var errorMessage = errors.Count > 0 ? string.Join(Environment.NewLine, errors) : string.Empty;
 		return await Task.FromResult(new StartListeningResult(anyStarted, errorMessage));
 	}
 
-	private static int? GetPortFromAddress(string address)
+	/// <summary>
+	/// Starts one source, e.g. after the user switched it on or asked to try again. Returns whether it listens now; if it does not,
+	/// <see cref="ReceiveSource.Error"/> says why.
+	/// </summary>
+	public bool Start(ReceiveSource source)
 	{
-		try
+		ArgumentNullException.ThrowIfNull(source);
+		if (source.State != ReceiveSourceState.Listening)
+			TryStart(source, CancellationToken.None);
+
+		SourcesChanged?.Invoke(this, EventArgs.Empty);
+		return source.State == ReceiveSourceState.Listening;
+	}
+
+	/// <summary>
+	/// Stops one source; it stays in <see cref="Sources"/> and can be started again
+	/// </summary>
+	public void Stop(ReceiveSource source)
+	{
+		ArgumentNullException.ThrowIfNull(source);
+		lock (_lock)
 		{
-			var uri = new Uri(address);
-			return uri.Port;
+			var listener = _listeners.FirstOrDefault(candidate => ReferenceEquals(candidate.Source, source));
+			if (listener != null)
+				StopListener(listener);
 		}
-		catch
-		{
-			return null;
-		}
+
+		SourcesChanged?.Invoke(this, EventArgs.Empty);
 	}
 
 	public void StopListening()
 	{
-		foreach (var cts in _cancellationTokens)
+		lock (_lock)
 		{
-			cts.Cancel();
+			foreach (var listener in _listeners)
+				StopListener(listener);
 		}
-		_cancellationTokens.Clear();
 
-		foreach (var client in _udpClients)
-		{
-			try
-			{
-				client.Close();
-			}
-			catch
-			{
-				// Ignore errors during cleanup
-			}
-		}
-		_udpClients.Clear();
+		SourcesChanged?.Invoke(this, EventArgs.Empty);
 	}
 
-	private async Task ReceiveLoop(UdpClient client, int port, CancellationToken cancellationToken)
+	/// <summary>
+	/// Opens the port of the source; returns the message of the failure, or null when it listens
+	/// </summary>
+	private string? TryStart(ReceiveSource source, CancellationToken cancellationToken)
+	{
+		Listener? listener;
+		lock (_lock)
+			listener = _listeners.FirstOrDefault(candidate => ReferenceEquals(candidate.Source, source));
+		if (listener == null)
+			return null;
+
+		var uri = new Uri(source.Address);
+		try
+		{
+			var client = new UdpClient(uri.Port);
+			var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+			listener.Client = client;
+			listener.Cancellation = cancellation;
+			source.Port = ((IPEndPoint)client.Client.LocalEndPoint!).Port;
+			source.ResetCounters();
+			source.State = ReceiveSourceState.Listening;
+			source.Failure = ReceiveSourceFailure.None;
+			source.Error = source.BlockingProcess = null;
+
+			_ = Task.Run(() => ReceiveLoop(source, client, cancellation.Token), cancellation.Token);
+			return null;
+		}
+		catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.NativeErrorCode == WSAEADDRINUSE)
+		{
+			var message = $"Error starting listener on {source.Address}: {ex.Message}";
+			var (processName, pid) = PortProcessResolver.TryGetProcessUsingPort(uri.Port, udp: true);
+			if (pid != null)
+			{
+				message += processName != null
+					? $"\n\nProcess using port {uri.Port}: {processName} (PID: {pid})"
+					: $"\n\nPort {uri.Port} in use by process PID: {pid}";
+				source.BlockingProcess = processName != null ? $"{processName} (PID {pid})" : $"PID {pid}";
+			}
+
+			Fail(source, ReceiveSourceFailure.PortInUse, message);
+			return message;
+		}
+		catch (Exception ex)
+		{
+			var message = $"Error starting listener on {source.Address}: {ex.Message}";
+			Fail(source, ReceiveSourceFailure.Other, message);
+			return message;
+		}
+	}
+
+	private static void Fail(ReceiveSource source, ReceiveSourceFailure failure, string message)
+	{
+		source.State = ReceiveSourceState.Failed;
+		source.Failure = failure;
+		source.Error = message;
+		System.Diagnostics.Debug.WriteLine(message);
+	}
+
+	private static void StopListener(Listener listener)
+	{
+		listener.Cancellation?.Cancel();
+		listener.Cancellation = null;
+
+		try
+		{
+			listener.Client?.Close();
+		}
+		catch
+		{
+			// Ignore errors during cleanup
+		}
+
+		listener.Client = null;
+		var source = listener.Source;
+		source.State = ReceiveSourceState.Stopped;
+		source.Failure = ReceiveSourceFailure.None;
+		source.Error = source.BlockingProcess = null;
+	}
+
+	private async Task ReceiveLoop(ReceiveSource source, UdpClient client, CancellationToken cancellationToken)
 	{
 		while (!cancellationToken.IsCancellationRequested)
 		{
@@ -131,6 +238,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 				var xml = Encoding.UTF8.GetString(data);
 				var log4JEvent = _xmlParser.Parse(xml);
 
+				source.RecordEntry();
 				_log4JEventObservable.OnNext(log4JEvent.ToLogEvent(sender));
 			}
 			catch (ObjectDisposedException)
@@ -140,12 +248,12 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine($"Error receiving UDP data on port {port}: {ex.Message}");
+				System.Diagnostics.Debug.WriteLine($"Error receiving UDP data on port {source.Port}: {ex.Message}");
 				// Continue receiving despite errors
 			}
 		}
 	}
-	
+
 	public void Dispose()
 	{
 		if (!_disposed)
