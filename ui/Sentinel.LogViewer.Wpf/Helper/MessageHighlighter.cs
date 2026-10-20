@@ -89,8 +89,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             string message = resolver.Resolve(logEntry);
             var terms = logViewer.ActiveSearchTerms;
-            var findText = logViewer.FindText;
-            if (string.IsNullOrEmpty(message) || ((terms == null || terms.Count == 0) && string.IsNullOrEmpty(findText)))
+            var findTerm = logViewer.FindTerm;
+            if (string.IsNullOrEmpty(message) || ((terms == null || terms.Count == 0) && findTerm == null))
             {
                 textBlock.Text = message; // fallback
                 return;
@@ -99,18 +99,19 @@ namespace Sentinel.LogViewer.Wpf.Helper
             // Highlight per character; search hits are painted over filter matches.
             var highlights = new Brush?[message.Length];
             var highlighted = false;
-            foreach (var term in terms ?? Enumerable.Empty<SearchTerm>())
+            // A term that excludes hides the entries it matches, so there is nothing of it to see.
+            foreach (var term in (terms ?? Enumerable.Empty<FilterTerm>()).Where(term => !term.IsExclude))
             {
-                foreach (var (start, length) in FindMatches(message, term))
+                foreach (var (start, length) in term.FindMatches(message))
                 {
                     Array.Fill(highlights, logViewer.SearchHighlightBackground, start, length);
                     highlighted = true;
                 }
             }
 
-            if (!string.IsNullOrEmpty(findText))
+            if (findTerm != null)
             {
-                foreach (var (start, length) in FindMatches(message, new TextSearchTerm(findText)))
+                foreach (var (start, length) in findTerm.FindMatches(message))
                 {
                     Array.Fill(highlights, logViewer.FindHighlightBackground, start, length);
                     highlighted = true;
@@ -133,30 +134,6 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
                 textBlock.Inlines.Add(new Run(message.Substring(runStart, i - runStart)) { Background = highlights[runStart] });
                 runStart = i;
-            }
-        }
-
-        private static IEnumerable<(int start, int length)> FindMatches(string text, SearchTerm term)
-        {
-            if (term is RegexSearchTerm regexTerm)
-            {
-                foreach (Match m in Regex.Matches(text, regexTerm.Text))
-                {
-                    if (m.Success && m.Length > 0)
-                        yield return (m.Index, m.Length);
-                }
-            }
-            else if (term is TextSearchTerm simple)
-            {
-                string needle = simple.ToString();
-                if (string.IsNullOrEmpty(needle)) yield break;
-                int pos = 0;
-                var comparison = StringComparison.InvariantCultureIgnoreCase;
-                while ((pos = text.IndexOf(needle, pos, comparison)) >= 0)
-                {
-                    yield return (pos, needle.Length);
-                    pos += needle.Length;
-                }
             }
         }
 

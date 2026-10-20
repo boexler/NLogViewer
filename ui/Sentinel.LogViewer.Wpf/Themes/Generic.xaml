@@ -222,66 +222,104 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.Resources>
-                                            <!-- Template for plain text terms -->
-                                            <DataTemplate DataType="{x:Type core:TextSearchTerm}">
-                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}" 
-                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}" 
-                                                        BorderThickness="1" 
-                                                        CornerRadius="3" 
-                                                        Margin="2" 
-                                                        Padding="4,2">
+                                            <!-- Template for a filter term: plain text, regex or exclude, with its options -->
+                                            <DataTemplate DataType="{x:Type core:FilterTerm}">
+                                                <Border BorderThickness="1" CornerRadius="3" Margin="2" Padding="4,2">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"/>
+                                                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
+                                                            <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsRegex}" Value="True">
+                                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}"/>
+                                                                    <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}"/>
+                                                                    <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermForeground}"/>
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsExclude}" Value="True">
+                                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorBackground}"/>
+                                                                    <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                                    <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Text}" Margin="0,0,4,0" 
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
-                                                        <Button Content="✏" 
-                                                                Width="16" 
-                                                                Height="16" 
-                                                                FontSize="10" 
-                                                                Padding="0" 
-                                                                Margin="0,0,2,0"
-                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
-                                                                CommandParameter="{Binding}"
-                                                                ToolTip="Edit filter term"/>
-                                                        <Button Content="×" 
-                                                                Width="16" 
-                                                                Height="16" 
-                                                                FontSize="10" 
-                                                                Padding="0" 
-                                                                Margin="0"
-                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
-                                                                CommandParameter="{Binding}"
-                                                                ToolTip="Remove filter term"/>
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-
-                                            <!-- Template for regex terms -->
-                                            <DataTemplate DataType="{x:Type core:RegexSearchTerm}">
-                                                <Border Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}" 
-                                                        BorderBrush="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}" 
-                                                        BorderThickness="1" 
-                                                        CornerRadius="3" 
-                                                        Margin="2" 
-                                                        Padding="4,2">
-                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="Hides the entries that match">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsExclude}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
                                                         <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}"/>
-                                                        <TextBlock Text="{Binding Text}" Margin="0,0,4,0"
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermForeground}"/>
-                                                        <Button Content="✏" 
-                                                                Width="16" 
-                                                                Height="16" 
-                                                                FontSize="10" 
-                                                                Padding="0" 
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsRegex}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding Text}" Margin="0,0,4,0"/>
+                                                        <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Match case">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding MatchCase}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="W" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Whole word">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding WholeWord}" Value="True">
+                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Only entries of this level">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Level}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <Button Content="✏"
+                                                                Width="16"
+                                                                Height="16"
+                                                                FontSize="10"
+                                                                Padding="0"
                                                                 Margin="0,0,2,0"
                                                                 Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"
                                                                 ToolTip="Edit filter term"/>
-                                                        <Button Content="×" 
-                                                                Width="16" 
-                                                                Height="16" 
-                                                                FontSize="10" 
-                                                                Padding="0" 
+                                                        <Button Content="×"
+                                                                Width="16"
+                                                                Height="16"
+                                                                FontSize="10"
+                                                                Padding="0"
                                                                 Margin="0"
                                                                 Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                 CommandParameter="{Binding}"

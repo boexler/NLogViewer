@@ -22,25 +22,18 @@ namespace Sentinel.LogViewer.Tests
 		}
 
 		[Fact]
-		public void AddRegexSearchTerm_EscapesSpecialCharacters_CreatesLiteralPattern()
+		public void AddRegexSearchTerm_AddsAPlainTextTermThatIncludes()
 		{
 			_context.RunOnSta(() =>
 			{
-				// Arrange
 				var viewer = new WpfLogViewer();
-				string loggerName = "MyApp.Logger";
-				string expectedEscaped = Regex.Escape(loggerName); // Should be "MyApp\\.Logger"
 
-				// Act
-				viewer.AddRegexSearchTerm(loggerName);
+				viewer.AddRegexSearchTerm("MyApp.Logger");
 
-				// Assert
-				Assert.Single(viewer.ActiveSearchTerms);
-				var searchTerm = viewer.ActiveSearchTerms[0];
-				Assert.IsType<RegexSearchTerm>(searchTerm);
-				Assert.Equal(expectedEscaped, searchTerm.Text);
-				// Verify it's not an exclude pattern
-				Assert.DoesNotMatch("^\\^\\(\\?!\\.\\*", searchTerm.Text);
+				var searchTerm = Assert.Single(viewer.ActiveSearchTerms);
+				Assert.Equal("MyApp.Logger", searchTerm.Text);
+				Assert.False(searchTerm.IsRegex);
+				Assert.False(searchTerm.IsExclude);
 			});
 		}
 
@@ -72,24 +65,18 @@ namespace Sentinel.LogViewer.Tests
 		}
 
 		[Fact]
-		public void AddRegexSearchTermExclude_CreatesNegativeLookaheadPattern()
+		public void AddRegexSearchTermExclude_AddsAPlainTextTermThatExcludes()
 		{
 			_context.RunOnSta(() =>
 			{
-				// Arrange
 				var viewer = new WpfLogViewer();
-				string loggerName = "MyApp.Logger";
-				string expectedPattern = $"^(?!.*{Regex.Escape(loggerName)}$)";
 
-				// Act
-				viewer.AddRegexSearchTermExclude(loggerName);
+				viewer.AddRegexSearchTermExclude("MyApp.Logger");
 
-				// Assert
-				Assert.Single(viewer.ActiveSearchTerms);
-				var searchTerm = viewer.ActiveSearchTerms[0];
-				Assert.IsType<RegexSearchTerm>(searchTerm);
-				Assert.StartsWith("^(?!.*", searchTerm.Text);
-				Assert.Equal(expectedPattern, searchTerm.Text);
+				var searchTerm = Assert.Single(viewer.ActiveSearchTerms);
+				Assert.Equal("MyApp.Logger", searchTerm.Text);
+				Assert.False(searchTerm.IsRegex);
+				Assert.True(searchTerm.IsExclude);
 			});
 		}
 
@@ -261,50 +248,38 @@ namespace Sentinel.LogViewer.Tests
 		}
 
 		[Fact]
-		public void AddRegexSearchTerm_SpecialRegexCharacters_AreEscaped()
+		public void AddRegexSearchTerm_SpecialRegexCharacters_AreTakenLiterally()
 		{
 			_context.RunOnSta(() =>
 			{
-				// Arrange
 				var viewer = new WpfLogViewer();
 				var specialChars = new[] { ".", "*", "+", "?", "^", "$", "[", "]", "(", ")", "{", "}", "|", "\\" };
 
 				foreach (var specialChar in specialChars)
 				{
-					// Act
 					viewer.ClearAllSearchTerms();
 					viewer.AddRegexSearchTerm($"Test{specialChar}Pattern");
 
-					// Assert
 					var searchTerm = viewer.ActiveSearchTerms[0];
-					Assert.IsType<RegexSearchTerm>(searchTerm);
-					// The pattern should be escaped, so special characters should be backslash-escaped
-					var escapedPattern = Regex.Escape($"Test{specialChar}Pattern");
-					Assert.Equal(escapedPattern, searchTerm.Text);
+					Assert.Equal($"Test{specialChar}Pattern", searchTerm.Text);
+					Assert.True(searchTerm.Contains($"a Test{specialChar}Pattern b"));
 				}
 			});
 		}
 
 		[Fact]
-		public void AddRegexSearchTermExclude_SpecialRegexCharacters_AreEscapedInNegativeLookahead()
+		public void AddRegexSearchTermExclude_SpecialRegexCharacters_AreTakenLiterally()
 		{
 			_context.RunOnSta(() =>
 			{
-				// Arrange
 				var viewer = new WpfLogViewer();
-				string loggerName = "MyApp.Logger+Test";
-				string expectedEscaped = Regex.Escape(loggerName);
-				string expectedPattern = $"^(?!.*{expectedEscaped}$)";
 
-				// Act
-				viewer.AddRegexSearchTermExclude(loggerName);
+				viewer.AddRegexSearchTermExclude("MyApp.Logger+Test");
 
-				// Assert
 				var searchTerm = viewer.ActiveSearchTerms[0];
-				Assert.IsType<RegexSearchTerm>(searchTerm);
-				Assert.Equal(expectedPattern, searchTerm.Text);
-				// Verify it starts with negative lookahead
-				Assert.StartsWith("^(?!.*", searchTerm.Text);
+				Assert.True(searchTerm.IsExclude);
+				Assert.True(searchTerm.Contains("x MyApp.Logger+Test y"));
+				Assert.False(searchTerm.Contains("x MyAppXLoggerTest y"));
 			});
 		}
 
@@ -405,12 +380,33 @@ namespace Sentinel.LogViewer.Tests
 				var collectionView = (CollectionView)viewer.LogEvents.View;
 				var visibleItems = collectionView.Cast<LogEntry>().ToList();
 
-				// Should exclude the last item
-				Assert.Equal(3, visibleItems.Count);
-				Assert.Contains(visibleItems, item => item.LoggerName == "OtherLogger1");
-				Assert.Contains(visibleItems, item => item.LoggerName == "OtherLogger2");
-				Assert.Contains(visibleItems, item => item.LoggerName == "OtherLogger3");
-				Assert.DoesNotContain(visibleItems, item => item.LoggerName == "OtherLogger4");
+				// The case does not matter by default, so every entry with "error" in its message is hidden
+				var visible = Assert.Single(visibleItems);
+				Assert.Equal("OtherLogger2", visible.LoggerName);
+			});
+		}
+
+		[Fact]
+		public void Filter_ExcludeMessageFieldMatchingCase_KeepsTheOtherCase()
+		{
+			_context.RunOnSta(() =>
+			{
+				var testData = new ObservableCollection<LogEntry>
+				{
+					new(LogEntryLevel.Info, "OtherLogger1", "Error occurred"),
+					new(LogEntryLevel.Info, "OtherLogger2", "Info message"),
+					new(LogEntryLevel.Info, "OtherLogger3", "error"),
+					new(LogEntryLevel.Info, "OtherLogger4", "Error")
+				};
+				var viewer = WpfTestHelper.CreateViewerWithTestData(testData);
+
+				viewer.CurrentSearchText = "Error";
+				viewer.FilterIsExclude = true;
+				viewer.FilterMatchCase = true;
+				viewer.AddSearchTerm();
+
+				var visibleItems = ((CollectionView)viewer.LogEvents.View).Cast<LogEntry>().Select(item => item.LoggerName).ToList();
+				Assert.Equal(new[] { "OtherLogger2", "OtherLogger3" }, visibleItems);
 			});
 		}
 
