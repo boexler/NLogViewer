@@ -155,7 +155,7 @@ public class AboutViewModel : INotifyPropertyChanged
 			State = UpdateState.UpToDate;
 			StatusText = Format("About_UpToDate", "{0} is up to date", ProductNames.Display);
 		}
-		else if (_update.Asset == null)
+		else if (!_updateService.CanInstallItself)
 		{
 			State = UpdateState.ManualUpdate;
 			StatusText = _updateService.InstallType == InstallType.Chocolatey
@@ -171,12 +171,23 @@ public class AboutViewModel : INotifyPropertyChanged
 
 	private async Task DownloadAsync()
 	{
-		if (_update?.Asset == null)
+		if (_update == null)
 			return;
 
 		State = UpdateState.Downloading;
 		DownloadPercentage = 0;
-		var total = _update.Asset.Size;
+		StatusText = GetString("About_Checking", "Checking for updates…");
+		try
+		{
+			_update = _update with { Asset = await _updateService.ResolveAssetAsync(_update) };
+		}
+		catch (Exception ex)
+		{
+			ShowError(ex);
+			return;
+		}
+
+		var total = _update.Asset!.Size;
 		StatusText = FormatDownload(0, total);
 		var progress = new Progress<(long Downloaded, long Total)>(p =>
 		{
@@ -222,7 +233,14 @@ public class AboutViewModel : INotifyPropertyChanged
 	private void ShowError(Exception ex)
 	{
 		State = UpdateState.Failed;
-		StatusText = Format("About_UpdateFailed", "Update failed: {0}", ex.Message);
+		StatusText = ex switch
+		{
+			GitHubRateLimitException { ResetAt: { } resetAt } => Format("About_RateLimitUntil",
+				"GitHub allows only a limited number of requests per hour. Try again after {0}.", resetAt.ToLocalTime().ToString("t", CultureInfo.CurrentCulture)),
+			GitHubRateLimitException => GetString("About_RateLimit", "GitHub allows only a limited number of requests per hour. Try again later."),
+			ReleaseFilesMissingException => GetString("About_FilesMissing", "The files of this release are not uploaded yet. Try again in a few minutes."),
+			_ => Format("About_UpdateFailed", "Update failed: {0}", ex.Message)
+		};
 	}
 
 	private string FormatDownload(long downloaded, long total)

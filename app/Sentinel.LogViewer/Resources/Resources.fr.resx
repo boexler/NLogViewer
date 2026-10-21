@@ -1078,5 +1078,14 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>Ignorer l'application « {0} » depuis l'adresse IP {1} ? Son onglet est fermé et ses journaux seront ignorés à partir de maintenant.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>GitHub n'autorise qu'un nombre limité de requêtes par heure. Réessayez après {0}.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>GitHub n'autorise qu'un nombre limité de requêtes par heure. Réessayez plus tard.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>Les fichiers de cette version ne sont pas encore téléversés. Réessayez dans quelques minutes.</value>
+  </data>
 </root>
 

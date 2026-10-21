@@ -1078,6 +1078,15 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást a(z) {1} IP-címről? A lapja bezáródik, a naplóit pedig mostantól eldobja a rendszer.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>A GitHub óránként csak korlátozott számú kérést enged. Próbálja újra {0} után.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>A GitHub óránként csak korlátozott számú kérést enged. Próbálja újra később.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>A kiadás fájljai még nincsenek feltöltve. Próbálja újra néhány perc múlva.</value>
+  </data>
 </root>
 
 

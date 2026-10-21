@@ -1081,5 +1081,14 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>Ignore the application “{0}” from the IP address {1}? Its tab is closed and its logs are dropped from now on.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>GitHub allows only a limited number of requests per hour. Try again after {0}.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>GitHub allows only a limited number of requests per hour. Try again later.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>The files of this release are not uploaded yet. Try again in a few minutes.</value>
+  </data>
 </root>
 

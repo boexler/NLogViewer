@@ -1078,5 +1078,14 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>¿Ignorar la aplicación «{0}» desde la dirección IP {1}? Su pestaña se cierra y sus registros se descartarán a partir de ahora.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>GitHub solo permite un número limitado de solicitudes por hora. Inténtelo de nuevo después de las {0}.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>GitHub solo permite un número limitado de solicitudes por hora. Inténtelo de nuevo más tarde.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>Los archivos de esta versión aún no se han subido. Inténtelo de nuevo en unos minutos.</value>
+  </data>
 </root>
 

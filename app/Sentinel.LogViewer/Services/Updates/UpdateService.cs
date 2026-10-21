@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
@@ -10,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Sentinel.LogViewer.Services.Updates;
 
@@ -18,11 +20,17 @@ namespace Sentinel.LogViewer.Services.Updates;
 public sealed record UpdateAsset(string Name, string DownloadUrl, long Size, string? Sha256);
 
 /// <summary>A release that is newer than the running version.</summary>
-/// <param name="Asset">The file to install, or null when the install type does not install updates itself</param>
-public sealed record AvailableUpdate(ReleaseVersion Version, string ReleasePageUrl, UpdateAsset? Asset);
+/// <param name="Tag">The tag of the release, e.g. <c>v5.0.0-beta.5</c></param>
+/// <param name="Asset">The file to install; null until <see cref="UpdateService.ResolveAssetAsync(AvailableUpdate, CancellationToken)"/> looked it up, and for install types that do not install updates themselves</param>
+public sealed record AvailableUpdate(ReleaseVersion Version, string ReleasePageUrl, string Tag, UpdateAsset? Asset);
+
+/// <summary>A release in the Atom feed of the releases</summary>
+public sealed record FeedRelease(string Tag, ReleaseVersion Version, string Url);
 
 /// <summary>
-/// Checks GitHub Releases for a newer version, downloads it and hands the installation over to a helper process
+/// Checks GitHub Releases for a newer version, downloads it and hands the installation over to a helper process. The check reads the Atom
+/// feed of the releases, which has no limit of requests; the API, which allows only 60 requests an hour without signing in, is asked only
+/// for the files of a release and for the changelog.
 /// </summary>
 public class UpdateService
 {
@@ -31,11 +39,22 @@ public class UpdateService
 
 	public const string RepositoryUrl = "https://github.com/" + Repository;
 
-	private readonly HttpClient _httpClient;
+	/// <summary>shortcut: the feed is kept in memory only, and not asked again for ten minutes; keep it on disk with its ETag if the check is made more often</summary>
+	private static readonly TimeSpan FeedLifetime = TimeSpan.FromMinutes(10);
 
-	public UpdateService()
+	private readonly HttpClient _httpClient;
+	private List<FeedRelease>? _feed;
+	private DateTime _feedReadAt;
+
+	public UpdateService() : this(new HttpClientHandler())
 	{
-		_httpClient = new HttpClient();
+	}
+
+	/// <summary>For tests: the requests go through <paramref name="handler"/></summary>
+	internal UpdateService(HttpMessageHandler handler, InstallType? installType = null)
+	{
+		InstallType = installType ?? InstallTypeDetector.Detect();
+		_httpClient = new HttpClient(handler);
 		// GitHub rejects API requests without a user agent.
 		_httpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"{ProductNames.Technical}/{CurrentVersion}");
 		_httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
@@ -44,7 +63,10 @@ public class UpdateService
 	/// <summary>The version of the running application.</summary>
 	public static ReleaseVersion CurrentVersion { get; } = ReadCurrentVersion();
 
-	public InstallType InstallType { get; } = InstallTypeDetector.Detect();
+	public InstallType InstallType { get; }
+
+	/// <summary>Whether this copy downloads and installs updates itself (MSI and portable) instead of pointing to the release or to Chocolatey</summary>
+	public bool CanInstallItself => InstallType is InstallType.Portable or InstallType.Msi;
 
 	/// <summary>
 	/// Whether prerelease versions are offered; unless set explicitly, as long as a prerelease is running
@@ -53,16 +75,104 @@ public class UpdateService
 		configuration.IncludePrereleaseUpdates ?? CurrentVersion.IsPrerelease;
 
 	/// <summary>
-	/// Returns the newest release that is newer than the running version, or null when the application is up to date
+	/// Returns the newest release that is newer than the running version, or null when the application is up to date. It asks the feed of the
+	/// releases, not the API; the file to install is looked up later with <see cref="ResolveAssetAsync(AvailableUpdate, CancellationToken)"/>.
 	/// </summary>
 	/// <param name="includePrereleases">Whether prerelease versions are offered</param>
-	public async Task<AvailableUpdate?> CheckForUpdateAsync(bool includePrereleases, CancellationToken cancellationToken = default)
-	{
-		var releases = await _httpClient.GetFromJsonAsync<List<GitHubRelease>>(
-			$"https://api.github.com/repos/{Repository}/releases?per_page=30", cancellationToken).ConfigureAwait(false);
+	public async Task<AvailableUpdate?> CheckForUpdateAsync(bool includePrereleases, CancellationToken cancellationToken = default) =>
+		SelectUpdate(await GetFeedAsync(cancellationToken).ConfigureAwait(false), CurrentVersion, includePrereleases);
 
-		return SelectUpdate(releases ?? new List<GitHubRelease>(), CurrentVersion, includePrereleases,
-			InstallType, InstallTypeDetector.IsFrameworkDependent(AppContext.BaseDirectory));
+	private async Task<List<FeedRelease>> GetFeedAsync(CancellationToken cancellationToken)
+	{
+		if (_feed != null && DateTime.UtcNow - _feedReadAt < FeedLifetime)
+			return _feed;
+
+		using var request = new HttpRequestMessage(HttpMethod.Get, $"{RepositoryUrl}/releases.atom");
+		request.Headers.Accept.ParseAdd("application/atom+xml");
+		using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+		response.EnsureSuccessStatusCode();
+		_feed = ParseFeed(await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
+		_feedReadAt = DateTime.UtcNow;
+		return _feed;
+	}
+
+	/// <summary>
+	/// Reads the releases of an Atom feed; an entry whose tag is not a version is left out
+	/// </summary>
+	public static List<FeedRelease> ParseFeed(string xml)
+	{
+		const string marker = "/releases/tag/";
+		XNamespace atom = "http://www.w3.org/2005/Atom";
+		var releases = new List<FeedRelease>();
+		foreach (var entry in XDocument.Parse(xml).Descendants(atom + "entry"))
+		{
+			var href = entry.Elements(atom + "link").FirstOrDefault(link => (string?)link.Attribute("rel") == "alternate")?.Attribute("href")?.Value;
+			var at = href?.IndexOf(marker, StringComparison.Ordinal) ?? -1;
+			if (href == null || at < 0)
+				continue;
+
+			var tag = Uri.UnescapeDataString(href[(at + marker.Length)..]);
+			if (ReleaseVersion.TryParse(tag, out var version))
+				releases.Add(new FeedRelease(tag, version, href));
+		}
+
+		return releases;
+	}
+
+	/// <summary>
+	/// Selects the newest release that is newer than <paramref name="currentVersion"/>
+	/// </summary>
+	public static AvailableUpdate? SelectUpdate(IEnumerable<FeedRelease> releases, ReleaseVersion currentVersion, bool includePrereleases)
+	{
+		AvailableUpdate? best = null;
+		foreach (var release in releases)
+		{
+			if (!includePrereleases && release.Version.IsPrerelease)
+				continue;
+
+			if (release.Version.CompareTo(currentVersion) <= 0 || (best != null && release.Version.CompareTo(best.Version) <= 0))
+				continue;
+
+			best = new AvailableUpdate(release.Version, release.Url, release.Tag, null);
+		}
+
+		return best;
+	}
+
+	/// <summary>
+	/// Looks up the file of the release that this installation installs. This asks the API, so it is done when the user wants to download.
+	/// </summary>
+	/// <exception cref="GitHubRateLimitException">The limit of requests per hour is reached</exception>
+	/// <exception cref="ReleaseFilesMissingException">The release has no such file, e.g. because it is still being uploaded</exception>
+	public Task<UpdateAsset> ResolveAssetAsync(AvailableUpdate update, CancellationToken cancellationToken = default) =>
+		ResolveAssetAsync(update, InstallTypeDetector.IsFrameworkDependent(AppContext.BaseDirectory), cancellationToken);
+
+	internal async Task<UpdateAsset> ResolveAssetAsync(AvailableUpdate update, bool frameworkDependent, CancellationToken cancellationToken)
+	{
+		var release = await GetApiAsync<GitHubRelease>(
+			$"https://api.github.com/repos/{Repository}/releases/tags/{Uri.EscapeDataString(update.Tag)}", cancellationToken).ConfigureAwait(false);
+		var file = release?.Assets.FirstOrDefault(a => IsAssetFor(a.Name, InstallType, frameworkDependent))
+		           ?? throw new ReleaseFilesMissingException(update.Tag);
+		return new UpdateAsset(file.Name, file.BrowserDownloadUrl, file.Size, ParseSha256(file.Digest));
+	}
+
+	/// <summary>
+	/// Asks the API; when its limit of requests is used up this throws <see cref="GitHubRateLimitException"/> instead of a bare status code
+	/// </summary>
+	private async Task<T?> GetApiAsync<T>(string url, CancellationToken cancellationToken)
+	{
+		using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+		if (response.StatusCode is HttpStatusCode.Forbidden or HttpStatusCode.TooManyRequests
+		    && response.Headers.TryGetValues("X-RateLimit-Remaining", out var remaining) && remaining.FirstOrDefault() == "0")
+		{
+			DateTimeOffset? resetAt = response.Headers.TryGetValues("X-RateLimit-Reset", out var reset) && long.TryParse(reset.FirstOrDefault(), out var seconds)
+				? DateTimeOffset.FromUnixTimeSeconds(seconds)
+				: null;
+			throw new GitHubRateLimitException(resetAt);
+		}
+
+		response.EnsureSuccessStatusCode();
+		return await response.Content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
 
 	/// <summary>
@@ -75,7 +185,7 @@ public class UpdateService
 		var releases = new List<GitHubRelease>();
 		for (var page = 1; page <= maxPages; page++)
 		{
-			var pageOfReleases = await _httpClient.GetFromJsonAsync<List<GitHubRelease>>(
+			var pageOfReleases = await GetApiAsync<List<GitHubRelease>>(
 				$"https://api.github.com/repos/{Repository}/releases?per_page={pageSize}&page={page}", cancellationToken).ConfigureAwait(false);
 			if (pageOfReleases == null || pageOfReleases.Count == 0)
 				break;
@@ -86,41 +196,6 @@ public class UpdateService
 		}
 
 		return releases;
-	}
-
-	/// <summary>
-	/// Selects the newest applicable release that is newer than <paramref name="currentVersion"/>
-	/// </summary>
-	public static AvailableUpdate? SelectUpdate(IEnumerable<GitHubRelease> releases, ReleaseVersion currentVersion,
-		bool includePrereleases, InstallType installType, bool frameworkDependent)
-	{
-		AvailableUpdate? best = null;
-		foreach (var release in releases)
-		{
-			if (release.Draft || !ReleaseVersion.TryParse(release.TagName, out var version))
-				continue;
-
-			if (!includePrereleases && (release.Prerelease || version.IsPrerelease))
-				continue;
-
-			if (version.CompareTo(currentVersion) <= 0 || (best != null && version.CompareTo(best.Version) <= 0))
-				continue;
-
-			UpdateAsset? asset = null;
-			if (installType is InstallType.Portable or InstallType.Msi)
-			{
-				// Skip releases whose files are not uploaded (yet); the release workflow attaches them after creating the release.
-				var file = release.Assets.FirstOrDefault(a => IsAssetFor(a.Name, installType, frameworkDependent));
-				if (file == null)
-					continue;
-
-				asset = new UpdateAsset(file.Name, file.BrowserDownloadUrl, file.Size, ParseSha256(file.Digest));
-			}
-
-			best = new AvailableUpdate(version, release.HtmlUrl, asset);
-		}
-
-		return best;
 	}
 
 	/// <summary>
