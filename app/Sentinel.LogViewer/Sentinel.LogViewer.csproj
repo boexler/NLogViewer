@@ -4,6 +4,8 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!-- Only for the notify icon of the tray; the types of Windows Forms stay out of the usings so they do not clash with the ones of WPF. -->
+    <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>Sentinel.LogViewer.App</StartupObject>
     <RootNamespace>Sentinel.LogViewer</RootNamespace>
     <AssemblyName>Sentinel.LogViewer</AssemblyName>
@@ -17,6 +19,11 @@
     <!-- The desktop app ships as MSI, Chocolatey package and portable ZIP, never as a NuGet package. -->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="appsettings.json" />

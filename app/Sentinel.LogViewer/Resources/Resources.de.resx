@@ -1120,5 +1120,26 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>Version {0} wird übersprungen. Die Anwendung weist nur noch auf neuere Versionen hin.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>In den Infobereich minimieren</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Beim Minimieren wandert das Fenster in den Infobereich (Tray) und empfängt weiter Logs. Das Symbol zeigt, wie es mit dem Empfang steht; ein Doppelklick darauf stellt das Fenster wieder her.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Im Infobereich über neue Fehler informieren</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Solange das Fenster im Infobereich ist, erscheint eine Benachrichtigung, wenn neue Fehler eintreffen, höchstens alle 30 Sekunden.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Neue Fehler: {0}</value>
+  </data>
 </root>
 

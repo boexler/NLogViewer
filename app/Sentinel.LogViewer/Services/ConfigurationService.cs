@@ -223,6 +223,12 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
         public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
 
+        /// <summary>Whether minimizing the window moves it to the notification area, where it keeps receiving.</summary>
+        public bool MinimizeToTray { get; set; } = false;
+
+        /// <summary>Whether a notification shows when new errors arrive while the window is in the tray.</summary>
+        public bool NotifyTrayErrors { get; set; } = false;
+
         /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
         public string SkippedVersion { get; set; } = string.Empty;
 

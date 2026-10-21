@@ -1120,6 +1120,27 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>Versiunea {0} este omisă. Aplicația anunță doar versiunile mai noi.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimizează în zona de notificare</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>La minimizare, fereastra trece în zona de notificare (tray) și continuă să primească loguri. Pictograma arată cum merge recepția; dublu clic pe ea restaurează fereastra.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Notifică erorile noi în zona de notificare</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Cât timp fereastra este în zona de notificare, apare o notificare când sosesc erori noi, cel mult una la 30 de secunde.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Deschide</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Ieșire</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Erori noi: {0}</value>
+  </data>
 </root>
 
 

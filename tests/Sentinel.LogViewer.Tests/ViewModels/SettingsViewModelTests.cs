@@ -410,6 +410,22 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheTraySettings_AreOffByDefault_AndSaved()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var minimize = viewModel.Setting<BoolSettingViewModel>("Minimize to the notification area");
+		var notify = viewModel.Setting<BoolSettingViewModel>("Notify about new errors in the tray");
+		Assert.False(minimize.Value);
+		Assert.False(notify.Value);
+
+		minimize.Value = true;
+		notify.Value = true;
+
+		Assert.True(_environment.Saved.MinimizeToTray);
+		Assert.True(_environment.Saved.NotifyTrayErrors);
+	}
+
+	[Fact]
 	public void TheFontOfTheList_HasDefaults_IsSaved_RejectsAnInvalidSize_AndIsReset()
 	{
 		var viewModel = _environment.CreateViewModel();

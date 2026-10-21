@@ -1120,6 +1120,27 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>Wersja {0} jest pomijana. Aplikacja będzie informować tylko o nowszych wersjach.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimalizuj do obszaru powiadomień</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Minimalizowanie przenosi okno do obszaru powiadomień (zasobnika), gdzie nadal odbiera logi. Ikona pokazuje stan odbioru; dwukrotne kliknięcie przywraca okno.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Powiadamiaj o nowych błędach w zasobniku</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Gdy okno jest w zasobniku, pojawia się powiadomienie o nowych błędach, najwyżej raz na 30 sekund.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Otwórz</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Nowe błędy: {0}</value>
+  </data>
 </root>
 
 

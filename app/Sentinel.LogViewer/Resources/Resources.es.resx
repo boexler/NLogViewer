@@ -1120,5 +1120,26 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>La versión {0} se omite. La aplicación solo avisará de versiones más nuevas.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimizar al área de notificación</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Al minimizar, la ventana pasa al área de notificación (bandeja) y sigue recibiendo logs. El icono muestra cómo va la recepción; haga doble clic en él para restaurar la ventana.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Avisar de nuevos errores en la bandeja</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Mientras la ventana está en la bandeja, se muestra una notificación cuando llegan nuevos errores, como máximo una cada 30 segundos.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Nuevos errores: {0}</value>
+  </data>
 </root>
 

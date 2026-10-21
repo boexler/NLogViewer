@@ -1120,6 +1120,27 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>A(z) {0} verzió ki van hagyva. Az alkalmazás csak újabb verziókra figyelmeztet.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Kicsinyítés az értesítési területre</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Kicsinyítéskor az ablak az értesítési területre (tálca) kerül, és tovább fogadja a naplókat. Az ikon mutatja a fogadás állapotát; dupla kattintással az ablak visszaállítható.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Értesítés az új hibákról a tálcán</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Amíg az ablak a tálcán van, értesítés jelenik meg az új hibák érkezésekor, legfeljebb 30 másodpercenként egy.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Megnyitás</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Új hibák: {0}</value>
+  </data>
 </root>
 
 

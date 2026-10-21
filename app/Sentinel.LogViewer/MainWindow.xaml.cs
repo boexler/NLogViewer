@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using Sentinel.LogViewer.Models;
+using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.ViewModels;
 
 namespace Sentinel.LogViewer
@@ -19,13 +20,21 @@ namespace Sentinel.LogViewer
     public partial class MainWindow : Window
     {
         private readonly MainViewModel _viewModel;
+        private readonly ITrayIcon? _tray;
+
+        /// <summary>At most one notification of new errors in this time, so a burst of errors does not flood the screen</summary>
+        private static readonly TimeSpan TrayNotificationInterval = TimeSpan.FromSeconds(30);
+
+        private int _trayErrors;
+        private DateTime _lastTrayNotification = DateTime.MinValue;
 
         private Point _logTabDragStart;
         private LogTabViewModel? _logTabDragSource;
 
-        public MainWindow(MainViewModel viewModel)
+        public MainWindow(MainViewModel viewModel, ITrayIcon? tray = null)
         {
             _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            _tray = tray;
             InitializeComponent();
             DataContext = _viewModel;
 
@@ -40,6 +49,9 @@ namespace Sentinel.LogViewer
                 new KeyGesture(Key.O, ModifierKeys.Control)));
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenSettingsCommand,
                 new KeyGesture(Key.OemComma, ModifierKeys.Control)));
+
+            if (_tray != null)
+                SetUpTray(_tray);
 
             // Zoom of the log list for this session
             this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control));
@@ -77,15 +89,62 @@ namespace Sentinel.LogViewer
         }
 
         /// <summary>
+        /// Minimizing moves the window to the tray when the settings say so; the tray icon brings it back, tells how receiving is going and
+        /// announces new errors
+        /// </summary>
+        private void SetUpTray(ITrayIcon tray)
+        {
+            StateChanged += (_, _) =>
+            {
+                if (WindowState != WindowState.Minimized || !_viewModel.MinimizeToTray)
+                    return;
+
+                _trayErrors = 0;
+                tray.ToolTip = TrayToolTip();
+                tray.Show();
+                Hide();
+            };
+            _viewModel.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MainViewModel.ReceiveStatusText))
+                    tray.ToolTip = TrayToolTip();
+            };
+            _viewModel.ErrorsReceived += (_, errors) =>
+            {
+                if (!tray.IsVisible || !_viewModel.NotifyTrayErrors)
+                    return;
+
+                _trayErrors += errors;
+                if (DateTime.UtcNow - _lastTrayNotification < TrayNotificationInterval)
+                    return;
+
+                _lastTrayNotification = DateTime.UtcNow;
+                var text = string.Format(System.Globalization.CultureInfo.CurrentCulture, _viewModel.TrayErrorsFormat, _trayErrors);
+                _trayErrors = 0;
+                tray.Notify(ProductNames.Display, text);
+            };
+            tray.RestoreRequested += (_, _) => RestoreFromTray();
+            tray.ExitRequested += (_, _) => _viewModel.ExitCommand.Execute(null);
+        }
+
+        private string TrayToolTip() => $"{ProductNames.Display} – {_viewModel.ReceiveStatusText}";
+
+        private void RestoreFromTray()
+        {
+            Show();
+            if (WindowState == WindowState.Minimized)
+                WindowState = WindowState.Normal;
+
+            Activate();
+            _tray?.Hide();
+        }
+
+        /// <summary>
         /// Activates this window and imports paths supplied by a shell or secondary-process invocation.
         /// </summary>
         public void HandleExternalInvocation(IReadOnlyList<string> arguments)
         {
-            if (WindowState == System.Windows.WindowState.Minimized)
-                WindowState = System.Windows.WindowState.Normal;
-
-            Show();
-            Activate();
+            RestoreFromTray();
 
             if (arguments.Count > 0)
                 _viewModel.BeginImportPathsFromUi(arguments);
@@ -316,6 +375,7 @@ namespace Sentinel.LogViewer
 
         protected override void OnClosed(System.EventArgs e)
         {
+            _tray?.Hide();
             _viewModel?.Dispose();
             base.OnClosed(e);
         }

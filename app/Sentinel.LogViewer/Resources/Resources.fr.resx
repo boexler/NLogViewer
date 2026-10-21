@@ -1120,5 +1120,26 @@
   <data name="About_Skipped" xml:space="preserve">
     <value>La version {0} est ignorée. L'application ne signalera que les versions plus récentes.</value>
   </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Réduire dans la zone de notification</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>La réduction de la fenêtre la déplace dans la zone de notification, où elle continue de recevoir des logs. L'icône indique l'état de la réception ; double-cliquez dessus pour restaurer la fenêtre.</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
+    <value>Signaler les nouvelles erreurs dans la zone de notification</value>
+  </data>
+  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
+    <value>Tant que la fenêtre est dans la zone de notification, une notification s'affiche à l'arrivée de nouvelles erreurs, au plus une toutes les 30 secondes.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="Tray_NewErrors" xml:space="preserve">
+    <value>Nouvelles erreurs : {0}</value>
+  </data>
 </root>
 

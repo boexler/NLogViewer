@@ -57,6 +57,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private int _listFontSize = SettingsRules.DefaultListFontSize;
 	private int _fontZoom;
 	private AvailableUpdate? _noticeUpdate;
+	private bool _minimizeToTray;
+	private bool _notifyTrayErrors;
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -196,6 +198,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
+
+		var errors = logEvents.Count(logEvent => logEvent.Entry.Level >= LogEntryLevel.Error);
+		if (errors > 0)
+			ErrorsReceived?.Invoke(this, errors);
 	}
 
 	/// <summary>The font family of the log list; the font of the application when none is set</summary>
@@ -968,6 +974,18 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
 
+	/// <summary>Whether minimizing the window moves it to the tray</summary>
+	public bool MinimizeToTray => _minimizeToTray;
+
+	/// <summary>Whether new errors are announced while the window is in the tray</summary>
+	public bool NotifyTrayErrors => _notifyTrayErrors;
+
+	/// <summary>The text of the notification of new errors, with the number as {0}</summary>
+	public string TrayErrorsFormat => _localizationService.GetString("Tray_NewErrors", "New errors: {0}");
+
+	/// <summary>Raised with the number of entries of the level Error or Fatal in a batch of received entries</summary>
+	public event EventHandler<int>? ErrorsReceived;
+
 	/// <summary>Skips the version that the status bar announces: it and older ones are not announced again</summary>
 	public ICommand SkipUpdateCommand { get; }
 
@@ -1070,6 +1088,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_listFontSize = config.ListFontSize;
 		_fontZoom = 0;
 		NotifyFont();
+		_minimizeToTray = config.MinimizeToTray;
+		_notifyTrayErrors = config.NotifyTrayErrors;
 		_udpReceiverService.Configure(config.Ports);
 		_ignoreRules = config.IgnoreRules.ToArray();
 

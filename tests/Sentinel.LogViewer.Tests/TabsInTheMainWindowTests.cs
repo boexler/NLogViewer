@@ -67,7 +67,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		resources.Add("SvgImageSourceConverter", new Sentinel.LogViewer.Converters.SvgImageSourceConverter());
 	}
 
-	private Session Start(UpdateService? updates = null)
+	private Session Start(UpdateService? updates = null, ITrayIcon? tray = null)
 	{
 		AddResourcesOfTheApplication();
 		var xml = new Log4JEventParser();
@@ -78,7 +78,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, updates ?? new UpdateService(), tabs);
 		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
-		var window = new MainWindow(viewModel) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
+		var window = new MainWindow(viewModel, tray) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
 		window.Show();
 		WpfTestHelper.Settle();
 		return new Session { Window = window, ViewModel = viewModel, Events = events, Tabs = tabs };
@@ -540,6 +540,110 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.True(command.CanExecute(tabs[0]));
 			Assert.True(command.CanExecute(tabs[1]));
 			Assert.False(command.CanExecute(tabs[2]));
+		});
+	}
+
+	private sealed class FakeTray : ITrayIcon
+	{
+		public event EventHandler? RestoreRequested;
+		public event EventHandler? ExitRequested;
+		public bool IsVisible { get; private set; }
+		public string ToolTip { get; set; } = string.Empty;
+		public List<string> Notifications { get; } = new();
+		public void Show() => IsVisible = true;
+		public void Hide() => IsVisible = false;
+		public void Notify(string title, string text) => Notifications.Add(text);
+		public void Restore() => RestoreRequested?.Invoke(this, EventArgs.Empty);
+	}
+
+	private void ConfigureTray(bool minimizeToTray, bool notifyErrors)
+	{
+		var configuration = _environment.Saved;
+		configuration.MinimizeToTray = minimizeToTray;
+		configuration.NotifyTrayErrors = notifyErrors;
+		_environment.Configuration.SaveConfiguration(configuration);
+	}
+
+	[Fact]
+	public void MinimizingWithTheTraySetting_HidesTheWindow_ShowsTheIcon_AndTheIconBringsTheWindowBack()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyErrors: false);
+			var tray = new FakeTray();
+			using var session = Start(tray: tray);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Assert.False(session.Window.IsVisible);
+			Assert.True(tray.IsVisible);
+			Assert.Contains(session.ViewModel.ReceiveStatusText, tray.ToolTip);
+
+			tray.Restore();
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.Equal(System.Windows.WindowState.Normal, session.Window.WindowState);
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	[Fact]
+	public void TheNotifyIconOfWindows_HasTheIconOfTheApplication_AndAToolTipThatFits()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var tray = new NotifyIconTray(_environment.Localization);
+
+			tray.ToolTip = new string('x', 300);
+			tray.Show();
+			Assert.True(tray.IsVisible);
+
+			tray.Hide();
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	[Fact]
+	public void MinimizingWithoutTheTraySetting_LeavesTheWindowInTheTaskbar()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: false, notifyErrors: true);
+			var tray = new FakeTray();
+			using var session = Start(tray: tray);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	[Fact]
+	public void NewErrors_AreAnnouncedOnlyWhileTheWindowIsInTheTray_AndNotMoreOftenThanEvery30Seconds()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyErrors: true);
+			var tray = new FakeTray();
+			using var session = Start(tray: tray);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Error);
+			Assert.Empty(tray.Notifications);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+			Send(session, App("(100)"), level: LogEntryLevel.Info);
+			Assert.Empty(tray.Notifications);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
+			Assert.Equal(new[] { "New errors: 1" }, tray.Notifications);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Error);
+			Assert.Single(tray.Notifications);
 		});
 	}
 
