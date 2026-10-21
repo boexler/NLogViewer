@@ -86,9 +86,20 @@ namespace Sentinel.LogViewer.Wpf
         }
 
         /// <summary>
-        /// The text of a property of an entry, or null when it has none
+        /// The text of a property of an entry, or null when it has none; the case of the name does not matter, as in the menu of the columns
         /// </summary>
-        public static string? ValueOf(LogEntry entry, string propertyName) =>
-            entry.Properties.TryGetValue(propertyName, out var value) ? Convert.ToString(value, CultureInfo.CurrentCulture) : null;
+        public static string? ValueOf(LogEntry entry, string propertyName)
+        {
+            if (!entry.Properties.TryGetValue(propertyName, out var value))
+            {
+                var match = entry.Properties.Where(pair => string.Equals(pair.Key, propertyName, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (match.Count == 0)
+                    return null;
+
+                value = match[0].Value;
+            }
+
+            return Convert.ToString(value, CultureInfo.CurrentCulture);
+        }
     }
 }

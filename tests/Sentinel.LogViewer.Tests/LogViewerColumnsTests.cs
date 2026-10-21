@@ -160,6 +160,16 @@ public class LogViewerColumnsTests
 			Assert.Contains(LogColumns.Property("Method"), viewer.ColumnKeys);
 		});
 
+	[Fact]
+	public void TheValueOfAProperty_IsFoundWhateverTheCaseOfItsName()
+	{
+		var entry = new LogEntry(LogEntryLevel.Info, "L", "m") { Properties = new Dictionary<string, object?> { ["class"] = "Billing" } };
+
+		Assert.Equal("Billing", LogColumns.ValueOf(entry, "Class"));
+		Assert.Equal("Billing", LogColumns.ValueOf(entry, "class"));
+		Assert.Null(LogColumns.ValueOf(entry, "Method"));
+	}
+
 	[Theory]
 	[InlineData("thread", true, "id,level,timestamp,logger,thread,message")]
 	[InlineData("property:Class", true, "id,level,timestamp,logger,property:Class,message")]
