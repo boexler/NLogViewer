@@ -128,7 +128,14 @@ public sealed class BoolSettingViewModel(string categoryId, string icon, string 
 /// <summary>
 /// One entry of a <see cref="ChoiceSettingViewModel"/>
 /// </summary>
-public sealed record ChoiceOption(string Value, string Display);
+public sealed record ChoiceOption(string Value, string Display)
+{
+	/// <summary>Finds the font that shows the entry in its own typeface; looked up when the entry is shown, not for the whole list at once</summary>
+	public Func<string?>? FontSource { get; init; }
+
+	/// <summary>The font family of the entry, or null for the font of the window</summary>
+	public string? FontFamily => FontSource?.Invoke();
+}
 
 /// <summary>
 /// A setting with a fixed list of values

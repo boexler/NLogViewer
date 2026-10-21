@@ -93,9 +93,69 @@
             <DataTemplate DataType="{x:Type settings:ChoiceSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">
                     <ComboBox MinWidth="150" ItemsSource="{Binding Options}"
-                              DisplayMemberPath="Display" SelectedValuePath="Value"
+                              SelectedValuePath="Value"
                               SelectedValue="{Binding Value}"
-                              AutomationProperties.Name="{Binding Title}"/>
+                              AutomationProperties.Name="{Binding Title}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <!-- A font is listed in its own typeface; the other entries have none -->
+                                <TextBlock Text="{Binding Display}"
+                                           FontFamily="{Binding FontFamily, TargetNullValue={x:Static SystemFonts.MessageFontFamily}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </controls:SettingCard>
+            </DataTemplate>
+
+            <!-- Rows of the log list in the font of the settings -->
+            <DataTemplate DataType="{x:Type settings:FontPreviewSettingViewModel}">
+                <controls:SettingCard Setting="{Binding}">
+                    <controls:SettingCard.Details>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="1" CornerRadius="6"
+                                    Grid.IsSharedSizeScope="True" ClipToBounds="True" HorizontalAlignment="Left" MinWidth="360">
+                                <ItemsControl ItemsSource="{Binding Rows}" Focusable="False"
+                                              FontFamily="{Binding FontFamily}" FontSize="{Binding FontSize}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type settings:FontPreviewRow}">
+                                            <Grid x:Name="Row">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewId"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewLevel"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewTime"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewLogger"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewMessage"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Id}" Margin="8,3"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Level}" Margin="8,3"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding TimeStamp}" Margin="8,3"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Logger}" Margin="8,3"/>
+                                                <TextBlock Grid.Column="4" Text="{Binding Message}" Margin="8,3,16,3"/>
+                                            </Grid>
+                                            <DataTemplate.Triggers>
+                                                <DataTrigger Binding="{Binding Kind}" Value="Header">
+                                                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource ThemeSurfaceAlt}"/>
+                                                    <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="Info">
+                                                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogInfoBackground}"/>
+                                                    <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogInfoForeground}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="Warn">
+                                                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogWarnBackground}"/>
+                                                    <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogWarnForeground}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Kind}" Value="Error">
+                                                    <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogErrorBackground}"/>
+                                                    <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogErrorForeground}"/>
+                                                </DataTrigger>
+                                            </DataTemplate.Triggers>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </ScrollViewer>
+                    </controls:SettingCard.Details>
                 </controls:SettingCard>
             </DataTemplate>
 

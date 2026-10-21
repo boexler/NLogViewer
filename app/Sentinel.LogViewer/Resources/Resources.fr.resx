@@ -1300,5 +1300,11 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>Sur l'arbre des loggers : afficher un seul logger ou tous, tout développer ou tout réduire</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>Voici à quoi ressemble la liste des logs avec cette police et cette taille.</value>
+  </data>
 </root>
 

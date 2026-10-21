@@ -106,6 +106,38 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
+	public void TheFontPreview_FollowsTheFontOfTheSettings_AndTheDropDownShowsTheSelectedFontInItsOwnTypeface()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			viewModel.SelectedCategory = viewModel.Category("Appearance");
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var family = viewModel.Setting<ChoiceSettingViewModel>("Font of the log list");
+				family.Value = "Consolas";
+				viewModel.Setting<IntSettingViewModel>("Font size of the log list").Text = "20";
+				WpfTestHelper.Settle();
+
+				var preview = Descendants<SettingCard>(window).Single(card => card.Setting?.Title == "Preview");
+				var message = Descendants<TextBlock>(preview).Single(text => text.Text == "Payment failed: timeout");
+				Assert.Equal("Consolas", message.FontFamily.Source);
+				Assert.Equal(20, message.FontSize);
+
+				var combo = Descendants<ComboBox>(window).Single(box => ReferenceEquals(box.ItemsSource, family.Options));
+				var selected = Descendants<TextBlock>(combo).Single(text => text.Text == "Consolas");
+				Assert.Equal("Consolas", selected.FontFamily.Source);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void Switch_WhenToggled_SavesTheSetting()
 	{
 		_context.RunOnSta(() =>

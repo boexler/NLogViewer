@@ -279,7 +279,7 @@
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.2"/>
                                 </Border.Effect>
-                                <ScrollViewer>
+                                <ScrollViewer CanContentScroll="True">
                                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
                                 </ScrollViewer>
                             </Border>

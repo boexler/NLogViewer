@@ -1300,6 +1300,12 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>A logger-fán: egy logger vagy az összes megjelenítése, az összes kibontása vagy összecsukása</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>Így néz ki a naplólista ezzel a betűtípussal és mérettel.</value>
+  </data>
 </root>
 
 

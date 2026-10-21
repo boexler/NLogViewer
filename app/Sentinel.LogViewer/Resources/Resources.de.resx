@@ -1300,5 +1300,11 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>Auf dem Logger-Baum: nur einen Logger oder alle zeigen, alles auf- oder zuklappen</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>So sieht die Logliste mit dieser Schrift und Größe aus.</value>
+  </data>
 </root>
 

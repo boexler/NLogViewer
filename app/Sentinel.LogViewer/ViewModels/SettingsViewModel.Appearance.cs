@@ -17,6 +17,13 @@ namespace Sentinel.LogViewer.ViewModels
         private const string LoggerTreeLeft = "left";
         private const string LoggerTreeRight = "right";
 
+        /// <summary>
+        /// Whether the name of a font reads well in the font itself; the names of symbol fonts, e.g. Wingdings, would show as symbols
+        /// </summary>
+        private static bool ShowsInItsOwnFont(string name) =>
+            new System.Windows.Media.Typeface(new System.Windows.Media.FontFamily(name), System.Windows.FontStyles.Normal, System.Windows.FontWeights.Normal, System.Windows.FontStretches.Normal)
+                .TryGetGlyphTypeface(out var glyphs) && !glyphs.Symbol && glyphs.CharacterToGlyphMap.ContainsKey('A');
+
         private IEnumerable<SettingViewModel> CreateAppearanceSettings()
         {
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE790",
@@ -77,18 +84,21 @@ namespace Sentinel.LogViewer.ViewModels
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
+            FontPreviewSettingViewModel? fontPreview = null;
+
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE8D2",
                 Text("Settings_ListFontFamily", "Font of the log list"),
                 Text("Settings_ListFontFamily_Description", "The font of the entries and of the column headers in the log list, e.g. a monospaced font such as Consolas."),
                 needsRestart: false,
                 options: new[] { new ChoiceOption(string.Empty, Text("Settings_ListFontFamily_Default", "Default (like the rest of the application)")) }
                     .Concat(System.Windows.Media.Fonts.SystemFontFamilies.Select(family => family.Source).OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
-                        .Select(name => new ChoiceOption(name, name))).ToList(),
+                        .Select(name => new ChoiceOption(name, name) { FontSource = () => ShowsInItsOwnFont(name) ? name : null })).ToList(),
                 get: () => _configuration.ListFontFamily,
                 set: family =>
                 {
                     _configuration.ListFontFamily = family;
                     Commit();
+                    fontPreview?.Reload();
                 },
                 getDefault: () => string.Empty);
 
@@ -100,11 +110,18 @@ namespace Sentinel.LogViewer.ViewModels
                 {
                     _configuration.ListFontSize = value;
                     Commit();
+                    fontPreview?.Reload();
                 },
                 getDefault: () => SettingsRules.DefaultListFontSize,
                 isValid: SettingsRules.IsValidListFontSize,
                 invalidMessage: string.Format(CultureInfo.CurrentCulture,
                     Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize));
+
+            fontPreview = new FontPreviewSettingViewModel(AppearanceId, "\uE7B3",
+                Text("Settings_ListFontPreview", "Preview"),
+                Text("Settings_ListFontPreview_Description", "How the log list looks with this font and size."),
+                () => _configuration.ListFontFamily, () => _configuration.ListFontSize);
+            yield return fontPreview;
 
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),

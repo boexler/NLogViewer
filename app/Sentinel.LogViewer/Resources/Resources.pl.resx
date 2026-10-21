@@ -1300,6 +1300,12 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>Na drzewie loggerów: pokaż jeden logger lub wszystkie, rozwiń lub zwiń wszystko</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Podgląd</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>Tak wygląda lista logów z tą czcionką i tym rozmiarem.</value>
+  </data>
 </root>
 
 

@@ -1300,6 +1300,12 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>Pe arborele de loggeri: arată un singur logger sau pe toți, extinde sau restrânge tot</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Previzualizare</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>Așa arată lista de loguri cu acest font și această dimensiune.</value>
+  </data>
 </root>
 
 

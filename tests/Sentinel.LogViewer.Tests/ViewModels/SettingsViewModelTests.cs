@@ -436,10 +436,20 @@ public class SettingsViewModelTests : IDisposable
 		Assert.Equal("12", size.Text);
 		Assert.Contains("Consolas", family.Options.Select(option => option.Value));
 
+		// Every font is listed in its own typeface; the default entry has none.
+		Assert.Null(family.Options[0].FontFamily);
+		Assert.Equal("Consolas", family.Options.Single(option => option.Value == "Consolas").FontFamily);
+
+		var preview = viewModel.Setting<FontPreviewSettingViewModel>("Preview");
+		Assert.Equal(System.Windows.SystemFonts.MessageFontFamily.Source, preview.FontFamily.Source);
+		Assert.Equal(12, preview.FontSize);
+
 		family.Value = "Consolas";
 		size.Text = "15";
 		Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
 		Assert.Equal(15, _environment.Saved.ListFontSize);
+		Assert.Equal("Consolas", preview.FontFamily.Source);
+		Assert.Equal(15, preview.FontSize);
 
 		size.Text = "5";
 		Assert.True(size.HasError);
@@ -449,6 +459,7 @@ public class SettingsViewModelTests : IDisposable
 		viewModel.ResetCategoryCommand.Execute(null);
 		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
 		Assert.Equal(12, _environment.Saved.ListFontSize);
+		Assert.Equal(12, preview.FontSize);
 	}
 
 	[Fact]

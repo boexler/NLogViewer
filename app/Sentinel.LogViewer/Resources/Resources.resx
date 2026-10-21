@@ -1303,5 +1303,11 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>On the logger tree: show only one logger or all, expand or collapse all</value>
   </data>
+  <data name="Settings_ListFontPreview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
+    <value>How the log list looks with this font and size.</value>
+  </data>
 </root>
 
