@@ -100,6 +100,25 @@ public class LogViewerLookTests
 	}
 
 	[Fact]
+	public void TheRowsAndTheirCells_KnowTheViewer_ForTheirColoursAndResolvers()
+	{
+		WithViewer(viewer =>
+		{
+			var row = FirstRow(viewer);
+			viewer.InfoBackground = Brushes.Orchid;
+			WpfTestHelper.Settle();
+
+			Assert.Same(viewer, Wpf.LogViewer.GetOwner(row));
+			Assert.Same(viewer, Wpf.LogViewer.GetOwner(Descendants<Image>(row).Single()));
+			Assert.Same(Brushes.Orchid, row.Background);
+			Assert.Contains(Descendants<TextBlock>(row), text => text.Text == "created");
+			Assert.Contains(Descendants<TextBlock>(row), text => text.Text == "Acme.Orders");
+			Assert.All(Descendants<TextBlock>(row).Where(text => text.Tag != null), text => Assert.Same(viewer, text.Tag));
+			Assert.DoesNotContain(Descendants<TextBlock>(row), text => text.Text == "####");
+		});
+	}
+
+	[Fact]
 	public void TheLevelColumn_IsAsWideAsWhatItShows()
 	{
 		WithViewer(viewer =>

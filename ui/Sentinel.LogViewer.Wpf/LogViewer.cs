@@ -1538,6 +1538,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             AttachEffectiveCollectionChangedHandler();
 
+            SetOwner(this, this);
+
             Loaded += _OnLoaded;
             Unloaded += _OnUnloaded;
 
