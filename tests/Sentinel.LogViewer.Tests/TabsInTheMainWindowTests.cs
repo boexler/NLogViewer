@@ -67,7 +67,8 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		resources.Add("SvgImageSourceConverter", new Sentinel.LogViewer.Converters.SvgImageSourceConverter());
 	}
 
-	private Session Start(UpdateService? updates = null, ITrayIcon? tray = null)
+	/// <param name="invisible">For tests that minimize or maximize the window: it has no frame and is fully transparent, so it neither shows nor catches clicks on the screen of the user</param>
+	private Session Start(UpdateService? updates = null, ITrayIcon? tray = null, bool invisible = false)
 	{
 		AddResourcesOfTheApplication();
 		var xml = new Log4JEventParser();
@@ -78,7 +79,14 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, updates ?? new UpdateService(), tabs);
 		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
-		var window = new MainWindow(viewModel, tray) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
+		var window = new MainWindow(viewModel, tray) { Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
+		if (invisible)
+		{
+			window.WindowStyle = System.Windows.WindowStyle.None;
+			window.AllowsTransparency = true;
+			window.Opacity = 0;
+		}
+
 		window.Show();
 		WpfTestHelper.Settle();
 		return new Session { Window = window, ViewModel = viewModel, Events = events, Tabs = tabs };
@@ -574,7 +582,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
 			var tray = new FakeTray();
-			using var session = Start(tray: tray);
+			using var session = Start(tray: tray, invisible: true);
 
 			session.Window.WindowState = System.Windows.WindowState.Minimized;
 			WpfTestHelper.Settle();
@@ -652,7 +660,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			ConfigureTray(minimizeToTray: false, notifyLevel: "Error");
 			var tray = new FakeTray();
-			using var session = Start(tray: tray);
+			using var session = Start(tray: tray, invisible: true);
 
 			session.Window.WindowState = System.Windows.WindowState.Minimized;
 			WpfTestHelper.Settle();
@@ -669,7 +677,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			ConfigureTray(minimizeToTray: true, notifyLevel: "Fatal");
 			var tray = new FakeTray();
-			using var session = Start(tray: tray);
+			using var session = Start(tray: tray, invisible: true);
 
 			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
 			Assert.Empty(tray.Notifications);
@@ -691,7 +699,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			ConfigureTray(minimizeToTray: true, notifyLevel: "Warn");
 			var tray = new FakeTray();
-			using var session = Start(tray: tray);
+			using var session = Start(tray: tray, invisible: true);
 			session.Window.TrayNotificationInterval = TimeSpan.FromSeconds(1.5);
 			session.Window.WindowState = System.Windows.WindowState.Minimized;
 			WpfTestHelper.Settle();
@@ -723,7 +731,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
 			var tray = new FakeTray();
-			using var session = Start(tray: tray);
+			using var session = Start(tray: tray, invisible: true);
 			session.Window.WindowState = System.Windows.WindowState.Maximized;
 			WpfTestHelper.Settle();
 
