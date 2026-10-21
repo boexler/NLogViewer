@@ -29,7 +29,7 @@ namespace Sentinel.LogViewer.Wpf
         private readonly Dictionary<string, GridViewColumn> _columnsByKey = new();
         private readonly Dictionary<GridViewColumn, double> _initialColumnWidths = new();
         private readonly HashSet<GridViewColumn> _fittedColumns = new();
-        private readonly SortedSet<string> _propertyNames = new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _propertyNames = new(StringComparer.OrdinalIgnoreCase);
         private bool _columnsReady;
         private bool _applyingColumns;
 
@@ -234,7 +234,10 @@ namespace Sentinel.LogViewer.Wpf
         {
             foreach (var item in entries)
             {
-                if (item is not LogEntry entry || _propertyNames.Count >= MaxPropertyNames)
+                if (_propertyNames.Count >= MaxPropertyNames)
+                    return;
+
+                if (item is not LogEntry entry)
                     continue;
 
                 foreach (var name in entry.Properties.Keys)

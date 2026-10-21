@@ -128,12 +128,12 @@ public class LogViewerColumnsTests
 	public void ThePropertyNames_AreCollected_WithoutTheThread_AndAlsoFromEntriesThatArriveLater() =>
 		WithViewer(viewer =>
 		{
-			Assert.Equal(new[] { "Amount", "Class", "Method" }, viewer.KnownPropertyNames);
+			Assert.Equal(new[] { "Amount", "Class", "Method" }, viewer.KnownPropertyNames.OrderBy(name => name));
 
 			var entries = (ObservableCollection<LogEntry>)viewer.ItemsSource!;
 			entries.Add(new LogEntry(LogEntryLevel.Info, "L", "m") { Properties = new Dictionary<string, object?> { ["Zone"] = 1 } });
 
-			Assert.Equal(new[] { "Amount", "Class", "Method", "Zone" }, viewer.KnownPropertyNames);
+			Assert.Equal(new[] { "Amount", "Class", "Method", "Zone" }, viewer.KnownPropertyNames.OrderBy(name => name));
 		});
 
 	[Fact]

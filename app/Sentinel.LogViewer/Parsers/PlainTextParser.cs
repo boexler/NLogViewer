@@ -265,12 +265,11 @@ public class PlainTextParser : IDisposable
 				message = line;
 			}
 
-			var entry = new LogEntry(level, loggerName, message)
+			return new LogEntry(level, loggerName, message)
 			{
-				TimeStamp = timestamp
+				TimeStamp = timestamp,
+				Properties = ExtraColumns(parts, format.ColumnMapping, columnNames)
 			};
-			var extra = ExtraColumns(parts, format.ColumnMapping, columnNames);
-			return extra.Count == 0 ? entry : new LogEntry(level, loggerName, message) { TimeStamp = timestamp, Properties = extra };
 		}
 		catch
 		{
