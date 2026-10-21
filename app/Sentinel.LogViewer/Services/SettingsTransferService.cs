@@ -52,7 +52,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		var settings = bundle.Settings;
 
 		// Values from a hand-edited file must not break the application.
-		settings.Ports = settings.Ports.Where(address => SettingsRules.TryGetUdpPort(address, out _)).ToList();
+		settings.Ports = settings.Ports.Where(address => SettingsRules.TryGetPort(address, out _)).ToList();
 		if (!SettingsRules.IsValidEntriesPerTab(settings.MaxLogEntriesPerTab))
 			settings.MaxLogEntriesPerTab = ConfigurationService.CreateDefaultConfiguration().MaxLogEntriesPerTab;
 		if (!string.IsNullOrEmpty(settings.Language) && !LocalizationService.AvailableLanguages.ContainsKey(settings.Language))

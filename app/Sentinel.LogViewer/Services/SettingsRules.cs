@@ -34,15 +34,20 @@ public static class SettingsRules
 			: SearchFields.Default;
 
 	/// <summary>
-	/// Reads the port of an address like <c>udp://0.0.0.0:4000</c>; only the port is used for listening
+	/// Reads the port of an address like <c>udp://0.0.0.0:4000</c> or <c>tcp://0.0.0.0:4000</c>; only the port is used for listening
 	/// </summary>
-	public static bool TryGetUdpPort(string? address, out int port)
+	public static bool TryGetPort(string? address, out int port)
 	{
 		port = 0;
-		if (!Uri.TryCreate(address?.Trim(), UriKind.Absolute, out var uri) || uri.Scheme != "udp" || uri.Host.Length == 0)
+		if (!Uri.TryCreate(address?.Trim(), UriKind.Absolute, out var uri) || uri.Scheme is not ("udp" or "tcp") || uri.Host.Length == 0)
 			return false;
 
 		port = uri.Port is >= 1 and <= 65535 ? uri.Port : 0;
 		return port != 0;
 	}
+
+	/// <summary>
+	/// The scheme of an address, <c>udp</c> or <c>tcp</c>; null when it is not an address
+	/// </summary>
+	public static string? SchemeOf(string? address) => Uri.TryCreate(address?.Trim(), UriKind.Absolute, out var uri) ? uri.Scheme : null;
 }

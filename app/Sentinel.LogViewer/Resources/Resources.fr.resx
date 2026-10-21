@@ -323,7 +323,7 @@
     <value>Supprimer le port</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Saisissez une adresse comme udp://0.0.0.0:4000 avec un port de 1 à 65535. Seul UDP est pris en charge pour l'instant.</value>
+    <value>Saisissez une adresse comme udp://0.0.0.0:4000 ou tcp://0.0.0.0:4000 avec un port de 1 à 65535.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ce port figure déjà dans la liste.</value>

@@ -323,7 +323,7 @@
     <value>Port eltávolítása</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal. Egyelőre csak az UDP támogatott.</value>
+    <value>Adjon meg egy címet, például udp://0.0.0.0:4000 vagy tcp://0.0.0.0:4000, 1 és 65535 közötti porttal.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ez a port már szerepel a listában.</value>

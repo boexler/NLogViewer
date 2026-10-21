@@ -127,6 +127,7 @@ public class SettingsViewModelTests : IDisposable
 
 	[Theory]
 	[InlineData("http://0.0.0.0:4000")]
+	[InlineData("tcp://0.0.0.0")]
 	[InlineData("udp://0.0.0.0")]
 	[InlineData("udp://0.0.0.0:70000")]
 	[InlineData("localhost")]
@@ -151,6 +152,21 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.True(ports.Items[1].HasError);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000", "udp://0.0.0.0:4001" }, _environment.Saved.Ports);
+	}
+
+	[Fact]
+	public void Ports_UdpAndTcpCanShareANumber_ButNotTwoTcpEntries()
+	{
+		var ports = _environment.CreateViewModel().Setting<PortListSettingViewModel>(PortsTitle);
+		ports.AddCommand.Execute(null);
+
+		ports.Items[1].Address = "tcp://0.0.0.0:4000";
+		Assert.False(ports.Items[1].HasError);
+		ports.AddCommand.Execute(null);
+		ports.Items[2].Address = "tcp://127.0.0.1:4000";
+
+		Assert.True(ports.Items[2].HasError);
+		Assert.Equal(new[] { "udp://0.0.0.0:4000", "tcp://0.0.0.0:4000", "udp://0.0.0.0:4001" }, _environment.Saved.Ports);
 	}
 
 	[Fact]
