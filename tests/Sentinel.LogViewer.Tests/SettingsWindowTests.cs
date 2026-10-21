@@ -106,7 +106,7 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
-	public void TheFontPreview_FollowsTheFontOfTheSettings_AndTheDropDownShowsTheSelectedFontInItsOwnTypeface()
+	public void TheListAppearance_IsOneCard_WhosePreviewFollowsEveryControl()
 	{
 		_context.RunOnSta(() =>
 		{
@@ -116,19 +116,56 @@ public class SettingsWindowTests
 			var window = ShowOffScreen(new SettingsWindow(viewModel));
 			try
 			{
-				var family = viewModel.Setting<ChoiceSettingViewModel>("Font of the log list");
-				family.Value = "Consolas";
-				viewModel.Setting<IntSettingViewModel>("Font size of the log list").Text = "20";
+				var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
+				var card = Descendants<SettingCard>(window).Single(candidate => candidate.Setting == look);
+				var boxes = Descendants<ComboBox>(card).ToList();
+				Assert.Equal(4, boxes.Count);
+				var (level, height, font, size) = (boxes[0], boxes[1], boxes[2], boxes[3]);
+				Assert.True(size.IsEditable);
+
+				TextBlock Message() => Descendants<TextBlock>(card).Single(text => text.Text == "Payment failed: timeout");
+				TextBlock LevelText() => Descendants<TextBlock>(card).Single(text => text.Text == "Error");
+				Image Symbol() => Descendants<Image>(card).Last();
+				var normalHeight = Symbol().Height;
+
+				// The controls change the settings, and the preview follows each of them.
+				level.SelectedValue = "SymbolAndText";
 				WpfTestHelper.Settle();
+				Assert.Equal(Visibility.Visible, LevelText().Visibility);
+				Assert.Equal(Visibility.Visible, Symbol().Visibility);
+				level.SelectedValue = "Text";
+				WpfTestHelper.Settle();
+				Assert.Equal(Visibility.Collapsed, Symbol().Visibility);
 
-				var preview = Descendants<SettingCard>(window).Single(card => card.Setting?.Title == "Preview");
-				var message = Descendants<TextBlock>(preview).Single(text => text.Text == "Payment failed: timeout");
-				Assert.Equal("Consolas", message.FontFamily.Source);
-				Assert.Equal(20, message.FontSize);
+				height.SelectedValue = "Compact";
+				WpfTestHelper.Settle();
+				Assert.True(Symbol().Height < normalHeight);
 
-				var combo = Descendants<ComboBox>(window).Single(box => ReferenceEquals(box.ItemsSource, family.Options));
-				var selected = Descendants<TextBlock>(combo).Single(text => text.Text == "Consolas");
-				Assert.Equal("Consolas", selected.FontFamily.Source);
+				font.SelectedValue = "Consolas";
+				WpfTestHelper.Settle();
+				Assert.Equal("Consolas", Message().FontFamily.Source);
+				Assert.Equal("Consolas", Descendants<TextBlock>(font).Single(text => text.Text == "Consolas").FontFamily.Source);
+
+				size.SelectedItem = "16";
+				WpfTestHelper.Settle();
+				Assert.Equal(16, Message().FontSize);
+				Assert.Equal(16, environment.Saved.ListFontSize);
+
+				size.Text = "18";
+				size.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.Equal(18, environment.Saved.ListFontSize);
+
+				size.Text = "5";
+				size.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.NotNull(look.Error);
+				Assert.Contains(Descendants<TextBlock>(card), text => text.Text == look.Error);
+
+				var saved = environment.Saved;
+				Assert.Equal(("Text", "Compact", "Consolas"), (saved.LevelDisplay, saved.RowHeight, saved.ListFontFamily));
 			}
 			finally
 			{

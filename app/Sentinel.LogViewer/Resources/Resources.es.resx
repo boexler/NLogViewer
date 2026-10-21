@@ -1300,12 +1300,6 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>En el árbol de loggers: mostrar solo un logger o todos, expandir o contraer todo</value>
   </data>
-  <data name="Settings_ListFontPreview" xml:space="preserve">
-    <value>Vista previa</value>
-  </data>
-  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
-    <value>Así se ve la lista de logs con esta fuente y este tamaño.</value>
-  </data>
   <data name="Settings_LevelDisplay" xml:space="preserve">
     <value>Mostrar el nivel como</value>
   </data>
@@ -1332,6 +1326,12 @@
   </data>
   <data name="Settings_RowHeight_Compact" xml:space="preserve">
     <value>Compacta</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>Aspecto de la lista de logs</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Nivel, altura de fila, fuente y tamaño de la lista de logs, con vista previa del resultado.</value>
   </data>
 </root>
 

@@ -249,10 +249,10 @@ public class SettingsViewModelTests : IDisposable
 		Assert.Null(viewModel.SelectedCategory);
 		Assert.True(viewModel.IsSearching);
 
-		// Case is ignored; the title of the ports and the descriptions of the auto start and of the level display contain "port".
+		// Case is ignored; the title of the ports and the description of the auto start contain "port".
 		viewModel.SearchText = "PORT";
-		Assert.Equal(new[] { AutoStartTitle, PortsTitle, "Show level as" }, SearchResultTitles(viewModel));
-		Assert.Equal(new[] { "Receiving", "Appearance" }, viewModel.PageItems.OfType<SettingsSectionLabel>().Select(label => label.Title));
+		Assert.Equal(new[] { AutoStartTitle, PortsTitle }, SearchResultTitles(viewModel));
+		Assert.Single(viewModel.PageItems.OfType<SettingsSectionLabel>());
 	}
 
 	[Fact]
@@ -426,62 +426,85 @@ public class SettingsViewModelTests : IDisposable
 		Assert.Equal("Warn", _environment.Saved.TrayNotifyLevel);
 	}
 
+
 	[Fact]
-	public void TheLookOfTheRows_HasDefaults_IsSaved_AndIsReset()
+	public void TheListAppearance_HasDefaults_IsSaved_RejectsAnInvalidSize_AndIsReset()
 	{
 		var viewModel = _environment.CreateViewModel();
-		var level = viewModel.Setting<ChoiceSettingViewModel>("Show level as");
-		var height = viewModel.Setting<ChoiceSettingViewModel>("Row height");
-		Assert.Equal("Symbol", level.Value);
-		Assert.Equal("Normal", height.Value);
-		Assert.Equal(new[] { "Symbol", "Text", "SymbolAndText" }, level.Options.Select(option => option.Value));
-		Assert.Equal(new[] { "Normal", "Compact" }, height.Options.Select(option => option.Value));
+		var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
+		Assert.Equal("Symbol", look.Level);
+		Assert.Equal("Normal", look.RowHeight);
+		Assert.Equal(string.Empty, look.Family);
+		Assert.Equal("12", look.SizeText);
+		Assert.Equal(new[] { "Symbol", "Text", "SymbolAndText" }, look.LevelOptions.Select(option => option.Value));
+		Assert.Equal(new[] { "Normal", "Compact" }, look.RowHeightOptions.Select(option => option.Value));
+		Assert.Contains("Consolas", look.FontOptions.Select(option => option.Value));
 
-		level.Value = "SymbolAndText";
-		height.Value = "Compact";
-		Assert.Equal("SymbolAndText", _environment.Saved.LevelDisplay);
-		Assert.Equal("Compact", _environment.Saved.RowHeight);
+		// Every font is listed in its own typeface; the default entry has none.
+		Assert.Null(look.FontOptions[0].FontFamily);
+		Assert.Equal("Consolas", look.FontOptions.Single(option => option.Value == "Consolas").FontFamily);
+
+		look.Level = "SymbolAndText";
+		look.RowHeight = "Compact";
+		look.Family = "Consolas";
+		look.SizeText = "15";
+		var saved = _environment.Saved;
+		Assert.Equal(("SymbolAndText", "Compact", "Consolas", 15), (saved.LevelDisplay, saved.RowHeight, saved.ListFontFamily, saved.ListFontSize));
+
+		look.SizeText = "5";
+		Assert.NotNull(look.Error);
+		Assert.Equal(15, _environment.Saved.ListFontSize);
+		look.SizeText = "twelve";
+		Assert.NotNull(look.Error);
+		look.SelectedSize = "16";
+		Assert.Null(look.Error);
+		Assert.Equal(16, _environment.Saved.ListFontSize);
+		Assert.Equal("16", look.SelectedSize);
+		look.SizeText = "17";
+		Assert.Null(look.SelectedSize);
 
 		viewModel.SelectedCategory = viewModel.Category("Appearance");
 		viewModel.ResetCategoryCommand.Execute(null);
-		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
-		Assert.Equal("Normal", _environment.Saved.RowHeight);
+		saved = _environment.Saved;
+		Assert.Equal(("Symbol", "Normal", string.Empty, 12), (saved.LevelDisplay, saved.RowHeight, saved.ListFontFamily, saved.ListFontSize));
+		Assert.Equal("12", look.SizeText);
 	}
 
 	[Fact]
-	public void TheFontOfTheList_HasDefaults_IsSaved_RejectsAnInvalidSize_AndIsReset()
+	public void EveryChangeOfTheListAppearance_ChangesThePreview()
 	{
-		var viewModel = _environment.CreateViewModel();
-		var family = viewModel.Setting<ChoiceSettingViewModel>("Font of the log list");
-		var size = viewModel.Setting<IntSettingViewModel>("Font size of the log list");
-		Assert.Equal(string.Empty, family.Value);
-		Assert.Equal("12", size.Text);
-		Assert.Contains("Consolas", family.Options.Select(option => option.Value));
+		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+		var changed = new List<string?>();
+		look.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+		var row = () => look.Rows[1];
 
-		// Every font is listed in its own typeface; the default entry has none.
-		Assert.Null(family.Options[0].FontFamily);
-		Assert.Equal("Consolas", family.Options.Single(option => option.Value == "Consolas").FontFamily);
+		// The level: symbol, text, or both.
+		Assert.Equal((true, false), (row().ShowSymbol, row().ShowText));
+		look.Level = "Text";
+		Assert.Equal((false, true), (row().ShowSymbol, row().ShowText));
+		look.Level = "SymbolAndText";
+		Assert.Equal((true, true), (row().ShowSymbol, row().ShowText));
 
-		var preview = viewModel.Setting<FontPreviewSettingViewModel>("Preview");
-		Assert.Equal(System.Windows.SystemFonts.MessageFontFamily.Source, preview.FontFamily.Source);
-		Assert.Equal(12, preview.FontSize);
+		// The row height: padding and symbol.
+		var normal = (row().Padding, row().IconHeight);
+		look.RowHeight = "Compact";
+		Assert.NotEqual(normal, (row().Padding, row().IconHeight));
+		Assert.True(row().Padding.Top < normal.Padding.Top && row().IconHeight < normal.IconHeight);
 
-		family.Value = "Consolas";
-		size.Text = "15";
-		Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
-		Assert.Equal(15, _environment.Saved.ListFontSize);
-		Assert.Equal("Consolas", preview.FontFamily.Source);
-		Assert.Equal(15, preview.FontSize);
+		// The font family and the size, typed and chosen.
+		var family = look.FontFamily.Source;
+		look.Family = "Consolas";
+		Assert.NotEqual(family, look.FontFamily.Source);
+		Assert.Equal("Consolas", look.FontFamily.Source);
+		look.SizeText = "20";
+		Assert.Equal(20, look.FontSize);
+		look.SelectedSize = "9";
+		Assert.Equal(9, look.FontSize);
 
-		size.Text = "5";
-		Assert.True(size.HasError);
-		Assert.Equal(15, _environment.Saved.ListFontSize);
-
-		viewModel.SelectedCategory = viewModel.Category("Appearance");
-		viewModel.ResetCategoryCommand.Execute(null);
-		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
-		Assert.Equal(12, _environment.Saved.ListFontSize);
-		Assert.Equal(12, preview.FontSize);
+		// Each change tells the card to read everything again, and so does a reload, e.g. after an import.
+		Assert.Equal(6, changed.Count(name => name == string.Empty));
+		look.Reload();
+		Assert.Equal(7, changed.Count(name => name == string.Empty));
 	}
 
 	[Fact]

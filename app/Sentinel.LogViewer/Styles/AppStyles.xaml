@@ -261,12 +261,22 @@
                                 </ControlTemplate>
                             </ToggleButton.Template>
                         </ToggleButton>
-                        <ContentPresenter Margin="{TemplateBinding Padding}" IsHitTestVisible="False"
+                        <ContentPresenter x:Name="ContentSite" Margin="{TemplateBinding Padding}" IsHitTestVisible="False"
                                           Content="{TemplateBinding SelectionBoxItem}"
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                           VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <!-- For an editable drop-down: type a value or choose one; the arrow keeps its room to open the list -->
+                        <TextBox x:Name="PART_EditableTextBox" Visibility="Collapsed" Focusable="True" Background="Transparent"
+                                 Margin="{TemplateBinding Padding}" Padding="0" BorderThickness="0" HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}">
+                            <TextBox.Template>
+                                <ControlTemplate TargetType="TextBox">
+                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="False" Margin="0,0,24,0"/>
+                                </ControlTemplate>
+                            </TextBox.Template>
+                        </TextBox>
                         <TextBlock Text="&#xE70D;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="9" IsHitTestVisible="False"
                                    Foreground="{DynamicResource ThemeTextSecondary}" HorizontalAlignment="Right"
                                    VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -288,6 +298,10 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource ThemeTextMuted}"/>
+                        </Trigger>
+                        <Trigger Property="IsEditable" Value="True">
+                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

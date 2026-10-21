@@ -1300,12 +1300,6 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>Pe arborele de loggeri: arată un singur logger sau pe toți, extinde sau restrânge tot</value>
   </data>
-  <data name="Settings_ListFontPreview" xml:space="preserve">
-    <value>Previzualizare</value>
-  </data>
-  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
-    <value>Așa arată lista de loguri cu acest font și această dimensiune.</value>
-  </data>
   <data name="Settings_LevelDisplay" xml:space="preserve">
     <value>Afișează nivelul ca</value>
   </data>
@@ -1332,6 +1326,12 @@
   </data>
   <data name="Settings_RowHeight_Compact" xml:space="preserve">
     <value>Compactă</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>Aspectul listei de loguri</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Nivelul, înălțimea rândurilor, fontul și dimensiunea listei de loguri, cu previzualizarea rezultatului.</value>
   </data>
 </root>
 

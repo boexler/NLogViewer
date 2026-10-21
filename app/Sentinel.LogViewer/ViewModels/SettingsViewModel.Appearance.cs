@@ -84,79 +84,58 @@ namespace Sentinel.LogViewer.ViewModels
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE81E",
-                Text("Settings_LevelDisplay", "Show level as"),
-                Text("Settings_LevelDisplay_Description", "How the level of an entry is shown in the log list: as a symbol, as text, or both. Text helps when rows are copied or exported, and when colours are hard to tell apart."),
-                needsRestart: false,
-                options: new[]
+            yield return new ListLookSettingViewModel(AppearanceId, "\uE8D2",
+                Text("Settings_ListAppearance", "List appearance"),
+                Text("Settings_ListAppearance_Description", "Level, row height, font and size of the log list, with a preview of the result."),
+                levelOptions: new[]
                 {
                     new ChoiceOption(nameof(Wpf.LevelDisplayMode.Symbol), Text("Settings_LevelDisplay_Symbol", "Symbol")),
                     new ChoiceOption(nameof(Wpf.LevelDisplayMode.Text), Text("Settings_LevelDisplay_Text", "Text")),
                     new ChoiceOption(nameof(Wpf.LevelDisplayMode.SymbolAndText), Text("Settings_LevelDisplay_SymbolAndText", "Symbol and text"))
                 },
-                get: () => SettingsRules.ParseLevelDisplay(_configuration.LevelDisplay).ToString(),
-                set: mode =>
-                {
-                    _configuration.LevelDisplay = mode;
-                    Commit();
-                },
-                getDefault: () => nameof(Wpf.LevelDisplayMode.Symbol));
-
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8A1",
-                Text("Settings_RowHeight", "Row height"),
-                Text("Settings_RowHeight_Description", "Compact rows show more entries on the screen."),
-                needsRestart: false,
-                options: new[]
+                rowHeightOptions: new[]
                 {
                     new ChoiceOption(nameof(Wpf.RowHeightMode.Normal), Text("Settings_RowHeight_Normal", "Normal")),
                     new ChoiceOption(nameof(Wpf.RowHeightMode.Compact), Text("Settings_RowHeight_Compact", "Compact"))
                 },
-                get: () => SettingsRules.ParseRowHeight(_configuration.RowHeight).ToString(),
-                set: mode =>
+                fontOptions: new[] { new ChoiceOption(string.Empty, Text("Settings_ListFontFamily_Default", "Default (like the rest of the application)")) }
+                    .Concat(System.Windows.Media.Fonts.SystemFontFamilies.Select(family => family.Source).OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
+                        .Select(name => new ChoiceOption(name, name) { FontSource = () => ShowsInItsOwnFont(name) ? name : null })).ToList(),
+                getLevel: () => SettingsRules.ParseLevelDisplay(_configuration.LevelDisplay).ToString(),
+                setLevel: mode =>
+                {
+                    _configuration.LevelDisplay = mode;
+                    Commit();
+                },
+                getRowHeight: () => SettingsRules.ParseRowHeight(_configuration.RowHeight).ToString(),
+                setRowHeight: mode =>
                 {
                     _configuration.RowHeight = mode;
                     Commit();
                 },
-                getDefault: () => nameof(Wpf.RowHeightMode.Normal));
-
-            FontPreviewSettingViewModel? fontPreview = null;
-
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8D2",
-                Text("Settings_ListFontFamily", "Font of the log list"),
-                Text("Settings_ListFontFamily_Description", "The font of the entries and of the column headers in the log list, e.g. a monospaced font such as Consolas."),
-                needsRestart: false,
-                options: new[] { new ChoiceOption(string.Empty, Text("Settings_ListFontFamily_Default", "Default (like the rest of the application)")) }
-                    .Concat(System.Windows.Media.Fonts.SystemFontFamilies.Select(family => family.Source).OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
-                        .Select(name => new ChoiceOption(name, name) { FontSource = () => ShowsInItsOwnFont(name) ? name : null })).ToList(),
-                get: () => _configuration.ListFontFamily,
-                set: family =>
+                getFamily: () => _configuration.ListFontFamily,
+                setFamily: family =>
                 {
                     _configuration.ListFontFamily = family;
                     Commit();
-                    fontPreview?.Reload();
                 },
-                getDefault: () => string.Empty);
-
-            yield return new IntSettingViewModel(AppearanceId, "\uE8E9",
-                Text("Settings_ListFontSize", "Font size of the log list"),
-                Text("Settings_ListFontSize_Description", "The size of the text in the log list. Ctrl+mouse wheel and Ctrl+Plus / Ctrl+Minus change it for the current session, Ctrl+0 goes back to this size; the status bar then offers to save the new size here."),
-                get: () => _configuration.ListFontSize,
-                set: value =>
+                getSize: () => _configuration.ListFontSize,
+                setSize: size =>
                 {
-                    _configuration.ListFontSize = value;
+                    _configuration.ListFontSize = size;
                     Commit();
-                    fontPreview?.Reload();
                 },
-                getDefault: () => SettingsRules.DefaultListFontSize,
-                isValid: SettingsRules.IsValidListFontSize,
-                invalidMessage: string.Format(CultureInfo.CurrentCulture,
-                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize));
-
-            fontPreview = new FontPreviewSettingViewModel(AppearanceId, "\uE7B3",
-                Text("Settings_ListFontPreview", "Preview"),
-                Text("Settings_ListFontPreview_Description", "How the log list looks with this font and size."),
-                () => _configuration.ListFontFamily, () => _configuration.ListFontSize);
-            yield return fontPreview;
+                invalidSizeMessage: string.Format(CultureInfo.CurrentCulture,
+                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize),
+                reset: () =>
+                {
+                    var defaults = ConfigurationService.CreateDefaultConfiguration();
+                    _configuration.LevelDisplay = defaults.LevelDisplay;
+                    _configuration.RowHeight = defaults.RowHeight;
+                    _configuration.ListFontFamily = defaults.ListFontFamily;
+                    _configuration.ListFontSize = defaults.ListFontSize;
+                    Commit();
+                });
 
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),

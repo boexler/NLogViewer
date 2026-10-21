@@ -1300,12 +1300,6 @@
   <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
     <value>A logger-fán: egy logger vagy az összes megjelenítése, az összes kibontása vagy összecsukása</value>
   </data>
-  <data name="Settings_ListFontPreview" xml:space="preserve">
-    <value>Előnézet</value>
-  </data>
-  <data name="Settings_ListFontPreview_Description" xml:space="preserve">
-    <value>Így néz ki a naplólista ezzel a betűtípussal és mérettel.</value>
-  </data>
   <data name="Settings_LevelDisplay" xml:space="preserve">
     <value>A szint megjelenítése</value>
   </data>
@@ -1332,6 +1326,12 @@
   </data>
   <data name="Settings_RowHeight_Compact" xml:space="preserve">
     <value>Kompakt</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>A naplólista megjelenése</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>A naplólista szintjének megjelenítése, sormagassága, betűtípusa és mérete, az eredmény előnézetével.</value>
   </data>
 </root>
 
