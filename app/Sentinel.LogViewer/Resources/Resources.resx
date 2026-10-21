@@ -1093,5 +1093,29 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Do you really want to close all tabs to the right of this one?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Font of the log list</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>The font of the entries and of the column headers in the log list, e.g. a monospaced font such as Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Default (like the rest of the application)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Font size of the log list</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>The size of the text in the log list. Ctrl+mouse wheel and Ctrl+Plus / Ctrl+Minus change it for the current session, Ctrl+0 goes back to this size; the status bar then offers to save the new size here.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Font size {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Save as default</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>
 

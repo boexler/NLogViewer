@@ -41,6 +41,23 @@ namespace Sentinel.LogViewer
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenSettingsCommand,
                 new KeyGesture(Key.OemComma, ModifierKeys.Control)));
 
+            // Zoom of the log list for this session
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control | ModifierKeys.Shift));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.Add, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomOutCommand, Key.OemMinus, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomOutCommand, Key.Subtract, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ResetFontZoomCommand, Key.D0, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ResetFontZoomCommand, Key.NumPad0, ModifierKeys.Control));
+            PreviewMouseWheel += (_, e) =>
+            {
+                if (Keyboard.Modifiers != ModifierKeys.Control)
+                    return;
+
+                (e.Delta > 0 ? _viewModel.ZoomInCommand : _viewModel.ZoomOutCommand).Execute(null);
+                e.Handled = true;
+            };
+
             // Tabs as in a browser
             this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.W, ModifierKeys.Control));
             this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.F4, ModifierKeys.Control));

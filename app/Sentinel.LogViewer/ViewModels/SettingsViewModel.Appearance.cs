@@ -77,6 +77,35 @@ namespace Sentinel.LogViewer.ViewModels
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8D2",
+                Text("Settings_ListFontFamily", "Font of the log list"),
+                Text("Settings_ListFontFamily_Description", "The font of the entries and of the column headers in the log list, e.g. a monospaced font such as Consolas."),
+                needsRestart: false,
+                options: new[] { new ChoiceOption(string.Empty, Text("Settings_ListFontFamily_Default", "Default (like the rest of the application)")) }
+                    .Concat(System.Windows.Media.Fonts.SystemFontFamilies.Select(family => family.Source).OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
+                        .Select(name => new ChoiceOption(name, name))).ToList(),
+                get: () => _configuration.ListFontFamily,
+                set: family =>
+                {
+                    _configuration.ListFontFamily = family;
+                    Commit();
+                },
+                getDefault: () => string.Empty);
+
+            yield return new IntSettingViewModel(AppearanceId, "\uE8E9",
+                Text("Settings_ListFontSize", "Font size of the log list"),
+                Text("Settings_ListFontSize_Description", "The size of the text in the log list. Ctrl+mouse wheel and Ctrl+Plus / Ctrl+Minus change it for the current session, Ctrl+0 goes back to this size; the status bar then offers to save the new size here."),
+                get: () => _configuration.ListFontSize,
+                set: value =>
+                {
+                    _configuration.ListFontSize = value;
+                    Commit();
+                },
+                getDefault: () => SettingsRules.DefaultListFontSize,
+                isValid: SettingsRules.IsValidListFontSize,
+                invalidMessage: string.Format(CultureInfo.CurrentCulture,
+                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize));
+
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),
                 Text("Settings_Group_LoggerTree_Subtitle", "Default view for new tabs"));

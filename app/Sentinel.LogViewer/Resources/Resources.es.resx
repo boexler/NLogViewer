@@ -1090,5 +1090,29 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>¿Realmente desea cerrar todas las pestañas a la derecha de esta?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Fuente de la lista de logs</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>La fuente de las entradas y de los encabezados de columna de la lista de logs, p. ej. una fuente monoespaciada como Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Predeterminada (como el resto de la aplicación)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Tamaño de fuente de la lista de logs</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>El tamaño del texto de la lista de logs. Ctrl+rueda del ratón y Ctrl+Más / Ctrl+Menos lo cambian durante la sesión actual, Ctrl+0 vuelve a este tamaño; la barra de estado ofrece entonces guardar aquí el nuevo tamaño.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Tamaño de fuente {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Guardar como predeterminado</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Restablecer</value>
+  </data>
 </root>
 

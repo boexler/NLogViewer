@@ -513,6 +513,8 @@
                             <ListView
                                 x:Name="PART_ListView"
                                 Grid.Column="3"
+                                FontFamily="{Binding ListFontFamily, RelativeSource={RelativeSource TemplatedParent}}"
+                                FontSize="{Binding ListFontSize, RelativeSource={RelativeSource TemplatedParent}}"
                                 ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
                                 BorderThickness="0"
                                 ScrollViewer.CanContentScroll="True"

@@ -61,6 +61,9 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		ApplicationTabService.Sanitize(settings);
 		if (!SettingsRules.IsValidLoggerTreeWidth(settings.LoggerTreeWidth))
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+		if (!SettingsRules.IsValidListFontSize(settings.ListFontSize))
+			settings.ListFontSize = SettingsRules.DefaultListFontSize;
+		settings.ListFontFamily ??= string.Empty;
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
 		settings.Columns = Wpf.LogColumns.Normalize(settings.Columns);
 		FilterPresetService.Sanitize(settings);

@@ -1090,5 +1090,29 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Voulez-vous vraiment fermer tous les onglets à droite de celui-ci ?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Police de la liste des logs</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>La police des entrées et des en-têtes de colonnes de la liste des logs, par exemple une police à chasse fixe comme Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Par défaut (comme le reste de l'application)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Taille de police de la liste des logs</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>La taille du texte de la liste des logs. Ctrl+molette et Ctrl+Plus / Ctrl+Moins la modifient pour la session en cours, Ctrl+0 revient à cette taille ; la barre d'état propose alors d'enregistrer ici la nouvelle taille.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Taille de police {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Enregistrer par défaut</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
 </root>
 

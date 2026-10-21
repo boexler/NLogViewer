@@ -128,6 +128,9 @@ namespace Sentinel.LogViewer.Services
                         ApplicationTabService.Sanitize(config);
                         if (!SettingsRules.IsValidLoggerTreeWidth(config.LoggerTreeWidth))
                             config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+                        if (!SettingsRules.IsValidListFontSize(config.ListFontSize))
+                            config.ListFontSize = SettingsRules.DefaultListFontSize;
+                        config.ListFontFamily ??= string.Empty;
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
                         config.Columns = Wpf.LogColumns.Normalize(config.Columns);
                         FilterPresetService.Sanitize(config);
@@ -219,6 +222,12 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
         public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
+
+        /// <summary>The font family of the log list; empty is the font of the application.</summary>
+        public string ListFontFamily { get; set; } = string.Empty;
+
+        /// <summary>The font size of the log list.</summary>
+        public int ListFontSize { get; set; } = SettingsRules.DefaultListFontSize;
 
         /// <summary>The fields that the filter and the search of a new tab look into, as the names of <see cref="Core.SearchFields"/> (default: Message and logger name).</summary>
         public string SearchFields { get; set; } = nameof(Core.SearchFields.Default);

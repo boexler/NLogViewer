@@ -53,6 +53,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private bool _isLoading;
 	private string _loadingProgress = string.Empty;
 	private TimeStampFormat _defaultTimeStampFormat;
+	private string _listFontFamilyName = string.Empty;
+	private int _listFontSize = SettingsRules.DefaultListFontSize;
+	private int _fontZoom;
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -119,6 +122,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
 		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
 		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
+		ZoomInCommand = new RelayCommand(() => Zoom(1));
+		ZoomOutCommand = new RelayCommand(() => Zoom(-1));
+		ResetFontZoomCommand = new RelayCommand(() => Zoom(0));
+		SaveFontZoomCommand = new RelayCommand(SaveFontZoom);
 		SelectTabCommand = new RelayCommand<int>(SelectTab, number => LogTabs.Count > 0 && number is >= 1 and <= 9);
 		ToggleTakeOverFiltersCommand = new RelayCommand<LogTabViewModel>(ToggleTakeOverFilters, tab => tab?.SenderKey != null);
 		RemoveTakenOverFiltersCommand = new RelayCommand<LogTabViewModel>(RemoveTakenOverFilters);
@@ -187,6 +194,55 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
+	}
+
+	/// <summary>The font family of the log list; the font of the application when none is set</summary>
+	public System.Windows.Media.FontFamily ListFontFamily =>
+		string.IsNullOrEmpty(_listFontFamilyName) ? System.Windows.SystemFonts.MessageFontFamily : new System.Windows.Media.FontFamily(_listFontFamilyName);
+
+	private int EffectiveFontSize => Math.Clamp(_listFontSize + _fontZoom, SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize);
+
+	/// <summary>The font size of the log list: the saved one and what the user zoomed in this session</summary>
+	public double ListFontSize => EffectiveFontSize;
+
+	/// <summary>Whether the size of this session differs from the saved one, which the status bar offers to save</summary>
+	public bool IsFontZoomed => EffectiveFontSize != _listFontSize;
+
+	public string FontZoomText => string.Format(CultureInfo.CurrentCulture, _localizationService.GetString("Zoom_FontSize", "Font size {0}"), EffectiveFontSize);
+
+	/// <summary>Zooms the log list for this session</summary>
+	public ICommand ZoomInCommand { get; }
+	public ICommand ZoomOutCommand { get; }
+
+	/// <summary>Goes back to the saved size</summary>
+	public ICommand ResetFontZoomCommand { get; }
+
+	/// <summary>Saves the size of this session as the font size of the settings</summary>
+	public ICommand SaveFontZoomCommand { get; }
+
+	/// <param name="step">1 or -1 to zoom, 0 to go back to the saved size</param>
+	private void Zoom(int step)
+	{
+		_fontZoom = step == 0 ? 0 : Math.Clamp(_listFontSize + _fontZoom + step, SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize) - _listFontSize;
+		NotifyFont();
+	}
+
+	private void SaveFontZoom()
+	{
+		var config = _configService.LoadConfiguration();
+		config.ListFontSize = EffectiveFontSize;
+		_configService.SaveConfiguration(config);
+		_listFontSize = config.ListFontSize;
+		_fontZoom = 0;
+		NotifyFont();
+	}
+
+	private void NotifyFont()
+	{
+		OnPropertyChanged(nameof(ListFontFamily));
+		OnPropertyChanged(nameof(ListFontSize));
+		OnPropertyChanged(nameof(IsFontZoomed));
+		OnPropertyChanged(nameof(FontZoomText));
 	}
 
 	/// <summary>
@@ -1005,6 +1061,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
+		_listFontFamilyName = config.ListFontFamily;
+		_listFontSize = config.ListFontSize;
+		_fontZoom = 0;
+		NotifyFont();
 		_udpReceiverService.Configure(config.Ports);
 		_ignoreRules = config.IgnoreRules.ToArray();
 

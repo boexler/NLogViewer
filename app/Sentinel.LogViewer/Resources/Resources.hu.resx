@@ -1090,6 +1090,30 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Valóban bezárja az összes lapot ettől jobbra?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>A naplólista betűtípusa</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>A naplólista bejegyzéseinek és oszlopfejléceinek betűtípusa, pl. egy fix szélességű betűtípus, például a Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Alapértelmezett (mint az alkalmazás többi része)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>A naplólista betűmérete</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>A naplólista szövegének mérete. A Ctrl+egérgörgő és a Ctrl+Plusz / Ctrl+Mínusz az aktuális munkamenetre módosítja, a Ctrl+0 visszaáll erre a méretre; az állapotsor ilyenkor felajánlja az új méret mentését ide.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Betűméret: {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Mentés alapértelmezettként</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Visszaállítás</value>
+  </data>
 </root>
 
 

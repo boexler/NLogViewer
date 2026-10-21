@@ -1090,5 +1090,29 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Möchten Sie wirklich alle Tabs rechts von diesem schließen?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Schrift der Logliste</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>Die Schriftart der Einträge und der Spaltenköpfe in der Logliste, z. B. eine Festbreitenschrift wie Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Standard (wie der Rest der Anwendung)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Schriftgröße der Logliste</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>Die Größe des Texts in der Logliste. Strg+Mausrad und Strg+Plus / Strg+Minus ändern sie für die laufende Sitzung, Strg+0 stellt diese Größe wieder her; die Statusleiste bietet dann an, die neue Größe hier zu speichern.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Schriftgröße {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Als Standard speichern</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
 </root>
 

@@ -410,6 +410,31 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheFontOfTheList_HasDefaults_IsSaved_RejectsAnInvalidSize_AndIsReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var family = viewModel.Setting<ChoiceSettingViewModel>("Font of the log list");
+		var size = viewModel.Setting<IntSettingViewModel>("Font size of the log list");
+		Assert.Equal(string.Empty, family.Value);
+		Assert.Equal("12", size.Text);
+		Assert.Contains("Consolas", family.Options.Select(option => option.Value));
+
+		family.Value = "Consolas";
+		size.Text = "15";
+		Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
+		Assert.Equal(15, _environment.Saved.ListFontSize);
+
+		size.Text = "5";
+		Assert.True(size.HasError);
+		Assert.Equal(15, _environment.Saved.ListFontSize);
+
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
+		Assert.Equal(12, _environment.Saved.ListFontSize);
+	}
+
+	[Fact]
 	public void TheLoggerTreeSettings_ShareOneCard_WithTheHeadingOfTheGroup()
 	{
 		var viewModel = _environment.CreateViewModel();

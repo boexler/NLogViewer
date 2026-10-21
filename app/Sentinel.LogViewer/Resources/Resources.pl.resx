@@ -1090,6 +1090,30 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Czy na pewno chcesz zamknąć wszystkie karty po prawej stronie tej karty?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Czcionka listy logów</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>Czcionka wpisów i nagłówków kolumn na liście logów, np. czcionka o stałej szerokości, taka jak Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Domyślna (jak reszta aplikacji)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Rozmiar czcionki listy logów</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>Rozmiar tekstu na liście logów. Ctrl+kółko myszy oraz Ctrl+Plus / Ctrl+Minus zmieniają go na czas bieżącej sesji, Ctrl+0 wraca do tego rozmiaru; pasek stanu proponuje wtedy zapisanie nowego rozmiaru tutaj.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Rozmiar czcionki {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Zapisz jako domyślny</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Resetuj</value>
+  </data>
 </root>
 
 

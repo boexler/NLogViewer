@@ -115,6 +115,8 @@
                     x:Name="LogViewer1"
                     Tag="{Binding ElementName=LogViewer1}"
                     DefaultTimeStampFormat="{Binding DataContext.DefaultTimeStampFormat, RelativeSource={RelativeSource AncestorType=Window}}"
+                    ListFontFamily="{Binding DataContext.ListFontFamily, RelativeSource={RelativeSource AncestorType=Window}}"
+                    ListFontSize="{Binding DataContext.ListFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
                     TraceBackground="{DynamicResource LogTraceBackground}"
                     TraceForeground="{DynamicResource LogTraceForeground}"
                     DebugBackground="{DynamicResource LogDebugBackground}"
@@ -450,6 +452,19 @@
             <!-- Timestamp and language (Right) -->
             <StatusBarItem Grid.Column="2">
                 <StackPanel Orientation="Horizontal">
+                    <!-- Zoomed with Ctrl+wheel: offers to keep the size -->
+                    <TextBlock VerticalAlignment="Center" Margin="0,0,14,0"
+                               Visibility="{Binding IsFontZoomed, Converter={StaticResource ThemeBoolToVisibility}}">
+                        <Run Text="{Binding FontZoomText, Mode=OneWay}"/>
+                        <Run Text="  "/>
+                        <Hyperlink Command="{Binding SaveFontZoomCommand}">
+                            <Run Text="{helpers:Resource Key=Zoom_Save, DefaultValue=Save as default}"/>
+                        </Hyperlink>
+                        <Run Text="  "/>
+                        <Hyperlink Command="{Binding ResetFontZoomCommand}">
+                            <Run Text="{helpers:Resource Key=Zoom_Reset, DefaultValue=Reset}"/>
+                        </Hyperlink>
+                    </TextBlock>
                     <TextBlock VerticalAlignment="Center" Margin="0,0,14,0">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">

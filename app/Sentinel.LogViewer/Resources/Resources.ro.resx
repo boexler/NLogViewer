@@ -1090,6 +1090,30 @@
   <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
     <value>Sigur doriți să închideți toate filele din dreapta acesteia?</value>
   </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Fontul listei de loguri</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>Fontul intrărilor și al antetelor de coloană din lista de loguri, de ex. un font monospațiat precum Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Implicit (ca restul aplicației)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Dimensiunea fontului listei de loguri</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>Dimensiunea textului din lista de loguri. Ctrl+rotița mouse-ului și Ctrl+Plus / Ctrl+Minus o modifică pentru sesiunea curentă, Ctrl+0 revine la această dimensiune; bara de stare oferă apoi salvarea noii dimensiuni aici.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Dimensiune font {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Salvează ca implicit</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Resetează</value>
+  </data>
 </root>
 
 

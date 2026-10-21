@@ -541,6 +541,46 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheFontOfTheList_IsZoomedForTheSession_AndTheStatusBarOffersToSaveIt()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.ListFontFamily = "Consolas";
+			configuration.ListFontSize = 14;
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Send(session, App("(100)"));
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.Equal(14, viewer.ListFontSize);
+			Assert.Equal("Consolas", viewer.ListFontFamily.Source);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			Press(session, Key.OemPlus, ModifierKeys.Control);
+			Press(session, Key.Add, ModifierKeys.Control);
+			Assert.Equal(16, viewer.ListFontSize);
+			Assert.True(session.ViewModel.IsFontZoomed);
+			Assert.Equal(14, _environment.Saved.ListFontSize);
+
+			Press(session, Key.D0, ModifierKeys.Control);
+			Assert.Equal(14, viewer.ListFontSize);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			Press(session, Key.OemMinus, ModifierKeys.Control);
+			Press(session, Key.Subtract, ModifierKeys.Control);
+			session.ViewModel.SaveFontZoomCommand.Execute(null);
+			Assert.Equal(12, _environment.Saved.ListFontSize);
+			Assert.Equal(12, viewer.ListFontSize);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			for (var i = 0; i < 50; i++)
+				session.ViewModel.ZoomOutCommand.Execute(null);
+
+			Assert.Equal(6, viewer.ListFontSize);
+		});
+	}
+
+	[Fact]
 	public void TheSourcesOfTheStatusBar_FollowTheAddressesOfTheSettings()
 	{
 		_context.RunOnSta(() =>

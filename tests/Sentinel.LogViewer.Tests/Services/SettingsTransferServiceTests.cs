@@ -93,6 +93,27 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheFontOfTheList_IsExportedAndImported_AndAnInvalidSizeBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.ListFontFamily = "Consolas";
+		configuration.ListFontSize = 15;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
+		Assert.Equal(15, _environment.Saved.ListFontSize);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "ListFontSize": 999, "ListFontFamily": null } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal(12, _environment.Saved.ListFontSize);
+		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
+	}
+
+	[Fact]
 	public void TheLoggerTreeSettings_AreExportedAndImported_AndAnInvalidWidthBecomesTheDefault()
 	{
 		var file = _environment.PathOf("export.json");
