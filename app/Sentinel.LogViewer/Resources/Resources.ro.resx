@@ -1078,6 +1078,15 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>Ignorați aplicația „{0}” de la adresa IP {1}? Fila ei se închide, iar jurnalele ei vor fi ignorate de acum înainte.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>GitHub permite doar un număr limitat de solicitări pe oră. Încercați din nou după {0}.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>GitHub permite doar un număr limitat de solicitări pe oră. Încercați din nou mai târziu.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>Fișierele acestei versiuni nu au fost încă încărcate. Încercați din nou peste câteva minute.</value>
+  </data>
 </root>
 
 

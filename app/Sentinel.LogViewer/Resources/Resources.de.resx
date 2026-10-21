@@ -1078,5 +1078,14 @@
   <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
     <value>Die Anwendung „{0}“ von der IP-Adresse {1} ignorieren? Ihr Tab wird geschlossen, und ihre Logs werden künftig verworfen.</value>
   </data>
+  <data name="About_RateLimitUntil" xml:space="preserve">
+    <value>GitHub erlaubt nur eine begrenzte Zahl von Anfragen pro Stunde. Versuchen Sie es nach {0} Uhr erneut.</value>
+  </data>
+  <data name="About_RateLimit" xml:space="preserve">
+    <value>GitHub erlaubt nur eine begrenzte Zahl von Anfragen pro Stunde. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="About_FilesMissing" xml:space="preserve">
+    <value>Die Dateien dieses Releases sind noch nicht hochgeladen. Versuchen Sie es in einigen Minuten erneut.</value>
+  </data>
 </root>
 

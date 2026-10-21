@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels;
@@ -102,62 +107,127 @@ public class UpdateServiceTests
 		Assert.False(ReleaseVersion.TryParse(text, out _));
 	}
 
+	private static FeedRelease Feed(string tag) => new(tag, Version(tag.TrimStart('v')), $"https://github.com/boexler/NLogViewer/releases/tag/{tag}");
+
+	private const string AtomFeed = """
+		<?xml version="1.0" encoding="UTF-8"?>
+		<feed xmlns="http://www.w3.org/2005/Atom">
+		  <title>Release notes from NLogViewer</title>
+		  <entry><title>Sentinel.LogViewer 99.0.0</title><link rel="alternate" type="text/html" href="https://github.com/boexler/NLogViewer/releases/tag/v99.0.0"/></entry>
+		  <entry><title>Sentinel.LogViewer 5.0.0-beta.4</title><link rel="alternate" type="text/html" href="https://github.com/boexler/NLogViewer/releases/tag/v5.0.0-beta.4"/></entry>
+		  <entry><title>Something else</title><link rel="alternate" type="text/html" href="https://github.com/boexler/NLogViewer/releases/tag/nightly"/></entry>
+		  <entry><title>Without a link</title></entry>
+		</feed>
+		""";
+
 	[Fact]
-	public void SelectUpdate_ReturnsNewestStableReleaseWithItsFile()
+	public void ParseFeed_ReadsTheTagsOfTheEntries_AndSkipsWhatIsNoVersion()
 	{
-		var releases = new[]
-		{
-			Release("v5.1.0-beta.1", prerelease: true, assets: AllAssets("5.1.0-beta.1")),
-			Release("v5.0.0", assets: AllAssets("5.0.0")),
-			Release("v4.0.0", assets: AllAssets("4.0.0"))
-		};
+		var releases = UpdateService.ParseFeed(AtomFeed);
 
-		var update = UpdateService.SelectUpdate(releases, Version("4.0.0"), includePrereleases: false, InstallType.Msi, frameworkDependent: false);
-
-		Assert.NotNull(update);
-		Assert.Equal("5.0.0", update.Version.ToString());
-		Assert.Equal("Sentinel.LogViewer-5.0.0-win-x64.msi", update.Asset?.Name);
-		Assert.Equal("ABC123", update.Asset?.Sha256);
+		Assert.Equal(new[] { "v99.0.0", "v5.0.0-beta.4" }, releases.Select(release => release.Tag));
+		Assert.Equal("https://github.com/boexler/NLogViewer/releases/tag/v99.0.0", releases[0].Url);
+		Assert.True(releases[1].Version.IsPrerelease);
 	}
 
 	[Fact]
-	public void SelectUpdate_WithPrereleases_ReturnsNewestPrerelease()
+	public void SelectUpdate_ReturnsTheNewestStableRelease_UnlessPrereleasesAreWanted()
 	{
-		var releases = new[]
-		{
-			Release("v5.0.0-beta.2", prerelease: true, assets: AllAssets("5.0.0-beta.2")),
-			Release("v5.0.0-beta.1", prerelease: true, assets: AllAssets("5.0.0-beta.1"))
-		};
+		var releases = new[] { Feed("v5.1.0-beta.1"), Feed("v5.0.0"), Feed("v4.0.0") };
 
-		var update = UpdateService.SelectUpdate(releases, Version("5.0.0-beta.1"), includePrereleases: true, InstallType.Portable, frameworkDependent: true);
+		var stable = UpdateService.SelectUpdate(releases, Version("4.0.0"), includePrereleases: false);
+		var withPrereleases = UpdateService.SelectUpdate(releases, Version("4.0.0"), includePrereleases: true);
 
-		Assert.Equal("5.0.0-beta.2", update?.Version.ToString());
-		Assert.Equal("Sentinel.LogViewer-FrameworkDependent-win-x64-5.0.0-beta.2.zip", update?.Asset?.Name);
+		Assert.Equal(("5.0.0", "v5.0.0"), (stable?.Version.ToString(), stable?.Tag));
+		Assert.Null(stable?.Asset);
+		Assert.Equal("5.1.0-beta.1", withPrereleases?.Version.ToString());
 	}
 
 	[Fact]
-	public void SelectUpdate_IgnoresDraftsOlderVersionsAndReleasesWithoutFile()
-	{
-		var releases = new[]
-		{
-			Release("v6.0.0", draft: true, assets: AllAssets("6.0.0")),
-			// Release workflow still running: no files attached yet.
-			Release("v5.1.0"),
-			Release("v4.0.0", assets: AllAssets("4.0.0"))
-		};
+	public void SelectUpdate_IgnoresOlderAndEqualVersions() =>
+		Assert.Null(UpdateService.SelectUpdate(new[] { Feed("v5.0.0"), Feed("v4.0.0") }, Version("5.0.0"), includePrereleases: true));
 
-		Assert.Null(UpdateService.SelectUpdate(releases, Version("5.0.0"), includePrereleases: true, InstallType.Msi, frameworkDependent: false));
+	private sealed class StubHandler(Func<HttpRequestMessage, HttpResponseMessage> respond) : HttpMessageHandler
+	{
+		public List<string> Requests { get; } = new();
+
+		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		{
+			Requests.Add(request.RequestUri!.ToString());
+			return Task.FromResult(respond(request));
+		}
 	}
+
+	private static HttpResponseMessage Text(string content) => new(HttpStatusCode.OK) { Content = new StringContent(content) };
+
+	[Fact]
+	public async Task CheckForUpdateAsync_AsksTheFeedAndNotTheApi_AndNotAgainWithinTenMinutes()
+	{
+		var handler = new StubHandler(_ => Text(AtomFeed));
+		var service = new UpdateService(handler, InstallType.Msi);
+
+		var first = await service.CheckForUpdateAsync(includePrereleases: false);
+		var second = await service.CheckForUpdateAsync(includePrereleases: true);
+
+		Assert.Equal("99.0.0", first?.Version.ToString());
+		Assert.Equal("99.0.0", second?.Version.ToString());
+		Assert.Equal(new[] { "https://github.com/boexler/NLogViewer/releases.atom" }, handler.Requests);
+	}
+
+	private static string ReleaseJson() => JsonSerializer.Serialize(new GitHubRelease
+	{
+		TagName = "v99.0.0",
+		Assets = AllAssets("99.0.0").Select(name => new GitHubAsset { Name = name, BrowserDownloadUrl = $"https://example.invalid/{name}", Size = 42, Digest = "sha256:ABC123" }).ToList()
+	});
+
+	private static AvailableUpdate Update() => new(Version("99.0.0"), "https://github.com/boexler/NLogViewer/releases/tag/v99.0.0", "v99.0.0", null);
 
 	[Theory]
-	[InlineData(InstallType.Chocolatey)]
-	[InlineData(InstallType.Development)]
-	public void SelectUpdate_InstallTypeWithoutSelfUpdate_ReturnsUpdateWithoutFile(InstallType installType)
+	[InlineData(InstallType.Msi, false, "Sentinel.LogViewer-99.0.0-win-x64.msi")]
+	[InlineData(InstallType.Portable, true, "Sentinel.LogViewer-FrameworkDependent-win-x64-99.0.0.zip")]
+	[InlineData(InstallType.Portable, false, "Sentinel.LogViewer-SelfContained-win-x64-99.0.0.zip")]
+	public async Task ResolveAssetAsync_PicksTheFileOfTheInstallation_FromTheApi(InstallType installType, bool frameworkDependent, string expected)
 	{
-		var update = UpdateService.SelectUpdate(new[] { Release("v5.0.0") }, Version("4.0.0"), includePrereleases: false, installType, frameworkDependent: false);
+		var handler = new StubHandler(_ => Text(ReleaseJson()));
+		var service = new UpdateService(handler, installType);
 
-		Assert.Equal("5.0.0", update?.Version.ToString());
-		Assert.Null(update?.Asset);
+		var asset = await service.ResolveAssetAsync(Update(), frameworkDependent, CancellationToken.None);
+
+		Assert.Equal((expected, "ABC123"), (asset.Name, asset.Sha256));
+		Assert.Equal(new[] { "https://api.github.com/repos/boexler/NLogViewer/releases/tags/v99.0.0" }, handler.Requests);
+	}
+
+	[Fact]
+	public async Task ResolveAssetAsync_WithoutAFile_SaysThatTheFilesAreMissing()
+	{
+		var service = new UpdateService(new StubHandler(_ => Text(JsonSerializer.Serialize(new GitHubRelease { TagName = "v99.0.0" }))), InstallType.Msi);
+
+		await Assert.ThrowsAsync<ReleaseFilesMissingException>(() => service.ResolveAssetAsync(Update(), false, CancellationToken.None));
+	}
+
+	[Fact]
+	public async Task TheApiLimit_IsReportedWithTheTimeWhenRequestsAreAllowedAgain()
+	{
+		var service = new UpdateService(new StubHandler(_ =>
+		{
+			var response = new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = new StringContent("rate limit exceeded") };
+			response.Headers.Add("X-RateLimit-Remaining", "0");
+			response.Headers.Add("X-RateLimit-Reset", "1900000000");
+			return response;
+		}), InstallType.Msi);
+
+		var exception = await Assert.ThrowsAsync<GitHubRateLimitException>(() => service.ResolveAssetAsync(Update(), false, CancellationToken.None));
+		await Assert.ThrowsAsync<GitHubRateLimitException>(() => service.GetReleasesAsync());
+
+		Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1900000000), exception.ResetAt);
+	}
+
+	[Fact]
+	public async Task AForbiddenAnswerWithoutTheLimit_IsAnOrdinaryError()
+	{
+		var service = new UpdateService(new StubHandler(_ => new HttpResponseMessage(HttpStatusCode.Forbidden)), InstallType.Msi);
+
+		await Assert.ThrowsAsync<HttpRequestException>(() => service.ResolveAssetAsync(Update(), false, CancellationToken.None));
 	}
 
 	[Fact]
