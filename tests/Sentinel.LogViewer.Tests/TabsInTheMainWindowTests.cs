@@ -368,17 +368,41 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 
 			Assert.Equal(new[] { "Orders", "Billing", "Billing" }, session.ViewModel.LogTabs.Select(tab => tab.ApplicationName));
 
-			session.ViewModel.Ignore(session.ViewModel.LogTabs[1], byApplication: false);
+			session.ViewModel.Ignore(session.ViewModel.LogTabs[1], IgnoreScope.Sender);
 
 			Assert.Equal(new[] { "Billing" }, session.ViewModel.LogTabs.Select(tab => tab.ApplicationName));
 			Send(session, App("(5)", "Orders", "10.0.0.5"));
 			Assert.Single(session.ViewModel.LogTabs);
 
-			session.ViewModel.Ignore(session.ViewModel.LogTabs[0], byApplication: true);
+			session.ViewModel.Ignore(session.ViewModel.LogTabs[0], IgnoreScope.Application);
 
 			Assert.Empty(session.ViewModel.LogTabs);
 			Assert.Equal(new[] { ("10.0.0.9", ""), ("10.0.0.5", ""), ("", "Billing") },
 				_environment.Saved.IgnoreRules.Select(rule => (rule.Ip, rule.Application)));
+		});
+	}
+
+	[Fact]
+	public void IgnoringAnApplicationFromAnIp_KeepsItsOtherIps_AndWorksForASenderWithAMachineName()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(1)", "Orders", "NB1 (10.0.0.5)"));
+			Send(session, App("(2)", "Orders", "10.0.0.7"));
+			var tab = session.ViewModel.LogTabs[0];
+			Assert.True(session.ViewModel.IgnoreApplicationFromSenderCommand.CanExecute(tab));
+			Assert.True(session.ViewModel.IgnoreSenderCommand.CanExecute(tab));
+
+			session.ViewModel.Ignore(tab, IgnoreScope.ApplicationFromSender);
+
+			var rule = Assert.Single(_environment.Saved.IgnoreRules);
+			Assert.Equal(("10.0.0.5", "Orders"), (rule.Ip, rule.Application));
+			Assert.Equal(new[] { "10.0.0.7" }, session.ViewModel.LogTabs.Select(other => other.Sender));
+			Send(session, App("(3)", "Orders", "NB1 (10.0.0.5)"));
+			Send(session, App("(4)", "Orders", "10.0.0.8"));
+			Assert.Equal(new[] { "10.0.0.7", "10.0.0.8" }, session.ViewModel.LogTabs.Select(other => other.Sender));
+			Assert.False(session.ViewModel.IgnoreSenderCommand.CanExecute(new Sentinel.LogViewer.Models.LogTabViewModel { SenderKey = "x", Sender = "Local" }));
 		});
 	}
 

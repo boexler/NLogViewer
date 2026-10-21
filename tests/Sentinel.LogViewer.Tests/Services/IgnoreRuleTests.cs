@@ -28,6 +28,25 @@ public class IgnoreRuleTests : IDisposable
 	public void ARule_NeedsEveryPartThatItHas_ToMatch(string ip, string application, string sentBy, string sender, bool expected) =>
 		Assert.Equal(expected, new IgnoreRule { Ip = ip, Application = application }.Matches(sentBy, sender));
 
+	[Theory]
+	[InlineData("10.0.0.5", "10.0.0.5")]
+	[InlineData("NB260911 (127.0.0.1)", "127.0.0.1")]
+	[InlineData("  host (::1) ", "::1")]
+	[InlineData("Local", "Local")]
+	[InlineData("", "")]
+	[InlineData(null, "")]
+	public void TheIpAddress_IsTakenFromTheSenderThatHasAMachineName(string? sender, string expected) =>
+		Assert.Equal(expected, IgnoreRule.IpOf(sender));
+
+	[Fact]
+	public void ARuleWithAnIp_AlsoMatchesASenderThatHasAMachineName()
+	{
+		var rule = new IgnoreRule { Ip = "127.0.0.1", Application = "LogViewer" };
+
+		Assert.True(rule.Matches("LogViewer", "NB260911 (127.0.0.1)"));
+		Assert.False(rule.Matches("LogViewer", "NB260911 (127.0.0.2)"));
+	}
+
 	[Fact]
 	public void WhatAHandEditedFileMakesWrong_IsLeftOut()
 	{

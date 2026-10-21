@@ -1058,7 +1058,7 @@
     <value>Saisissez une adresse IP valide.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Ignorer cette application</value>
+    <value>Ignorer cette application (depuis n'importe quelle adresse IP)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>Ignorer cette adresse IP</value>
@@ -1067,10 +1067,16 @@
     <value>Ignorer l'expéditeur</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>Ignorer l'application « {0} » ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
+    <value>Ignorer l'application « {0} » depuis n'importe quelle adresse IP ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>Ignorer l'adresse IP {0} ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
+    <value>Ignorer l'adresse IP {1} ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignorer cette application (seulement depuis cette adresse IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Ignorer l'application « {0} » depuis l'adresse IP {1} ? Son onglet est fermé et ses journaux seront ignorés à partir de maintenant.</value>
   </data>
 </root>
 

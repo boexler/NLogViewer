@@ -1058,7 +1058,7 @@
     <value>Introduceți o adresă IP validă.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Ignoră această aplicație</value>
+    <value>Ignoră această aplicație (de la orice adresă IP)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>Ignoră această adresă IP</value>
@@ -1067,10 +1067,16 @@
     <value>Ignoră expeditorul</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>Ignorați aplicația „{0}”? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
+    <value>Ignorați aplicația „{0}” de la orice adresă IP? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>Ignorați adresa IP {0}? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
+    <value>Ignorați adresa IP {1}? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignoră această aplicație (doar de la această adresă IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Ignorați aplicația „{0}” de la adresa IP {1}? Fila ei se închide, iar jurnalele ei vor fi ignorate de acum înainte.</value>
   </data>
 </root>
 

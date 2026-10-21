@@ -6,6 +6,21 @@ using System.Net;
 namespace Sentinel.LogViewer.Services;
 
 /// <summary>
+/// What a rule that is made from a tab covers
+/// </summary>
+public enum IgnoreScope
+{
+	/// <summary>The application, from any IP address</summary>
+	Application,
+
+	/// <summary>The application, from the IP address of the tab only</summary>
+	ApplicationFromSender,
+
+	/// <summary>Every application of the IP address of the tab</summary>
+	Sender
+}
+
+/// <summary>
 /// A sender whose logs are dropped when they arrive: an IP address, an application name, or both, in which case both have to match.
 /// It does not matter whether the logs come over UDP or TCP.
 /// </summary>
@@ -24,8 +39,21 @@ public class IgnoreRule
 	/// </summary>
 	public bool Matches(string? application, string? sender) =>
 		!IsEmpty
-		&& (Ip.Length == 0 || string.Equals(Ip, sender, StringComparison.OrdinalIgnoreCase))
+		&& (Ip.Length == 0 || string.Equals(Ip, IpOf(sender), StringComparison.OrdinalIgnoreCase))
 		&& (Application.Length == 0 || string.Equals(Application, application, StringComparison.OrdinalIgnoreCase));
+
+	/// <summary>
+	/// The IP address in the sender of an application: the receiver puts the name of the machine in front of it when the application tells it
+	/// (<c>NB260911 (127.0.0.1)</c>); otherwise the sender is the address
+	/// </summary>
+	public static string IpOf(string? sender)
+	{
+		if (string.IsNullOrWhiteSpace(sender))
+			return string.Empty;
+
+		var open = sender.LastIndexOf('(');
+		return open >= 0 && sender.TrimEnd().EndsWith(')') ? sender[(open + 1)..sender.TrimEnd().LastIndexOf(')')].Trim() : sender.Trim();
+	}
 
 	/// <summary>
 	/// Whether the rule can be saved: it is not empty and its address, if there is one, is an IP address

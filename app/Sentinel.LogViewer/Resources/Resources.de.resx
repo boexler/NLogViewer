@@ -1058,7 +1058,7 @@
     <value>Geben Sie eine gültige IP-Adresse ein.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Diese Anwendung ignorieren</value>
+    <value>Diese Anwendung ignorieren (von jeder IP-Adresse)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>Diese IP-Adresse ignorieren</value>
@@ -1067,10 +1067,16 @@
     <value>Absender ignorieren</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>Die Anwendung „{0}“ ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
+    <value>Die Anwendung „{0}“ von jeder IP-Adresse ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>Die IP-Adresse {0} ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
+    <value>Die IP-Adresse {1} ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Diese Anwendung ignorieren (nur von dieser IP-Adresse)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Die Anwendung „{0}“ von der IP-Adresse {1} ignorieren? Ihr Tab wird geschlossen, und ihre Logs werden künftig verworfen.</value>
   </data>
 </root>
 

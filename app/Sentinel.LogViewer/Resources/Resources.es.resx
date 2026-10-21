@@ -1058,7 +1058,7 @@
     <value>Introduzca una dirección IP válida.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Ignorar esta aplicación</value>
+    <value>Ignorar esta aplicación (desde cualquier dirección IP)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>Ignorar esta dirección IP</value>
@@ -1067,10 +1067,16 @@
     <value>Ignorar remitente</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>¿Ignorar la aplicación «{0}»? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
+    <value>¿Ignorar la aplicación «{0}» desde cualquier dirección IP? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>¿Ignorar la dirección IP {0}? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
+    <value>¿Ignorar la dirección IP {1}? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignorar esta aplicación (solo desde esta dirección IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>¿Ignorar la aplicación «{0}» desde la dirección IP {1}? Su pestaña se cierra y sus registros se descartarán a partir de ahora.</value>
   </data>
 </root>
 

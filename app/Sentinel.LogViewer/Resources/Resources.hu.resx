@@ -1058,7 +1058,7 @@
     <value>Adjon meg érvényes IP-címet.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Alkalmazás figyelmen kívül hagyása</value>
+    <value>Alkalmazás figyelmen kívül hagyása (bármely IP-címről)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>IP-cím figyelmen kívül hagyása</value>
@@ -1067,10 +1067,16 @@
     <value>Küldő figyelmen kívül hagyása</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
+    <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást bármely IP-címről? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>Figyelmen kívül hagyja a(z) {0} IP-címet? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
+    <value>Figyelmen kívül hagyja a(z) {1} IP-címet? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Alkalmazás figyelmen kívül hagyása (csak erről az IP-címről)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást a(z) {1} IP-címről? A lapja bezáródik, a naplóit pedig mostantól eldobja a rendszer.</value>
   </data>
 </root>
 

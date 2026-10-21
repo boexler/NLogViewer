@@ -1058,7 +1058,7 @@
     <value>Wpisz prawidłowy adres IP.</value>
   </data>
   <data name="Tab_IgnoreApplication" xml:space="preserve">
-    <value>Ignoruj tę aplikację</value>
+    <value>Ignoruj tę aplikację (z dowolnego adresu IP)</value>
   </data>
   <data name="Tab_IgnoreSender" xml:space="preserve">
     <value>Ignoruj ten adres IP</value>
@@ -1067,10 +1067,16 @@
     <value>Ignoruj nadawcę</value>
   </data>
   <data name="Ignore_ConfirmApplication" xml:space="preserve">
-    <value>Zignorować aplikację „{0}”? Jej karty zostaną zamknięte, a jej logi będą odtąd odrzucane.</value>
+    <value>Zignorować aplikację „{0}” z dowolnego adresu IP? Jej karty zostaną zamknięte, a jej logi będą odtąd odrzucane.</value>
   </data>
   <data name="Ignore_ConfirmSender" xml:space="preserve">
-    <value>Zignorować adres IP {0}? Jego karty zostaną zamknięte, a jego logi będą odtąd odrzucane.</value>
+    <value>Zignorować adres IP {1}? Jego karty zostaną zamknięte, a jego logi będą odtąd odrzucane.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignoruj tę aplikację (tylko z tego adresu IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Zignorować aplikację „{0}” z adresu IP {1}? Jej karta zostanie zamknięta, a jej logi będą odtąd odrzucane.</value>
   </data>
 </root>
 

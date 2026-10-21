@@ -77,7 +77,10 @@
                               Tag="ReplaceTab" IsChecked="{Binding RestartReplacesTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="{helpers:Resource Key=Tab_IgnoreApplication, DefaultValue=Ignore this application}"
+                <MenuItem Header="{helpers:Resource Key=Tab_IgnoreApplicationFromSender, DefaultValue=Ignore this application (from this IP address)}"
+                          Command="{Binding PlacementTarget.Tag.IgnoreApplicationFromSenderCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_IgnoreApplication, DefaultValue=Ignore this application (from any IP address)}"
                           Command="{Binding PlacementTarget.Tag.IgnoreApplicationCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_IgnoreSender, DefaultValue=Ignore this IP address}"

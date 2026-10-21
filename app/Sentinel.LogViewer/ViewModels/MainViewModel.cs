@@ -92,9 +92,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		});
 		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
 		ResetFilterCommand = new RelayCommand(ResetFilter, () => HasActiveFilter);
-		IgnoreApplicationCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, byApplication: true), tab => tab?.SenderKey != null);
-		IgnoreSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, byApplication: false),
-			tab => tab?.SenderKey != null && System.Net.IPAddress.TryParse(tab.Sender, out _));
+		IgnoreApplicationCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Application), tab => tab?.SenderKey != null);
+		IgnoreApplicationFromSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.ApplicationFromSender), HasIpAddress);
+		IgnoreSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Sender), HasIpAddress);
 		ManageSourcesCommand = new RelayCommand(() =>
 		{
 			IsSourcesPanelOpen = false;
@@ -592,14 +592,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// Drops the logs of the application of the tab from now on and closes its tabs; the parameter is the <see cref="LogTabViewModel"/>
+	/// Drops the logs of the application of the tab, from any IP address, from now on and closes its tabs; the parameter is the <see cref="LogTabViewModel"/>
 	/// </summary>
 	public ICommand IgnoreApplicationCommand { get; }
 
 	/// <summary>
-	/// Drops the logs of the IP address of the tab from now on and closes the tabs that come from it
+	/// Drops the logs of the application of the tab from the IP address of the tab only, and closes that tab
+	/// </summary>
+	public ICommand IgnoreApplicationFromSenderCommand { get; }
+
+	/// <summary>
+	/// Drops the logs of every application from the IP address of the tab and closes the tabs that come from it
 	/// </summary>
 	public ICommand IgnoreSenderCommand { get; }
+
+	private static bool HasIpAddress(LogTabViewModel? tab) =>
+		tab?.SenderKey != null && System.Net.IPAddress.TryParse(IgnoreRule.IpOf(tab.Sender), out _);
 
 	private bool IsIgnored(LogEvent logEvent)
 	{
@@ -612,28 +620,37 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		return false;
 	}
 
-	private void ConfirmAndIgnore(LogTabViewModel? tab, bool byApplication)
+	private void ConfirmAndIgnore(LogTabViewModel? tab, IgnoreScope scope)
 	{
 		if (tab == null)
 			return;
 
-		var message = string.Format(CultureInfo.CurrentCulture,
-			byApplication
-				? _localizationService.GetString("Ignore_ConfirmApplication", "Ignore the application “{0}”? Its tabs are closed and its logs are dropped from now on.")
-				: _localizationService.GetString("Ignore_ConfirmSender", "Ignore the IP address {0}? Its tabs are closed and its logs are dropped from now on."),
-			byApplication ? tab.ApplicationName : tab.Sender);
+		var ip = IgnoreRule.IpOf(tab.Sender);
+		var (key, text) = scope switch
+		{
+			IgnoreScope.Application => ("Ignore_ConfirmApplication", "Ignore the application “{0}” from any IP address? Its tabs are closed and its logs are dropped from now on."),
+			IgnoreScope.ApplicationFromSender => ("Ignore_ConfirmApplicationFromSender", "Ignore the application “{0}” from the IP address {1}? Its tab is closed and its logs are dropped from now on."),
+			_ => ("Ignore_ConfirmSender", "Ignore the IP address {1}? Its tabs are closed and its logs are dropped from now on.")
+		};
+		var message = string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, text), tab.ApplicationName, ip);
 		var owner = System.Windows.Application.Current.MainWindow;
 		if (MessageDialogWindow.Show(owner, message, _localizationService.GetString("Ignore_ConfirmCaption", "Ignore sender"),
 			    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-			Ignore(tab, byApplication);
+			Ignore(tab, scope);
 	}
 
 	/// <summary>
-	/// Adds a rule for the application or the IP address of the tab, saves it, and closes the tabs that it matches
+	/// Adds a rule for the tab, saves it, and closes the tabs that it matches
 	/// </summary>
-	public void Ignore(LogTabViewModel tab, bool byApplication)
+	public void Ignore(LogTabViewModel tab, IgnoreScope scope)
 	{
-		var rule = byApplication ? new IgnoreRule { Application = tab.ApplicationName } : new IgnoreRule { Ip = tab.Sender };
+		var ip = IgnoreRule.IpOf(tab.Sender);
+		var rule = scope switch
+		{
+			IgnoreScope.Application => new IgnoreRule { Application = tab.ApplicationName },
+			IgnoreScope.ApplicationFromSender => new IgnoreRule { Application = tab.ApplicationName, Ip = ip },
+			_ => new IgnoreRule { Ip = ip }
+		};
 		var configuration = _configService.LoadConfiguration();
 		if (!configuration.IgnoreRules.Any(existing => string.Equals(existing.Ip, rule.Ip, StringComparison.OrdinalIgnoreCase)
 		                                              && string.Equals(existing.Application, rule.Application, StringComparison.OrdinalIgnoreCase)))
