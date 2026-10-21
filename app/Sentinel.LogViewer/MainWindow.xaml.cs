@@ -41,6 +41,19 @@ namespace Sentinel.LogViewer
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenSettingsCommand,
                 new KeyGesture(Key.OemComma, ModifierKeys.Control)));
 
+            // Tabs as in a browser
+            this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.W, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.F4, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectNextTabCommand, Key.PageDown, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectPreviousTabCommand, Key.PageUp, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectNextTabCommand, Key.Tab, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectPreviousTabCommand, Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
+            for (var number = 1; number <= 9; number++)
+            {
+                this.InputBindings.Add(new KeyBinding(_viewModel.SelectTabCommand, Key.D0 + number, ModifierKeys.Alt) { CommandParameter = number });
+                this.InputBindings.Add(new KeyBinding(_viewModel.SelectTabCommand, Key.NumPad0 + number, ModifierKeys.Alt) { CommandParameter = number });
+            }
+
 #if DEBUG
             AddDebugMenu();
 #endif
@@ -151,6 +164,18 @@ namespace Sentinel.LogViewer
 		        _logTabDragStart = e.GetPosition(null);
 		        _logTabDragSource = vm;
 	        }
+        }
+
+        /// <summary>
+        /// A click with the middle mouse button closes the tab, as in a browser.
+        /// </summary>
+        private void LogTabItem_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Middle && sender is TabItem { DataContext: LogTabViewModel tab })
+            {
+                _viewModel.CloseTabCommand.Execute(tab);
+                e.Handled = true;
+            }
         }
 
         /// <summary>

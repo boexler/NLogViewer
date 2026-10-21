@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Fermer _tous les onglets</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Fermer l'onglet</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Voulez-vous vraiment fermer l'onglet actuel ?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Fermer tous les onglets</value>
   </data>
@@ -1086,6 +1080,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Les fichiers de cette version ne sont pas encore téléversés. Réessayez dans quelques minutes.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Fermer les onglets à droite</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Fermer les onglets à droite</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Voulez-vous vraiment fermer tous les onglets à droite de celui-ci ?</value>
   </data>
 </root>
 

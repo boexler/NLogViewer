@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Zamknij _wszystkie karty</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Zamknij kartę</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Czy na pewno chcesz zamknąć bieżącą kartę?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Zamknij wszystkie karty</value>
   </data>
@@ -1086,6 +1080,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Pliki tego wydania nie zostały jeszcze przesłane. Spróbuj ponownie za kilka minut.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Zamknij karty po prawej</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Zamknij karty po prawej</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Czy na pewno chcesz zamknąć wszystkie karty po prawej stronie tej karty?</value>
   </data>
 </root>
 

@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Închide _toate filele</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Închide fila</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Sigur doriți să închideți fila curentă?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Închide toate filele</value>
   </data>
@@ -1086,6 +1080,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Fișierele acestei versiuni nu au fost încă încărcate. Încercați din nou peste câteva minute.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Închide filele din dreapta</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Închide filele din dreapta</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Sigur doriți să închideți toate filele din dreapta acesteia?</value>
   </data>
 </root>
 

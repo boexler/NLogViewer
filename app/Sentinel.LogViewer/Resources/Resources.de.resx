@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Alle Tabs _schließen</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Tab schließen</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Möchten Sie das aktuelle Tab wirklich schließen?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Alle Tabs schließen</value>
   </data>
@@ -1086,6 +1080,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Die Dateien dieses Releases sind noch nicht hochgeladen. Versuchen Sie es in einigen Minuten erneut.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Tabs rechts davon schließen</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Tabs rechts davon schließen</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Möchten Sie wirklich alle Tabs rechts von diesem schließen?</value>
   </data>
 </root>
 

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
@@ -433,6 +434,109 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			var second = ViewerOf(session, session.ViewModel.LogTabs[1]);
 			Assert.Equal(_environment.Saved.Columns, second.ColumnKeys);
 			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message }, first.ColumnKeys);
+		});
+	}
+
+	private Session StartWithTabs(int count)
+	{
+		var session = Start();
+		for (var i = 1; i <= count; i++)
+			Send(session, App($"({i}00)", name: $"App{i}"));
+
+		Assert.Equal(count, session.ViewModel.LogTabs.Count);
+		return session;
+	}
+
+	private static void Press(Session session, Key key, ModifierKeys modifiers)
+	{
+		var binding = session.Window.InputBindings.OfType<KeyBinding>().First(candidate => candidate.Key == key && candidate.Modifiers == modifiers);
+		Assert.True(binding.Command.CanExecute(binding.CommandParameter));
+		binding.Command.Execute(binding.CommandParameter);
+		WpfTestHelper.Settle();
+	}
+
+	[Fact]
+	public void TheTabs_ChangeWithTheKeysOfABrowser_AndGoAroundAtTheEnds()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(4);
+			var tabs = session.ViewModel.LogTabs;
+
+			Press(session, Key.D2, ModifierKeys.Alt);
+			Assert.Same(tabs[1], session.ViewModel.SelectedTab);
+
+			Press(session, Key.NumPad9, ModifierKeys.Alt);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			Press(session, Key.PageDown, ModifierKeys.Control);
+			Assert.Same(tabs[0], session.ViewModel.SelectedTab);
+
+			Press(session, Key.PageUp, ModifierKeys.Control);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			Press(session, Key.Tab, ModifierKeys.Control | ModifierKeys.Shift);
+			Assert.Same(tabs[2], session.ViewModel.SelectedTab);
+
+			Press(session, Key.Tab, ModifierKeys.Control);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			// A number beyond the last tab selects the last one.
+			session.ViewModel.SelectTabCommand.Execute(8);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+		});
+	}
+
+	[Fact]
+	public void TheCurrentTab_IsClosedWithCtrlW_AndWithCtrlF4_WithoutAsking()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			session.ViewModel.SelectedTab = tabs[1];
+			var second = tabs[1];
+
+			Press(session, Key.W, ModifierKeys.Control);
+			Assert.Equal(2, tabs.Count);
+			Assert.DoesNotContain(second, tabs);
+
+			Press(session, Key.F4, ModifierKeys.Control);
+			Assert.Single(tabs);
+		});
+	}
+
+	[Fact]
+	public void AMiddleClickOnATab_ClosesIt_AndOtherButtonsDoNot()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			var first = tabs[0];
+			var item = Descendants<TabItem>(session.Window).First(candidate => ReferenceEquals(candidate.DataContext, first));
+
+			item.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right) { RoutedEvent = Mouse.PreviewMouseUpEvent, Source = item });
+			Assert.Equal(3, tabs.Count);
+
+			item.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Middle) { RoutedEvent = Mouse.PreviewMouseUpEvent, Source = item });
+			Assert.Equal(2, tabs.Count);
+			Assert.DoesNotContain(first, tabs);
+		});
+	}
+
+	[Fact]
+	public void CloseTheTabsToTheRight_IsOnlyOfferedWhereThereAreTabsToTheRight()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			var command = session.ViewModel.CloseTabsToTheRightCommand;
+
+			Assert.True(command.CanExecute(tabs[0]));
+			Assert.True(command.CanExecute(tabs[1]));
+			Assert.False(command.CanExecute(tabs[2]));
 		});
 	}
 

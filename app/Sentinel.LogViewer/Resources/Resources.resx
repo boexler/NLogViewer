@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Close _all tabs</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Close tab</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Do you really want to close the current tab?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Close all tabs</value>
   </data>
@@ -1089,6 +1083,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>The files of this release are not uploaded yet. Try again in a few minutes.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Close tabs to the right</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Close tabs to the right</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Do you really want to close all tabs to the right of this one?</value>
   </data>
 </root>
 

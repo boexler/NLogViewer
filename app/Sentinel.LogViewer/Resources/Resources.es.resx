@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Cerrar _todas las pestañas</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Cerrar pestaña</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>¿Desea cerrar realmente la pestaña actual?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Cerrar todas las pestañas</value>
   </data>
@@ -1086,6 +1080,15 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Los archivos de esta versión aún no se han subido. Inténtelo de nuevo en unos minutos.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Cerrar las pestañas a la derecha</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Cerrar las pestañas a la derecha</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>¿Realmente desea cerrar todas las pestañas a la derecha de esta?</value>
   </data>
 </root>
 

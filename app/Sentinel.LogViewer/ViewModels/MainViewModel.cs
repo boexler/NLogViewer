@@ -116,6 +116,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
+		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
+		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
+		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
+		SelectTabCommand = new RelayCommand<int>(SelectTab, number => LogTabs.Count > 0 && number is >= 1 and <= 9);
 		ToggleTakeOverFiltersCommand = new RelayCommand<LogTabViewModel>(ToggleTakeOverFilters, tab => tab?.SenderKey != null);
 		RemoveTakenOverFiltersCommand = new RelayCommand<LogTabViewModel>(RemoveTakenOverFilters);
 
@@ -250,27 +254,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
 		((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 		((RelayCommand<LogTabViewModel>)CloseOtherTabsCommand).RaiseCanExecuteChanged();
+		((RelayCommand<LogTabViewModel>)CloseTabsToTheRightCommand).RaiseCanExecuteChanged();
+		((RelayCommand)SelectNextTabCommand).RaiseCanExecuteChanged();
+		((RelayCommand)SelectPreviousTabCommand).RaiseCanExecuteChanged();
 	}
 
 	/// <summary>
-	/// Removes the selected tab after user confirms.
+	/// Removes the selected tab; like the close button of a tab, it does not ask.
 	/// </summary>
-	private void CloseCurrentTab()
-	{
-		if (SelectedTab == null)
-			return;
-
-		var caption = _localizationService.GetString("Confirm_CloseCurrentTab_Caption", "Close tab");
-		var message = _localizationService.GetString(
-			"Confirm_CloseCurrentTab_Message",
-			"Do you really want to close the current tab?");
-		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
-		    MessageBoxResult.Yes)
-			return;
-
-		CloseTab(SelectedTab);
-	}
+	private void CloseCurrentTab() => CloseTab(SelectedTab);
 
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
@@ -419,6 +411,55 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			LogTabs.Remove(other);
 
 		SelectedTab = tab;
+	}
+
+	/// <summary>
+	/// Removes the tabs to the right of the given one after the user confirms.
+	/// </summary>
+	private void CloseTabsToTheRight(LogTabViewModel? tab)
+	{
+		var index = tab == null ? -1 : LogTabs.IndexOf(tab);
+		if (index < 0 || index == LogTabs.Count - 1)
+			return;
+
+		var caption = _localizationService.GetString("Confirm_CloseTabsToTheRight_Caption", "Close tabs to the right");
+		var message = _localizationService.GetString(
+			"Confirm_CloseTabsToTheRight_Message",
+			"Do you really want to close all tabs to the right of this one?");
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		    MessageBoxResult.Yes)
+			return;
+
+		var selectedIsClosed = LogTabs.IndexOf(SelectedTab!) > index;
+		foreach (var right in LogTabs.Skip(index + 1).ToList())
+			LogTabs.Remove(right);
+
+		if (selectedIsClosed)
+			SelectedTab = tab;
+	}
+
+	/// <summary>
+	/// Selects the next or the previous tab; after the last one it goes on with the first, as in a browser.
+	/// </summary>
+	private void SelectTabRelative(int step)
+	{
+		if (LogTabs.Count == 0)
+			return;
+
+		var index = SelectedTab == null ? 0 : LogTabs.IndexOf(SelectedTab);
+		SelectedTab = LogTabs[(index + step + LogTabs.Count) % LogTabs.Count];
+	}
+
+	/// <summary>
+	/// Selects the tab with the given number (1 is the first); 9 is always the last tab, as in a browser.
+	/// </summary>
+	private void SelectTab(int number)
+	{
+		if (LogTabs.Count == 0)
+			return;
+
+		SelectedTab = LogTabs[number == 9 ? LogTabs.Count - 1 : Math.Min(number, LogTabs.Count) - 1];
 	}
 
 	/// <summary>
@@ -896,6 +937,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand CloseOtherTabsCommand { get; }
 	public ICommand SaveFilteredListCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
+
+	/// <summary>Closes the tabs to the right of the tab; the parameter is the tab</summary>
+	public ICommand CloseTabsToTheRightCommand { get; }
+
+	public ICommand SelectNextTabCommand { get; }
+	public ICommand SelectPreviousTabCommand { get; }
+
+	/// <summary>Selects a tab by its number, 1 to 9 (9 is the last tab); the parameter is the number</summary>
+	public ICommand SelectTabCommand { get; }
 	public ICommand CloseAllTabsCommand { get; }
 
 	/// <summary>

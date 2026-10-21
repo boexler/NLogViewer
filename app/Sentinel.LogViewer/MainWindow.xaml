@@ -58,6 +58,9 @@
                 <MenuItem Header="{helpers:Resource Key=Tab_CloseOthers, DefaultValue=Close all other tabs}"
                           Command="{Binding PlacementTarget.Tag.CloseOtherTabsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_CloseToTheRight, DefaultValue=Close tabs to the right}"
+                          Command="{Binding PlacementTarget.Tag.CloseTabsToTheRightCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
                 <Separator/>
                 <MenuItem Header="{helpers:Resource Key=Tab_SaveFilteredList, DefaultValue=Save filtered list...}"
                           Command="{Binding PlacementTarget.Tag.SaveFilteredListCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
@@ -211,7 +214,8 @@
                 <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
                     <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
-                              Command="{Binding CloseCurrentTabCommand}"/>
+                              Command="{Binding CloseCurrentTabCommand}"
+                              InputGestureText="Ctrl+W"/>
                     <MenuItem Header="{helpers:Resource Key=Menu_CloseAllTabs, DefaultValue=Close _all tabs}"
                               Command="{Binding CloseAllTabsCommand}"/>
                 </MenuItem>
@@ -245,6 +249,7 @@
                     <Setter Property="ContextMenu" Value="{StaticResource TabContextMenu}"/>
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LogTabItem_PreviewMouseLeftButtonDown"/>
                     <EventSetter Event="PreviewMouseLeftButtonUp" Handler="LogTabItem_PreviewMouseLeftButtonUp"/>
+                    <EventSetter Event="PreviewMouseUp" Handler="LogTabItem_PreviewMouseUp"/>
                     <EventSetter Event="PreviewMouseMove" Handler="LogTabItem_PreviewMouseMove"/>
                     <EventSetter Event="PreviewDragOver" Handler="LogTabItem_PreviewDragOver"/>
                     <EventSetter Event="Drop" Handler="LogTabItem_Drop"/>
