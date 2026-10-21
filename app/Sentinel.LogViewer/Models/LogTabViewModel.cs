@@ -100,6 +100,9 @@ namespace Sentinel.LogViewer.Models
         /// </summary>
         public string? SenderKey { get; set; }
 
+        /// <summary>The colour of the tab of an application that sends logs; null for the tab of a file</summary>
+        public System.Windows.Media.Brush? AccentBrush => SenderKey == null ? null : Services.TabColors.BrushFor(SenderKey);
+
         /// <summary>The name of the application that sends to the tab; empty for the tab of a file</summary>
         public string ApplicationName { get; set; } = string.Empty;
 

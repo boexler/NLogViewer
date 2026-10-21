@@ -249,6 +249,9 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
+                        <Border Width="4" Height="14" CornerRadius="2" Margin="0,0,6,0" VerticalAlignment="Center"
+                                Background="{Binding AccentBrush}"
+                                Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
                         <TextBlock Text="{Binding Header}" />
                         <TextBlock Text=" (" 
                                    Margin="2,0,0,0"/>
