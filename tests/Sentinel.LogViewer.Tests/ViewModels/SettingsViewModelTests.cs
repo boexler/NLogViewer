@@ -170,6 +170,37 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void IgnoredSenders_AreAdded_Edited_Checked_AndRemoved()
+	{
+		var rules = _environment.CreateViewModel().Setting<IgnoreRuleListSettingViewModel>("Ignored senders");
+		Assert.Empty(rules.Items);
+
+		rules.AddCommand.Execute(null);
+		var item = rules.Items[0];
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Ip = "not an address";
+		Assert.True(item.HasError);
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Ip = " 10.0.0.5 ";
+		item.Application = "Orders";
+		Assert.False(item.HasError);
+		var saved = Assert.Single(_environment.Saved.IgnoreRules);
+		Assert.Equal(("10.0.0.5", "Orders"), (saved.Ip, saved.Application));
+
+		item.Ip = string.Empty;
+		item.Application = string.Empty;
+		Assert.True(item.HasError);
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Application = "Billing";
+		item.RemoveCommand.Execute(null);
+		Assert.Empty(rules.Items);
+		Assert.Empty(_environment.Saved.IgnoreRules);
+	}
+
+	[Fact]
 	public void Language_Change_IsSavedAndAppliedAndNeedsARestart()
 	{
 		var language = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>("Language");
@@ -247,7 +278,7 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.False(viewModel.IsSearching);
 		Assert.Equal("Receiving", viewModel.SelectedCategory?.Id);
-		Assert.Equal(1 + 5, viewModel.PageItems.Count);
+		Assert.Equal(1 + 6, viewModel.PageItems.Count);
 	}
 
 	[Fact]

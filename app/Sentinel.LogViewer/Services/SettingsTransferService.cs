@@ -63,6 +63,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
 		FilterPresetService.Sanitize(settings);
+		IgnoreRule.Sanitize(settings);
 
 		// The version that ran last belongs to this computer, not to the file.
 		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;

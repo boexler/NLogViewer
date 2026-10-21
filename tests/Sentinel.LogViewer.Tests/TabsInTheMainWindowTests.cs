@@ -352,6 +352,37 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void LogsOfAnIgnoredSender_DoNotOpenATab_AndIgnoringATabClosesItsTabs()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.IgnoreRules.Add(new IgnoreRule { Ip = "10.0.0.9" });
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+
+			Send(session, App("(1)", "Noisy", "10.0.0.9"));
+			Send(session, App("(2)", "Orders", "10.0.0.5"));
+			Send(session, App("(3)", "Billing", "10.0.0.5"));
+			Send(session, App("(4)", "Billing", "10.0.0.7"));
+
+			Assert.Equal(new[] { "Orders", "Billing", "Billing" }, session.ViewModel.LogTabs.Select(tab => tab.ApplicationName));
+
+			session.ViewModel.Ignore(session.ViewModel.LogTabs[1], byApplication: false);
+
+			Assert.Equal(new[] { "Billing" }, session.ViewModel.LogTabs.Select(tab => tab.ApplicationName));
+			Send(session, App("(5)", "Orders", "10.0.0.5"));
+			Assert.Single(session.ViewModel.LogTabs);
+
+			session.ViewModel.Ignore(session.ViewModel.LogTabs[0], byApplication: true);
+
+			Assert.Empty(session.ViewModel.LogTabs);
+			Assert.Equal(new[] { ("10.0.0.9", ""), ("10.0.0.5", ""), ("", "Billing") },
+				_environment.Saved.IgnoreRules.Select(rule => (rule.Ip, rule.Application)));
+		});
+	}
+
+	[Fact]
 	public void TheSourcesOfTheStatusBar_FollowTheAddressesOfTheSettings()
 	{
 		_context.RunOnSta(() =>

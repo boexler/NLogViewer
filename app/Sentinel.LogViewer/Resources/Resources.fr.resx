@@ -1033,5 +1033,44 @@
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Fermer</value>
   </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Expéditeurs ignorés</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Les journaux de ces expéditeurs sont ignorés à leur arrivée, qu'ils viennent en UDP ou en TCP. Une règle comporte une adresse IP, un nom d'application, ou les deux (les deux doivent alors correspondre).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Ajouter une règle</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Supprimer la règle</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>Adresse IP</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Saisissez une adresse IP, un nom d'application ou les deux.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Saisissez une adresse IP valide.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Ignorer cette application</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Ignorer cette adresse IP</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Ignorer l'expéditeur</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Ignorer l'application « {0} » ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Ignorer l'adresse IP {0} ? Ses onglets sont fermés et ses journaux seront ignorés à partir de maintenant.</value>
+  </data>
 </root>
 

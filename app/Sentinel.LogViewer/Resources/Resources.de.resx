@@ -1033,5 +1033,44 @@
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Ignorierte Absender</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Logs dieser Absender werden beim Eintreffen verworfen, egal ob sie per UDP oder TCP kommen. Eine Regel hat eine IP-Adresse, einen Anwendungsnamen oder beides (dann müssen beide passen).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Regel hinzufügen</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Regel entfernen</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>IP-Adresse</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Anwendung</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Geben Sie eine IP-Adresse, einen Anwendungsnamen oder beides ein.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Geben Sie eine gültige IP-Adresse ein.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Diese Anwendung ignorieren</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Diese IP-Adresse ignorieren</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Absender ignorieren</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Die Anwendung „{0}“ ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Die IP-Adresse {0} ignorieren? Ihre Tabs werden geschlossen, und ihre Logs werden künftig verworfen.</value>
+  </data>
 </root>
 

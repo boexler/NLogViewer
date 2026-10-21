@@ -130,6 +130,7 @@ namespace Sentinel.LogViewer.Services
                             config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
                         FilterPresetService.Sanitize(config);
+                        IgnoreRule.Sanitize(config);
                         return config;
                     }
                 }
@@ -223,6 +224,9 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>The saved filter presets, see <see cref="FilterPresetService"/>.</summary>
         public List<FilterPreset> FilterPresets { get; set; } = new();
+
+        /// <summary>The senders whose logs are dropped when they arrive, see <see cref="IgnoreRule"/>.</summary>
+        public List<IgnoreRule> IgnoreRules { get; set; } = new();
 
         /// <summary>What happens when an application starts again: a new tab (NewTab), the existing tab (ExtendTab) or a new tab that replaces the old one (ReplaceTab).</summary>
         public string RestartBehavior { get; set; } = nameof(Services.RestartBehavior.NewTab);

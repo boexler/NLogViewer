@@ -1033,5 +1033,44 @@
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Remitentes ignorados</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Los registros de estos remitentes se descartan al llegar, ya sea por UDP o por TCP. Una regla tiene una dirección IP, un nombre de aplicación o ambos (entonces deben coincidir los dos).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Agregar regla</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Quitar regla</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>Dirección IP</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Aplicación</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Introduzca una dirección IP, un nombre de aplicación o ambos.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Introduzca una dirección IP válida.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Ignorar esta aplicación</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Ignorar esta dirección IP</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Ignorar remitente</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>¿Ignorar la aplicación «{0}»? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>¿Ignorar la dirección IP {0}? Sus pestañas se cierran y sus registros se descartarán a partir de ahora.</value>
+  </data>
 </root>
 

@@ -100,6 +100,12 @@ namespace Sentinel.LogViewer.Models
         /// </summary>
         public string? SenderKey { get; set; }
 
+        /// <summary>The name of the application that sends to the tab; empty for the tab of a file</summary>
+        public string ApplicationName { get; set; } = string.Empty;
+
+        /// <summary>The address that the logs of the tab come from; empty for the tab of a file</summary>
+        public string Sender { get; set; } = string.Empty;
+
         /// <summary>
         /// When the tab got the last entry
         /// </summary>
