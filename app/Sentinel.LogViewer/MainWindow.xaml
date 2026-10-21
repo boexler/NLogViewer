@@ -116,6 +116,8 @@
                     Tag="{Binding ElementName=LogViewer1}"
                     DefaultTimeStampFormat="{Binding DataContext.DefaultTimeStampFormat, RelativeSource={RelativeSource AncestorType=Window}}"
                     ListFontFamily="{Binding DataContext.ListFontFamily, RelativeSource={RelativeSource AncestorType=Window}}"
+                    LevelDisplay="{Binding DataContext.LevelDisplay, RelativeSource={RelativeSource AncestorType=Window}}"
+                    RowHeight="{Binding DataContext.RowHeight, RelativeSource={RelativeSource AncestorType=Window}}"
                     ListFontSize="{Binding DataContext.ListFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
                     TraceBackground="{DynamicResource LogTraceBackground}"
                     TraceForeground="{DynamicResource LogTraceForeground}"

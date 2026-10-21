@@ -39,6 +39,12 @@ public static class SettingsRules
 	public static bool IsInstalledFont(string name) => System.Windows.Media.Fonts.SystemFontFamilies.Any(family =>
 		family.FamilyNames.Values.Append(family.Source).Contains(name, StringComparer.OrdinalIgnoreCase));
 
+	public static Wpf.LevelDisplayMode ParseLevelDisplay(string? text) =>
+		Enum.TryParse<Wpf.LevelDisplayMode>(text, out var mode) && Enum.IsDefined(mode) ? mode : Wpf.LevelDisplayMode.Symbol;
+
+	public static Wpf.RowHeightMode ParseRowHeight(string? text) =>
+		Enum.TryParse<Wpf.RowHeightMode>(text, out var mode) && Enum.IsDefined(mode) ? mode : Wpf.RowHeightMode.Normal;
+
 	public const int MinListFontSize = 6;
 	public const int MaxListFontSize = 40;
 

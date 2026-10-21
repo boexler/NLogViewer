@@ -1306,5 +1306,32 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>So sieht die Logliste mit dieser Schrift und Größe aus.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Level anzeigen als</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Wie das Level eines Eintrags in der Logliste angezeigt wird: als Symbol, als Text oder beides. Text hilft, wenn Zeilen kopiert oder exportiert werden und wenn Farben schwer zu unterscheiden sind.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Symbol und Text</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Zeilenhöhe</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Kompakte Zeilen zeigen mehr Einträge auf dem Bildschirm.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Kompakt</value>
+  </data>
 </root>
 

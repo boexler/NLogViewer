@@ -249,10 +249,10 @@ public class SettingsViewModelTests : IDisposable
 		Assert.Null(viewModel.SelectedCategory);
 		Assert.True(viewModel.IsSearching);
 
-		// Case is ignored; the title of the ports and the description of the auto start contain "port".
+		// Case is ignored; the title of the ports and the descriptions of the auto start and of the level display contain "port".
 		viewModel.SearchText = "PORT";
-		Assert.Equal(new[] { AutoStartTitle, PortsTitle }, SearchResultTitles(viewModel));
-		Assert.Single(viewModel.PageItems.OfType<SettingsSectionLabel>());
+		Assert.Equal(new[] { AutoStartTitle, PortsTitle, "Show level as" }, SearchResultTitles(viewModel));
+		Assert.Equal(new[] { "Receiving", "Appearance" }, viewModel.PageItems.OfType<SettingsSectionLabel>().Select(label => label.Title));
 	}
 
 	[Fact]
@@ -424,6 +424,28 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.True(_environment.Saved.MinimizeToTray);
 		Assert.Equal("Warn", _environment.Saved.TrayNotifyLevel);
+	}
+
+	[Fact]
+	public void TheLookOfTheRows_HasDefaults_IsSaved_AndIsReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var level = viewModel.Setting<ChoiceSettingViewModel>("Show level as");
+		var height = viewModel.Setting<ChoiceSettingViewModel>("Row height");
+		Assert.Equal("Symbol", level.Value);
+		Assert.Equal("Normal", height.Value);
+		Assert.Equal(new[] { "Symbol", "Text", "SymbolAndText" }, level.Options.Select(option => option.Value));
+		Assert.Equal(new[] { "Normal", "Compact" }, height.Options.Select(option => option.Value));
+
+		level.Value = "SymbolAndText";
+		height.Value = "Compact";
+		Assert.Equal("SymbolAndText", _environment.Saved.LevelDisplay);
+		Assert.Equal("Compact", _environment.Saved.RowHeight);
+
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
+		Assert.Equal("Normal", _environment.Saved.RowHeight);
 	}
 
 	[Fact]

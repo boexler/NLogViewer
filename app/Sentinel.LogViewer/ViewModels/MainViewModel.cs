@@ -53,6 +53,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private bool _isLoading;
 	private string _loadingProgress = string.Empty;
 	private TimeStampFormat _defaultTimeStampFormat;
+	private Wpf.LevelDisplayMode _levelDisplay;
+	private Wpf.RowHeightMode _rowHeight;
 	private string _listFontFamilyName = string.Empty;
 	private int _listFontSize = SettingsRules.DefaultListFontSize;
 	private int _fontZoom;
@@ -205,6 +207,34 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			var alerts = logEvents.Count(logEvent => logEvent.Entry.Level >= level);
 			if (alerts > 0)
 				AlertsReceived?.Invoke(this, alerts);
+		}
+	}
+
+	/// <summary>How the level column of the log list shows the level</summary>
+	public Wpf.LevelDisplayMode LevelDisplay
+	{
+		get => _levelDisplay;
+		private set
+		{
+			if (_levelDisplay == value)
+				return;
+
+			_levelDisplay = value;
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>How high the rows of the log list are</summary>
+	public Wpf.RowHeightMode RowHeight
+	{
+		get => _rowHeight;
+		private set
+		{
+			if (_rowHeight == value)
+				return;
+
+			_rowHeight = value;
+			OnPropertyChanged();
 		}
 	}
 
@@ -1098,6 +1128,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 
 		_listFontFamilyName = config.ListFontFamily;
+		LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay);
+		RowHeight = SettingsRules.ParseRowHeight(config.RowHeight);
 		_listFontSize = config.ListFontSize;
 		_fontZoom = 0;
 		NotifyFont();

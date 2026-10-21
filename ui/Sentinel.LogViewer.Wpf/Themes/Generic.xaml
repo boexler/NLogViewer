@@ -524,6 +524,11 @@
                                         <Setter Property="BorderBrush" Value="Black" />
                                         <Setter Property="BorderThickness" Value="1" />
                                         <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RowHeight}"
+                                                         Value="{x:Static local:RowHeightMode.Compact}">
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Padding" Value="0" />
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Trace}">
                                                 <Setter Property="Background"
@@ -582,8 +587,13 @@
                                         <GridViewColumn Header="Level" Width="Auto">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
-                                                           Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
+                                                               Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                        <TextBlock x:Name="LevelText" Text="{Binding Path=Level}" Visibility="Collapsed"
+                                                                   VerticalAlignment="Center" Margin="4,0,0,0"
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}"/>
+                                                    </StackPanel>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding Path=Level}"
                                                                      Value="{x:Static core:LogEntryLevel.Trace}">
@@ -614,6 +624,20 @@
                                                                      Value="{x:Static core:LogEntryLevel.Fatal}">
                                                             <Setter TargetName="Image" Property="Source"
                                                                     Value="../Images/Small/Fatal.png" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=LevelDisplay}"
+                                                                     Value="{x:Static local:LevelDisplayMode.Text}">
+                                                            <Setter TargetName="Image" Property="Visibility" Value="Collapsed" />
+                                                            <Setter TargetName="LevelText" Property="Visibility" Value="Visible" />
+                                                            <Setter TargetName="LevelText" Property="Margin" Value="0" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=LevelDisplay}"
+                                                                     Value="{x:Static local:LevelDisplayMode.SymbolAndText}">
+                                                            <Setter TargetName="LevelText" Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RowHeight}"
+                                                                     Value="{x:Static local:RowHeightMode.Compact}">
+                                                            <Setter TargetName="Image" Property="Height" Value="14" />
                                                         </DataTrigger>
                                                     </DataTemplate.Triggers>
                                                 </DataTemplate>

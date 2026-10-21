@@ -815,6 +815,25 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheLookOfTheRows_StartsAsTheSettingsSay()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.LevelDisplay = "SymbolAndText";
+			configuration.RowHeight = "Compact";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Send(session, App("(100)"));
+
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			Assert.Equal(Sentinel.LogViewer.Wpf.LevelDisplayMode.SymbolAndText, viewer.LevelDisplay);
+			Assert.Equal(Sentinel.LogViewer.Wpf.RowHeightMode.Compact, viewer.RowHeight);
+		});
+	}
+
+	[Fact]
 	public void TheFontOfTheList_IsZoomedForTheSession_AndTheStatusBarOffersToSaveIt()
 	{
 		_context.RunOnSta(() =>

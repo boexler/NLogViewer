@@ -1306,6 +1306,33 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>Így néz ki a naplólista ezzel a betűtípussal és mérettel.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>A szint megjelenítése</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Hogyan jelenik meg egy bejegyzés szintje a naplólistában: szimbólumként, szövegként vagy mindkettőként. A szöveg segít a sorok másolásakor vagy exportálásakor, és ha a színeket nehéz megkülönböztetni.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Szimbólum</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Szimbólum és szöveg</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Sormagasság</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>A kompakt sorok több bejegyzést mutatnak a képernyőn.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normál</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Kompakt</value>
+  </data>
 </root>
 
 

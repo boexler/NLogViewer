@@ -1306,6 +1306,33 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>Tak wygląda lista logów z tą czcionką i tym rozmiarem.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Pokaż poziom jako</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Jak poziom wpisu jest pokazywany na liście logów: jako symbol, jako tekst lub jedno i drugie. Tekst pomaga przy kopiowaniu lub eksporcie wierszy oraz gdy trudno odróżnić kolory.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Symbol i tekst</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Wysokość wierszy</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Zwarte wiersze pokazują więcej wpisów na ekranie.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normalna</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Zwarta</value>
+  </data>
 </root>
 
 

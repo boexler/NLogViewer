@@ -1306,5 +1306,32 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>Voici à quoi ressemble la liste des logs avec cette police et cette taille.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Afficher le niveau sous forme de</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>La façon dont le niveau d'une entrée s'affiche dans la liste des logs : symbole, texte ou les deux. Le texte aide lors de la copie ou de l'export des lignes et quand les couleurs sont difficiles à distinguer.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Symbole</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Texte</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Symbole et texte</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Hauteur des lignes</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Les lignes compactes affichent plus d'entrées à l'écran.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normale</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compacte</value>
+  </data>
 </root>
 

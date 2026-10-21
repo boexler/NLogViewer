@@ -1306,6 +1306,33 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>Așa arată lista de loguri cu acest font și această dimensiune.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Afișează nivelul ca</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Cum este afișat nivelul unei intrări în lista de loguri: ca simbol, ca text sau ambele. Textul ajută la copierea sau exportul rândurilor și când culorile sunt greu de deosebit.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Simbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Simbol și text</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Înălțimea rândurilor</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Rândurile compacte arată mai multe intrări pe ecran.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normală</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compactă</value>
+  </data>
 </root>
 
 

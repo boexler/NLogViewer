@@ -1306,5 +1306,32 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>How the log list looks with this font and size.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Show level as</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>How the level of an entry is shown in the log list: as a symbol, as text, or both. Text helps when rows are copied or exported, and when colours are hard to tell apart.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Symbol and text</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Row height</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Compact rows show more entries on the screen.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compact</value>
+  </data>
 </root>
 

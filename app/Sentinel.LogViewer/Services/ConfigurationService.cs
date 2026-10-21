@@ -131,6 +131,8 @@ namespace Sentinel.LogViewer.Services
                         if (!SettingsRules.IsValidListFontSize(config.ListFontSize))
                             config.ListFontSize = SettingsRules.DefaultListFontSize;
                         config.ListFontFamily ??= string.Empty;
+                        config.LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay).ToString();
+                        config.RowHeight = SettingsRules.ParseRowHeight(config.RowHeight).ToString();
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
                         config.Columns = Wpf.LogColumns.Normalize(config.Columns);
                         FilterPresetService.Sanitize(config);
@@ -231,6 +233,12 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
         public string SkippedVersion { get; set; } = string.Empty;
+
+        /// <summary>How the level column of the log list shows the level: Symbol, Text or SymbolAndText.</summary>
+        public string LevelDisplay { get; set; } = nameof(Wpf.LevelDisplayMode.Symbol);
+
+        /// <summary>How high the rows of the log list are: Normal or Compact.</summary>
+        public string RowHeight { get; set; } = nameof(Wpf.RowHeightMode.Normal);
 
         /// <summary>The font family of the log list; empty is the font of the application.</summary>
         public string ListFontFamily { get; set; } = string.Empty;

@@ -84,6 +84,41 @@ namespace Sentinel.LogViewer.ViewModels
                 },
                 getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
 
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE81E",
+                Text("Settings_LevelDisplay", "Show level as"),
+                Text("Settings_LevelDisplay_Description", "How the level of an entry is shown in the log list: as a symbol, as text, or both. Text helps when rows are copied or exported, and when colours are hard to tell apart."),
+                needsRestart: false,
+                options: new[]
+                {
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.Symbol), Text("Settings_LevelDisplay_Symbol", "Symbol")),
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.Text), Text("Settings_LevelDisplay_Text", "Text")),
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.SymbolAndText), Text("Settings_LevelDisplay_SymbolAndText", "Symbol and text"))
+                },
+                get: () => SettingsRules.ParseLevelDisplay(_configuration.LevelDisplay).ToString(),
+                set: mode =>
+                {
+                    _configuration.LevelDisplay = mode;
+                    Commit();
+                },
+                getDefault: () => nameof(Wpf.LevelDisplayMode.Symbol));
+
+            yield return new ChoiceSettingViewModel(AppearanceId, "\uE8A1",
+                Text("Settings_RowHeight", "Row height"),
+                Text("Settings_RowHeight_Description", "Compact rows show more entries on the screen."),
+                needsRestart: false,
+                options: new[]
+                {
+                    new ChoiceOption(nameof(Wpf.RowHeightMode.Normal), Text("Settings_RowHeight_Normal", "Normal")),
+                    new ChoiceOption(nameof(Wpf.RowHeightMode.Compact), Text("Settings_RowHeight_Compact", "Compact"))
+                },
+                get: () => SettingsRules.ParseRowHeight(_configuration.RowHeight).ToString(),
+                set: mode =>
+                {
+                    _configuration.RowHeight = mode;
+                    Commit();
+                },
+                getDefault: () => nameof(Wpf.RowHeightMode.Normal));
+
             FontPreviewSettingViewModel? fontPreview = null;
 
             yield return new ChoiceSettingViewModel(AppearanceId, "\uE8D2",

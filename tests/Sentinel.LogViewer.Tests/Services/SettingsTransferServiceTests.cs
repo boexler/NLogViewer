@@ -93,6 +93,27 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheLookOfTheRows_IsExportedAndImported_AndAnUnknownValueBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.LevelDisplay = "Text";
+		configuration.RowHeight = "Compact";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal("Text", _environment.Saved.LevelDisplay);
+		Assert.Equal("Compact", _environment.Saved.RowHeight);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "LevelDisplay": "Rainbow", "RowHeight": "42" } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
+		Assert.Equal("Normal", _environment.Saved.RowHeight);
+	}
+
+	[Fact]
 	public void TheFontOfTheList_IsExportedAndImported_AndAnInvalidSizeBecomesTheDefault()
 	{
 		var file = _environment.PathOf("export.json");

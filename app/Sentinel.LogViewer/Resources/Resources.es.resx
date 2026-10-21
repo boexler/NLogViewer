@@ -1306,5 +1306,32 @@
   <data name="Settings_ListFontPreview_Description" xml:space="preserve">
     <value>Así se ve la lista de logs con esta fuente y este tamaño.</value>
   </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Mostrar el nivel como</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Cómo se muestra el nivel de una entrada en la lista de logs: como símbolo, como texto o ambos. El texto ayuda al copiar o exportar filas y cuando los colores son difíciles de distinguir.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Símbolo</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Símbolo y texto</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Altura de fila</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Las filas compactas muestran más entradas en la pantalla.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compacta</value>
+  </data>
 </root>
 
