@@ -517,17 +517,6 @@
                                 BorderThickness="0"
                                 ScrollViewer.CanContentScroll="True"
                                 listViewLayoutManager:ListViewLayoutManager.Enabled="true">
-                                <ListView.Resources>
-                                <!-- The header of the time stamp column has the format menu -->
-                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
-                                    <Style.Triggers>
-                                        <Trigger Property="Content" Value="TimeStamp">
-                                            <Setter Property="ContextMenu" Value="{StaticResource TimeStampFormatMenu}"/>
-                                            <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.Resources>
                             <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="BorderBrush" Value="Black" />

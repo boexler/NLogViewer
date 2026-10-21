@@ -160,14 +160,10 @@ public class LogViewerTimeStampFormatTests
 				var cell = Descendants<TextBlock>((DependencyObject)listView.ItemContainerGenerator.ContainerFromIndex(0))
 					.First(text => text.ContextMenu?.Items.OfType<MenuItem>().Any(item => item.Header as string == "Default view") == true);
 
-				foreach (var menu in new[] { header.ContextMenu, cell.ContextMenu })
-				{
-					Assert.NotNull(menu);
-					Assert.Equal(new[] { "System", "ISO  2025-12-18 15:11:48.385", "German  18.12.2025 15:11:48.385", "English  12/18/2025 03:11:48.385 PM", "Default view" },
-						menu.Items.OfType<MenuItem>().Skip(1).Select(item => (string)item.Header));
-				}
-
-				Assert.Same(viewer, header.Tag);
+				var formats = new[] { "System", "ISO  2025-12-18 15:11:48.385", "German  18.12.2025 15:11:48.385", "English  12/18/2025 03:11:48.385 PM", "Default view" };
+				var headerFormats = viewer.BuildColumnMenu(header.Column, header).Items.OfType<MenuItem>().Single(item => item.Header as string == "Timestamp format");
+				Assert.Equal(formats, headerFormats.Items.OfType<MenuItem>().Select(item => (string)item.Header));
+				Assert.Equal(formats, cell.ContextMenu.Items.OfType<MenuItem>().Skip(1).Select(item => (string)item.Header));
 				Assert.Same(viewer, cell.Tag);
 			}
 			finally

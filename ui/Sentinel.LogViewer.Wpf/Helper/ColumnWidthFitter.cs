@@ -20,6 +20,9 @@ namespace Sentinel.LogViewer.Wpf.Helper
         // Cell margin of the GridViewRowPresenter (6 on each side) plus a reserve for rounding.
         private const double CellChromeWidth = 16;
 
+        // Padding of a column header, so that its text is not cut off when the values are narrower.
+        private const double HeaderChromeWidth = 24;
+
         private readonly ListView _listView;
         private readonly Typeface _typeface;
         private readonly Dictionary<char, double> _charWidths = new();
@@ -34,7 +37,12 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
         public void AddColumn(GridViewColumn column, Func<LogEntry, string?> getText)
         {
-            _columns.Add(new FittedColumn(column, getText));
+            _columns.Add(new FittedColumn(column, getText) { HeaderWidth = MeasureWidestLine(column.Header as string) });
+        }
+
+        public void RemoveColumn(GridViewColumn column)
+        {
+            _columns.RemoveAll(fitted => fitted.Column == column);
         }
 
         /// <summary>
@@ -92,7 +100,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 if (column.TextWidth <= 0)
                     continue;
 
-                var width = column.TextWidth + CellChromeWidth;
+                var width = Math.Max(column.TextWidth + CellChromeWidth, column.HeaderWidth + HeaderChromeWidth);
                 if (RangeColumn.GetIsFillColumn(column.Column))
                 {
                     // The layout manager stretches a fill column to the viewport, but not below its minimum.
@@ -174,6 +182,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             public Func<LogEntry, string?> GetText { get; }
             public double InitialWidth { get; }
             public double TextWidth { get; set; }
+            public double HeaderWidth { get; init; }
         }
     }
 }

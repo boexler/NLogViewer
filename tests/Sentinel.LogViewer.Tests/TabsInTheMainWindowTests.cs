@@ -407,6 +407,36 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheColumns_StartAsTheSettingsSay_AndWhatTheUserChoosesInATab_IsSavedForTheNextTab()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.Columns = new() { LogColumns.Level, LogColumns.Thread, LogColumns.Message };
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+
+			Send(session, App("(100)"));
+			var first = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Message }, first.ColumnKeys);
+
+			first.SetColumnVisible(LogColumns.Property("Class"), true);
+			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message }, _environment.Saved.Columns);
+
+			// A header that is dragged to another place reaches the tab and the settings as well.
+			((GridView)((ListView)first.Template.FindName("PART_ListView", first)).View).Columns.Move(0, 1);
+			Assert.Equal(new[] { LogColumns.Thread, LogColumns.Level, LogColumns.Property("Class"), LogColumns.Message }, session.ViewModel.LogTabs[0].ColumnKeys);
+			Assert.Equal(session.ViewModel.LogTabs[0].ColumnKeys, _environment.Saved.Columns);
+			first.ColumnKeys = new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message };
+
+			Send(session, App("(100)", name: "Orders"));
+			var second = ViewerOf(session, session.ViewModel.LogTabs[1]);
+			Assert.Equal(_environment.Saved.Columns, second.ColumnKeys);
+			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message }, first.ColumnKeys);
+		});
+	}
+
+	[Fact]
 	public void TheSourcesOfTheStatusBar_FollowTheAddressesOfTheSettings()
 	{
 		_context.RunOnSta(() =>

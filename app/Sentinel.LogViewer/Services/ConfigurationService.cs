@@ -129,6 +129,7 @@ namespace Sentinel.LogViewer.Services
                         if (!SettingsRules.IsValidLoggerTreeWidth(config.LoggerTreeWidth))
                             config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
+                        config.Columns = Wpf.LogColumns.Normalize(config.Columns);
                         FilterPresetService.Sanitize(config);
                         IgnoreRule.Sanitize(config);
                         return config;
@@ -221,6 +222,9 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>The fields that the filter and the search of a new tab look into, as the names of <see cref="Core.SearchFields"/> (default: Message and logger name).</summary>
         public string SearchFields { get; set; } = nameof(Core.SearchFields.Default);
+
+        /// <summary>The columns of the log list of a new tab and their order, as keys of <see cref="Wpf.LogColumns"/> (<c>thread</c>, <c>property:Class</c>, ...).</summary>
+        public List<string> Columns { get; set; } = new(Wpf.LogColumns.Default);
 
         /// <summary>The saved filter presets, see <see cref="FilterPresetService"/>.</summary>
         public List<FilterPreset> FilterPresets { get; set; } = new();

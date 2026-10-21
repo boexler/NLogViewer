@@ -141,10 +141,13 @@ public class PlainTextParser : IDisposable
 	/// </summary>
 	private List<LogEntry> ParseWithFormat(IEnumerable<string> lines, TextFileFormat format, DateTime? referenceTime)
 	{
+		var columnNames = format.HasHeaderLine && lines.FirstOrDefault() is { } header
+			? SplitLine(header, format).Select(name => name.Trim()).ToArray()
+			: Array.Empty<string>();
 		return ParseEntries(
 			ReadRecords(lines, format),
 			record => IsNewLogEntryWithFormat(record, format),
-			record => ParseLineWithFormat(record, format, referenceTime));
+			record => ParseLineWithFormat(record, format, referenceTime, columnNames));
 	}
 
 	/// <summary>
@@ -216,7 +219,7 @@ public class PlainTextParser : IDisposable
 	/// <summary>
 	/// Parses a single line using the format configuration
 	/// </summary>
-	private LogEntry? ParseLineWithFormat(string line, TextFileFormat format, DateTime? referenceTime)
+	private LogEntry? ParseLineWithFormat(string line, TextFileFormat format, DateTime? referenceTime, string[] columnNames)
 	{
 		try
 		{
@@ -264,13 +267,36 @@ public class PlainTextParser : IDisposable
 
 			return new LogEntry(level, loggerName, message)
 			{
-				TimeStamp = timestamp
+				TimeStamp = timestamp,
+				Properties = ExtraColumns(parts, format.ColumnMapping, columnNames)
 			};
 		}
 		catch
 		{
 			return null;
 		}
+	}
+
+	/// <summary>
+	/// The columns of a line that are not mapped to the timestamp, the level, the logger or the message, as properties: named after the header
+	/// line when there is one, otherwise <c>Column N</c>; empty values are left out
+	/// </summary>
+	private static Dictionary<string, object?> ExtraColumns(string[] parts, ColumnMapping mapping, string[] columnNames)
+	{
+		var extra = new Dictionary<string, object?>();
+		var timestampEnd = mapping.TimestampColumn < 0 ? -1 : mapping.TimestampColumn + Math.Max(1, mapping.TimestampColumnCount);
+		for (var i = 0; i < parts.Length; i++)
+		{
+			var isMapped = (i >= mapping.TimestampColumn && i < timestampEnd) || i == mapping.LevelColumn || i == mapping.LoggerColumn || i == mapping.MessageColumn;
+			var value = parts[i].Trim();
+			if (isMapped || value.Length == 0)
+				continue;
+
+			var name = i < columnNames.Length && columnNames[i].Length > 0 ? columnNames[i] : $"Column {i + 1}";
+			extra[name] = value;
+		}
+
+		return extra;
 	}
 
 	/// <summary>

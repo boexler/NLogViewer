@@ -236,6 +236,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				tab.LoggerTreeOpen = configuration.LoggerTreeOpen;
 				tab.LoggerTreeWidth = configuration.LoggerTreeWidth;
 				tab.SearchFields = SettingsRules.ParseSearchFields(configuration.SearchFields);
+				tab.ColumnKeys = Wpf.LogColumns.Normalize(configuration.Columns);
 				tab.PropertyChanged += OnTabViewSettingsChanged;
 			}
 		}
@@ -290,6 +291,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				break;
 			case nameof(LogTabViewModel.LoggerTreeWidth):
 				configuration.LoggerTreeWidth = Math.Clamp((int)Math.Round(tab.LoggerTreeWidth), SettingsRules.MinLoggerTreeWidth, SettingsRules.MaxLoggerTreeWidth);
+				break;
+			case nameof(LogTabViewModel.ColumnKeys):
+				configuration.Columns = Wpf.LogColumns.Normalize(tab.ColumnKeys);
 				break;
 			case nameof(LogTabViewModel.SearchFields):
 				if (_applyingFilterPreset)

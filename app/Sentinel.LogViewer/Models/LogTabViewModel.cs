@@ -23,6 +23,7 @@ namespace Sentinel.LogViewer.Models
         private bool _loggerTreeOpen;
         private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
         private SearchFields _searchFields = SearchFields.Default;
+        private IReadOnlyList<string> _columnKeys = Wpf.LogColumns.Default;
         private int _visibleEntryCount;
 
         /// <summary>
@@ -237,6 +238,22 @@ namespace Sentinel.LogViewer.Models
         /// <summary>
         /// The fields that the filter and the search of the viewer in the tab look into; the viewer keeps it up to date and takes it when it is set
         /// </summary>
+        /// <summary>
+        /// The columns of the viewer in the tab, in their order; the viewer keeps it up to date and takes it when it is set
+        /// </summary>
+        public IReadOnlyList<string> ColumnKeys
+        {
+            get => _columnKeys;
+            set
+            {
+                if (!_columnKeys.SequenceEqual(value))
+                {
+                    _columnKeys = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public SearchFields SearchFields
         {
             get => _searchFields;
