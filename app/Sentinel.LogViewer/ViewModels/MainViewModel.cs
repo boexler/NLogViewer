@@ -126,6 +126,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
 		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
 		SkipUpdateCommand = new RelayCommand(SkipUpdate, () => _noticeUpdate != null);
+		ShowShortcutsCommand = new RelayCommand(() => ShortcutsWindow.Show(System.Windows.Application.Current.MainWindow));
 		ZoomInCommand = new RelayCommand(() => Zoom(1));
 		ZoomOutCommand = new RelayCommand(() => Zoom(-1));
 		ResetFontZoomCommand = new RelayCommand(() => Zoom(0));
@@ -985,6 +986,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	/// <summary>Raised with the number of entries of the level Error or Fatal in a batch of received entries</summary>
 	public event EventHandler<int>? ErrorsReceived;
+
+	/// <summary>Opens the window with the keyboard and mouse commands</summary>
+	public ICommand ShowShortcutsCommand { get; }
 
 	/// <summary>Skips the version that the status bar announces: it and older ones are not announced again</summary>
 	public ICommand SkipUpdateCommand { get; }

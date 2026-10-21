@@ -1141,6 +1141,144 @@
   <data name="Tray_NewErrors" xml:space="preserve">
     <value>Nowe błędy: {0}</value>
   </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Skróty klawiszowe</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Polecenia klawiatury i myszy</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Okno główne</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>Karty</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Lista logów</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Filtr i wyszukiwanie</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Ustawienia i okna dialogowe</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>Page Up</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>Page Down</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Plus</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Minus</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Kółko myszy</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Kliknięcie prawym</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Kliknięcie środkowym</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Przeciągnięcie</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Otwórz plik logów</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>Otwórz ustawienia</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>Pokaż tę listę poleceń klawiatury i myszy</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Zakończ aplikację</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Przeciągnij pliki logów na okno, aby je otworzyć</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Zamknij bieżącą kartę</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Zamknij kartę</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Przejdź do następnej karty</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Przejdź do poprzedniej karty</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Przejdź do karty o tym numerze</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Przejdź do ostatniej karty</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Przeciągnij nagłówek karty, aby zmienić kolejność kart</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Otwórz menu karty: zamknij, zapisz przefiltrowaną listę, ignoruj nadawcę i więcej</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>Powiększ lub pomniejsz listę logów na tę sesję; pasek stanu proponuje zapisanie rozmiaru</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Wróć do zapisanego rozmiaru czcionki</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>Wybierz kolumny listy; w kolumnie znacznika czasu także jego format</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Przeciągnij nagłówek kolumny, aby zmienić kolejność kolumn</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Przeciągnij krawędź nagłówka kolumny, aby zmienić jej szerokość</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Otwórz menu wpisu: pokaż tylko jeden logger lub ukryj go, skopiuj tekst, dodaj do filtra</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>Dodaj tekst pola filtra jako wyrażenie filtra</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Przejdź do następnego trafienia wyszukiwania</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Przejdź do poprzedniego trafienia wyszukiwania</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Przejdź do pola wyszukiwania ustawień lub dziennika zmian</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>Wyczyść wyszukiwanie w ustawieniach, potem zamknij okno; zamyka okna dialogowe</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>Zapisz od razu wartość pola tekstowego w ustawieniach</value>
+  </data>
 </root>
 
 

@@ -227,6 +227,9 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Help, DefaultValue=_Help}">
+                <MenuItem Header="{helpers:Resource Key=Menu_Shortcuts, DefaultValue=_Keyboard shortcuts}"
+                          Command="{Binding ShowShortcutsCommand}"
+                          InputGestureText="F1"/>
                 <MenuItem Header="{helpers:Resource Key=Menu_About, DefaultValue=_About...}" 
                           Command="{Binding AboutCommand}"/>
             </MenuItem>

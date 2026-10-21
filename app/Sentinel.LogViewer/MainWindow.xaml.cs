@@ -53,6 +53,8 @@ namespace Sentinel.LogViewer
             if (_tray != null)
                 SetUpTray(_tray);
 
+            this.InputBindings.Add(new KeyBinding(_viewModel.ShowShortcutsCommand, Key.F1, ModifierKeys.None));
+
             // Zoom of the log list for this session
             this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control));
             this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control | ModifierKeys.Shift));

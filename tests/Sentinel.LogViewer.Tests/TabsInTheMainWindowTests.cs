@@ -546,7 +546,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	private sealed class FakeTray : ITrayIcon
 	{
 		public event EventHandler? RestoreRequested;
-		public event EventHandler? ExitRequested;
+		public event EventHandler? ExitRequested { add { } remove { } }
 		public bool IsVisible { get; private set; }
 		public string ToolTip { get; set; } = string.Empty;
 		public List<string> Notifications { get; } = new();
@@ -586,6 +586,43 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.True(session.Window.IsVisible);
 			Assert.Equal(System.Windows.WindowState.Normal, session.Window.WindowState);
 			Assert.False(tray.IsVisible);
+		});
+	}
+
+	/// <summary>The way the list of the shortcuts writes the gesture of a key binding</summary>
+	private static string Gesture(KeyBinding binding)
+	{
+		var key = binding.Key switch
+		{
+			>= Key.D0 and <= Key.D9 => (binding.Key - Key.D0).ToString(),
+			>= Key.NumPad0 and <= Key.NumPad9 => (binding.Key - Key.NumPad0).ToString(),
+			Key.OemPlus or Key.Add => "Plus",
+			Key.OemMinus or Key.Subtract => "Minus",
+			Key.OemComma => ",",
+			Key.Next => "PageDown",
+			Key.Prior => "PageUp",
+			_ => binding.Key.ToString()
+		};
+		if (key is "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" && binding.Modifiers == ModifierKeys.Alt)
+			key = "1…8";
+
+		var modifiers = (binding.Modifiers.HasFlag(ModifierKeys.Control) ? "Ctrl+" : "")
+			+ (binding.Modifiers.HasFlag(ModifierKeys.Alt) ? "Alt+" : "")
+			+ (binding.Modifiers.HasFlag(ModifierKeys.Shift) && key != "Plus" ? "Shift+" : "");
+		return modifiers + key;
+	}
+
+	[Fact]
+	public void EveryKeyBindingOfTheMainWindow_IsInTheListOfTheShortcuts()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+
+			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).ToHashSet();
+			var missing = session.Window.InputBindings.OfType<KeyBinding>().Select(Gesture).Distinct().Where(gesture => !listed.Contains(gesture)).ToList();
+
+			Assert.Empty(missing);
 		});
 	}
 

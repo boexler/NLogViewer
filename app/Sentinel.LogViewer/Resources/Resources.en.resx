@@ -1141,5 +1141,143 @@
   <data name="Tray_NewErrors" xml:space="preserve">
     <value>New errors: {0}</value>
   </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Keyboard shortcuts</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Keyboard and mouse commands</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Main window</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Log list</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Filter and search</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Settings and dialogs</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>Page up</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>Page down</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Plus</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Minus</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Mouse wheel</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Right-click</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Middle click</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Drag</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Open a log file</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>Open the settings</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>Show this list of keyboard and mouse commands</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Exit the application</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Drag log files onto the window to open them</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Close the current tab</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Close a tab</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Go to the next tab</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Go to the previous tab</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Go to the tab with that number</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Go to the last tab</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Drag a tab header to change the order of the tabs</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Open the menu of a tab: close, save the filtered list, ignore the sender and more</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>Zoom the log list for this session; the status bar offers to save the size</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Go back to the saved font size</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>Choose the columns of the list; the timestamp column also has its format here</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Drag a column header to change the order of the columns</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Drag the edge of a column header to change the width of the column</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>Add the text of the filter box as a filter term</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Go to the next hit of the search</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Go to the previous hit of the search</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Go to the search box of the settings or of the changelog</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>Clear the search of the settings, then close the window; closes dialogs</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>Save the value of a text box in the settings right away</value>
+  </data>
 </root>
 
