@@ -1129,20 +1129,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>Minimizing the window moves it to the notification area (tray), where it keeps receiving logs. The icon shows how receiving is going; double-click it to restore the window.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Notify about new errors in the tray</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>While the window is in the tray, a notification shows when new errors arrive, at most one every 30 seconds.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Open</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Exit</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>New errors: {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Keyboard shortcuts</value>
@@ -1281,6 +1272,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>Save the value of a text box in the settings right away</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Notify about new log entries in the tray</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Fatal only</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Errors and fatal</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Warnings, errors and fatal</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>New entries of level {1} or higher: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>The font “{0}” is not installed. The default font is used instead.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>On the receive button of the status bar: switch single sources on or off</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>On the logger tree: show only one logger or all, expand or collapse all</value>
   </data>
 </root>
 

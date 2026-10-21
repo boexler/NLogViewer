@@ -1126,20 +1126,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>Kicsinyítéskor az ablak az értesítési területre (tálca) kerül, és tovább fogadja a naplókat. Az ikon mutatja a fogadás állapotát; dupla kattintással az ablak visszaállítható.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Értesítés az új hibákról a tálcán</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>Amíg az ablak a tálcán van, értesítés jelenik meg az új hibák érkezésekor, legfeljebb 30 másodpercenként egy.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Megnyitás</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Kilépés</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>Új hibák: {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Billentyűparancsok</value>
@@ -1278,6 +1269,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>A beállításokban egy szövegmező értékének azonnali mentése</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Értesítés az új naplóbejegyzésekről a tálcán</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Amíg az ablak a tálcán van, értesítés jelenik meg, ha legalább ilyen szintű új bejegyzések érkeznek, legfeljebb 30 másodpercenként egy. Az értesítésre kattintva megnyílik az ablak.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Ki</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Csak végzetes</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Hibák és végzetesek</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Figyelmeztetések, hibák és végzetesek</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Új bejegyzések {1} vagy magasabb szinten: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>A(z) „{0}” betűtípus nincs telepítve. Helyette az alapértelmezett betűtípus lesz használva.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Az állapotsor fogadás gombján: egyes források be- vagy kikapcsolása</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>A logger-fán: egy logger vagy az összes megjelenítése, az összes kibontása vagy összecsukása</value>
   </data>
 </root>
 

@@ -414,15 +414,16 @@ public class SettingsViewModelTests : IDisposable
 	{
 		var viewModel = _environment.CreateViewModel();
 		var minimize = viewModel.Setting<BoolSettingViewModel>("Minimize to the notification area");
-		var notify = viewModel.Setting<BoolSettingViewModel>("Notify about new errors in the tray");
+		var notify = viewModel.Setting<ChoiceSettingViewModel>("Notify about new log entries in the tray");
 		Assert.False(minimize.Value);
-		Assert.False(notify.Value);
+		Assert.Equal("Off", notify.Value);
+		Assert.Equal(new[] { "Off", "Fatal", "Error", "Warn" }, notify.Options.Select(option => option.Value));
 
 		minimize.Value = true;
-		notify.Value = true;
+		notify.Value = "Warn";
 
 		Assert.True(_environment.Saved.MinimizeToTray);
-		Assert.True(_environment.Saved.NotifyTrayErrors);
+		Assert.Equal("Warn", _environment.Saved.TrayNotifyLevel);
 	}
 
 	[Fact]

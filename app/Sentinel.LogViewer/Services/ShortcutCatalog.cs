@@ -22,6 +22,7 @@ public static class ShortcutCatalog
 	{
 		new("Shortcuts_Group_Main", "Main window", new Shortcut[]
 		{
+			new("RightClick", "Shortcut_SourceMenu", "On the receive button of the status bar: switch single sources on or off"),
 			new("Ctrl+O", "Shortcut_OpenFile", "Open a log file"),
 			new("Ctrl+,", "Shortcut_Settings", "Open the settings"),
 			new("F1", "Shortcut_Help", "Show this list of keyboard and mouse commands"),
@@ -47,6 +48,7 @@ public static class ShortcutCatalog
 			new("Drag", "Shortcut_ReorderColumns", "Drag a column header to change the order of the columns"),
 			new("Drag", "Shortcut_ResizeColumn", "Drag the edge of a column header to change the width of the column"),
 			new("RightClick", "Shortcut_EntryMenu", "Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter"),
+			new("RightClick", "Shortcut_LoggerTreeMenu", "On the logger tree: show only one logger or all, expand or collapse all"),
 		}),
 		new("Shortcuts_Group_Filter", "Filter and search", new Shortcut[]
 		{
@@ -62,6 +64,4 @@ public static class ShortcutCatalog
 		}),
 	};
 
-	/// <summary>The parts of the combinations that are written in the language of the user</summary>
-	public static IEnumerable<string> Parts(string keys) => keys.Split(" / ").SelectMany(combination => combination.Split('+'));
 }

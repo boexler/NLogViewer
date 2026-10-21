@@ -1126,20 +1126,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>Beim Minimieren wandert das Fenster in den Infobereich (Tray) und empfängt weiter Logs. Das Symbol zeigt, wie es mit dem Empfang steht; ein Doppelklick darauf stellt das Fenster wieder her.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Im Infobereich über neue Fehler informieren</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>Solange das Fenster im Infobereich ist, erscheint eine Benachrichtigung, wenn neue Fehler eintreffen, höchstens alle 30 Sekunden.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Öffnen</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Beenden</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>Neue Fehler: {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Tastenkürzel</value>
@@ -1278,6 +1269,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>Den Wert eines Textfelds in den Einstellungen sofort speichern</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Im Infobereich über neue Logeinträge informieren</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Solange das Fenster im Infobereich ist, erscheint eine Benachrichtigung, wenn neue Einträge mindestens dieser Stufe eintreffen, höchstens alle 30 Sekunden. Ein Klick auf die Benachrichtigung öffnet das Fenster.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Nur Fatal</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Fehler und Fatal</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Warnungen, Fehler und Fatal</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Neue Einträge der Stufe {1} oder höher: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>Die Schrift „{0}“ ist nicht installiert. Stattdessen wird die Standardschrift verwendet.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Auf dem Empfangsknopf der Statusleiste: einzelne Quellen ein- oder ausschalten</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>Auf dem Logger-Baum: nur einen Logger oder alle zeigen, alles auf- oder zuklappen</value>
   </data>
 </root>
 

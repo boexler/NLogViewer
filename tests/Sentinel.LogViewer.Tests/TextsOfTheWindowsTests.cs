@@ -92,7 +92,7 @@ public class TextsOfTheWindowsTests
 	{
 		var same = new Regex(@"^(F\d{1,2}|[A-Z0-9,]|1…8)$");
 
-		var parts = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => ShortcutCatalog.Parts(shortcut.Keys)).Distinct();
+		var parts = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).SelectMany(combination => combination.Split('+')).Distinct();
 
 		Assert.Empty(parts.Where(part => !ShortcutCatalog.LocalizedKeys.Contains(part) && !same.IsMatch(part)));
 	}

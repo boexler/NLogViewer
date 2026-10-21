@@ -226,8 +226,8 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Whether minimizing the window moves it to the notification area, where it keeps receiving.</summary>
         public bool MinimizeToTray { get; set; } = false;
 
-        /// <summary>Whether a notification shows when new errors arrive while the window is in the tray.</summary>
-        public bool NotifyTrayErrors { get; set; } = false;
+        /// <summary>The lowest level of the entries that show a notification while the window is in the tray: Warn, Error or Fatal; Off for none.</summary>
+        public string TrayNotifyLevel { get; set; } = SettingsRules.TrayNotifyOff;
 
         /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
         public string SkippedVersion { get; set; } = string.Empty;

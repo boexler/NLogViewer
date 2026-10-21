@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
@@ -22,11 +23,15 @@ namespace Sentinel.LogViewer
         private readonly MainViewModel _viewModel;
         private readonly ITrayIcon? _tray;
 
-        /// <summary>At most one notification of new errors in this time, so a burst of errors does not flood the screen</summary>
-        private static readonly TimeSpan TrayNotificationInterval = TimeSpan.FromSeconds(30);
+        /// <summary>At most one notification in this time, so a burst of entries does not flood the screen; what arrives meanwhile is announced after it</summary>
+        internal TimeSpan TrayNotificationInterval { get; set; } = TimeSpan.FromSeconds(30);
 
-        private int _trayErrors;
+        private readonly DispatcherTimer _trayTimer = new();
+        private int _trayAlerts;
         private DateTime _lastTrayNotification = DateTime.MinValue;
+
+        /// <summary>The state to go back to when the window comes back from the tray: minimizing does not remember a maximized window</summary>
+        private WindowState _restoreState = WindowState.Normal;
 
         private Point _logTabDragStart;
         private LogTabViewModel? _logTabDragSource;
@@ -81,8 +86,8 @@ namespace Sentinel.LogViewer
             this.InputBindings.Add(new KeyBinding(_viewModel.SelectPreviousTabCommand, Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
             for (var number = 1; number <= 9; number++)
             {
+                // Not the numpad: Alt and numpad digits enter a character by its code in a text box.
                 this.InputBindings.Add(new KeyBinding(_viewModel.SelectTabCommand, Key.D0 + number, ModifierKeys.Alt) { CommandParameter = number });
-                this.InputBindings.Add(new KeyBinding(_viewModel.SelectTabCommand, Key.NumPad0 + number, ModifierKeys.Alt) { CommandParameter = number });
             }
 
 #if DEBUG
@@ -96,12 +101,20 @@ namespace Sentinel.LogViewer
         /// </summary>
         private void SetUpTray(ITrayIcon tray)
         {
+            Loaded += (_, _) => _restoreState = WindowState == WindowState.Minimized ? WindowState.Normal : WindowState;
+            _trayTimer.Tick += (_, _) => NotifyTray(tray);
             StateChanged += (_, _) =>
             {
-                if (WindowState != WindowState.Minimized || !_viewModel.MinimizeToTray)
+                if (WindowState != WindowState.Minimized)
+                {
+                    _restoreState = WindowState;
+                    return;
+                }
+
+                if (!_viewModel.MinimizeToTray)
                     return;
 
-                _trayErrors = 0;
+                _trayAlerts = 0;
                 tray.ToolTip = TrayToolTip();
                 tray.Show();
                 Hide();
@@ -111,22 +124,37 @@ namespace Sentinel.LogViewer
                 if (e.PropertyName == nameof(MainViewModel.ReceiveStatusText))
                     tray.ToolTip = TrayToolTip();
             };
-            _viewModel.ErrorsReceived += (_, errors) =>
+            _viewModel.AlertsReceived += (_, alerts) =>
             {
-                if (!tray.IsVisible || !_viewModel.NotifyTrayErrors)
+                if (!tray.IsVisible)
                     return;
 
-                _trayErrors += errors;
-                if (DateTime.UtcNow - _lastTrayNotification < TrayNotificationInterval)
-                    return;
-
-                _lastTrayNotification = DateTime.UtcNow;
-                var text = string.Format(System.Globalization.CultureInfo.CurrentCulture, _viewModel.TrayErrorsFormat, _trayErrors);
-                _trayErrors = 0;
-                tray.Notify(ProductNames.Display, text);
+                _trayAlerts += alerts;
+                var wait = TrayNotificationInterval - (DateTime.UtcNow - _lastTrayNotification);
+                if (wait <= TimeSpan.Zero)
+                {
+                    NotifyTray(tray);
+                }
+                else if (!_trayTimer.IsEnabled)
+                {
+                    _trayTimer.Interval = wait;
+                    _trayTimer.Start();
+                }
             };
             tray.RestoreRequested += (_, _) => RestoreFromTray();
             tray.ExitRequested += (_, _) => _viewModel.ExitCommand.Execute(null);
+        }
+
+        private void NotifyTray(ITrayIcon tray)
+        {
+            _trayTimer.Stop();
+            if (!tray.IsVisible || _trayAlerts == 0)
+                return;
+
+            _lastTrayNotification = DateTime.UtcNow;
+            var text = _viewModel.TrayNotificationText(_trayAlerts);
+            _trayAlerts = 0;
+            tray.Notify(ProductNames.Display, text);
         }
 
         private string TrayToolTip() => $"{ProductNames.Display} – {_viewModel.ReceiveStatusText}";
@@ -135,10 +163,12 @@ namespace Sentinel.LogViewer
         {
             Show();
             if (WindowState == WindowState.Minimized)
-                WindowState = WindowState.Normal;
+                WindowState = _restoreState;
 
             Activate();
             _tray?.Hide();
+            _trayTimer.Stop();
+            _trayAlerts = 0;
         }
 
         /// <summary>

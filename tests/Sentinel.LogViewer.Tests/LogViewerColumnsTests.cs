@@ -178,6 +178,20 @@ public class LogViewerColumnsTests
 		});
 
 	[Fact]
+	public void SeveralChangesOfTheFont_AreMeasuredOnce() =>
+		WithViewer(viewer =>
+		{
+			var before = viewer.FontRefits;
+
+			for (var size = 13; size <= 20; size++)
+				viewer.ListFontSize = size;
+
+			WpfTestHelper.Settle();
+
+			Assert.Equal(before + 1, viewer.FontRefits);
+		});
+
+	[Fact]
 	public void TheValueOfAProperty_IsFoundWhateverTheCaseOfItsName()
 	{
 		var entry = new LogEntry(LogEntryLevel.Info, "L", "m") { Properties = new Dictionary<string, object?> { ["class"] = "Billing" } };

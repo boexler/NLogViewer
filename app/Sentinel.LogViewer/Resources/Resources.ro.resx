@@ -1126,20 +1126,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>La minimizare, fereastra trece în zona de notificare (tray) și continuă să primească loguri. Pictograma arată cum merge recepția; dublu clic pe ea restaurează fereastra.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Notifică erorile noi în zona de notificare</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>Cât timp fereastra este în zona de notificare, apare o notificare când sosesc erori noi, cel mult una la 30 de secunde.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Deschide</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Ieșire</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>Erori noi: {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Comenzi rapide</value>
@@ -1278,6 +1269,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>Salvează imediat valoarea unui câmp de text din setări</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Notifică intrările noi de log în zona de notificare</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Cât timp fereastra este în zona de notificare, apare o notificare când sosesc intrări noi cu cel puțin acest nivel, cel mult una la 30 de secunde. Un clic pe notificare deschide fereastra.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Dezactivat</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Doar fatale</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Erori și fatale</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Avertismente, erori și fatale</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Intrări noi de nivel {1} sau mai mare: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>Fontul „{0}” nu este instalat. În locul lui se folosește fontul implicit.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Pe butonul de recepție din bara de stare: activează sau dezactivează surse individuale</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>Pe arborele de loggeri: arată un singur logger sau pe toți, extinde sau restrânge tot</value>
   </data>
 </root>
 

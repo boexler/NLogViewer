@@ -24,6 +24,21 @@ public static class SettingsRules
 
 	public static bool IsValidLoggerTreeWidth(int value) => value is >= MinLoggerTreeWidth and <= MaxLoggerTreeWidth;
 
+	/// <summary>The value of the setting for no notification in the tray; the others are the names of the levels Warn, Error and Fatal</summary>
+	public const string TrayNotifyOff = "Off";
+
+	public static Core.LogEntryLevel? ParseTrayNotifyLevel(string? text) => text switch
+	{
+		"Warn" => Core.LogEntryLevel.Warn,
+		"Error" => Core.LogEntryLevel.Error,
+		"Fatal" => Core.LogEntryLevel.Fatal,
+		_ => null
+	};
+
+	/// <summary>Whether a font family is installed, by its name in any language</summary>
+	public static bool IsInstalledFont(string name) => System.Windows.Media.Fonts.SystemFontFamilies.Any(family =>
+		family.FamilyNames.Values.Append(family.Source).Contains(name, StringComparer.OrdinalIgnoreCase));
+
 	public const int MinListFontSize = 6;
 	public const int MaxListFontSize = 40;
 

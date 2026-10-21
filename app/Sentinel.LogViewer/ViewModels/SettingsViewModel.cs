@@ -230,16 +230,24 @@ namespace Sentinel.LogViewer.ViewModels
                     },
                     getDefault: () => ConfigurationService.CreateDefaultConfiguration().MinimizeToTray),
 
-                new BoolSettingViewModel(GeneralId, "",
-                    Text("Settings_NotifyTrayErrors", "Notify about new errors in the tray"),
-                    Text("Settings_NotifyTrayErrors_Description", "While the window is in the tray, a notification shows when new errors arrive, at most one every 30 seconds."),
-                    get: () => _configuration.NotifyTrayErrors,
-                    set: value =>
+                new ChoiceSettingViewModel(GeneralId, "",
+                    Text("Settings_TrayNotify", "Notify about new log entries in the tray"),
+                    Text("Settings_TrayNotify_Description", "While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window."),
+                    needsRestart: false,
+                    options: new[]
                     {
-                        _configuration.NotifyTrayErrors = value;
+                        new ChoiceOption(SettingsRules.TrayNotifyOff, Text("Settings_TrayNotify_Off", "Off")),
+                        new ChoiceOption("Fatal", Text("Settings_TrayNotify_Fatal", "Fatal only")),
+                        new ChoiceOption("Error", Text("Settings_TrayNotify_Error", "Errors and fatal")),
+                        new ChoiceOption("Warn", Text("Settings_TrayNotify_Warn", "Warnings, errors and fatal"))
+                    },
+                    get: () => _configuration.TrayNotifyLevel,
+                    set: level =>
+                    {
+                        _configuration.TrayNotifyLevel = level;
                         Commit();
                     },
-                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().NotifyTrayErrors),
+                    getDefault: () => SettingsRules.TrayNotifyOff),
 
                 new BoolSettingViewModel(ReceivingId, "",
                     Text("Settings_AutoStartListening", "Start listening on launch"),

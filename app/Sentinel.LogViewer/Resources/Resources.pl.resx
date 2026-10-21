@@ -1126,20 +1126,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>Minimalizowanie przenosi okno do obszaru powiadomień (zasobnika), gdzie nadal odbiera logi. Ikona pokazuje stan odbioru; dwukrotne kliknięcie przywraca okno.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Powiadamiaj o nowych błędach w zasobniku</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>Gdy okno jest w zasobniku, pojawia się powiadomienie o nowych błędach, najwyżej raz na 30 sekund.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Otwórz</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Zakończ</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>Nowe błędy: {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Skróty klawiszowe</value>
@@ -1278,6 +1269,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>Zapisz od razu wartość pola tekstowego w ustawieniach</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Powiadamiaj o nowych wpisach logów w zasobniku</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Gdy okno jest w zasobniku, pojawia się powiadomienie o nowych wpisach co najmniej tego poziomu, najwyżej raz na 30 sekund. Kliknięcie powiadomienia otwiera okno.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Wyłączone</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Tylko krytyczne (Fatal)</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Błędy i krytyczne</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Ostrzeżenia, błędy i krytyczne</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Nowe wpisy poziomu {1} lub wyższego: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>Czcionka „{0}” nie jest zainstalowana. Zamiast niej używana jest czcionka domyślna.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Na przycisku odbioru na pasku stanu: włącz lub wyłącz pojedyncze źródła</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>Na drzewie loggerów: pokaż jeden logger lub wszystkie, rozwiń lub zwiń wszystko</value>
   </data>
 </root>
 

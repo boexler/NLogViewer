@@ -46,13 +46,25 @@ namespace Sentinel.LogViewer.Wpf
             DependencyProperty.Register(nameof(ListFontSize), typeof(double), typeof(LogViewer),
                 new FrameworkPropertyMetadata(SystemFonts.MessageFontSize, OnListFontChanged));
 
+        private bool _refitPending;
+
+        /// <summary>How often the columns were measured again for a new font</summary>
+        internal int FontRefits { get; private set; }
+
         private static void OnListFontChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is LogViewer { _columnWidthFitter: { } fitter } viewer)
+            if (d is not LogViewer { _columnWidthFitter: not null, _refitPending: false } viewer)
+                return;
+
+            // Every wheel notch of a zoom changes the font, and measuring all entries takes long: one measuring for all the changes
+            // that come before the list has taken the font.
+            viewer._refitPending = true;
+            viewer.Dispatcher.InvokeAsync(() =>
             {
-                // After the list has taken the font, so that the texts are measured with it.
-                viewer.Dispatcher.InvokeAsync(() => fitter.Refit(viewer.GetEffectiveEntries()), DispatcherPriority.Loaded);
-            }
+                viewer._refitPending = false;
+                viewer.FontRefits++;
+                viewer._columnWidthFitter?.Refit(viewer.GetEffectiveEntries());
+            }, DispatcherPriority.Loaded);
         }
     }
 }

@@ -58,7 +58,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private int _fontZoom;
 	private AvailableUpdate? _noticeUpdate;
 	private bool _minimizeToTray;
-	private bool _notifyTrayErrors;
+	private Core.LogEntryLevel? _trayNotifyLevel;
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -200,9 +200,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 
-		var errors = logEvents.Count(logEvent => logEvent.Entry.Level >= LogEntryLevel.Error);
-		if (errors > 0)
-			ErrorsReceived?.Invoke(this, errors);
+		if (_trayNotifyLevel is { } level)
+		{
+			var alerts = logEvents.Count(logEvent => logEvent.Entry.Level >= level);
+			if (alerts > 0)
+				AlertsReceived?.Invoke(this, alerts);
+		}
 	}
 
 	/// <summary>The font family of the log list; the font of the application when none is set</summary>
@@ -978,14 +981,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>Whether minimizing the window moves it to the tray</summary>
 	public bool MinimizeToTray => _minimizeToTray;
 
-	/// <summary>Whether new errors are announced while the window is in the tray</summary>
-	public bool NotifyTrayErrors => _notifyTrayErrors;
+	/// <summary>The text of the notification that tells how many entries of the level of the setting arrived</summary>
+	public string TrayNotificationText(int count) => string.Format(CultureInfo.CurrentCulture,
+		_localizationService.GetString("Tray_NewEntries", "New entries of level {1} or higher: {0}"), count, _trayNotifyLevel);
 
-	/// <summary>The text of the notification of new errors, with the number as {0}</summary>
-	public string TrayErrorsFormat => _localizationService.GetString("Tray_NewErrors", "New errors: {0}");
-
-	/// <summary>Raised with the number of entries of the level Error or Fatal in a batch of received entries</summary>
-	public event EventHandler<int>? ErrorsReceived;
+	/// <summary>Raised with the number of entries at or above the level of the tray setting in a batch of received entries; never when the setting is off</summary>
+	public event EventHandler<int>? AlertsReceived;
 
 	/// <summary>Opens the window with the keyboard and mouse commands</summary>
 	public ICommand ShowShortcutsCommand { get; }
@@ -1088,12 +1089,20 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
+		if (config.ListFontFamily.Length > 0 && !SettingsRules.IsInstalledFont(config.ListFontFamily))
+		{
+			Snackbar.ShowError(string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Message_FontMissing", "The font “{0}” is not installed. The default font is used instead."), config.ListFontFamily));
+			config.ListFontFamily = string.Empty;
+			_configService.SaveConfiguration(config);
+		}
+
 		_listFontFamilyName = config.ListFontFamily;
 		_listFontSize = config.ListFontSize;
 		_fontZoom = 0;
 		NotifyFont();
 		_minimizeToTray = config.MinimizeToTray;
-		_notifyTrayErrors = config.NotifyTrayErrors;
+		_trayNotifyLevel = SettingsRules.ParseTrayNotifyLevel(config.TrayNotifyLevel);
 		_udpReceiverService.Configure(config.Ports);
 		_ignoreRules = config.IgnoreRules.ToArray();
 

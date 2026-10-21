@@ -1126,20 +1126,11 @@
   <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
     <value>La réduction de la fenêtre la déplace dans la zone de notification, où elle continue de recevoir des logs. L'icône indique l'état de la réception ; double-cliquez dessus pour restaurer la fenêtre.</value>
   </data>
-  <data name="Settings_NotifyTrayErrors" xml:space="preserve">
-    <value>Signaler les nouvelles erreurs dans la zone de notification</value>
-  </data>
-  <data name="Settings_NotifyTrayErrors_Description" xml:space="preserve">
-    <value>Tant que la fenêtre est dans la zone de notification, une notification s'affiche à l'arrivée de nouvelles erreurs, au plus une toutes les 30 secondes.</value>
-  </data>
   <data name="Tray_Open" xml:space="preserve">
     <value>Ouvrir</value>
   </data>
   <data name="Tray_Exit" xml:space="preserve">
     <value>Quitter</value>
-  </data>
-  <data name="Tray_NewErrors" xml:space="preserve">
-    <value>Nouvelles erreurs : {0}</value>
   </data>
   <data name="Menu_Shortcuts" xml:space="preserve">
     <value>_Raccourcis clavier</value>
@@ -1278,6 +1269,36 @@
   </data>
   <data name="Shortcut_ConfirmText" xml:space="preserve">
     <value>Enregistrer tout de suite la valeur d'un champ de texte des paramètres</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Signaler les nouvelles entrées de log dans la zone de notification</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Tant que la fenêtre est dans la zone de notification, une notification s'affiche à l'arrivée de nouvelles entrées de ce niveau ou plus, au plus une toutes les 30 secondes. Un clic sur la notification ouvre la fenêtre.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Fatales uniquement</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Erreurs et fatales</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Avertissements, erreurs et fatales</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Nouvelles entrées de niveau {1} ou plus : {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>La police « {0} » n'est pas installée. La police par défaut est utilisée à la place.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Sur le bouton de réception de la barre d'état : activer ou désactiver des sources individuelles</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>Sur l'arbre des loggers : afficher un seul logger ou tous, tout développer ou tout réduire</value>
   </data>
 </root>
 

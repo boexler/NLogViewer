@@ -469,7 +469,10 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Press(session, Key.D2, ModifierKeys.Alt);
 			Assert.Same(tabs[1], session.ViewModel.SelectedTab);
 
-			Press(session, Key.NumPad9, ModifierKeys.Alt);
+			// Alt and numpad digits enter a character by its code in a text box, so they do not change the tab.
+			Assert.DoesNotContain(session.Window.InputBindings.OfType<KeyBinding>(), binding => binding.Modifiers == ModifierKeys.Alt && binding.Key is >= Key.NumPad0 and <= Key.NumPad9);
+
+			Press(session, Key.D9, ModifierKeys.Alt);
 			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
 
 			Press(session, Key.PageDown, ModifierKeys.Control);
@@ -556,11 +559,11 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		public void Restore() => RestoreRequested?.Invoke(this, EventArgs.Empty);
 	}
 
-	private void ConfigureTray(bool minimizeToTray, bool notifyErrors)
+	private void ConfigureTray(bool minimizeToTray, string notifyLevel)
 	{
 		var configuration = _environment.Saved;
 		configuration.MinimizeToTray = minimizeToTray;
-		configuration.NotifyTrayErrors = notifyErrors;
+		configuration.TrayNotifyLevel = notifyLevel;
 		_environment.Configuration.SaveConfiguration(configuration);
 	}
 
@@ -569,7 +572,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	{
 		_context.RunOnSta(() =>
 		{
-			ConfigureTray(minimizeToTray: true, notifyErrors: false);
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
 			var tray = new FakeTray();
 			using var session = Start(tray: tray);
 
@@ -647,7 +650,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	{
 		_context.RunOnSta(() =>
 		{
-			ConfigureTray(minimizeToTray: false, notifyErrors: true);
+			ConfigureTray(minimizeToTray: false, notifyLevel: "Error");
 			var tray = new FakeTray();
 			using var session = Start(tray: tray);
 
@@ -660,27 +663,100 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
-	public void NewErrors_AreAnnouncedOnlyWhileTheWindowIsInTheTray_AndNotMoreOftenThanEvery30Seconds()
+	public void TheTrayNotification_FollowsTheLevelOfTheSetting_AndOnlyWhileTheWindowIsInTheTray()
 	{
 		_context.RunOnSta(() =>
 		{
-			ConfigureTray(minimizeToTray: true, notifyErrors: true);
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Fatal");
 			var tray = new FakeTray();
 			using var session = Start(tray: tray);
 
-			Send(session, App("(100)"), level: LogEntryLevel.Error);
+			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
 			Assert.Empty(tray.Notifications);
 
 			session.Window.WindowState = System.Windows.WindowState.Minimized;
 			WpfTestHelper.Settle();
-			Send(session, App("(100)"), level: LogEntryLevel.Info);
+			Send(session, App("(100)"), level: LogEntryLevel.Error);
 			Assert.Empty(tray.Notifications);
 
 			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
-			Assert.Equal(new[] { "New errors: 1" }, tray.Notifications);
+			Assert.Equal(new[] { "New entries of level Fatal or higher: 1" }, tray.Notifications);
+		});
+	}
 
+	[Fact]
+	public void WarningsAreAnnounced_WhenTheSettingSaysSo_AndWhatArrivesWithinTheIntervalIsAnnouncedAfterIt()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Warn");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray);
+			session.Window.TrayNotificationInterval = TimeSpan.FromSeconds(1.5);
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Send(session, App("(100)"), level: LogEntryLevel.Info);
+			Assert.Empty(tray.Notifications);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Warn);
+			Assert.Equal(new[] { "New entries of level Warn or higher: 1" }, tray.Notifications);
+
+			// Within the interval: nothing yet, but it is not lost.
 			Send(session, App("(100)"), level: LogEntryLevel.Error);
 			Assert.Single(tray.Notifications);
+
+			for (var i = 0; i < 60 && tray.Notifications.Count < 2; i++)
+			{
+				Thread.Sleep(50);
+				WpfTestHelper.Settle();
+			}
+
+			Assert.Equal(new[] { "New entries of level Warn or higher: 1", "New entries of level Warn or higher: 1" }, tray.Notifications);
+		});
+	}
+
+	[Fact]
+	public void TheWindowComesBackFromTheTray_AsItWasBefore()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray);
+			session.Window.WindowState = System.Windows.WindowState.Maximized;
+			WpfTestHelper.Settle();
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+			tray.Restore();
+			WpfTestHelper.Settle();
+
+			Assert.Equal(System.Windows.WindowState.Maximized, session.Window.WindowState);
+		});
+	}
+
+	[Fact]
+	public void AMissingFontOfTheSettings_IsReplacedByTheDefault_WithAMessage()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.ListFontFamily = "Consolas";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using (var installed = Start())
+			{
+				Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
+				Assert.DoesNotContain("not installed", installed.ViewModel.Snackbar.Message);
+			}
+
+			configuration.ListFontFamily = "No Such Font 123";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var missing = Start();
+
+			Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
+			Assert.Contains("No Such Font 123", missing.ViewModel.Snackbar.Message);
+			Assert.Equal(System.Windows.SystemFonts.MessageFontFamily.Source, missing.ViewModel.ListFontFamily.Source);
 		});
 	}
 
