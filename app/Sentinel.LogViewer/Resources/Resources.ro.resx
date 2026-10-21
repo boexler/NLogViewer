@@ -323,7 +323,7 @@
     <value>Elimină portul</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Introduceți o adresă precum udp://0.0.0.0:4000 cu un port între 1 și 65535. Deocamdată este acceptat doar UDP.</value>
+    <value>Introduceți o adresă precum udp://0.0.0.0:4000 sau tcp://0.0.0.0:4000, cu un port de la 1 la 65535.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Acest port este deja în listă.</value>
@@ -1032,6 +1032,51 @@
   </data>
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Închide</value>
+  </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Expeditori ignorați</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Jurnalele acestor expeditori sunt ignorate la sosire, indiferent dacă vin prin UDP sau TCP. O regulă are o adresă IP, un nume de aplicație sau ambele (atunci trebuie să se potrivească amândouă).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Adaugă regulă</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Elimină regula</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>Adresă IP</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Aplicație</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Introduceți o adresă IP, un nume de aplicație sau ambele.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Introduceți o adresă IP validă.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Ignoră această aplicație (de la orice adresă IP)</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Ignoră această adresă IP</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Ignoră expeditorul</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Ignorați aplicația „{0}” de la orice adresă IP? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Ignorați adresa IP {1}? Filele ei se închid, iar jurnalele ei vor fi ignorate de acum înainte.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignoră această aplicație (doar de la această adresă IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Ignorați aplicația „{0}” de la adresa IP {1}? Fila ei se închide, iar jurnalele ei vor fi ignorate de acum înainte.</value>
   </data>
 </root>
 

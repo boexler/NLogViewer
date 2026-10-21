@@ -62,10 +62,11 @@ public sealed class PortListSettingViewModel : SettingViewModel
 	}
 
 	/// <summary>
-	/// Returns whether another entry already listens on the port
+	/// Returns whether another entry already listens on the port with the same protocol; UDP and TCP can use the same number
 	/// </summary>
-	internal bool IsPortInUse(int port, PortItemViewModel except) =>
-		Items.Any(item => !ReferenceEquals(item, except) && SettingsRules.TryGetUdpPort(item.Address, out var other) && other == port);
+	internal bool IsPortInUse(string address, int port, PortItemViewModel except) =>
+		Items.Any(item => !ReferenceEquals(item, except) && SettingsRules.TryGetPort(item.Address, out var other) && other == port
+		                  && SettingsRules.SchemeOf(item.Address) == SettingsRules.SchemeOf(address));
 
 	private void Load(IEnumerable<string> addresses)
 	{
@@ -77,7 +78,7 @@ public sealed class PortListSettingViewModel : SettingViewModel
 	private void Add()
 	{
 		var port = FirstSuggestedPort;
-		while (Items.Any(item => SettingsRules.TryGetUdpPort(item.Address, out var used) && used == port))
+		while (Items.Any(item => SettingsRules.TryGetPort(item.Address, out var used) && used == port && SettingsRules.SchemeOf(item.Address) == "udp"))
 			port++;
 
 		Items.Add(new PortItemViewModel(this, $"udp://0.0.0.0:{port}"));
@@ -110,14 +111,14 @@ public sealed class PortItemViewModel : INotifyPropertyChanged
 		set
 		{
 			var address = value?.Trim() ?? string.Empty;
-			if (!SettingsRules.TryGetUdpPort(address, out var port))
+			if (!SettingsRules.TryGetPort(address, out var port))
 			{
 				// The text box keeps what was typed, so nothing is raised for the address.
 				Error = _owner.InvalidAddressMessage;
 				return;
 			}
 
-			if (_owner.IsPortInUse(port, this))
+			if (_owner.IsPortInUse(address, port, this))
 			{
 				Error = _owner.DuplicatePortMessage;
 				return;

@@ -323,7 +323,7 @@
     <value>Port eltávolítása</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal. Egyelőre csak az UDP támogatott.</value>
+    <value>Adjon meg egy címet, például udp://0.0.0.0:4000 vagy tcp://0.0.0.0:4000, 1 és 65535 közötti porttal.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ez a port már szerepel a listában.</value>
@@ -1032,6 +1032,51 @@
   </data>
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Bezárás</value>
+  </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Figyelmen kívül hagyott küldők</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Az ilyen küldőktől érkező naplókat a rendszer érkezéskor eldobja, akár UDP-n, akár TCP-n jönnek. Egy szabály tartalmazhat IP-címet, alkalmazásnevet vagy mindkettőt (ekkor mindkettőnek egyeznie kell).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Szabály hozzáadása</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Szabály eltávolítása</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>IP-cím</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Alkalmazás</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Adjon meg egy IP-címet, egy alkalmazásnevet vagy mindkettőt.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Adjon meg érvényes IP-címet.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Alkalmazás figyelmen kívül hagyása (bármely IP-címről)</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>IP-cím figyelmen kívül hagyása</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Küldő figyelmen kívül hagyása</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást bármely IP-címről? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Figyelmen kívül hagyja a(z) {1} IP-címet? A lapjai bezáródnak, a naplóit pedig mostantól eldobja a rendszer.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Alkalmazás figyelmen kívül hagyása (csak erről az IP-címről)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Figyelmen kívül hagyja a(z) „{0}” alkalmazást a(z) {1} IP-címről? A lapja bezáródik, a naplóit pedig mostantól eldobja a rendszer.</value>
   </data>
 </root>
 

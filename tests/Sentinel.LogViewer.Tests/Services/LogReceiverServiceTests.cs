@@ -13,13 +13,13 @@ using Xunit;
 namespace Sentinel.LogViewer.Tests.Services;
 
 /// <summary>
-/// Tests for <see cref="UdpLogReceiverService"/> StartListeningAsync result and error handling.
+/// Tests for <see cref="LogReceiverService"/> StartListeningAsync result and error handling.
 /// </summary>
-public class UdpLogReceiverServiceTests
+public class LogReceiverServiceTests
 {
-	private static UdpLogReceiverService CreateService()
+	private static LogReceiverService CreateService()
 	{
-		return new UdpLogReceiverService(new Log4JEventParser());
+		return new LogReceiverService(new Log4JEventParser());
 	}
 
 	[Fact]
@@ -106,7 +106,7 @@ public class UdpLogReceiverServiceTests
 		var changes = 0;
 		service.SourcesChanged += (_, _) => changes++;
 
-		var result = await service.StartListeningAsync(new List<string> { $"udp://0.0.0.0:{free}", $"udp://0.0.0.0:{busy}", "tcp://0.0.0.0:1" });
+		var result = await service.StartListeningAsync(new List<string> { $"udp://0.0.0.0:{free}", $"udp://0.0.0.0:{busy}", "http://0.0.0.0:1" });
 
 		Assert.True(result.AnyStarted);
 		Assert.Equal(2, service.Sources.Count);
@@ -190,5 +190,76 @@ public class UdpLogReceiverServiceTests
 		Assert.Equal(new[] { "UDP 2", kept.Name }, service.Sources.Select(source => source.Name));
 		Assert.Same(kept, service.Sources[1]);
 		Assert.Equal(ReceiveSourceState.Listening, kept.State);
+	}
+
+	private static async Task SendTcp(int port, params string[] pieces)
+	{
+		using var client = new System.Net.Sockets.TcpClient();
+		await client.ConnectAsync(IPAddress.Loopback, port);
+		var stream = client.GetStream();
+		foreach (var piece in pieces)
+		{
+			await stream.WriteAsync(Encoding.UTF8.GetBytes(piece));
+			await stream.FlushAsync();
+			await Task.Delay(30);
+		}
+	}
+
+	private static string Event(string message) =>
+		$@"<log4j:event logger=""L"" level=""INFO"" timestamp=""1"" xmlns:log4j=""http://jakarta.apache.org/log4j/""><log4j:message>{message}</log4j:message></log4j:event>";
+
+	[Fact]
+	public async Task ATcpSource_ReceivesEvents_FromSeveralClients_AlsoWhenTheyArriveInPieces()
+	{
+		var port = FreeUdpPort();
+		using var service = CreateService();
+		var received = new System.Collections.Concurrent.ConcurrentBag<string>();
+		using var subscription = System.ObservableExtensions.Subscribe(service.Log4JEventObservable, e => received.Add(e.Entry.Message));
+		await service.StartListeningAsync(new List<string> { $"tcp://0.0.0.0:{port}" });
+		var source = service.Sources.Single();
+		Assert.Equal(("TCP", ReceiveSourceState.Listening), (source.Kind, source.State));
+
+		var text = Event("one") + "\r\n" + Event("two");
+		await Task.WhenAll(SendTcp(port, text[..40], text[40..130], text[130..]), SendTcp(port, Event("three")));
+
+		Assert.True(await WaitFor(() => received.Count == 3));
+		Assert.Equal(new[] { "one", "three", "two" }, received.OrderBy(message => message));
+		Assert.Equal(3, source.EntryCount);
+	}
+
+	[Fact]
+	public async Task UdpAndTcpCanUseTheSamePort_AndStoppingStopsTheClients()
+	{
+		var port = FreeUdpPort();
+		using var service = CreateService();
+		await service.StartListeningAsync(new List<string> { $"udp://0.0.0.0:{port}", $"tcp://0.0.0.0:{port}" });
+		Assert.Equal(new[] { ReceiveSourceState.Listening, ReceiveSourceState.Listening }, service.Sources.Select(source => source.State));
+
+		service.StopListening();
+
+		Assert.All(service.Sources, source => Assert.Equal(ReceiveSourceState.Stopped, source.State));
+		using var client = new System.Net.Sockets.TcpClient();
+		await Assert.ThrowsAnyAsync<System.Net.Sockets.SocketException>(() => client.ConnectAsync(IPAddress.Loopback, port));
+	}
+
+	[Fact]
+	public async Task ATcpPortThatIsInUse_FailsLikeAUdpPort()
+	{
+		var busy = new System.Net.Sockets.TcpListener(IPAddress.Any, 0);
+		busy.Start();
+		try
+		{
+			var port = ((IPEndPoint)busy.LocalEndpoint).Port;
+			using var service = CreateService();
+
+			await service.StartListeningAsync(new List<string> { $"tcp://0.0.0.0:{port}" });
+
+			var source = service.Sources.Single();
+			Assert.Equal((ReceiveSourceState.Failed, ReceiveSourceFailure.PortInUse), (source.State, source.Failure));
+		}
+		finally
+		{
+			busy.Stop();
+		}
 	}
 }

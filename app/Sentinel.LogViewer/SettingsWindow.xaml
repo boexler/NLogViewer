@@ -174,6 +174,63 @@
                 </controls:SettingCard>
             </DataTemplate>
 
+            <!-- List of ignored senders -->
+            <DataTemplate DataType="{x:Type settings:IgnoreRuleListSettingViewModel}">
+                <controls:SettingCard Setting="{Binding}">
+                    <Button Command="{Binding AddCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE710;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="11"
+                                       VerticalAlignment="Center" Margin="0,1,8,0"/>
+                            <TextBlock Text="{helpers:Resource Key=Settings_AddIgnoreRule, DefaultValue=Add rule}"/>
+                        </StackPanel>
+                    </Button>
+                    <controls:SettingCard.Details>
+                        <StackPanel>
+                            <Grid Margin="0,4,0,4" TextElement.Foreground="{DynamicResource ThemeTextMuted}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{helpers:Resource Key=Settings_IgnoreRuleIp, DefaultValue=IP address}"/>
+                                <TextBlock Grid.Column="1" Margin="8,0,0,0" Text="{helpers:Resource Key=Settings_IgnoreRuleApplication, DefaultValue=Application}"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="0,1,0,0" Padding="0,8">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="180"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="40"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBox Grid.Column="0" Style="{StaticResource ThemeValidatedTextBox}"
+                                                         Text="{Binding Ip, UpdateSourceTrigger=LostFocus}"
+                                                         AutomationProperties.Name="{helpers:Resource Key=Settings_IgnoreRuleIp, DefaultValue=IP address}"/>
+                                                <TextBox Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource ThemeValidatedTextBox}"
+                                                         Text="{Binding Application, UpdateSourceTrigger=LostFocus}"
+                                                         AutomationProperties.Name="{helpers:Resource Key=Settings_IgnoreRuleApplication, DefaultValue=Application}"/>
+                                                <Button Grid.Column="2" Style="{StaticResource ThemeIconButton}"
+                                                        Content="&#xE74D;" Width="32" Height="30" HorizontalAlignment="Right"
+                                                        Command="{Binding RemoveCommand}"
+                                                        ToolTip="{helpers:Resource Key=Settings_RemoveIgnoreRule, DefaultValue=Remove rule}"
+                                                        AutomationProperties.Name="{helpers:Resource Key=Settings_RemoveIgnoreRule, DefaultValue=Remove rule}"/>
+                                                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </controls:SettingCard.Details>
+                </controls:SettingCard>
+            </DataTemplate>
+
             <!-- List of filter presets -->
             <DataTemplate DataType="{x:Type settings:PresetListSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">

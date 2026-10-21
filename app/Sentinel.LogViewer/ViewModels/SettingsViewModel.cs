@@ -243,6 +243,14 @@ namespace Sentinel.LogViewer.ViewModels
                     invalidAddressMessage: Text("Settings_InvalidPort", "Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535."),
                     duplicatePortMessage: Text("Settings_DuplicatePort", "This port is already in the list.")),
 
+                new IgnoreRuleListSettingViewModel(ReceivingId, "",
+                    Text("Settings_IgnoreRules", "Ignored senders"),
+                    Text("Settings_IgnoreRules_Description", "Logs from these senders are dropped when they arrive, whether they come over UDP or TCP. A rule has an IP address, an application name, or both (then both have to match)."),
+                    get: () => _configuration.IgnoreRules,
+                    save: Commit,
+                    emptyMessage: Text("Settings_IgnoreRuleEmpty", "Enter an IP address, an application name or both."),
+                    invalidIpMessage: Text("Settings_IgnoreRuleInvalidIp", "Enter a valid IP address.")),
+
                 new ChoiceSettingViewModel(ReceivingId, "\uE72C",
                     Text("Settings_AfterRestart", "After a restart of an application"),
                     Text("Settings_AfterRestart_Description", "What happens when an application that sends logs starts again. Each application can be set differently in the menu of its tab."),

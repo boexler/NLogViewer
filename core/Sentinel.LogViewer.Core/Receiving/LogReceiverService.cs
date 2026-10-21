@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -11,10 +12,10 @@ using System.Threading.Tasks;
 namespace Sentinel.LogViewer.Core;
 
 /// <summary>
-/// Service for receiving UDP log messages and parsing them. It keeps a <see cref="ReceiveSource"/> for every address, which can be
+/// Service for receiving log messages over UDP and TCP and parsing them. It keeps a <see cref="ReceiveSource"/> for every address, which can be
 /// started and stopped one by one.
 /// </summary>
-public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
+public class LogReceiverService(Log4JEventParser xmlParser) : IDisposable
 {
 	private const int WSAEADDRINUSE = 10048;
 
@@ -22,6 +23,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 	{
 		public ReceiveSource Source { get; } = source;
 		public UdpClient? Client { get; set; }
+		public TcpListener? Tcp { get; set; }
 		public CancellationTokenSource? Cancellation { get; set; }
 	}
 
@@ -52,7 +54,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 
 	/// <summary>
 	/// Makes the sources the ones of the addresses: a source of an address that is in the list stays as it is, a new address gets a source
-	/// that is stopped, and a source of an address that is no longer in the list is stopped and removed. Addresses that are not UDP are left out.
+	/// that is stopped, and a source of an address that is no longer in the list is stopped and removed. Addresses that are neither UDP nor TCP are left out.
 	/// </summary>
 	public void Configure(IReadOnlyList<string> addresses)
 	{
@@ -61,10 +63,10 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 			var next = new List<Listener>();
 			foreach (var address in addresses)
 			{
-				if (!Uri.TryCreate(address, UriKind.Absolute, out var uri) || uri.Scheme != "udp" || next.Any(listener => listener.Source.Address == address))
+				if (!Uri.TryCreate(address, UriKind.Absolute, out var uri) || uri.Scheme is not ("udp" or "tcp") || next.Any(listener => listener.Source.Address == address))
 					continue;
 
-				next.Add(_listeners.FirstOrDefault(listener => listener.Source.Address == address) ?? new Listener(new ReceiveSource(address, "UDP", uri.Port)));
+				next.Add(_listeners.FirstOrDefault(listener => listener.Source.Address == address) ?? new Listener(new ReceiveSource(address, uri.Scheme.ToUpperInvariant(), uri.Port)));
 			}
 
 			foreach (var removed in _listeners.Except(next))
@@ -79,7 +81,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 	/// <summary>
 	/// Starts listening on the given UDP addresses. Returns a result indicating success and any error messages.
 	/// </summary>
-	/// <param name="addresses">List of addresses in format udp://host:port (e.g. udp://0.0.0.0:4000).</param>
+	/// <param name="addresses">List of addresses in format udp://host:port or tcp://host:port (e.g. udp://0.0.0.0:4000); only the port is used.</param>
 	/// <param name="cancellationToken">Optional cancellation token.</param>
 	/// <returns>Result with AnyStarted and aggregated ErrorMessage (e.g. including process name/PID when port is in use).</returns>
 	public async Task<StartListeningResult> StartListeningAsync(IReadOnlyList<string> addresses, CancellationToken cancellationToken = default)
@@ -159,23 +161,34 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 		var uri = new Uri(source.Address);
 		try
 		{
-			var client = new UdpClient(uri.Port);
 			var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-			listener.Client = client;
+			if (uri.Scheme == "tcp")
+			{
+				var tcp = new TcpListener(IPAddress.Any, uri.Port);
+				tcp.Start();
+				listener.Tcp = tcp;
+				source.Port = ((IPEndPoint)tcp.LocalEndpoint).Port;
+				_ = Task.Run(() => AcceptLoop(source, tcp, cancellation.Token), cancellation.Token);
+			}
+			else
+			{
+				var client = new UdpClient(uri.Port);
+				listener.Client = client;
+				source.Port = ((IPEndPoint)client.Client.LocalEndPoint!).Port;
+				_ = Task.Run(() => ReceiveLoop(source, client, cancellation.Token), cancellation.Token);
+			}
+
 			listener.Cancellation = cancellation;
-			source.Port = ((IPEndPoint)client.Client.LocalEndPoint!).Port;
 			source.ResetCounters();
 			source.State = ReceiveSourceState.Listening;
 			source.Failure = ReceiveSourceFailure.None;
 			source.Error = source.BlockingProcess = null;
-
-			_ = Task.Run(() => ReceiveLoop(source, client, cancellation.Token), cancellation.Token);
 			return null;
 		}
 		catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse || ex.NativeErrorCode == WSAEADDRINUSE)
 		{
 			var message = $"Error starting listener on {source.Address}: {ex.Message}";
-			var (processName, pid) = PortProcessResolver.TryGetProcessUsingPort(uri.Port, udp: true);
+			var (processName, pid) = PortProcessResolver.TryGetProcessUsingPort(uri.Port, udp: uri.Scheme == "udp");
 			if (pid != null)
 			{
 				message += processName != null
@@ -218,6 +231,8 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 		}
 
 		listener.Client = null;
+		listener.Tcp?.Stop();
+		listener.Tcp = null;
 		var source = listener.Source;
 		source.State = ReceiveSourceState.Stopped;
 		source.Failure = ReceiveSourceFailure.None;
@@ -231,15 +246,7 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 			try
 			{
 				var result = await client.ReceiveAsync();
-				var data = result.Buffer;
-				var sender = result.RemoteEndPoint.Address.ToString();
-
-				// Parse the received data
-				var xml = Encoding.UTF8.GetString(data);
-				var log4JEvent = _xmlParser.Parse(xml);
-
-				source.RecordEntry();
-				_log4JEventObservable.OnNext(log4JEvent.ToLogEvent(sender));
+				Publish(source, Encoding.UTF8.GetString(result.Buffer), result.RemoteEndPoint.Address.ToString());
 			}
 			catch (ObjectDisposedException)
 			{
@@ -251,6 +258,74 @@ public class UdpLogReceiverService(Log4JEventParser xmlParser) : IDisposable
 				System.Diagnostics.Debug.WriteLine($"Error receiving UDP data on port {source.Port}: {ex.Message}");
 				// Continue receiving despite errors
 			}
+		}
+	}
+
+	/// <summary>
+	/// Parses one event and sends it on; an event that cannot be parsed is dropped
+	/// </summary>
+	private void Publish(ReceiveSource source, string xml, string sender)
+	{
+		try
+		{
+			var log4JEvent = _xmlParser.Parse(xml);
+			source.RecordEntry();
+			_log4JEventObservable.OnNext(log4JEvent.ToLogEvent(sender));
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"Error receiving data on port {source.Port}: {ex.Message}");
+		}
+	}
+
+	private async Task AcceptLoop(ReceiveSource source, TcpListener listener, CancellationToken cancellationToken)
+	{
+		while (!cancellationToken.IsCancellationRequested)
+		{
+			try
+			{
+				var client = await listener.AcceptTcpClientAsync(cancellationToken);
+				_ = Task.Run(() => ReadClient(source, client, cancellationToken), cancellationToken);
+			}
+			catch (Exception ex) when (ex is OperationCanceledException or ObjectDisposedException)
+			{
+				break;
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine($"Error accepting a client on port {source.Port}: {ex.Message}");
+			}
+		}
+	}
+
+	/// <summary>
+	/// Reads the events of one client until it closes the connection or the source is stopped
+	/// </summary>
+	private async Task ReadClient(ReceiveSource source, TcpClient client, CancellationToken cancellationToken)
+	{
+		using var _ = client;
+		using var registration = cancellationToken.Register(client.Close);
+		try
+		{
+			var sender = ((IPEndPoint)client.Client.RemoteEndPoint!).Address.ToString();
+			var stream = client.GetStream();
+			var decoder = Encoding.UTF8.GetDecoder();
+			var framer = new Log4JEventFramer();
+			var bytes = new byte[8192];
+			var chars = new char[Encoding.UTF8.GetMaxCharCount(bytes.Length)];
+			while (!cancellationToken.IsCancellationRequested)
+			{
+				var read = await stream.ReadAsync(bytes, cancellationToken);
+				if (read == 0)
+					break;
+
+				foreach (var xml in framer.Add(new string(chars, 0, decoder.GetChars(bytes, 0, read, chars, 0))))
+					Publish(source, xml, sender);
+			}
+		}
+		catch (Exception ex) when (ex is OperationCanceledException or ObjectDisposedException or IOException or SocketException)
+		{
+			// The client went away or the source was stopped.
 		}
 	}
 

@@ -140,7 +140,7 @@ public class SettingsTransferServiceTests : IDisposable
 			{
 			  "Version": 1,
 			  "Settings": {
-			    "Ports": [ "udp://0.0.0.0:4000", "not a port", "tcp://0.0.0.0:4505" ],
+			    "Ports": [ "udp://0.0.0.0:4000", "not a port", "http://0.0.0.0:4505" ],
 			    "Language": "xx",
 			    "MaxLogEntriesPerTab": 5
 			  }
@@ -204,13 +204,14 @@ public class SettingsTransferServiceTests : IDisposable
 	[InlineData("udp://0.0.0.0:0", false, 0)]
 	[InlineData("udp://0.0.0.0:65536", false, 0)]
 	[InlineData("udp://0.0.0.0", false, 0)]
-	[InlineData("tcp://0.0.0.0:4000", false, 0)]
+	[InlineData("tcp://0.0.0.0:4000", true, 4000)]
+	[InlineData("http://0.0.0.0:4000", false, 0)]
 	[InlineData("0.0.0.0:4000", false, 0)]
 	[InlineData("", false, 0)]
 	[InlineData(null, false, 0)]
-	public void TryGetUdpPort_AcceptsOnlyUdpAddressesWithAPort(string? address, bool expected, int expectedPort)
+	public void TryGetPort_AcceptsUdpAndTcpAddressesWithAPort(string? address, bool expected, int expectedPort)
 	{
-		Assert.Equal(expected, SettingsRules.TryGetUdpPort(address, out var port));
+		Assert.Equal(expected, SettingsRules.TryGetPort(address, out var port));
 		Assert.Equal(expectedPort, port);
 	}
 }

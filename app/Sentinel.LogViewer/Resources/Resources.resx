@@ -326,7 +326,7 @@
     <value>Remove port</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Enter an address like udp://0.0.0.0:4000 with a port from 1 to 65535. Only UDP is supported for now.</value>
+    <value>Enter an address like udp://0.0.0.0:4000 or tcp://0.0.0.0:4000 with a port from 1 to 65535.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>This port is already in the list.</value>
@@ -1035,6 +1035,51 @@
   </data>
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Ignored senders</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Logs from these senders are dropped when they arrive, whether they come over UDP or TCP. A rule has an IP address, an application name, or both (then both have to match).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Add rule</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Remove rule</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>IP address</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Enter an IP address, an application name or both.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Enter a valid IP address.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Ignore this application (from any IP address)</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Ignore this IP address</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Ignore sender</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Ignore the application “{0}” from any IP address? Its tabs are closed and its logs are dropped from now on.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Ignore the IP address {1}? Its tabs are closed and its logs are dropped from now on.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignore this application (from this IP address)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Ignore the application “{0}” from the IP address {1}? Its tab is closed and its logs are dropped from now on.</value>
   </data>
 </root>
 

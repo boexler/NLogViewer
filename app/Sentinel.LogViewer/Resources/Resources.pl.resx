@@ -323,7 +323,7 @@
     <value>Usuń port</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Podaj adres w postaci udp://0.0.0.0:4000 z portem od 1 do 65535. Na razie obsługiwany jest tylko UDP.</value>
+    <value>Wpisz adres, na przykład udp://0.0.0.0:4000 lub tcp://0.0.0.0:4000, z portem od 1 do 65535.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ten port jest już na liście.</value>
@@ -1032,6 +1032,51 @@
   </data>
   <data name="Snackbar_Close" xml:space="preserve">
     <value>Zamknij</value>
+  </data>
+  <data name="Settings_IgnoreRules" xml:space="preserve">
+    <value>Ignorowani nadawcy</value>
+  </data>
+  <data name="Settings_IgnoreRules_Description" xml:space="preserve">
+    <value>Logi tych nadawców są odrzucane po nadejściu, niezależnie od tego, czy przychodzą przez UDP, czy TCP. Reguła ma adres IP, nazwę aplikacji albo oba (wtedy muszą pasować oba).</value>
+  </data>
+  <data name="Settings_AddIgnoreRule" xml:space="preserve">
+    <value>Dodaj regułę</value>
+  </data>
+  <data name="Settings_RemoveIgnoreRule" xml:space="preserve">
+    <value>Usuń regułę</value>
+  </data>
+  <data name="Settings_IgnoreRuleIp" xml:space="preserve">
+    <value>Adres IP</value>
+  </data>
+  <data name="Settings_IgnoreRuleApplication" xml:space="preserve">
+    <value>Aplikacja</value>
+  </data>
+  <data name="Settings_IgnoreRuleEmpty" xml:space="preserve">
+    <value>Wpisz adres IP, nazwę aplikacji lub oba.</value>
+  </data>
+  <data name="Settings_IgnoreRuleInvalidIp" xml:space="preserve">
+    <value>Wpisz prawidłowy adres IP.</value>
+  </data>
+  <data name="Tab_IgnoreApplication" xml:space="preserve">
+    <value>Ignoruj tę aplikację (z dowolnego adresu IP)</value>
+  </data>
+  <data name="Tab_IgnoreSender" xml:space="preserve">
+    <value>Ignoruj ten adres IP</value>
+  </data>
+  <data name="Ignore_ConfirmCaption" xml:space="preserve">
+    <value>Ignoruj nadawcę</value>
+  </data>
+  <data name="Ignore_ConfirmApplication" xml:space="preserve">
+    <value>Zignorować aplikację „{0}” z dowolnego adresu IP? Jej karty zostaną zamknięte, a jej logi będą odtąd odrzucane.</value>
+  </data>
+  <data name="Ignore_ConfirmSender" xml:space="preserve">
+    <value>Zignorować adres IP {1}? Jego karty zostaną zamknięte, a jego logi będą odtąd odrzucane.</value>
+  </data>
+  <data name="Tab_IgnoreApplicationFromSender" xml:space="preserve">
+    <value>Ignoruj tę aplikację (tylko z tego adresu IP)</value>
+  </data>
+  <data name="Ignore_ConfirmApplicationFromSender" xml:space="preserve">
+    <value>Zignorować aplikację „{0}” z adresu IP {1}? Jej karta zostanie zamknięta, a jej logi będą odtąd odrzucane.</value>
   </data>
 </root>
 

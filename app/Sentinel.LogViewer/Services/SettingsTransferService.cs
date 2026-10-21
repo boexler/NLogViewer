@@ -52,7 +52,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		var settings = bundle.Settings;
 
 		// Values from a hand-edited file must not break the application.
-		settings.Ports = settings.Ports.Where(address => SettingsRules.TryGetUdpPort(address, out _)).ToList();
+		settings.Ports = settings.Ports.Where(address => SettingsRules.TryGetPort(address, out _)).ToList();
 		if (!SettingsRules.IsValidEntriesPerTab(settings.MaxLogEntriesPerTab))
 			settings.MaxLogEntriesPerTab = ConfigurationService.CreateDefaultConfiguration().MaxLogEntriesPerTab;
 		if (!string.IsNullOrEmpty(settings.Language) && !LocalizationService.AvailableLanguages.ContainsKey(settings.Language))
@@ -63,6 +63,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
 		FilterPresetService.Sanitize(settings);
+		IgnoreRule.Sanitize(settings);
 
 		// The version that ran last belongs to this computer, not to the file.
 		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;

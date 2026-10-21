@@ -32,7 +32,7 @@ namespace Sentinel.LogViewer.ViewModels;
 /// </summary>
 public class MainViewModel : INotifyPropertyChanged, IDisposable
 {
-	private readonly UdpLogReceiverService _udpReceiverService;
+	private readonly LogReceiverService _udpReceiverService;
 	private readonly LogFileParserService _fileParserService;
 	private readonly ConfigurationService _configService;
 	private readonly LocalizationService _localizationService;
@@ -57,11 +57,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
 	private readonly FilterPresetService _filterPresets;
+	private IgnoreRule[] _ignoreRules = Array.Empty<IgnoreRule>();
 	private bool _applyingFilterPreset;
 
 
 	public MainViewModel(
-		UdpLogReceiverService udpReceiverService,
+		LogReceiverService udpReceiverService,
 		LogFileParserService fileParserService,
 		ConfigurationService configService,
 		LocalizationService localizationService,
@@ -91,6 +92,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		});
 		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
 		ResetFilterCommand = new RelayCommand(ResetFilter, () => HasActiveFilter);
+		IgnoreApplicationCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Application), tab => tab?.SenderKey != null);
+		IgnoreApplicationFromSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.ApplicationFromSender), HasIpAddress);
+		IgnoreSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Sender), HasIpAddress);
 		ManageSourcesCommand = new RelayCommand(() =>
 		{
 			IsSourcesPanelOpen = false;
@@ -129,6 +133,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Subscribe to log events
 		// Buffer events for 250ms, filter empty batches, group by AppInfo.Id, and process each group as a batch
 		_udpReceiverService.Log4JEventObservable
+			.Where(logEvent => !IsIgnored(logEvent))
 			.Buffer(TimeSpan.FromMilliseconds(250))
 			.Where(list => list.Count > 0)
 			.SelectMany(list => list.GroupBy(le => le.AppInfo.Id).Select(g => g.ToList()))
@@ -308,6 +313,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			TargetName = appInfo.Id,
 			MaxCount = _configService.LoadConfiguration().MaxLogEntriesPerTab,
 			SenderKey = key,
+			ApplicationName = appInfo.AppName?.Name ?? string.Empty,
+			Sender = appInfo.Sender,
 			TakesOverFilters = _applicationTabs.TakesOverFilters(key),
 			RestartBehavior = _applicationTabs.RestartBehaviorOf(key)
 		};
@@ -582,6 +589,79 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				((RelayCommand)ResetFilterCommand).RaiseCanExecuteChanged();
 			}
 		}
+	}
+
+	/// <summary>
+	/// Drops the logs of the application of the tab, from any IP address, from now on and closes its tabs; the parameter is the <see cref="LogTabViewModel"/>
+	/// </summary>
+	public ICommand IgnoreApplicationCommand { get; }
+
+	/// <summary>
+	/// Drops the logs of the application of the tab from the IP address of the tab only, and closes that tab
+	/// </summary>
+	public ICommand IgnoreApplicationFromSenderCommand { get; }
+
+	/// <summary>
+	/// Drops the logs of every application from the IP address of the tab and closes the tabs that come from it
+	/// </summary>
+	public ICommand IgnoreSenderCommand { get; }
+
+	private static bool HasIpAddress(LogTabViewModel? tab) =>
+		tab?.SenderKey != null && System.Net.IPAddress.TryParse(IgnoreRule.IpOf(tab.Sender), out _);
+
+	private bool IsIgnored(LogEvent logEvent)
+	{
+		foreach (var rule in _ignoreRules)
+		{
+			if (rule.Matches(logEvent.AppInfo.AppName?.Name, logEvent.AppInfo.Sender))
+				return true;
+		}
+
+		return false;
+	}
+
+	private void ConfirmAndIgnore(LogTabViewModel? tab, IgnoreScope scope)
+	{
+		if (tab == null)
+			return;
+
+		var ip = IgnoreRule.IpOf(tab.Sender);
+		var (key, text) = scope switch
+		{
+			IgnoreScope.Application => ("Ignore_ConfirmApplication", "Ignore the application “{0}” from any IP address? Its tabs are closed and its logs are dropped from now on."),
+			IgnoreScope.ApplicationFromSender => ("Ignore_ConfirmApplicationFromSender", "Ignore the application “{0}” from the IP address {1}? Its tab is closed and its logs are dropped from now on."),
+			_ => ("Ignore_ConfirmSender", "Ignore the IP address {1}? Its tabs are closed and its logs are dropped from now on.")
+		};
+		var message = string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, text), tab.ApplicationName, ip);
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageDialogWindow.Show(owner, message, _localizationService.GetString("Ignore_ConfirmCaption", "Ignore sender"),
+			    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+			Ignore(tab, scope);
+	}
+
+	/// <summary>
+	/// Adds a rule for the tab, saves it, and closes the tabs that it matches
+	/// </summary>
+	public void Ignore(LogTabViewModel tab, IgnoreScope scope)
+	{
+		var ip = IgnoreRule.IpOf(tab.Sender);
+		var rule = scope switch
+		{
+			IgnoreScope.Application => new IgnoreRule { Application = tab.ApplicationName },
+			IgnoreScope.ApplicationFromSender => new IgnoreRule { Application = tab.ApplicationName, Ip = ip },
+			_ => new IgnoreRule { Ip = ip }
+		};
+		var configuration = _configService.LoadConfiguration();
+		if (!configuration.IgnoreRules.Any(existing => string.Equals(existing.Ip, rule.Ip, StringComparison.OrdinalIgnoreCase)
+		                                              && string.Equals(existing.Application, rule.Application, StringComparison.OrdinalIgnoreCase)))
+		{
+			configuration.IgnoreRules.Add(rule);
+			_configService.SaveConfiguration(configuration);
+		}
+
+		_ignoreRules = configuration.IgnoreRules.ToArray();
+		foreach (var matching in LogTabs.Where(candidate => candidate.IsLive && rule.Matches(candidate.ApplicationName, candidate.Sender)).ToList())
+			CloseTab(matching);
 	}
 
 	/// <summary>
@@ -872,6 +952,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
 		_udpReceiverService.Configure(config.Ports);
+		_ignoreRules = config.IgnoreRules.ToArray();
 
 		if (config.CheckForUpdates && UpdateNotice == null)
 			_ = CheckForUpdatesInBackgroundAsync(UpdateService.IncludesPrereleases(config));

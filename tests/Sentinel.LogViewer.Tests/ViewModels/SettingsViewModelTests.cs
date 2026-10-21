@@ -127,6 +127,7 @@ public class SettingsViewModelTests : IDisposable
 
 	[Theory]
 	[InlineData("http://0.0.0.0:4000")]
+	[InlineData("tcp://0.0.0.0")]
 	[InlineData("udp://0.0.0.0")]
 	[InlineData("udp://0.0.0.0:70000")]
 	[InlineData("localhost")]
@@ -151,6 +152,52 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.True(ports.Items[1].HasError);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000", "udp://0.0.0.0:4001" }, _environment.Saved.Ports);
+	}
+
+	[Fact]
+	public void Ports_UdpAndTcpCanShareANumber_ButNotTwoTcpEntries()
+	{
+		var ports = _environment.CreateViewModel().Setting<PortListSettingViewModel>(PortsTitle);
+		ports.AddCommand.Execute(null);
+
+		ports.Items[1].Address = "tcp://0.0.0.0:4000";
+		Assert.False(ports.Items[1].HasError);
+		ports.AddCommand.Execute(null);
+		ports.Items[2].Address = "tcp://127.0.0.1:4000";
+
+		Assert.True(ports.Items[2].HasError);
+		Assert.Equal(new[] { "udp://0.0.0.0:4000", "tcp://0.0.0.0:4000", "udp://0.0.0.0:4001" }, _environment.Saved.Ports);
+	}
+
+	[Fact]
+	public void IgnoredSenders_AreAdded_Edited_Checked_AndRemoved()
+	{
+		var rules = _environment.CreateViewModel().Setting<IgnoreRuleListSettingViewModel>("Ignored senders");
+		Assert.Empty(rules.Items);
+
+		rules.AddCommand.Execute(null);
+		var item = rules.Items[0];
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Ip = "not an address";
+		Assert.True(item.HasError);
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Ip = " 10.0.0.5 ";
+		item.Application = "Orders";
+		Assert.False(item.HasError);
+		var saved = Assert.Single(_environment.Saved.IgnoreRules);
+		Assert.Equal(("10.0.0.5", "Orders"), (saved.Ip, saved.Application));
+
+		item.Ip = string.Empty;
+		item.Application = string.Empty;
+		Assert.True(item.HasError);
+		Assert.Empty(_environment.Saved.IgnoreRules);
+
+		item.Application = "Billing";
+		item.RemoveCommand.Execute(null);
+		Assert.Empty(rules.Items);
+		Assert.Empty(_environment.Saved.IgnoreRules);
 	}
 
 	[Fact]
@@ -231,7 +278,7 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.False(viewModel.IsSearching);
 		Assert.Equal("Receiving", viewModel.SelectedCategory?.Id);
-		Assert.Equal(1 + 5, viewModel.PageItems.Count);
+		Assert.Equal(1 + 6, viewModel.PageItems.Count);
 	}
 
 	[Fact]
