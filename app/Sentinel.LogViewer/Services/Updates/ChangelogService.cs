@@ -63,7 +63,7 @@ public class ChangelogService
 			return new ChangelogList(entries, false, DateTimeOffset.Now);
 		}
 		catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
-		                           ex is HttpRequestException or TaskCanceledException or JsonException or IOException)
+		                           ex is HttpRequestException or TaskCanceledException or JsonException or IOException or GitHubRateLimitException)
 		{
 			return LoadSaved();
 		}

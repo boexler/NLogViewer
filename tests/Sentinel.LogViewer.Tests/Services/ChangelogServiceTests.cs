@@ -165,6 +165,19 @@ public class ChangelogServiceTests : IDisposable
 	}
 
 	[Fact]
+	public async Task LoadAsync_WhenTheApiLimitIsReached_ReturnsTheSavedList_InsteadOfThrowing()
+	{
+		var online = new ChangelogService(new FakeUpdateService(() => Task.FromResult(new List<GitHubRelease> { Release("v4.0.0", body: "## Saved notes") })), CachePath);
+		await online.LoadAsync();
+		var limited = new ChangelogService(new FakeUpdateService(() => throw new GitHubRateLimitException(DateTimeOffset.Now.AddMinutes(20))), CachePath);
+
+		var list = await limited.LoadAsync();
+
+		Assert.True(list.IsFromCache);
+		Assert.Equal("## Saved notes", Assert.Single(list.Entries).Markdown);
+	}
+
+	[Fact]
 	public async Task LoadAsync_WithoutANetworkAndWithoutASavedList_ReturnsAnEmptyList()
 	{
 		var service = new ChangelogService(new FakeUpdateService(() => throw new HttpRequestException("no network")), CachePath);
