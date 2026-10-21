@@ -1114,5 +1114,11 @@
   <data name="Zoom_Reset" xml:space="preserve">
     <value>Réinitialiser</value>
   </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Ignorer cette version</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>La version {0} est ignorée. L'application ne signalera que les versions plus récentes.</value>
+  </data>
 </root>
 

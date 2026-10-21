@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
@@ -64,7 +67,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		resources.Add("SvgImageSourceConverter", new Sentinel.LogViewer.Converters.SvgImageSourceConverter());
 	}
 
-	private Session Start()
+	private Session Start(UpdateService? updates = null)
 	{
 		AddResourcesOfTheApplication();
 		var xml = new Log4JEventParser();
@@ -72,7 +75,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		var formats = _environment.Formats;
 		var files = new LogFileParserService(xml, new PlainTextParser(), new JsonLogParser(), new TextFileFormatDetector(), formats);
 		var tabs = new ApplicationTabService(_environment.Configuration);
-		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, new UpdateService(), tabs);
+		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, updates ?? new UpdateService(), tabs);
 		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
 		var window = new MainWindow(viewModel) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
@@ -537,6 +540,60 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.True(command.CanExecute(tabs[0]));
 			Assert.True(command.CanExecute(tabs[1]));
 			Assert.False(command.CanExecute(tabs[2]));
+		});
+	}
+
+	private sealed class FeedHandler(string tag) : HttpMessageHandler
+	{
+		public int Requests { get; private set; }
+
+		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		{
+			Requests++;
+			var feed = $"""<feed xmlns="http://www.w3.org/2005/Atom"><entry><link rel="alternate" href="https://github.com/boexler/NLogViewer/releases/tag/{tag}"/></entry></feed>""";
+			return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(feed) });
+		}
+	}
+
+	/// <summary>Starts the window with a feed that offers the given release, and waits until the check has run</summary>
+	private Session StartWithRelease(string tag)
+	{
+		var feed = new FeedHandler(tag);
+		var session = Start(new UpdateService(feed, InstallType.Msi));
+		for (var i = 0; i < 100 && feed.Requests == 0; i++)
+		{
+			Thread.Sleep(50);
+			WpfTestHelper.Settle();
+		}
+
+		Assert.True(feed.Requests > 0);
+		for (var i = 0; i < 5; i++)
+		{
+			Thread.Sleep(50);
+			WpfTestHelper.Settle();
+		}
+
+		return session;
+	}
+
+	[Fact]
+	public void TheUpdateNoticeOfTheStatusBar_CanBeSkipped_AndComesBackForANewerVersion()
+	{
+		_context.RunOnSta(() =>
+		{
+			using (var first = StartWithRelease("v99.0.0"))
+			{
+				Assert.NotNull(first.ViewModel.UpdateNotice);
+				first.ViewModel.SkipUpdateCommand.Execute(null);
+				Assert.Null(first.ViewModel.UpdateNotice);
+				Assert.Equal("99.0.0", _environment.Saved.SkippedVersion);
+			}
+
+			using (var second = StartWithRelease("v99.0.0"))
+				Assert.Null(second.ViewModel.UpdateNotice);
+
+			using var third = StartWithRelease("v100.0.0");
+			Assert.NotNull(third.ViewModel.UpdateNotice);
 		});
 	}
 

@@ -1114,5 +1114,11 @@
   <data name="Zoom_Reset" xml:space="preserve">
     <value>Zurücksetzen</value>
   </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Diese Version überspringen</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>Version {0} wird übersprungen. Die Anwendung weist nur noch auf neuere Versionen hin.</value>
+  </data>
 </root>
 

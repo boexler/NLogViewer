@@ -1114,6 +1114,12 @@
   <data name="Zoom_Reset" xml:space="preserve">
     <value>Resetuj</value>
   </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Pomiń tę wersję</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>Wersja {0} jest pomijana. Aplikacja będzie informować tylko o nowszych wersjach.</value>
+  </data>
 </root>
 
 

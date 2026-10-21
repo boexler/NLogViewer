@@ -1114,6 +1114,12 @@
   <data name="Zoom_Reset" xml:space="preserve">
     <value>Resetează</value>
   </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Omite această versiune</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>Versiunea {0} este omisă. Aplicația anunță doar versiunile mai noi.</value>
+  </data>
 </root>
 
 

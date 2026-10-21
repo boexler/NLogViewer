@@ -475,6 +475,12 @@
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{helpers:Resource Key=About_Skip, DefaultValue=Skip this version}"
+                                          Command="{Binding PlacementTarget.DataContext.SkipUpdateCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
                         <Hyperlink Command="{Binding AboutCommand}">
                             <Run Text="{Binding UpdateNotice, Mode=OneWay}" />
                         </Hyperlink>

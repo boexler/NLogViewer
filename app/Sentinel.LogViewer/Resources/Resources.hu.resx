@@ -1114,6 +1114,12 @@
   <data name="Zoom_Reset" xml:space="preserve">
     <value>Visszaállítás</value>
   </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Ennek a verziónak a kihagyása</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>A(z) {0} verzió ki van hagyva. Az alkalmazás csak újabb verziókra figyelmeztet.</value>
+  </data>
 </root>
 
 

@@ -147,6 +147,20 @@ public class UpdateServiceTests
 	public void SelectUpdate_IgnoresOlderAndEqualVersions() =>
 		Assert.Null(UpdateService.SelectUpdate(new[] { Feed("v5.0.0"), Feed("v4.0.0") }, Version("5.0.0"), includePrereleases: true));
 
+	[Theory]
+	[InlineData("5.0.0-beta.5", "5.0.0-beta.5", true)]
+	[InlineData("5.0.0-beta.5", "v5.0.0", true)]
+	[InlineData("5.0.0", "5.0.0-beta.5", false)]
+	[InlineData("5.0.1", "5.0.0", false)]
+	[InlineData("5.0.0", "", false)]
+	[InlineData("5.0.0", "no version", false)]
+	public void IsSkipped_IsTrueForTheSkippedVersionAndOlderOnes_AndFalseForNewerOnes(string offered, string skipped, bool expected)
+	{
+		var update = UpdateService.SelectUpdate(new[] { Feed("v" + offered) }, Version("1.0.0"), includePrereleases: true)!;
+
+		Assert.Equal(expected, UpdateService.IsSkipped(update, skipped));
+	}
+
 	private sealed class StubHandler(Func<HttpRequestMessage, HttpResponseMessage> respond) : HttpMessageHandler
 	{
 		public List<string> Requests { get; } = new();

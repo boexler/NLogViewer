@@ -56,6 +56,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string _listFontFamilyName = string.Empty;
 	private int _listFontSize = SettingsRules.DefaultListFontSize;
 	private int _fontZoom;
+	private AvailableUpdate? _noticeUpdate;
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -122,6 +123,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
 		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
 		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
+		SkipUpdateCommand = new RelayCommand(SkipUpdate, () => _noticeUpdate != null);
 		ZoomInCommand = new RelayCommand(() => Zoom(1));
 		ZoomOutCommand = new RelayCommand(() => Zoom(-1));
 		ResetFontZoomCommand = new RelayCommand(() => Zoom(0));
@@ -966,6 +968,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
 
+	/// <summary>Skips the version that the status bar announces: it and older ones are not announced again</summary>
+	public ICommand SkipUpdateCommand { get; }
+
 	/// <summary>
 	/// Status bar text announcing an available update, or null
 	/// </summary>
@@ -1558,6 +1563,28 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
 		var aboutWindow = provider.GetRequiredService<AboutWindow>();
 		aboutWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
+
+		// The version may have been skipped in the dialog.
+		if (_noticeUpdate != null && UpdateService.IsSkipped(_noticeUpdate, _configService.LoadConfiguration().SkippedVersion))
+			HideUpdateNotice();
+	}
+
+	private void SkipUpdate()
+	{
+		if (_noticeUpdate == null)
+			return;
+
+		var config = _configService.LoadConfiguration();
+		config.SkippedVersion = _noticeUpdate.Version.ToString();
+		_configService.SaveConfiguration(config);
+		HideUpdateNotice();
+	}
+
+	private void HideUpdateNotice()
+	{
+		_noticeUpdate = null;
+		UpdateNotice = null;
+		((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
 	}
 
 	/// <summary>
@@ -1568,8 +1595,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		try
 		{
 			var update = await _updateService.CheckForUpdateAsync(includePrereleases);
-			if (update != null)
+			if (update != null && !UpdateService.IsSkipped(update, _configService.LoadConfiguration().SkippedVersion))
 			{
+				_noticeUpdate = update;
+				((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
 				UpdateNotice = string.Format(System.Globalization.CultureInfo.CurrentCulture,
 					_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
 			}

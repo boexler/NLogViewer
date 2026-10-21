@@ -223,6 +223,9 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
         public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
 
+        /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
+        public string SkippedVersion { get; set; } = string.Empty;
+
         /// <summary>The font family of the log list; empty is the font of the application.</summary>
         public string ListFontFamily { get; set; } = string.Empty;
 

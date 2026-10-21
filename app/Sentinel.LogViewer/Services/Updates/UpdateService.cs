@@ -82,6 +82,12 @@ public class UpdateService
 	public async Task<AvailableUpdate?> CheckForUpdateAsync(bool includePrereleases, CancellationToken cancellationToken = default) =>
 		SelectUpdate(await GetFeedAsync(cancellationToken).ConfigureAwait(false), CurrentVersion, includePrereleases);
 
+	/// <summary>
+	/// Whether the user skipped this version, or a newer one; the next release after the skipped one is announced again
+	/// </summary>
+	public static bool IsSkipped(AvailableUpdate update, string? skippedVersion) =>
+		ReleaseVersion.TryParse(skippedVersion, out var skipped) && update.Version.CompareTo(skipped) <= 0;
+
 	private async Task<List<FeedRelease>> GetFeedAsync(CancellationToken cancellationToken)
 	{
 		if (_feed != null && DateTime.UtcNow - _feedReadAt < FeedLifetime)
