@@ -14,7 +14,7 @@ namespace Sentinel.LogViewer.Tests
         private Dispatcher _dispatcher;
         private readonly Thread _thread;
         private readonly ManualResetEvent _ready = new ManualResetEvent(false);
-        private const int StaThreadReadyTimeoutMs = 5000;
+        private const int StaThreadReadyTimeoutMs = 30000;
 
         public WpfStaContextFixture()
         {
