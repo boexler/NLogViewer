@@ -28,7 +28,9 @@ namespace Sentinel.LogViewer.Wpf
     }
 
     /// <summary>
-    /// The look of the rows of the list: how the level is shown and how high the rows are
+    /// The look of the rows of the list: how the level is shown and how high the rows are. Both are inherited by what the list shows, so the rows
+    /// and the cells read them from themselves; a search for the viewer above them would fail while a row is made, before it is in the window,
+    /// and fill the output with binding errors.
     /// </summary>
     public partial class LogViewer
     {
@@ -47,8 +49,12 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="LevelDisplay"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty LevelDisplayProperty =
-            DependencyProperty.Register(nameof(LevelDisplay), typeof(LevelDisplayMode), typeof(LogViewer),
-                new FrameworkPropertyMetadata(LevelDisplayMode.Symbol, OnLevelDisplayChanged));
+            DependencyProperty.RegisterAttached(nameof(LevelDisplay), typeof(LevelDisplayMode), typeof(LogViewer),
+                new FrameworkPropertyMetadata(LevelDisplayMode.Symbol, FrameworkPropertyMetadataOptions.Inherits, OnLevelDisplayChanged));
+
+        public static LevelDisplayMode GetLevelDisplay(DependencyObject element) => (LevelDisplayMode)element.GetValue(LevelDisplayProperty);
+
+        public static void SetLevelDisplay(DependencyObject element, LevelDisplayMode value) => element.SetValue(LevelDisplayProperty, value);
 
         /// <summary>
         /// How high the rows of the list are
@@ -65,7 +71,12 @@ namespace Sentinel.LogViewer.Wpf
         /// The <see cref="RowHeight"/> DependencyProperty.
         /// </summary>
         public static readonly DependencyProperty RowHeightProperty =
-            DependencyProperty.Register(nameof(RowHeight), typeof(RowHeightMode), typeof(LogViewer), new FrameworkPropertyMetadata(RowHeightMode.Normal));
+            DependencyProperty.RegisterAttached(nameof(RowHeight), typeof(RowHeightMode), typeof(LogViewer),
+                new FrameworkPropertyMetadata(RowHeightMode.Normal, FrameworkPropertyMetadataOptions.Inherits));
+
+        public static RowHeightMode GetRowHeight(DependencyObject element) => (RowHeightMode)element.GetValue(RowHeightProperty);
+
+        public static void SetRowHeight(DependencyObject element, RowHeightMode value) => element.SetValue(RowHeightProperty, value);
 
         private static void OnLevelDisplayChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

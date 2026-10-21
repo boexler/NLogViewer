@@ -85,6 +85,21 @@ public class LogViewerLookTests
 	}
 
 	[Fact]
+	public void TheRowsAndTheirCells_ReadTheLookFromThemselves_NotFromASearchForTheViewer()
+	{
+		WithViewer(viewer =>
+		{
+			viewer.LevelDisplay = LevelDisplayMode.Text;
+			viewer.RowHeight = RowHeightMode.Compact;
+			WpfTestHelper.Settle();
+
+			var row = FirstRow(viewer);
+			Assert.Equal(RowHeightMode.Compact, Wpf.LogViewer.GetRowHeight(row));
+			Assert.Equal(LevelDisplayMode.Text, Wpf.LogViewer.GetLevelDisplay(Descendants<Image>(row).Single()));
+		});
+	}
+
+	[Fact]
 	public void TheLevelColumn_IsAsWideAsWhatItShows()
 	{
 		WithViewer(viewer =>
