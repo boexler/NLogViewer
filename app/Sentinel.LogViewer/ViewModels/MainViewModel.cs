@@ -32,7 +32,7 @@ namespace Sentinel.LogViewer.ViewModels;
 /// </summary>
 public class MainViewModel : INotifyPropertyChanged, IDisposable
 {
-	private readonly UdpLogReceiverService _udpReceiverService;
+	private readonly LogReceiverService _udpReceiverService;
 	private readonly LogFileParserService _fileParserService;
 	private readonly ConfigurationService _configService;
 	private readonly LocalizationService _localizationService;
@@ -61,7 +61,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 
 	public MainViewModel(
-		UdpLogReceiverService udpReceiverService,
+		LogReceiverService udpReceiverService,
 		LogFileParserService fileParserService,
 		ConfigurationService configService,
 		LocalizationService localizationService,

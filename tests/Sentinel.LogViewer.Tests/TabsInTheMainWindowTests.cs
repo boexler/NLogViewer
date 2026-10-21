@@ -67,12 +67,12 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	{
 		AddResourcesOfTheApplication();
 		var xml = new Log4JEventParser();
-		var receiver = new UdpLogReceiverService(xml);
+		var receiver = new LogReceiverService(xml);
 		var formats = _environment.Formats;
 		var files = new LogFileParserService(xml, new PlainTextParser(), new JsonLogParser(), new TextFileFormatDetector(), formats);
 		var tabs = new ApplicationTabService(_environment.Configuration);
 		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, new UpdateService(), tabs);
-		var events = (Subject<LogEvent>)typeof(UdpLogReceiverService)
+		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
 		var window = new MainWindow(viewModel) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
 		window.Show();

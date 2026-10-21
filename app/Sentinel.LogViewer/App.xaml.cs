@@ -59,7 +59,7 @@ namespace Sentinel.LogViewer
             services.AddSingleton<ThemeService>();
 
             // Register services as scoped (one per window/view)
-            services.AddScoped<UdpLogReceiverService>();
+            services.AddScoped<LogReceiverService>();
             services.AddScoped<LogFileParserService>();
 
             // Register parsers as transient (new instance each time)

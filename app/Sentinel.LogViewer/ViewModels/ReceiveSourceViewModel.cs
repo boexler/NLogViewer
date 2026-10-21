@@ -33,10 +33,10 @@ public enum ReceiveStatus
 /// </summary>
 public sealed class ReceiveSourceViewModel : INotifyPropertyChanged
 {
-	private readonly UdpLogReceiverService _receiver;
+	private readonly LogReceiverService _receiver;
 	private readonly LocalizationService? _localization;
 
-	public ReceiveSourceViewModel(ReceiveSource source, UdpLogReceiverService receiver, LocalizationService? localization = null)
+	public ReceiveSourceViewModel(ReceiveSource source, LogReceiverService receiver, LocalizationService? localization = null)
 	{
 		Source = source;
 		_receiver = receiver;
