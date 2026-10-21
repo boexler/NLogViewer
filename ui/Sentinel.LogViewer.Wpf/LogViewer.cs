@@ -932,112 +932,6 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             DependencyProperty.Register(nameof(ShowLoggerNameColumn), typeof(bool), typeof(LogViewer), 
                 new PropertyMetadata(true, OnColumnVisibilityChanged));
 
-
-        private static void OnColumnVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs args)
-        {
-            if (d is LogViewer instance)
-            {
-                instance.UpdateColumnVisibility();
-            }
-        }
-
-        /// <summary>
-        /// Updates column visibility by removing or adding columns based on the Show properties.
-        /// When a column is hidden, it's removed from the grid. When shown again, it's added back at its original position.
-        /// </summary>
-        private void UpdateColumnVisibility()
-        {
-	        if (PART_ListView?.View is not AutoSizedGridView gridView) return;
-
-	        // Update ID column visibility (original index 0)
-	        UpdateColumnVisibility(gridView, _originalIdColumn, ShowIdColumn, _originalIdColumnWidth, 0);
-
-	        // Update Level column visibility (original index 1)
-	        UpdateColumnVisibility(gridView, _originalLevelColumn, ShowLevelColumn, _originalLevelColumnWidth, 1);
-
-	        // Update TimeStamp column visibility (original index 2)
-	        UpdateColumnVisibility(gridView, _originalTimeStampColumn, ShowTimeStampColumn, _originalTimeStampColumnWidth, 2);
-
-	        // Update LoggerName column visibility (original index 3)
-	        UpdateColumnVisibility(gridView, _originalLoggerNameColumn, ShowLoggerNameColumn, _originalLoggerNameColumnWidth, 3);
-
-	        // Message column is always visible (no visibility control)
-
-	        // A column that is shown again starts with its original width.
-	        _columnWidthFitter?.Apply();
-        }
-
-        /// <summary>
-        /// Helper method to update individual column visibility by removing or adding the column.
-        /// Calculates the correct insertion position based on which columns are currently visible.
-        /// </summary>
-        /// <param name="gridView">The GridView containing the columns</param>
-        /// <param name="originalColumn">The original column reference to add/remove</param>
-        /// <param name="showColumn">Whether the column should be visible</param>
-        /// <param name="originalWidth">The original width of the column</param>
-        /// <param name="originalIndex">The original index of the column (0=ID, 1=Level, 2=TimeStamp, 3=LoggerName)</param>
-        private void UpdateColumnVisibility(AutoSizedGridView gridView, GridViewColumn? originalColumn, bool showColumn, double originalWidth, int originalIndex)
-        {
-	        if (originalColumn == null) return;
-
-	        // Check if column is currently in the grid
-	        var columnExists = gridView.Columns.Contains(originalColumn);
-
-	        if (showColumn && !columnExists)
-	        {
-		        // Column should be visible but is not in the grid - add it back
-		        originalColumn.Width = originalWidth;
-		        
-		        // Calculate the correct insertion index based on which columns are currently visible
-		        var insertionIndex = CalculateInsertionIndex(gridView, originalIndex);
-		        gridView.Columns.Insert(insertionIndex, originalColumn);
-	        }
-	        else if (!showColumn && columnExists)
-	        {
-		        // Column should be hidden but is in the grid - remove it
-		        gridView.Columns.Remove(originalColumn);
-	        }
-        }
-
-        /// <summary>
-        /// Calculates the correct insertion index for a column based on its original position
-        /// and which columns are currently visible.
-        /// </summary>
-        /// <param name="gridView">The GridView containing the columns</param>
-        /// <param name="originalIndex">The original index of the column to insert</param>
-        /// <returns>The correct insertion index</returns>
-        private int CalculateInsertionIndex(AutoSizedGridView gridView, int originalIndex)
-        {
-	        // Count how many visible columns come before this one in the original order
-	        var insertionIndex = 0;
-	        
-	        // Check ID column (original index 0)
-	        if (originalIndex > 0 && ShowIdColumn && _originalIdColumn != null && gridView.Columns.Contains(_originalIdColumn))
-	        {
-		        insertionIndex++;
-	        }
-	        
-	        // Check Level column (original index 1)
-	        if (originalIndex > 1 && ShowLevelColumn && _originalLevelColumn != null && gridView.Columns.Contains(_originalLevelColumn))
-	        {
-		        insertionIndex++;
-	        }
-	        
-	        // Check TimeStamp column (original index 2)
-	        if (originalIndex > 2 && ShowTimeStampColumn && _originalTimeStampColumn != null && gridView.Columns.Contains(_originalTimeStampColumn))
-	        {
-		        insertionIndex++;
-	        }
-	        
-	        // Check LoggerName column (original index 3)
-	        if (originalIndex > 3 && ShowLoggerNameColumn && _originalLoggerNameColumn != null && gridView.Columns.Contains(_originalLoggerNameColumn))
-	        {
-		        insertionIndex++;
-	        }
-	        
-	        return insertionIndex;
-        }
-
 		#endregion
 
 		// ##########################################################################################
@@ -1504,15 +1398,6 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         private ObservableCollection<LogEntry>? _collectionChangedSubscriber;
         private Window? _ParentWindow;
 
-        // Store original column references and widths for restoration
-        private GridViewColumn? _originalIdColumn;
-        private GridViewColumn? _originalLevelColumn;
-        private GridViewColumn? _originalTimeStampColumn;
-        private GridViewColumn? _originalLoggerNameColumn;
-        private double _originalIdColumnWidth = 40;
-        private double _originalLevelColumnWidth = double.NaN; // Auto
-        private double _originalTimeStampColumnWidth = double.NaN; // Auto
-        private double _originalLoggerNameColumnWidth = double.NaN; // Auto
         private ColumnWidthFitter? _columnWidthFitter;
         private readonly ScrollAnchorKeeper _scrollAnchorKeeper = new();
 
@@ -1562,6 +1447,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             LoggerTree.Rebuild(GetEffectiveEntries());
             LogEvents?.View?.Refresh();
             UpdateFilter();
+            CollectPropertyNames(GetEffectiveEntries());
             _columnWidthFitter?.Reset(GetEffectiveEntries());
         }
 
@@ -1589,9 +1475,15 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 ApplyMaxCountTrim(coll);
 
             if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+            {
+                CollectPropertyNames(e.NewItems);
                 _columnWidthFitter?.Include(e.NewItems);
+            }
             else if (e.Action is NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
+            {
+                CollectPropertyNames(coll);
                 _columnWidthFitter?.Reset(coll);
+            }
 
             ScheduleFindUpdate();
 
@@ -1701,49 +1593,9 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             PART_ListView?.ScrollToEnd();
 
-            if (PART_ListView?.View is AutoSizedGridView gridView)
-            {
-                if (gridView.Columns.Count > 0)
-                {
-                    _originalIdColumn = gridView.Columns[0];
-                    _originalIdColumnWidth = gridView.Columns[0].Width;
-                }
-
-                if (gridView.Columns.Count > 1)
-                {
-                    _originalLevelColumn = gridView.Columns[1];
-                    _originalLevelColumnWidth = gridView.Columns[1].Width;
-                }
-
-                if (gridView.Columns.Count > 2)
-                {
-                    _originalTimeStampColumn = gridView.Columns[2];
-                    _originalTimeStampColumnWidth = gridView.Columns[2].Width;
-                }
-
-                if (gridView.Columns.Count > 3)
-                {
-                    _originalLoggerNameColumn = gridView.Columns[3];
-                    _originalLoggerNameColumnWidth = gridView.Columns[3].Width;
-                }
-
-                _columnWidthFitter = new ColumnWidthFitter(PART_ListView);
-                AddFittedColumn(gridView, 0, () => IdResolver);
-                AddFittedColumn(gridView, 2, () => TimeStampResolver);
-                AddFittedColumn(gridView, 3, () => LoggerNameResolver);
-                AddFittedColumn(gridView, 4, () => MessageResolver);
-
-                UpdateColumnVisibility();
-                _columnWidthFitter.Include(GetEffectiveEntries());
-            }
+            InitializeColumns();
 
             OnViewerLoaded();
-        }
-
-        private void AddFittedColumn(GridView gridView, int index, Func<ILogEntryResolver?> getResolver)
-        {
-            if (gridView.Columns.Count > index)
-                _columnWidthFitter?.AddColumn(gridView.Columns[index], logEvent => getResolver()?.Resolve(logEvent));
         }
 
         #endregion
