@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Biztosan bezárja az összes lapot?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Figyelés indítása</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Figyelés leállítása</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Kész</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Figyel</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Leállítva</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -163,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Starting...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Importing...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Error importing {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import finished.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Error detecting file format</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>Loaded {0} log entries from {1}</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Adding to view: {0}%</value>
@@ -347,7 +323,7 @@
     <value>Port eltávolítása</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal.</value>
+    <value>Adjon meg egy udp://0.0.0.0:4000 formátumú címet 1 és 65535 közötti porttal. Egyelőre csak az UDP támogatott.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Ez a port már szerepel a listában.</value>
@@ -901,15 +877,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Nyelv kiválasztása</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Figyelés indítása a beállított portokon</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Figyelés leállítása az összes porton</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Állapot:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Szűrő</value>
   </data>
@@ -930,12 +897,6 @@
   </data>
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Már létezik „{0}” nevű előbeállítás. Lecseréli?</value>
-  </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>A(z) „{0}” szűrő-előbeállítás mentve</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>A(z) „{0}” szűrő-előbeállítás alkalmazva</value>
   </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Szűrő-előbeállítások</value>
@@ -960,6 +921,117 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Már létezik ilyen nevű előbeállítás.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Figyel</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Figyel · {0} forrás</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Figyel · {0}/{1} forrás</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Figyelés leállítva</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Az indítás sikertelen</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Nincs forrás</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>A naplókat fogadó források megjelenítése</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Figyelés indítása vagy leállítása az összes forráson</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Figyel</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Leállítva</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>A port foglalt</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>A portot használja: {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Az indítás sikertelen</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Újra</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Források</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Források kezelése...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Állapot</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Bejegyzések</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Utolsó bejegyzés</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Be</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>Figyelés _indítása</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>Figyelés _leállítása</value>
+  </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Bejegyzések: {0:N0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Bejegyzések: {0:N0} / {1:N0}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Elrejtett szintek: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Kifejezések: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Naplózó-szabályok: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Szűrő visszaállítása</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>A nyelv megváltozott. Indítsa újra az alkalmazást, hogy a módosítás teljesen érvényesüljön.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>A nyelvet nem sikerült módosítani: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportálva ide: {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>Az exportálás ehhez a laphoz nem érhető el.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>A lap naplónézete nem található.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Bezárás</value>
   </data>
 </root>
 

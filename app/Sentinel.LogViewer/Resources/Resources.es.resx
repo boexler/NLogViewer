@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>¿Desea cerrar realmente todas las pestañas?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Iniciar escucha</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Detener escucha</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Listo</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Escuchando</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Detenido</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Import destination</value>
   </data>
@@ -163,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Starting...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Importing...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Error importing {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import finished.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Error detecting file format</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>File {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>Loaded {0} log entries from {1}</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Adding to view: {0}%</value>
@@ -347,7 +323,7 @@
     <value>Quitar puerto</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Introduzca una dirección como udp://0.0.0.0:4000 con un puerto de 1 a 65535.</value>
+    <value>Introduzca una dirección como udp://0.0.0.0:4000 con un puerto de 1 a 65535. Por ahora solo se admite UDP.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Este puerto ya está en la lista.</value>
@@ -901,15 +877,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Seleccionar idioma</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Empezar a escuchar en los puertos configurados</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Dejar de escuchar en todos los puertos</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Estado:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filtro</value>
   </data>
@@ -930,12 +897,6 @@
   </data>
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Ya existe un preajuste llamado «{0}». ¿Reemplazarlo?</value>
-  </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>Preajuste de filtro «{0}» guardado</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>Preajuste de filtro «{0}» aplicado</value>
   </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Preajustes de filtro</value>
@@ -960,6 +921,117 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Ya existe un preajuste con este nombre.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Escuchando</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Escuchando · {0} fuentes</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Escuchando · {0} de {1} fuentes</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Escucha detenida</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Error al iniciar</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Sin fuentes</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Mostrar las fuentes que reciben registros</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Iniciar o detener la escucha en todas las fuentes</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Escuchando</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Detenida</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Puerto en uso</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Puerto en uso por {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>No se pudo iniciar</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Fuentes</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Administrar fuentes...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Fuente</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Última entrada</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>_Iniciar escucha</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>_Detener escucha</value>
+  </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Entradas: {0:N0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Entradas: {0:N0} de {1:N0}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Niveles ocultos: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Términos: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Reglas de logger: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Restablecer filtro</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>Idioma cambiado. Reinicie la aplicación para que el cambio surta pleno efecto.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>No se pudo cambiar el idioma: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportado a {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>La exportación no está disponible para esta pestaña.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>No se encontró la vista de registros de la pestaña.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Cerrar</value>
   </data>
 </root>
 

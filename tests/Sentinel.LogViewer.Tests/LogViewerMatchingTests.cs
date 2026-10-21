@@ -33,6 +33,32 @@ public class LogViewerMatchingTests
 	private void WithViewer(Action<Wpf.LogViewer> test) => _context.RunOnSta(() => test(WpfTestHelper.CreateViewerWithTestData(Entries())));
 
 	[Fact]
+	public void TheVisibleEntryCount_FollowsTheFilters()
+	{
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				Assert.Equal(4, viewer.VisibleEntryCount);
+
+				viewer.AddRegexSearchTerm("cat");
+				WpfTestHelper.Settle();
+				Assert.Equal(3, viewer.VisibleEntryCount);
+
+				viewer.ClearAllSearchTerms();
+				viewer.ErrorFilter = true;
+				WpfTestHelper.Settle();
+				Assert.Equal(2, viewer.VisibleEntryCount);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void TheFilterInput_AppliesItsOptionsToTheNewTerm()
 	{
 		WithViewer(viewer =>

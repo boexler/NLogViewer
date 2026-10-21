@@ -39,8 +39,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private readonly UpdateService _updateService;
 	private string? _updateNotice;
 	private bool _isListening;
-	private string _listeningStatus = string.Empty;
-	private string _statusMessage = "Ready";
+	private bool _hasStarted;
+	private LogTabViewModel? _summaryTab;
+	private string _tabSummary = string.Empty;
+	private bool _hasActiveFilter;
+	private bool _sourcesPanelOpen;
+	private string _receiveStatusText = string.Empty;
+	private ReceiveStatus _receiveStatus;
+	private readonly System.Windows.Threading.DispatcherTimer _sourcesTimer = new() { Interval = TimeSpan.FromSeconds(1) };
 	private string _lastLogTimestamp = string.Empty;
 	private LogTabViewModel? _selectedTab;
 	private string _currentLanguageFlag = "🇬🇧";
@@ -76,6 +82,20 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		// Initialize commands
 		StartListeningCommand = new AsyncRelayCommand(StartListeningAsync, () => !_isListening);
+		ToggleReceivingCommand = new RelayCommand(() =>
+		{
+			if (_isListening)
+				StopListening();
+			else
+				_ = StartListeningAsync();
+		});
+		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
+		ResetFilterCommand = new RelayCommand(ResetFilter, () => HasActiveFilter);
+		ManageSourcesCommand = new RelayCommand(() =>
+		{
+			IsSourcesPanelOpen = false;
+			OpenSettings(SettingsViewModel.ReceivingId);
+		});
 		StopListeningCommand = new RelayCommand(StopListening, () => _isListening);
 		OpenFileCommand = new RelayCommand(() => OpenFile(askColumnMapping: false));
 		OpenFileWithMappingCommand = new RelayCommand(() => OpenFile(askColumnMapping: true));
@@ -98,8 +118,13 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Initialize current language flag
 		UpdateLanguageFlag();
 
-		// Initialize listening status with translated value
-		ListeningStatus = _localizationService.GetString("Status_Stopped", "Stopped");
+		// The sources of the receiver follow its changes; their numbers are read again while the panel is open
+		_udpReceiverService.SourcesChanged += OnSourcesChanged;
+		_sourcesTimer.Tick += (_, _) =>
+		{
+			foreach (var source in Sources)
+				source.Refresh();
+		};
 
 		// Subscribe to log events
 		// Buffer events for 250ms, filter empty batches, group by AppInfo.Id, and process each group as a batch
@@ -153,7 +178,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
-		StatusMessage = $"Received {logEvents.Count} log(s) from {firstEvent.AppInfo.AppName?.Name}";
 	}
 
 	/// <summary>
@@ -189,6 +213,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 				((RelayCommand)SaveFilterPresetCommand).RaiseCanExecuteChanged();
 				((RelayCommand<FilterPreset>)ApplyFilterPresetCommand).RaiseCanExecuteChanged();
+				FollowSummaryOfSelectedTab();
 			}
 		}
 	}
@@ -466,31 +491,263 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
-	public string ListeningStatus
+	/// <summary>
+	/// The sources that receive logs, for the panel of the status bar
+	/// </summary>
+	public ObservableCollection<ReceiveSourceViewModel> Sources { get; } = new();
+
+	/// <summary>
+	/// What the status bar says about receiving, e.g. "Receiving · 2 of 3 sources"
+	/// </summary>
+	public string ReceiveStatusText
 	{
-		get => _listeningStatus;
-		set
+		get => _receiveStatusText;
+		private set
 		{
-			if (_listeningStatus != value)
+			if (_receiveStatusText != value)
 			{
-				_listeningStatus = value;
+				_receiveStatusText = value;
 				OnPropertyChanged();
 			}
 		}
 	}
 
-	public string StatusMessage
+	public ReceiveStatus ReceiveStatus
 	{
-		get => _statusMessage;
-		set
+		get => _receiveStatus;
+		private set
 		{
-			if (_statusMessage != value)
+			if (_receiveStatus != value)
 			{
-				_statusMessage = value;
+				_receiveStatus = value;
 				OnPropertyChanged();
 			}
 		}
 	}
+
+	/// <summary>
+	/// Whether the panel with the sources is open above the status bar
+	/// </summary>
+	public bool IsSourcesPanelOpen
+	{
+		get => _sourcesPanelOpen;
+		set
+		{
+			if (_sourcesPanelOpen == value)
+				return;
+
+			_sourcesPanelOpen = value;
+			if (value)
+			{
+				RefreshSources();
+				_sourcesTimer.Start();
+			}
+			else
+			{
+				_sourcesTimer.Stop();
+			}
+
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>
+	/// What the status bar says about the selected tab, e.g. "Entries: 1,204 of 27,851 · Levels off: 2 · Terms: 1"; empty without a tab
+	/// </summary>
+	public string TabSummary
+	{
+		get => _tabSummary;
+		private set
+		{
+			if (_tabSummary != value)
+			{
+				_tabSummary = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the selected tab has a filter: a level that is hidden, a term or a rule for loggers
+	/// </summary>
+	public bool HasActiveFilter
+	{
+		get => _hasActiveFilter;
+		private set
+		{
+			if (_hasActiveFilter != value)
+			{
+				_hasActiveFilter = value;
+				OnPropertyChanged();
+				((RelayCommand)ResetFilterCommand).RaiseCanExecuteChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Takes the levels, terms and logger rules off the selected tab; the fields and the time stamp format stay
+	/// </summary>
+	public ICommand ResetFilterCommand { get; }
+
+	private void ResetFilter()
+	{
+		if (SelectedTab is not { } tab)
+			return;
+
+		var current = tab.FilterState;
+		tab.FilterState = new LogViewerFilterState
+		{
+			SearchFields = current?.SearchFields ?? SearchFields.Default,
+			TimeStampFormat = current?.TimeStampFormat
+		};
+	}
+
+	private void FollowSummaryOfSelectedTab()
+	{
+		if (_summaryTab != null)
+			_summaryTab.PropertyChanged -= OnSummaryTabChanged;
+
+		_summaryTab = _selectedTab;
+		if (_summaryTab != null)
+			_summaryTab.PropertyChanged += OnSummaryTabChanged;
+
+		UpdateTabSummary();
+	}
+
+	private void OnSummaryTabChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (e.PropertyName is nameof(LogTabViewModel.LogCount) or nameof(LogTabViewModel.VisibleEntryCount) or nameof(LogTabViewModel.FilterState))
+			UpdateTabSummary();
+	}
+
+	private void UpdateTabSummary()
+	{
+		if (_summaryTab is not { } tab)
+		{
+			TabSummary = string.Empty;
+			HasActiveFilter = false;
+			return;
+		}
+
+		var state = tab.FilterState;
+		var levels = state?.HiddenLevels.Count ?? 0;
+		var terms = state?.Terms.Count ?? 0;
+		var loggers = state?.LoggerRules.Count ?? 0;
+		var filtered = levels + terms + loggers > 0;
+
+		string Text(string key, string defaultValue, params object[] arguments) =>
+			string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, defaultValue), arguments);
+
+		var parts = new List<string>
+		{
+			filtered
+				? Text("Summary_EntriesOf", "Entries: {0:N0} of {1:N0}", tab.VisibleEntryCount, tab.LogCount)
+				: Text("Summary_Entries", "Entries: {0:N0}", tab.LogCount)
+		};
+		if (levels > 0)
+			parts.Add(Text("Summary_LevelsOff", "Levels off: {0}", levels));
+		if (terms > 0)
+			parts.Add(Text("Summary_Terms", "Terms: {0}", terms));
+		if (loggers > 0)
+			parts.Add(Text("Summary_Loggers", "Logger rules: {0}", loggers));
+
+		TabSummary = string.Join(" · ", parts);
+		HasActiveFilter = filtered;
+	}
+
+	/// <summary>
+	/// Starts all sources, or stops them when some receive
+	/// </summary>
+	public ICommand ToggleReceivingCommand { get; }
+
+	public ICommand ToggleSourcesPanelCommand { get; }
+
+	/// <summary>
+	/// Opens the settings where the addresses are
+	/// </summary>
+	public ICommand ManageSourcesCommand { get; }
+
+	private void OnSourcesChanged(object? sender, EventArgs e)
+	{
+		var dispatcher = System.Windows.Application.Current?.Dispatcher;
+		if (dispatcher == null || dispatcher.CheckAccess())
+			RefreshSources();
+		else
+			dispatcher.InvokeAsync(RefreshSources);
+	}
+
+	/// <summary>
+	/// Makes the rows of the panel the sources of the receiver and works out what the status bar says
+	/// </summary>
+	private void RefreshSources()
+	{
+		var current = _udpReceiverService.Sources;
+		for (var i = Sources.Count - 1; i >= 0; i--)
+		{
+			if (!current.Contains(Sources[i].Source))
+				Sources.RemoveAt(i);
+		}
+
+		for (var i = 0; i < current.Count; i++)
+		{
+			var existing = Sources.FirstOrDefault(row => ReferenceEquals(row.Source, current[i]));
+			if (existing == null)
+			{
+				Sources.Insert(i, new ReceiveSourceViewModel(current[i], _udpReceiverService, _localizationService));
+				continue;
+			}
+
+			var index = Sources.IndexOf(existing);
+			if (index != i)
+				Sources.Move(index, i);
+
+			existing.Refresh();
+		}
+
+		var listening = current.Count(source => source.State == ReceiveSourceState.Listening);
+		IsListening = listening > 0;
+		if (current.Count == 0)
+		{
+			ReceiveStatus = ReceiveStatus.Stopped;
+			ReceiveStatusText = _localizationService.GetString("Receive_NoSources", "No sources");
+		}
+		else if (listening == 0)
+		{
+			if (current.Any(source => source.State == ReceiveSourceState.Failed))
+			{
+				ReceiveStatus = ReceiveStatus.Failed;
+				ReceiveStatusText = _localizationService.GetString("Receive_Failed", "Could not start");
+			}
+			else if (_hasStarted)
+			{
+				ReceiveStatus = ReceiveStatus.Stopped;
+				ReceiveStatusText = _localizationService.GetString("Receive_Stopped", "Stopped");
+			}
+			else
+			{
+				ReceiveStatus = ReceiveStatus.Ready;
+				ReceiveStatusText = _localizationService.GetString("Receive_Ready", "Ready");
+			}
+		}
+		else if (listening == current.Count)
+		{
+			ReceiveStatus = ReceiveStatus.Active;
+			ReceiveStatusText = current.Count == 1
+				? _localizationService.GetString("Receive_Active", "Listening")
+				: string.Format(CultureInfo.CurrentCulture, _localizationService.GetString("Receive_ActiveMany", "Listening · {0} sources"), current.Count);
+		}
+		else
+		{
+			ReceiveStatus = ReceiveStatus.Partial;
+			ReceiveStatusText = string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Receive_ActivePartial", "Listening · {0} of {1} sources"), listening, current.Count);
+		}
+	}
+
+	/// <summary>
+	/// The card at the bottom of the window for hints and errors
+	/// </summary>
+	public SnackbarViewModel Snackbar { get; } = new();
 
 	public string LastLogTimestamp
 	{
@@ -614,6 +871,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
+		_udpReceiverService.Configure(config.Ports);
 
 		if (config.CheckForUpdates && UpdateNotice == null)
 			_ = CheckForUpdatesInBackgroundAsync(UpdateService.IncludesPrereleases(config));
@@ -629,40 +887,27 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// Starts the UDP listener asynchronously. On failure (e.g. port in use), shows a MessageBox and keeps the listener inactive.
+	/// Starts all sources. A source that cannot be started (e.g. the port is in use) shows why in the panel; when none can be started,
+	/// a message says so.
 	/// </summary>
 	private async Task StartListeningAsync()
 	{
 		try
 		{
+			_hasStarted = true;
 			var config = _configService.LoadConfiguration();
 			var result = await _udpReceiverService.StartListeningAsync(config.Ports);
+			RefreshSources();
 
-			if (result.AnyStarted)
+			if (!result.AnyStarted && !string.IsNullOrEmpty(result.ErrorMessage))
 			{
-				IsListening = true;
-				ListeningStatus = _localizationService.GetString("Status_Listening", "Listening");
-				StatusMessage = _localizationService.GetString("Status_ListeningOnPorts", $"Listening on {config.Ports.Count} port(s)");
-				if (!string.IsNullOrEmpty(result.ErrorMessage))
-				{
-					// Partial failure: some ports failed
-					StatusMessage += " " + _localizationService.GetString("Status_SomePortsFailed", "(Some ports could not be opened.)");
-				}
-			}
-			else
-			{
-				IsListening = false;
-				ListeningStatus = _localizationService.GetString("Status_Error", "Error");
-				StatusMessage = result.ErrorMessage;
 				var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
 				MessageDialogWindow.Show(null, result.ErrorMessage, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 		catch (Exception ex)
 		{
-			IsListening = false;
-			ListeningStatus = _localizationService.GetString("Status_Error", "Error");
-			StatusMessage = _localizationService.GetString("Error_StartingListener", $"Error starting listener: {ex.Message}");
+			RefreshSources();
 			var caption = _localizationService.GetString("Error_StartingListenerCaption", "Error starting listener");
 			MessageDialogWindow.Show(null, ex.Message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
 		}
@@ -673,13 +918,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		try
 		{
 			_udpReceiverService.StopListening();
-			IsListening = false;
-			ListeningStatus = _localizationService.GetString("Status_Stopped", "Stopped");
-			StatusMessage = _localizationService.GetString("Status_StoppedListening", "Stopped listening");
+			RefreshSources();
 		}
 		catch (Exception ex)
 		{
-			StatusMessage = _localizationService.GetString("Error_StoppingListener", $"Error stopping listener: {ex.Message}");
+			Snackbar.ShowError(_localizationService.GetString("Error_StoppingListener", $"Error stopping listener: {ex.Message}"));
 		}
 	}
 
@@ -710,7 +953,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		if (filtered.Count == 0)
 		{
-			StatusMessage = _localizationService.GetString("Import_NoSupportedFiles", "No supported log files were found.");
+			Snackbar.Show(_localizationService.GetString("Import_NoSupportedFiles", "No supported log files were found."));
 			return;
 		}
 
@@ -819,7 +1062,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		IsLoading = true;
 		LoadingProgress = _localizationService.GetString("Import_Starting", "Starting...");
-		StatusMessage = _localizationService.GetString("Import_InProgress", "Importing...");
 
 		try
 		{
@@ -836,11 +1078,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				var tpl = _localizationService.GetString(
 					"Import_FileError_Format",
 					"Error importing {0}: {1}");
-				StatusMessage = string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, pathName, ex.Message);
+				Snackbar.ShowError(string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, pathName, ex.Message));
 			}
 			}
-
-			StatusMessage = _localizationService.GetString("Import_BatchComplete", "Import finished.");
 		}
 		finally
 		{
@@ -879,8 +1119,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			await dispatcher.InvokeAsync(() =>
 			{
-				StatusMessage = _localizationService.GetString("Import_FormatDetectError", "Error detecting file format") +
-				                $": {ex.Message}";
+				Snackbar.ShowError(_localizationService.GetString("Import_FormatDetectError", "Error detecting file format") + $": {ex.Message}");
 			}).Task.ConfigureAwait(false);
 		}
 
@@ -932,7 +1171,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			await dispatcher.InvokeAsync(() =>
 			{
-				StatusMessage = _localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}";
+				Snackbar.ShowError(_localizationService.GetString("Import_ParseError", "Error parsing file") + $": {ex.Message}");
 			}).Task.ConfigureAwait(false);
 			return;
 		}
@@ -940,7 +1179,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		await dispatcher.InvokeAsync(() =>
 		{
 			ApplyParsedLogs(logEvents, filePath, ctx);
-			StatusMessage = FormatLoadedStatus(filePath, logEvents.Count);
 			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 		}).Task.ConfigureAwait(false);
 	}
@@ -954,15 +1192,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			"File {0}/{1} — {2}: {3} / {4} ({5}%)");
 		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, fileIndex, fileTotal, name,
 			current, parsedTotal, percentage);
-	}
-
-	private string FormatLoadedStatus(string filePath, int count)
-	{
-		var name = Path.GetFileName(filePath);
-		var tpl = _localizationService.GetString(
-			"Import_LoadedFromFile_Format",
-			"Loaded {0} log entries from {1}");
-		return string.Format(System.Globalization.CultureInfo.CurrentCulture, tpl, count, name);
 	}
 
 	/// <summary>
@@ -1038,7 +1267,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		// Settings are saved as they change, so the window has nothing to confirm.
 		if (settingsWindow.HasChanges)
 		{
-			StatusMessage = "Settings saved";
 			LoadConfiguration();
 			RefreshFilterPresets();
 		}
@@ -1081,8 +1309,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		_filterPresets.Save(name, SelectedTab.FilterState ?? new LogViewerFilterState());
 		RefreshFilterPresets();
-		StatusMessage = string.Format(CultureInfo.CurrentCulture,
-			_localizationService.GetString("FilterPreset_Saved", "Filter preset “{0}” saved"), name);
 	}
 
 	/// <summary>
@@ -1107,8 +1333,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			_applyingFilterPreset = false;
 		}
 
-		StatusMessage = string.Format(CultureInfo.CurrentCulture,
-			_localizationService.GetString("FilterPreset_Applied", "Filter preset “{0}” applied"), preset.Name);
 	}
 
 	/// <summary>
@@ -1172,11 +1396,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			UpdateLanguageFlag();
                 
 			// Notify that language has changed - this will require app restart for full effect
-			StatusMessage = "Language changed. Please restart the application for full effect.";
+			Snackbar.Show(_localizationService.GetString("Message_LanguageChanged", "Language changed. Restart the application for the change to take full effect."));
 		}
 		catch (Exception ex)
 		{
-			StatusMessage = $"Error changing language: {ex.Message}";
+			Snackbar.ShowError(string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Message_LanguageChangeError", "Could not change the language: {0}"), ex.Message));
 		}
 	}
 
@@ -1208,7 +1433,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 			if (logViewer == null)
 			{
-				StatusMessage = "Could not find LogViewer instance in selected tab.";
+				Snackbar.ShowError(_localizationService.GetString("Message_ViewerNotFound", "The log view of the tab could not be found."));
 				return;
 			}
 
@@ -1222,11 +1447,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			if (logViewer.ExportCommand?.CanExecute(exportParameter) == true)
 			{
 				logViewer.ExportCommand.Execute(exportParameter);
-				StatusMessage = $"Exported logs to {Path.GetFileName(filePath)}";
+				Snackbar.Show(string.Format(CultureInfo.CurrentCulture,
+					_localizationService.GetString("Message_Exported", "Exported to {0}"), Path.GetFileName(filePath)));
 			}
 			else
 			{
-				StatusMessage = "Export command is not available.";
+				Snackbar.ShowError(_localizationService.GetString("Message_ExportUnavailable", "Export is not available for this tab."));
 			}
 		}
 	}
@@ -1334,6 +1560,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public void Dispose()
 	{
 		LogTabs.CollectionChanged -= OnLogTabsCollectionChanged;
+		_udpReceiverService.SourcesChanged -= OnSourcesChanged;
+		_sourcesTimer.Stop();
 		StopListening();
 		//_udpReceiverService.LogReceived -= OnLogReceived;
 		//_fileParserService.LogParsed -= OnLogReceived;

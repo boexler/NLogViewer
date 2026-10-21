@@ -112,21 +112,6 @@
   <data name="Confirm_CloseAllTabs_Message" xml:space="preserve">
     <value>Möchten Sie wirklich alle Tabs schließen?</value>
   </data>
-  <data name="Button_StartListening" xml:space="preserve">
-    <value>Lauschen starten</value>
-  </data>
-  <data name="Button_StopListening" xml:space="preserve">
-    <value>Lauschen beenden</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Bereit</value>
-  </data>
-  <data name="Status_Listening" xml:space="preserve">
-    <value>Lauscht</value>
-  </data>
-  <data name="Status_Stopped" xml:space="preserve">
-    <value>Gestoppt</value>
-  </data>
   <data name="ImportDestination_Title" xml:space="preserve">
     <value>Importziel</value>
   </data>
@@ -163,23 +148,14 @@
   <data name="Import_Starting" xml:space="preserve">
     <value>Wird gestartet...</value>
   </data>
-  <data name="Import_InProgress" xml:space="preserve">
-    <value>Import läuft...</value>
-  </data>
   <data name="Import_FileError_Format" xml:space="preserve">
     <value>Fehler beim Importieren von {0}: {1}</value>
-  </data>
-  <data name="Import_BatchComplete" xml:space="preserve">
-    <value>Import abgeschlossen.</value>
   </data>
   <data name="Import_FormatDetectError" xml:space="preserve">
     <value>Fehler bei der Formerkennung</value>
   </data>
   <data name="Import_ParseProgress_Format" xml:space="preserve">
     <value>Datei {0}/{1} — {2}: {3} / {4} ({5}%)</value>
-  </data>
-  <data name="Import_LoadedFromFile_Format" xml:space="preserve">
-    <value>{0} Logeinträge aus {1} geladen</value>
   </data>
   <data name="Import_ApplyProgress_Format" xml:space="preserve">
     <value>Ansicht wird befüllt: {0}%</value>
@@ -347,7 +323,7 @@
     <value>Port entfernen</value>
   </data>
   <data name="Settings_InvalidPort" xml:space="preserve">
-    <value>Geben Sie eine Adresse wie udp://0.0.0.0:4000 mit einem Port von 1 bis 65535 ein.</value>
+    <value>Geben Sie eine Adresse wie udp://0.0.0.0:4000 mit einem Port von 1 bis 65535 ein. Zurzeit wird nur UDP unterstützt.</value>
   </data>
   <data name="Settings_DuplicatePort" xml:space="preserve">
     <value>Dieser Port steht bereits in der Liste.</value>
@@ -380,13 +356,13 @@
     <value>Sprache der Menüs und Dialoge. Wird nach einem Neustart der Anwendung vollständig übernommen.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
-    <value>Beim Start lauschen</value>
+    <value>Empfang beim Start</value>
   </data>
   <data name="Settings_Ports" xml:space="preserve">
     <value>Ports</value>
   </data>
   <data name="Settings_Ports_Description" xml:space="preserve">
-    <value>Adressen, auf denen die Anwendung auf Logs wartet, zum Beispiel udp://0.0.0.0:4000. Änderungen gelten ab dem nächsten Start des Lauschens.</value>
+    <value>Adressen, auf denen die Anwendung auf Logs wartet, zum Beispiel udp://0.0.0.0:4000. Änderungen gelten ab dem nächsten Start des Empfangs.</value>
   </data>
   <data name="Settings_MaxEntries" xml:space="preserve">
     <value>Höchstzahl Einträge je Tab</value>
@@ -398,7 +374,7 @@
     <value>Berücksichtigt Beta-Versionen bei der Suche nach Updates. Standardmäßig an, solange eine Vorabversion läuft.</value>
   </data>
   <data name="Settings_AutoStartListening_Description" xml:space="preserve">
-    <value>Empfängt sofort nach dem Start Logs auf allen Ports, ohne dass „Lauschen starten“ geklickt werden muss.</value>
+    <value>Empfängt sofort nach dem Start Logs auf allen Ports, ohne dass „Empfang starten“ geklickt werden muss.</value>
   </data>
   <data name="Settings_CheckForUpdates_Description" xml:space="preserve">
     <value>Fragt beim Start der Anwendung einmal bei GitHub nach, ob es eine neuere Version gibt. Hilfe → Über prüft immer.</value>
@@ -901,15 +877,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Sprache auswählen</value>
   </data>
-  <data name="ToolTip_StartListening" xml:space="preserve">
-    <value>Lauschen auf den konfigurierten Ports starten</value>
-  </data>
-  <data name="ToolTip_StopListening" xml:space="preserve">
-    <value>Lauschen auf allen Ports beenden</value>
-  </data>
-  <data name="Status_Label" xml:space="preserve">
-    <value>Status:</value>
-  </data>
   <data name="Menu_Filter" xml:space="preserve">
     <value>_Filter</value>
   </data>
@@ -930,12 +897,6 @@
   </data>
   <data name="FilterPreset_Overwrite" xml:space="preserve">
     <value>Ein Preset namens „{0}“ existiert bereits. Ersetzen?</value>
-  </data>
-  <data name="FilterPreset_Saved" xml:space="preserve">
-    <value>Filter-Preset „{0}“ gespeichert</value>
-  </data>
-  <data name="FilterPreset_Applied" xml:space="preserve">
-    <value>Filter-Preset „{0}“ angewendet</value>
   </data>
   <data name="Settings_Category_FilterPresets" xml:space="preserve">
     <value>Filter-Presets</value>
@@ -960,6 +921,117 @@
   </data>
   <data name="Settings_PresetNameInUse" xml:space="preserve">
     <value>Ein Preset mit diesem Namen existiert bereits.</value>
+  </data>
+  <data name="Receive_Ready" xml:space="preserve">
+    <value>Bereit</value>
+  </data>
+  <data name="Receive_Active" xml:space="preserve">
+    <value>Empfang aktiv</value>
+  </data>
+  <data name="Receive_ActiveMany" xml:space="preserve">
+    <value>Empfang aktiv · {0} Quellen</value>
+  </data>
+  <data name="Receive_ActivePartial" xml:space="preserve">
+    <value>Empfang aktiv · {0} von {1} Quellen</value>
+  </data>
+  <data name="Receive_Stopped" xml:space="preserve">
+    <value>Empfang gestoppt</value>
+  </data>
+  <data name="Receive_Failed" xml:space="preserve">
+    <value>Empfang fehlgeschlagen</value>
+  </data>
+  <data name="Receive_NoSources" xml:space="preserve">
+    <value>Keine Quellen</value>
+  </data>
+  <data name="Receive_ToolTip" xml:space="preserve">
+    <value>Quellen anzeigen, die Logs empfangen</value>
+  </data>
+  <data name="Receive_ToggleToolTip" xml:space="preserve">
+    <value>Empfang auf allen Quellen starten oder beenden</value>
+  </data>
+  <data name="Source_Listening" xml:space="preserve">
+    <value>Empfängt</value>
+  </data>
+  <data name="Source_Stopped" xml:space="preserve">
+    <value>Gestoppt</value>
+  </data>
+  <data name="Source_PortInUse" xml:space="preserve">
+    <value>Port belegt</value>
+  </data>
+  <data name="Source_PortInUseBy" xml:space="preserve">
+    <value>Port belegt von {0}</value>
+  </data>
+  <data name="Source_Failed" xml:space="preserve">
+    <value>Start fehlgeschlagen</value>
+  </data>
+  <data name="Source_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Sources_Title" xml:space="preserve">
+    <value>Quellen</value>
+  </data>
+  <data name="Sources_Manage" xml:space="preserve">
+    <value>Quellen verwalten...</value>
+  </data>
+  <data name="Sources_ColumnSource" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
+  <data name="Sources_ColumnKind" xml:space="preserve">
+    <value>Art</value>
+  </data>
+  <data name="Sources_ColumnState" xml:space="preserve">
+    <value>Zustand</value>
+  </data>
+  <data name="Sources_ColumnEntries" xml:space="preserve">
+    <value>Einträge</value>
+  </data>
+  <data name="Sources_ColumnLastEntry" xml:space="preserve">
+    <value>Letzter Eintrag</value>
+  </data>
+  <data name="Sources_ColumnOn" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Menu_StartReceiving" xml:space="preserve">
+    <value>Empfang _starten</value>
+  </data>
+  <data name="Menu_StopReceiving" xml:space="preserve">
+    <value>Empfang _beenden</value>
+  </data>
+  <data name="Summary_Entries" xml:space="preserve">
+    <value>Einträge: {0:N0}</value>
+  </data>
+  <data name="Summary_EntriesOf" xml:space="preserve">
+    <value>Einträge: {0:N0} von {1:N0}</value>
+  </data>
+  <data name="Summary_LevelsOff" xml:space="preserve">
+    <value>Level ausgeblendet: {0}</value>
+  </data>
+  <data name="Summary_Terms" xml:space="preserve">
+    <value>Suchbegriffe: {0}</value>
+  </data>
+  <data name="Summary_Loggers" xml:space="preserve">
+    <value>Logger-Regeln: {0}</value>
+  </data>
+  <data name="Summary_Reset" xml:space="preserve">
+    <value>Filter zurücksetzen</value>
+  </data>
+  <data name="Message_LanguageChanged" xml:space="preserve">
+    <value>Sprache geändert. Starten Sie die Anwendung neu, damit die Änderung vollständig wirkt.</value>
+  </data>
+  <data name="Message_LanguageChangeError" xml:space="preserve">
+    <value>Die Sprache konnte nicht geändert werden: {0}</value>
+  </data>
+  <data name="Message_Exported" xml:space="preserve">
+    <value>Exportiert nach {0}</value>
+  </data>
+  <data name="Message_ExportUnavailable" xml:space="preserve">
+    <value>Der Export ist für diesen Tab nicht verfügbar.</value>
+  </data>
+  <data name="Message_ViewerNotFound" xml:space="preserve">
+    <value>Die Logansicht des Tabs wurde nicht gefunden.</value>
+  </data>
+  <data name="Snackbar_Close" xml:space="preserve">
+    <value>Schließen</value>
   </data>
 </root>
 

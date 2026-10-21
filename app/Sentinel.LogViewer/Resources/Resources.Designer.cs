@@ -61,24 +61,6 @@ namespace Sentinel.LogViewer.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Start Listening ähnelt.
-        /// </summary>
-        internal static string Button_StartListening {
-            get {
-                return ResourceManager.GetString("Button_StartListening", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Stop Listening ähnelt.
-        /// </summary>
-        internal static string Button_StopListening {
-            get {
-                return ResourceManager.GetString("Button_StopListening", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die _About... ähnelt.
         /// </summary>
         internal static string Menu_About {
@@ -141,31 +123,5 @@ namespace Sentinel.LogViewer.Resources {
             }
         }
         
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Listening ähnelt.
-        /// </summary>
-        internal static string Status_Listening {
-            get {
-                return ResourceManager.GetString("Status_Listening", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Ready ähnelt.
-        /// </summary>
-        internal static string Status_Ready {
-            get {
-                return ResourceManager.GetString("Status_Ready", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Stopped ähnelt.
-        /// </summary>
-        internal static string Status_Stopped {
-            get {
-                return ResourceManager.GetString("Status_Stopped", resourceCulture);
-            }
-        }
     }
 }

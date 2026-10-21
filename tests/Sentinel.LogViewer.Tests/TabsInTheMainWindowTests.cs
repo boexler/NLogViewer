@@ -259,6 +259,112 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		});
 	}
 
+	private static int FreeUdpPort()
+	{
+		using var probe = new System.Net.Sockets.UdpClient(0);
+		return ((System.Net.IPEndPoint)probe.Client.LocalEndPoint!).Port;
+	}
+
+	[Fact]
+	public void TheStatusBar_SaysWhatReceives_AndEverySourceCanBeSwitchedOnAndOff()
+	{
+		_context.RunOnSta(() =>
+		{
+			var busy = new System.Net.Sockets.UdpClient(0);
+			var busyPort = ((System.Net.IPEndPoint)busy.Client.LocalEndPoint!).Port;
+			var configuration = _environment.Saved;
+			configuration.Ports = new() { $"udp://0.0.0.0:{FreeUdpPort()}", $"udp://0.0.0.0:{FreeUdpPort()}", $"udp://0.0.0.0:{busyPort}" };
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Assert.Equal(("Ready", ReceiveStatus.Ready), (viewModel.ReceiveStatusText, viewModel.ReceiveStatus));
+			Assert.Equal(3, viewModel.Sources.Count);
+			Assert.False(viewModel.IsSourcesPanelOpen);
+
+			viewModel.StartListeningCommand.Execute(null);
+			WpfTestHelper.Settle();
+
+			Assert.Equal(("Listening · 2 of 3 sources", ReceiveStatus.Partial), (viewModel.ReceiveStatusText, viewModel.ReceiveStatus));
+			var failed = viewModel.Sources[2];
+			Assert.True(failed.CanRetry);
+			Assert.StartsWith("Port in use", failed.StateText);
+			Assert.False(failed.IsOn);
+
+			viewModel.Sources[0].IsOn = false;
+			Assert.Equal("Listening · 1 of 3 sources", viewModel.ReceiveStatusText);
+
+			busy.Close();
+			failed.RetryCommand.Execute(null);
+			Assert.Equal("Listening · 2 of 3 sources", viewModel.ReceiveStatusText);
+			viewModel.Sources[0].IsOn = true;
+			Assert.Equal(("Listening · 3 sources", ReceiveStatus.Active), (viewModel.ReceiveStatusText, viewModel.ReceiveStatus));
+
+			viewModel.ToggleSourcesPanelCommand.Execute(null);
+			Assert.True(viewModel.IsSourcesPanelOpen);
+
+			viewModel.ToggleReceivingCommand.Execute(null);
+
+			Assert.Equal(("Stopped", ReceiveStatus.Stopped), (viewModel.ReceiveStatusText, viewModel.ReceiveStatus));
+			Assert.False(viewModel.IsListening);
+			Assert.All(viewModel.Sources, source => Assert.False(source.IsOn));
+		});
+	}
+
+	[Fact]
+	public void TheStatusBar_SummarizesTheSelectedTab_AndTheFilterCanBeReset()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Assert.Equal(string.Empty, viewModel.TabSummary);
+			Assert.False(viewModel.HasActiveFilter);
+
+			Send(session, App("(100)"), "alpha");
+			Send(session, App("(100)"), "beta", LogEntryLevel.Error);
+			Send(session, App("(100)"), "beta again");
+			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
+			Assert.Equal("Entries: 3", viewModel.TabSummary);
+			Assert.False(viewModel.HasActiveFilter);
+
+			viewer.AddRegexSearchTerm("beta");
+			viewer.InfoFilter = true;
+			WpfTestHelper.Settle();
+
+			Assert.True(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 1 of 3 · Levels off: 1 · Terms: 1", viewModel.TabSummary);
+			Assert.Equal(1, viewModel.LogTabs[0].VisibleEntryCount);
+
+			viewer.SearchFields = SearchFields.All;
+			viewer.CustomTimeStampFormat = TimeStampFormat.German;
+			viewModel.ResetFilterCommand.Execute(null);
+			WpfTestHelper.Settle();
+
+			Assert.False(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 3", viewModel.TabSummary);
+			Assert.Empty(viewer.ActiveSearchTerms);
+			Assert.False(viewer.InfoFilter);
+			Assert.Equal((SearchFields.All, TimeStampFormat.German), (viewer.SearchFields, viewer.CustomTimeStampFormat));
+
+			viewModel.LogTabs.Clear();
+			Assert.Equal(string.Empty, viewModel.TabSummary);
+		});
+	}
+
+	[Fact]
+	public void TheSourcesOfTheStatusBar_FollowTheAddressesOfTheSettings()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.Ports = new() { "udp://0.0.0.0:4511" };
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Assert.Equal(new[] { "UDP 4511" }, session.ViewModel.Sources.Select(source => source.Name));
+			Assert.Equal("Ready", session.ViewModel.ReceiveStatusText);
+		});
+	}
+
 	[Fact]
 	public void ADraggedWidth_ThatIsOutsideTheLimits_IsSavedAsTheNearestValidWidth()
 	{
