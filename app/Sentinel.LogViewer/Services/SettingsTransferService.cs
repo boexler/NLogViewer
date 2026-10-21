@@ -62,6 +62,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		if (!SettingsRules.IsValidLoggerTreeWidth(settings.LoggerTreeWidth))
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
+		settings.Columns = Wpf.LogColumns.Normalize(settings.Columns);
 		FilterPresetService.Sanitize(settings);
 		IgnoreRule.Sanitize(settings);
 

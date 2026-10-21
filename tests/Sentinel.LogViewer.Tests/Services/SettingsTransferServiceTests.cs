@@ -1,3 +1,4 @@
+using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Core;
 using System;
 using System.IO;
@@ -130,6 +131,25 @@ public class SettingsTransferServiceTests : IDisposable
 		File.WriteAllText(file, """{ "Version": 1, "Settings": { "SearchFields": "Nonsense" } }""");
 		_environment.Transfer.Import(file);
 		Assert.Equal("Default", _environment.Saved.SearchFields);
+	}
+
+	[Fact]
+	public void TheColumns_AreExportedAndImported_AndWhatIsNoColumnIsLeftOut()
+	{
+		var file = _environment.PathOf("columns.json");
+		var configuration = _environment.Saved;
+		configuration.Columns = new() { LogColumns.Level, LogColumns.Property("Class"), LogColumns.Message };
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal(new[] { "level", "property:Class", "message" }, _environment.Saved.Columns);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "Columns": [ "bogus", "level", "level", "property:" ] } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal(new[] { "level", "message" }, _environment.Saved.Columns);
+		Assert.Equal(LogColumns.Default, ConfigurationService.CreateDefaultConfiguration().Columns);
 	}
 
 	[Fact]
