@@ -1331,7 +1331,13 @@
     <value>Apparence de la liste des logs</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>Niveau, hauteur des lignes, police et taille de la liste des logs, avec un aperçu du résultat.</value>
+    <value>Mode de couleur, thème, format de l'horodatage, niveau, hauteur des lignes, police et taille de la liste des logs, avec un aperçu du résultat.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Annule la dernière modification de cette carte, autant de fois que nécessaire</value>
   </data>
 </root>
 

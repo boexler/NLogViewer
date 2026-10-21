@@ -1334,7 +1334,13 @@
     <value>List appearance</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>Level, row height, font and size of the log list, with a preview of the result.</value>
+    <value>Colour mode, theme, timestamp format, level, row height, font and size of the log list, with a preview of the result.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Takes back the last change of this card, again and again</value>
   </data>
 </root>
 

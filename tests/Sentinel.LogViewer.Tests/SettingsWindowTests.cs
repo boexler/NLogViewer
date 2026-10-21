@@ -119,9 +119,10 @@ public class SettingsWindowTests
 				var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
 				var card = Descendants<SettingCard>(window).Single(candidate => candidate.Setting == look);
 				var boxes = Descendants<ComboBox>(card).ToList();
-				Assert.Equal(4, boxes.Count);
-				var (level, height, font, size) = (boxes[0], boxes[1], boxes[2], boxes[3]);
+				Assert.Equal(7, boxes.Count);
+				var (mode, theme, format, level, height, font, size) = (boxes[0], boxes[1], boxes[2], boxes[3], boxes[4], boxes[5], boxes[6]);
 				Assert.True(size.IsEditable);
+				Assert.DoesNotContain(Descendants<SettingCard>(window), candidate => candidate.Setting?.IsEmbedded == true);
 
 				TextBlock Message() => Descendants<TextBlock>(card).Single(text => text.Text == "Payment failed: timeout");
 				TextBlock LevelText() => Descendants<TextBlock>(card).Single(text => text.Text == "Error");
@@ -129,6 +130,15 @@ public class SettingsWindowTests
 				var normalHeight = Symbol().Height;
 
 				// The controls change the settings, and the preview follows each of them.
+				format.SelectedValue = "german";
+				WpfTestHelper.Settle();
+				Assert.Contains(Descendants<TextBlock>(card), text => text.Text == "18.12.2025 15:11:48.385");
+
+				theme.SelectedValue = "oldschool";
+				mode.SelectedValue = "dark";
+				WpfTestHelper.Settle();
+				Assert.Equal(("dark", "oldschool"), (environment.Saved.ThemeMode, environment.Saved.Theme));
+
 				level.SelectedValue = "SymbolAndText";
 				WpfTestHelper.Settle();
 				Assert.Equal(Visibility.Visible, LevelText().Visibility);
@@ -166,6 +176,17 @@ public class SettingsWindowTests
 
 				var saved = environment.Saved;
 				Assert.Equal(("Text", "Compact", "Consolas"), (saved.LevelDisplay, saved.RowHeight, saved.ListFontFamily));
+
+				// The button takes back the last change, which is the size, and the preview follows.
+				var undo = Descendants<Button>(card).Single(button => button.Command == look.UndoCommand);
+				Assert.True(undo.IsEnabled);
+				look.SizeText = "20";
+				WpfTestHelper.Settle();
+				Assert.Equal(20, Message().FontSize);
+				undo.Command.Execute(null);
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.Equal(18, environment.Saved.ListFontSize);
 			}
 			finally
 			{

@@ -471,6 +471,119 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheColourMode_TheTheme_AndTheTimestampFormat_AreShownInTheCardOfTheListAppearance_NotInCardsOfTheirOwn()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
+		var mode = viewModel.Setting<ChoiceSettingViewModel>("Colour mode");
+		var theme = viewModel.Setting<ChoiceSettingViewModel>("Theme");
+		var format = viewModel.Setting<ChoiceSettingViewModel>("Timestamp format");
+		Assert.All(new SettingViewModel[] { mode, theme, format }, setting => Assert.True(setting.IsEmbedded));
+		Assert.False(look.IsEmbedded);
+
+		// The settings stay in the list, but the page has one card for all of them, and so has the search.
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		var cards = viewModel.PageItems.OfType<SettingViewModel>().ToList();
+		Assert.Contains(look, cards);
+		Assert.DoesNotContain(mode, cards);
+		Assert.DoesNotContain(theme, cards);
+		Assert.DoesNotContain(format, cards);
+		viewModel.SearchText = "theme";
+		Assert.Contains(look, viewModel.PageItems.OfType<SettingViewModel>());
+		Assert.DoesNotContain(theme, viewModel.PageItems.OfType<SettingViewModel>());
+		viewModel.SearchText = string.Empty;
+
+		// The card sets them and follows them.
+		Assert.Equal((mode.Value, theme.Value, format.Value), (look.ColourMode, look.Theme, look.TimeStampFormat));
+		look.ColourMode = "dark";
+		look.Theme = "oldschool";
+		look.TimeStampFormat = "iso";
+		var saved = _environment.Saved;
+		Assert.Equal(("dark", "oldschool", "iso"), (saved.ThemeMode, saved.Theme, saved.TimeStampFormat));
+		Assert.Equal(("dark", "oldschool", "iso"), (mode.Value, theme.Value, format.Value));
+
+		// Changed elsewhere, e.g. by a reset of the category, they show in the card as well.
+		var changed = new List<string?>();
+		look.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Contains(string.Empty, changed);
+		Assert.Equal(("system", "newschool"), (look.ColourMode, look.Theme));
+	}
+
+	[Fact]
+	public void ThePreviewShowsTheTimestampInTheChosenFormat()
+	{
+		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+
+		look.TimeStampFormat = "iso";
+		Assert.Equal("2025-12-18 15:11:48.385", look.Rows[1].TimeStamp);
+		look.TimeStampFormat = "german";
+		Assert.Equal("18.12.2025 15:11:48.385", look.Rows[1].TimeStamp);
+		look.TimeStampFormat = "english";
+		Assert.Equal("12/18/2025 03:11:48.385 PM", look.Rows[1].TimeStamp);
+	}
+
+	[Fact]
+	public void TheChangesOfTheListAppearance_CanBeTakenBack_OneAfterTheOther_AlsoAReset()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
+		Assert.False(look.CanUndo);
+		Assert.False(look.UndoCommand.CanExecute(null));
+
+		look.Level = "Text";
+		look.Family = "Consolas";
+		look.Theme = "oldschool";
+		look.SizeText = "20";
+		Assert.True(look.CanUndo);
+		Assert.True(look.UndoCommand.CanExecute(null));
+
+		look.UndoCommand.Execute(null);
+		Assert.Equal(12, _environment.Saved.ListFontSize);
+		look.UndoCommand.Execute(null);
+		Assert.Equal("newschool", _environment.Saved.Theme);
+		Assert.Equal("Consolas", look.Family);
+		look.UndoCommand.Execute(null);
+		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
+		Assert.Equal("Text", look.Level);
+		look.UndoCommand.Execute(null);
+		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
+		Assert.False(look.CanUndo);
+		Assert.False(look.UndoCommand.CanExecute(null));
+
+		// A change that does nothing is nothing to take back.
+		look.Level = "Symbol";
+		Assert.False(look.CanUndo);
+
+		// The reset of the category can be taken back as well.
+		look.Level = "SymbolAndText";
+		look.RowHeight = "Compact";
+		look.Theme = "oldschool";
+		viewModel.SelectedCategory = viewModel.Category("Appearance");
+		viewModel.ResetCategoryCommand.Execute(null);
+		Assert.Equal(("Symbol", "Normal", "newschool"), (look.Level, look.RowHeight, look.Theme));
+		look.UndoCommand.Execute(null);
+		var saved = _environment.Saved;
+		Assert.Equal(("SymbolAndText", "Compact", "oldschool"), (saved.LevelDisplay, saved.RowHeight, saved.Theme));
+		Assert.Equal(("SymbolAndText", "Compact", "oldschool"), (look.Level, look.RowHeight, look.Theme));
+	}
+
+	[Fact]
+	public void AnInvalidSize_ShowsAnError_ThatTheCardCanShow()
+	{
+		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+		var changed = new List<string?>();
+		look.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+		look.SizeText = "5";
+
+		Assert.True(look.HasError);
+		Assert.Contains("HasError", changed);
+		look.SizeText = "13";
+		Assert.False(look.HasError);
+	}
+
+	[Fact]
 	public void EveryChangeOfTheListAppearance_ChangesThePreview()
 	{
 		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");

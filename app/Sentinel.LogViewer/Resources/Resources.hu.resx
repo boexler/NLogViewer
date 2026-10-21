@@ -1331,7 +1331,13 @@
     <value>A naplólista megjelenése</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>A naplólista szintjének megjelenítése, sormagassága, betűtípusa és mérete, az eredmény előnézetével.</value>
+    <value>Színmód, téma, időbélyeg-formátum, szint, sormagasság, betűtípus és méret a naplólistához, az eredmény előnézetével.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Visszavonás</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Visszavonja a kártya utolsó módosítását, akárhányszor</value>
   </data>
 </root>
 

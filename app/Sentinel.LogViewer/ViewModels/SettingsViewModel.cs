@@ -416,7 +416,7 @@ namespace Sentinel.LogViewer.ViewModels
 
                 foreach (var category in Categories)
                 {
-                    var matches = category.Settings.Where(setting => setting.Matches(query)).ToList();
+                    var matches = category.Settings.Where(setting => !setting.IsEmbedded && setting.Matches(query)).ToList();
                     if (matches.Count == 0)
                         continue;
 
@@ -445,7 +445,7 @@ namespace Sentinel.LogViewer.ViewModels
                 group.Clear();
             }
 
-            foreach (var setting in settings)
+            foreach (var setting in settings.Where(setting => !setting.IsEmbedded))
             {
                 if (setting.Group == null)
                 {

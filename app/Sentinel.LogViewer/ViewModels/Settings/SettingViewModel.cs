@@ -41,6 +41,12 @@ public abstract class SettingViewModel : INotifyPropertyChanged
 	public SettingGroup? Group { get; init; }
 
 	/// <summary>
+	/// Whether another card shows this setting; it stays in the list, so that it is reset, reloaded and found by the tests, but gets no card of its own
+	/// and is not offered by the search
+	/// </summary>
+	public bool IsEmbedded { get; init; }
+
+	/// <summary>
 	/// Whether a change only takes full effect after restarting the application
 	/// </summary>
 	public bool NeedsRestart { get; }

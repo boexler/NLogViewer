@@ -99,56 +99,75 @@
                 </controls:SettingCard>
             </DataTemplate>
 
-            <!-- How the log list looks: four settings and a preview of a few rows that follows them -->
+            <!-- How the log list looks: the settings on the left, a preview of a few rows that follows them on the right -->
             <DataTemplate DataType="{x:Type settings:ListLookSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">
+                    <Button Command="{Binding UndoCommand}" Padding="12,5"
+                            ToolTip="{helpers:Resource Key=Settings_ListLookUndo_ToolTip, DefaultValue=Takes back the last change of this card and then the one before}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7A7;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="11" VerticalAlignment="Center" Margin="0,1,8,0"/>
+                            <TextBlock Text="{helpers:Resource Key=Settings_ListLookUndo, DefaultValue=Undo}"/>
+                        </StackPanel>
+                    </Button>
                     <controls:SettingCard.Details>
-                        <StackPanel>
-                            <UniformGrid Columns="4">
-                                <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}" TextWrapping="Wrap" FontSize="12"
-                                               Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,0,0,4"/>
-                                    <ComboBox ItemsSource="{Binding LevelOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding Level}"
-                                              ToolTip="{helpers:Resource Key=Settings_LevelDisplay_Description, DefaultValue=How the level of an entry is shown in the log list}"
-                                              AutomationProperties.Name="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}"/>
-                                </StackPanel>
-                                <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}" TextWrapping="Wrap" FontSize="12"
-                                               Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,0,0,4"/>
-                                    <ComboBox ItemsSource="{Binding RowHeightOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding RowHeight}"
-                                              ToolTip="{helpers:Resource Key=Settings_RowHeight_Description, DefaultValue=Compact rows show more entries on the screen.}"
-                                              AutomationProperties.Name="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}"/>
-                                </StackPanel>
-                                <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}" TextWrapping="Wrap" FontSize="12"
-                                               Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,0,0,4"/>
-                                    <ComboBox ItemsSource="{Binding FontOptions}" SelectedValuePath="Value" SelectedValue="{Binding Family}"
-                                              ToolTip="{helpers:Resource Key=Settings_ListFontFamily_Description, DefaultValue=The font of the entries and of the column headers in the log list}"
-                                              AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <!-- A font is listed in its own typeface; the default entry has none -->
-                                                <TextBlock Text="{Binding Display}"
-                                                           FontFamily="{Binding FontFamily, TargetNullValue={x:Static SystemFonts.MessageFontFamily}}"/>
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}" TextWrapping="Wrap" FontSize="12"
-                                               Foreground="{DynamicResource ThemeTextSecondary}" Margin="0,0,0,4"/>
-                                    <!-- Choose one of the sizes or type another one -->
-                                    <ComboBox IsEditable="True" ItemsSource="{x:Static settings:ListLookSettingViewModel.SizeOptions}"
-                                              Text="{Binding SizeText, UpdateSourceTrigger=LostFocus}"
-                                              SelectedItem="{Binding SelectedSize}"
-                                              ToolTip="{helpers:Resource Key=Settings_ListFontSize_Description, DefaultValue=The size of the text in the log list}"
-                                              AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}"/>
-                                    <TextBlock Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
-                                </StackPanel>
-                            </UniformGrid>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Margin="0,12,0,0">
+                        <Grid>
+                            <Grid.Resources>
+                                <Style x:Key="LookLabel" TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="Margin" Value="0,0,0,3"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="240"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_ThemeMode, DefaultValue=Colour mode}"/>
+                                <ComboBox ItemsSource="{Binding ColourModeOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding ColourMode}"
+                                          ToolTip="{helpers:Resource Key=Settings_ThemeMode_Description, DefaultValue=Light or dark or like Windows}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_ThemeMode, DefaultValue=Colour mode}"/>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_Theme, DefaultValue=Theme}"/>
+                                <ComboBox ItemsSource="{Binding ThemeOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding Theme}"
+                                          ToolTip="{helpers:Resource Key=Settings_Theme_Description, DefaultValue=The look of the application}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_Theme, DefaultValue=Theme}"/>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_TimeStampFormat, DefaultValue=Timestamp format}"/>
+                                <ComboBox ItemsSource="{Binding TimeStampOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding TimeStampFormat}"
+                                          ToolTip="{helpers:Resource Key=Settings_TimeStampFormat_Description, DefaultValue=Format of the timestamp column in the log list}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_TimeStampFormat, DefaultValue=Timestamp format}"/>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}"/>
+                                <ComboBox ItemsSource="{Binding LevelOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding Level}"
+                                          ToolTip="{helpers:Resource Key=Settings_LevelDisplay_Description, DefaultValue=How the level of an entry is shown in the log list}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}"/>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}"/>
+                                <ComboBox ItemsSource="{Binding RowHeightOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding RowHeight}"
+                                          ToolTip="{helpers:Resource Key=Settings_RowHeight_Description, DefaultValue=Compact rows show more entries on the screen.}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}"/>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}"/>
+                                <ComboBox ItemsSource="{Binding FontOptions}" SelectedValuePath="Value" SelectedValue="{Binding Family}"
+                                          ToolTip="{helpers:Resource Key=Settings_ListFontFamily_Description, DefaultValue=The font of the entries and of the column headers in the log list}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <!-- A font is listed in its own typeface; the default entry has none -->
+                                            <TextBlock Text="{Binding Display}"
+                                                       FontFamily="{Binding FontFamily, TargetNullValue={x:Static SystemFonts.MessageFontFamily}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <TextBlock Style="{StaticResource LookLabel}" Margin="0,10,0,3" Text="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}"/>
+                                <!-- Choose one of the sizes or type another one -->
+                                <ComboBox IsEditable="True" ItemsSource="{x:Static settings:ListLookSettingViewModel.SizeOptions}"
+                                          Text="{Binding SizeText, UpdateSourceTrigger=LostFocus}"
+                                          SelectedItem="{Binding SelectedSize}"
+                                          ToolTip="{helpers:Resource Key=Settings_ListFontSize_Description, DefaultValue=The size of the text in the log list}"
+                                          AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}"/>
+                                <TextBlock Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
+                            </StackPanel>
+                            <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center">
                                 <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="1" CornerRadius="6"
-                                        Grid.IsSharedSizeScope="True" ClipToBounds="True" HorizontalAlignment="Left" MinWidth="360">
+                                        Grid.IsSharedSizeScope="True" ClipToBounds="True" HorizontalAlignment="Left">
                                     <ItemsControl ItemsSource="{Binding Rows}" Focusable="False"
                                                   FontFamily="{Binding FontFamily}" FontSize="{Binding FontSize}">
                                         <ItemsControl.ItemTemplate>
@@ -195,7 +214,7 @@
                                     </ItemsControl>
                                 </Border>
                             </ScrollViewer>
-                        </StackPanel>
+                        </Grid>
                     </controls:SettingCard.Details>
                 </controls:SettingCard>
             </DataTemplate>

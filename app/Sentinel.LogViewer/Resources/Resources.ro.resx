@@ -1331,7 +1331,13 @@
     <value>Aspectul listei de loguri</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>Nivelul, înălțimea rândurilor, fontul și dimensiunea listei de loguri, cu previzualizarea rezultatului.</value>
+    <value>Modul de culoare, tema, formatul marcajului de timp, nivelul, înălțimea rândurilor, fontul și dimensiunea listei de loguri, cu previzualizarea rezultatului.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Anulează</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Anulează ultima modificare a acestui card, de câte ori este nevoie</value>
   </data>
 </root>
 

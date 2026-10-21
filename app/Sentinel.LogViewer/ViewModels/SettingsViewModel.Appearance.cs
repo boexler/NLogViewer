@@ -26,7 +26,7 @@ namespace Sentinel.LogViewer.ViewModels
 
         private IEnumerable<SettingViewModel> CreateAppearanceSettings()
         {
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE790",
+            var colourMode = new ChoiceSettingViewModel(AppearanceId, "\uE790",
                 Text("Settings_ThemeMode", "Colour mode"),
                 Text("Settings_ThemeMode_Description", "Light or dark, or the same as Windows. The colours below belong to the theme that is in use."),
                 needsRestart: false,
@@ -50,9 +50,9 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.Theme = ThemeCatalog.DefaultThemeId;
                     _configuration.ThemeColors.Clear();
                     ChangeTheme();
-                });
+                }) { IsEmbedded = true };
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE771",
+            var theme = new ChoiceSettingViewModel(AppearanceId, "\uE771",
                 Text("Settings_Theme", "Theme"),
                 Text("Settings_Theme_Description", "Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode."),
                 needsRestart: false,
@@ -63,9 +63,9 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.Theme = id;
                     ChangeTheme();
                 },
-                getDefault: () => ThemeCatalog.DefaultThemeId);
+                getDefault: () => ThemeCatalog.DefaultThemeId) { IsEmbedded = true };
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE121",
+            var timeStampFormat = new ChoiceSettingViewModel(AppearanceId, "\uE121",
                 Text("Settings_TimeStampFormat", "Timestamp format"),
                 Text("Settings_TimeStampFormat_Description", "Format of the timestamp column in the log list."),
                 needsRestart: false,
@@ -82,11 +82,12 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.TimeStampFormat = id;
                     Commit();
                 },
-                getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
+                getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System)) { IsEmbedded = true };
 
             yield return new ListLookSettingViewModel(AppearanceId, "\uE8D2",
                 Text("Settings_ListAppearance", "List appearance"),
-                Text("Settings_ListAppearance_Description", "Level, row height, font and size of the log list, with a preview of the result."),
+                Text("Settings_ListAppearance_Description", "Colour mode, theme, timestamp format, level, row height, font and size of the log list, with a preview of the result."),
+                colourMode, theme, timeStampFormat,
                 levelOptions: new[]
                 {
                     new ChoiceOption(nameof(Wpf.LevelDisplayMode.Symbol), Text("Settings_LevelDisplay_Symbol", "Symbol")),
@@ -136,6 +137,11 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.ListFontSize = defaults.ListFontSize;
                     Commit();
                 });
+
+            // They are shown in the card above, but stay in the list: the reset of the category and the import take them along.
+            yield return colourMode;
+            yield return theme;
+            yield return timeStampFormat;
 
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),

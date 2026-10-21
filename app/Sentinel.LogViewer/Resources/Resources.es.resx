@@ -1331,7 +1331,13 @@
     <value>Aspecto de la lista de logs</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>Nivel, altura de fila, fuente y tamaño de la lista de logs, con vista previa del resultado.</value>
+    <value>Modo de color, tema, formato de la marca de tiempo, nivel, altura de fila, fuente y tamaño de la lista de logs, con vista previa del resultado.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Deshacer</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Deshace el último cambio de esta tarjeta, una y otra vez</value>
   </data>
 </root>
 

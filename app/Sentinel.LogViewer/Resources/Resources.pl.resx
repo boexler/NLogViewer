@@ -1331,7 +1331,13 @@
     <value>Wygląd listy logów</value>
   </data>
   <data name="Settings_ListAppearance_Description" xml:space="preserve">
-    <value>Poziom, wysokość wierszy, czcionka i rozmiar listy logów, z podglądem wyniku.</value>
+    <value>Tryb kolorów, motyw, format znacznika czasu, poziom, wysokość wierszy, czcionka i rozmiar listy logów, z podglądem wyniku.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Cofnij</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Cofa ostatnią zmianę tej karty, wielokrotnie</value>
   </data>
 </root>
 
