@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.ViewModels;
@@ -28,6 +29,7 @@ namespace Sentinel.LogViewer
 
         private readonly DispatcherTimer _trayTimer = new();
         private int _trayAlerts;
+        private LogEntryLevel _trayHighest;
         private DateTime _lastTrayNotification = DateTime.MinValue;
 
         /// <summary>The state to go back to when the window comes back from the tray: minimizing does not remember a maximized window</summary>
@@ -115,6 +117,7 @@ namespace Sentinel.LogViewer
                     return;
 
                 _trayAlerts = 0;
+                _trayHighest = LogEntryLevel.Trace;
                 tray.ToolTip = TrayToolTip();
                 tray.Show();
                 Hide();
@@ -124,12 +127,13 @@ namespace Sentinel.LogViewer
                 if (e.PropertyName == nameof(MainViewModel.ReceiveStatusText))
                     tray.ToolTip = TrayToolTip();
             };
-            _viewModel.AlertsReceived += (_, alerts) =>
+            _viewModel.AlertsReceived += (_, alert) =>
             {
                 if (!tray.IsVisible)
                     return;
 
-                _trayAlerts += alerts;
+                _trayAlerts += alert.Count;
+                _trayHighest = (LogEntryLevel)Math.Max((int)_trayHighest, (int)alert.Highest);
                 var wait = TrayNotificationInterval - (DateTime.UtcNow - _lastTrayNotification);
                 if (wait <= TimeSpan.Zero)
                 {
@@ -153,8 +157,10 @@ namespace Sentinel.LogViewer
 
             _lastTrayNotification = DateTime.UtcNow;
             var text = _viewModel.TrayNotificationText(_trayAlerts);
+            var isWarning = _trayHighest < LogEntryLevel.Error;
             _trayAlerts = 0;
-            tray.Notify(ProductNames.Display, text);
+            _trayHighest = LogEntryLevel.Trace;
+            tray.Notify(ProductNames.Display, text, isWarning);
         }
 
         private string TrayToolTip() => $"{ProductNames.Display} – {_viewModel.ReceiveStatusText}";
@@ -169,6 +175,7 @@ namespace Sentinel.LogViewer
             _tray?.Hide();
             _trayTimer.Stop();
             _trayAlerts = 0;
+            _trayHighest = LogEntryLevel.Trace;
         }
 
         /// <summary>

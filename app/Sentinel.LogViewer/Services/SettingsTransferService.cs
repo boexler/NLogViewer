@@ -34,6 +34,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 	{
 		var settings = configurationService.LoadConfiguration();
 		settings.LastSeenVersion = string.Empty;
+		settings.SkippedVersion = string.Empty;
 		var bundle = new SettingsBundle
 		{
 			Settings = settings,
@@ -71,8 +72,10 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		FilterPresetService.Sanitize(settings);
 		IgnoreRule.Sanitize(settings);
 
-		// The version that ran last belongs to this computer, not to the file.
-		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;
+		// The version that ran last and the version that was skipped belong to this computer, not to the file.
+		var local = configurationService.LoadConfiguration();
+		settings.LastSeenVersion = local.LastSeenVersion;
+		settings.SkippedVersion = local.SkippedVersion;
 		configurationService.SaveConfiguration(settings);
 		formatConfigService.ReplaceAll(bundle.TextFileFormats);
 	}

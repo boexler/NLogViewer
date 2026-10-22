@@ -563,7 +563,12 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		public List<string> Notifications { get; } = new();
 		public void Show() => IsVisible = true;
 		public void Hide() => IsVisible = false;
-		public void Notify(string title, string text) => Notifications.Add(text);
+		public List<bool> Warnings { get; } = new();
+		public void Notify(string title, string text, bool isWarning)
+		{
+			Notifications.Add(text);
+			Warnings.Add(isWarning);
+		}
 		public void Restore() => RestoreRequested?.Invoke(this, EventArgs.Empty);
 	}
 
@@ -689,6 +694,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 
 			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
 			Assert.Equal(new[] { "New entries of level Fatal or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { false }, tray.Warnings);
 		});
 	}
 
@@ -709,6 +715,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 
 			Send(session, App("(100)"), level: LogEntryLevel.Warn);
 			Assert.Equal(new[] { "New entries of level Warn or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { true }, tray.Warnings);
 
 			// Within the interval: nothing yet, but it is not lost.
 			Send(session, App("(100)"), level: LogEntryLevel.Error);
@@ -721,6 +728,9 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			}
 
 			Assert.Equal(new[] { "New entries of level Warn or higher: 1", "New entries of level Warn or higher: 1" }, tray.Notifications);
+
+			// A warning has the symbol of a warning, an error that of an error.
+			Assert.Equal(new[] { true, false }, tray.Warnings);
 		});
 	}
 

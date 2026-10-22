@@ -25,6 +25,17 @@ public sealed class ListLookSettingViewModel : SettingViewModel
 
 	private static readonly Dictionary<string, ImageSource> Icons = new();
 
+	/// <summary>
+	/// The entries that the preview takes its timestamps from; made once, because every <see cref="LogEntry"/> takes the next number of the ID column
+	/// from the counter that the entries of the tabs use, and the preview is built again after every change
+	/// </summary>
+	private static readonly LogEntry[] SampleEntries =
+	{
+		new(LogEntryLevel.Info, null, null) { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 48, 385) },
+		new(LogEntryLevel.Warn, null, null) { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 49, 412) },
+		new(LogEntryLevel.Error, null, null) { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 50, 507) }
+	};
+
 	/// <summary>Everything that the card sets, as it was before a change</summary>
 	private sealed record Look(string Level, string RowHeight, string Family, int Size, string Mode, string Theme, string TimeStamp);
 
@@ -194,16 +205,15 @@ public sealed class ListLookSettingViewModel : SettingViewModel
 			var padding = compact ? new Thickness(8, 0, 8, 0) : new Thickness(8, 3, 8, 3);
 			var resolver = new TimeStampResolver(TimeStampFormats.Parse(TimeStampFormat));
 
-			FontPreviewRow Row(string kind, string id, string level, int milliseconds, string logger, string message, string icon) =>
-				new(kind, id, level, resolver.Resolve(new LogEntry(LogEntryLevel.Info, null, null) { TimeStamp = new DateTime(2025, 12, 18, 15, 11, 48 + int.Parse(id) - 1, milliseconds) }),
-					logger, message, LoadIcon(icon), showSymbol, showText, iconHeight, padding);
+			FontPreviewRow Row(string kind, string id, string level, string logger, string message, string icon) =>
+				new(kind, id, level, resolver.Resolve(SampleEntries[int.Parse(id) - 1]), logger, message, LoadIcon(icon), showSymbol, showText, iconHeight, padding);
 
 			return new[]
 			{
 				new FontPreviewRow("Header", "ID", "Level", "TimeStamp", "LoggerName", "Message", null, false, true, iconHeight, padding),
-				Row("Info", "1", "Info", 385, "Acme.Orders", "Order 4711 created", "Info.png"),
-				Row("Warn", "2", "Warn", 412, "Acme.Billing", "Retry 2 of 3", "Warning.png"),
-				Row("Error", "3", "Error", 507, "Acme.Billing", "Payment failed: timeout", "Error.png")
+				Row("Info", "1", "Info", "Acme.Orders", "Order 4711 created", "Info.png"),
+				Row("Warn", "2", "Warn", "Acme.Billing", "Retry 2 of 3", "Warning.png"),
+				Row("Error", "3", "Error", "Acme.Billing", "Payment failed: timeout", "Error.png")
 			};
 		}
 	}
@@ -270,9 +280,11 @@ public sealed class ListLookSettingViewModel : SettingViewModel
 		Reload();
 	}
 
+	/// <summary>The reset also deletes the own colours of the themes, which cannot be brought back, so what was done before it cannot be taken back either</summary>
 	public override void ResetToDefault()
 	{
-		Remember();
+		_undo.Clear();
+		((Wpf.RelayCommand)UndoCommand).RaiseCanExecuteChanged();
 		_reset();
 		Error = null;
 		Reload();

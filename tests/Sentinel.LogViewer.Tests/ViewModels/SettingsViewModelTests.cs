@@ -524,7 +524,7 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
-	public void TheChangesOfTheListAppearance_CanBeTakenBack_OneAfterTheOther_AlsoAReset()
+	public void TheChangesOfTheListAppearance_CanBeTakenBack_OneAfterTheOther_ButNotAcrossAReset()
 	{
 		var viewModel = _environment.CreateViewModel();
 		var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
@@ -555,17 +555,37 @@ public class SettingsViewModelTests : IDisposable
 		look.Level = "Symbol";
 		Assert.False(look.CanUndo);
 
-		// The reset of the category can be taken back as well.
+		// The reset of the category deletes the own colours of the themes, so nothing before it can be taken back.
 		look.Level = "SymbolAndText";
 		look.RowHeight = "Compact";
 		look.Theme = "oldschool";
+		Assert.True(look.CanUndo);
 		viewModel.SelectedCategory = viewModel.Category("Appearance");
 		viewModel.ResetCategoryCommand.Execute(null);
 		Assert.Equal(("Symbol", "Normal", "newschool"), (look.Level, look.RowHeight, look.Theme));
+		Assert.False(look.CanUndo);
+		Assert.False(look.UndoCommand.CanExecute(null));
+
+		// And what is changed after it can be taken back again.
+		look.Level = "Text";
 		look.UndoCommand.Execute(null);
-		var saved = _environment.Saved;
-		Assert.Equal(("SymbolAndText", "Compact", "oldschool"), (saved.LevelDisplay, saved.RowHeight, saved.Theme));
-		Assert.Equal(("SymbolAndText", "Compact", "oldschool"), (look.Level, look.RowHeight, look.Theme));
+		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
+	}
+
+	[Fact]
+	public void ThePreview_DoesNotUseUpTheNumbersOfTheEntriesOfTheTabs()
+	{
+		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+		_ = look.Rows;
+		var before = new LogEntry(LogEntryLevel.Info, "L", "m").Id;
+
+		look.Level = "Text";
+		look.RowHeight = "Compact";
+		look.TimeStampFormat = "iso";
+		look.SizeText = "14";
+		_ = look.Rows;
+
+		Assert.Equal(before + 1, new LogEntry(LogEntryLevel.Info, "L", "m").Id);
 	}
 
 	[Fact]

@@ -13,7 +13,6 @@
         d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
         Title="{helpers:Resource Key=Settings_Title, DefaultValue=Settings}"
         Width="1280" Height="780" MinWidth="720" MinHeight="460"
-        MaxWidth="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}" MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         TextOptions.TextFormattingMode="Display">

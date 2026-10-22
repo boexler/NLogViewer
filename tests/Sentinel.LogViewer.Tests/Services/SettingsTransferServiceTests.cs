@@ -64,6 +64,24 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheSkippedVersion_StaysOnThisComputer_NotExportedAndNotReplacedByAnImport()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.SkippedVersion = "5.0.0-beta.5";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		Assert.DoesNotContain("5.0.0-beta.5", File.ReadAllText(file));
+
+		configuration.SkippedVersion = "5.0.0-beta.6";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Import(file);
+
+		Assert.Equal("5.0.0-beta.6", _environment.Saved.SkippedVersion);
+	}
+
+	[Fact]
 	public void TheChoicesAndFiltersOfApplications_AreExportedAndImported_AndInvalidValuesAreDropped()
 	{
 		var file = _environment.PathOf("export.json");

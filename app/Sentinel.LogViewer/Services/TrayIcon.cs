@@ -24,8 +24,8 @@ public interface ITrayIcon
 
 	void Hide();
 
-	/// <summary>Shows a notification that stands out from the icon</summary>
-	void Notify(string title, string text);
+	/// <summary>Shows a notification that stands out from the icon, with the symbol of a warning or of an error</summary>
+	void Notify(string title, string text, bool isWarning);
 }
 
 /// <summary>
@@ -66,7 +66,8 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 
 	public void Hide() => _icon.Visible = false;
 
-	public void Notify(string title, string text) => _icon.ShowBalloonTip(5000, title, text, System.Windows.Forms.ToolTipIcon.Error);
+	public void Notify(string title, string text, bool isWarning) =>
+		_icon.ShowBalloonTip(5000, title, text, isWarning ? System.Windows.Forms.ToolTipIcon.Warning : System.Windows.Forms.ToolTipIcon.Error);
 
 	public void Dispose()
 	{

@@ -204,9 +204,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		if (_trayNotifyLevel is { } level)
 		{
-			var alerts = logEvents.Count(logEvent => logEvent.Entry.Level >= level);
-			if (alerts > 0)
-				AlertsReceived?.Invoke(this, alerts);
+			var alerts = logEvents.Where(logEvent => logEvent.Entry.Level >= level).ToList();
+			if (alerts.Count > 0)
+				AlertsReceived?.Invoke(this, (alerts.Count, alerts.Max(logEvent => logEvent.Entry.Level)));
 		}
 	}
 
@@ -1015,8 +1015,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public string TrayNotificationText(int count) => string.Format(CultureInfo.CurrentCulture,
 		_localizationService.GetString("Tray_NewEntries", "New entries of level {1} or higher: {0}"), count, _trayNotifyLevel);
 
-	/// <summary>Raised with the number of entries at or above the level of the tray setting in a batch of received entries; never when the setting is off</summary>
-	public event EventHandler<int>? AlertsReceived;
+	/// <summary>Raised with the number of entries at or above the level of the tray setting in a batch of received entries and the highest level among them; never when the setting is off</summary>
+	public event EventHandler<(int Count, LogEntryLevel Highest)>? AlertsReceived;
 
 	/// <summary>Opens the window with the keyboard and mouse commands</summary>
 	public ICommand ShowShortcutsCommand { get; }
