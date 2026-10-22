@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="TestPopup" Height="450" Width="800">
     <Grid>
-        <dj:LogViewer TargetName="target1"/>
+        <dj:LogViewer x:Name="LogViewer1"/>
     </Grid>
 </Window>

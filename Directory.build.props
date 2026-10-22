@@ -8,7 +8,7 @@
     <RepositoryUrl>git@github.com:boexler/NLogViewer.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>sentinel logviewer nlog wpf</PackageTags>
-    <Description>Sentinel.LogViewer.Wpf is a UI control library to visualize NLog logs</Description>
+    <Description>Sentinel.LogViewer.Wpf is a UI control library to visualize logs</Description>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>

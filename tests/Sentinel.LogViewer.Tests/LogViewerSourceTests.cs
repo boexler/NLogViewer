@@ -3,16 +3,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using NLog;
 using Sentinel.LogViewer.Core;
-using Sentinel.LogViewer.Wpf.Targets;
 using Xunit;
 using ViewerControl = Sentinel.LogViewer.Wpf.LogViewer;
 
 namespace Sentinel.LogViewer.Tests;
 
 /// <summary>
-/// Tests for the entries of the viewer: its source, the logging of NLog as the default, and listening again when the control is loaded again
+/// Tests for the entries of the viewer: its source, the default buffer, and listening again when the control is loaded again
 /// </summary>
 [Collection(WpfCollection.Name)]
 public class LogViewerSourceTests
@@ -191,21 +189,19 @@ public class LogViewerSourceTests
 	}
 
 	[Fact]
-	public void WithoutASource_TheViewerShowsTheLoggingOfNLog()
+	public void WithoutASource_TheViewerShowsTheDefaultBuffer()
 	{
 		_context.RunOnSta(() =>
 		{
-			var targetName = "viewer-source-test-" + Guid.NewGuid().ToString("N");
-			var viewer = new ViewerControl { TargetName = targetName };
+			var viewer = new ViewerControl();
 			var window = Show(viewer);
 			try
 			{
 				Wait();
-				LogManager.GetLogger("Acme.SourceTest").Info("written with NLog");
+				LogBuffer.Default.Add(Entry("written to the default buffer"));
 				Wait();
 
-				Assert.Contains("written with NLog", Messages(viewer));
-				Assert.IsType<CacheTarget>(CacheTarget.GetInstance(targetName: targetName));
+				Assert.Contains("written to the default buffer", Messages(viewer));
 			}
 			finally
 			{

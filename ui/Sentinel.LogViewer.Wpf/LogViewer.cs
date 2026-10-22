@@ -21,7 +21,7 @@ namespace Sentinel.LogViewer.Wpf
 {
     /// <summary>
     /// The log viewer control: the entries with filter, search, logger tree and colours. Its entries come from an external
-    /// <see cref="ItemsSource"/>, from a <see cref="Source"/>, or, without either, from the logging of NLog (<see cref="Targets.CacheTarget"/>).
+    /// <see cref="ItemsSource"/>, from a <see cref="Source"/>, or, without either, from <see cref="LogBuffer.Default"/>.
     /// </summary>
     public partial class LogViewer : Control
     {
@@ -1419,7 +1419,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             => ItemsSource ?? _internalLogEntries;
 
         /// <summary>
-        /// Adds log entries on the UI thread batch path (used by <see cref="LogViewer"/> when subscribing to <see cref="Targets.ICacheTarget"/>).
+        /// Adds log entries on the UI thread batch path (used by <see cref="LogViewer"/> when subscribing to a <see cref="Source"/>).
         /// </summary>
         protected internal void AppendLogEntriesBatch(IEnumerable<LogEntry> infos)
         {
