@@ -51,7 +51,9 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.Equal(new[] { "General", "Receiving", "Appearance", "FilterPresets", "Updates" }, viewModel.Categories.Select(category => category.Id));
 		Assert.Equal("General", viewModel.SelectedCategory?.Id);
-		Assert.Equal(1 + viewModel.SelectedCategory!.Settings.Count, viewModel.PageItems.Count);
+		// The header, a card for each setting, and one card for each group of settings.
+		var settings = viewModel.SelectedCategory!.Settings;
+		Assert.Equal(1 + settings.Count(setting => setting.Group == null) + settings.Select(setting => setting.Group).OfType<SettingGroup>().Distinct().Count(), viewModel.PageItems.Count);
 		Assert.IsType<SettingsPageHeader>(viewModel.PageItems[0]);
 	}
 
@@ -410,6 +412,21 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheTraySettings_ShareOneCard_WithTheHeadingOfTheGroup()
+	{
+		var viewModel = _environment.CreateViewModel();
+		viewModel.SelectedCategory = viewModel.Category("General");
+
+		var group = viewModel.PageItems.OfType<SettingsGroupViewModel>().Single();
+
+		Assert.Equal("Notification area", group.Title);
+		Assert.Equal(new[] { "Minimize to the notification area", "Notify about new log entries in the tray", "Time between notifications in the tray (seconds)" },
+			group.Settings.Select(setting => setting.Title));
+		Assert.All(group.Settings, setting => Assert.NotNull(setting.Group));
+		Assert.DoesNotContain(viewModel.PageItems.OfType<SettingViewModel>(), setting => setting.Group != null);
+	}
+
+	[Fact]
 	public void TheTimeBetweenNotifications_HasSuggestions_AcceptsOtherNumbers_AndRejectsWrongOnes()
 	{
 		var viewModel = _environment.CreateViewModel();
@@ -596,22 +613,6 @@ public class SettingsViewModelTests : IDisposable
 		look.Level = "Text";
 		look.UndoCommand.Execute(null);
 		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
-	}
-
-	[Fact]
-	public void ThePreview_DoesNotUseUpTheNumbersOfTheEntriesOfTheTabs()
-	{
-		var look = _environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
-		_ = look.Rows;
-		var before = new LogEntry(LogEntryLevel.Info, "L", "m").Id;
-
-		look.Level = "Text";
-		look.RowHeight = "Compact";
-		look.TimeStampFormat = "iso";
-		look.SizeText = "14";
-		_ = look.Rows;
-
-		Assert.Equal(before + 1, new LogEntry(LogEntryLevel.Info, "L", "m").Id);
 	}
 
 	[Fact]

@@ -1345,5 +1345,11 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} de plus)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Zone de notification</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Réduire dans la zone de notification. Les nouvelles entrées du niveau choisi affichent une notification avec l'application, le logger et le message ; un clic dessus ouvre l'onglet.</value>
+  </data>
 </root>
 

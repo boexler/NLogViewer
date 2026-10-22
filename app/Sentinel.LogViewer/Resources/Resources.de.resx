@@ -1345,5 +1345,11 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} weitere)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Infobereich</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimieren in den Infobereich. Neue Einträge der gewählten Stufe zeigen eine Benachrichtigung mit Anwendung, Logger und Meldung, ein Klick darauf öffnet den Tab.</value>
+  </data>
 </root>
 

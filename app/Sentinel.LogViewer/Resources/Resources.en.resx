@@ -1345,5 +1345,11 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} more)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Notification area</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimize to the tray. New entries of the level you choose show a notification with application, logger and message; a click on it opens the tab.</value>
+  </data>
 </root>
 

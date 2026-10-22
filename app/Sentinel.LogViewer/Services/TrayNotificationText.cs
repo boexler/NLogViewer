@@ -19,9 +19,9 @@ public static class TrayNotificationText
 	/// <param name="moreFormat">The text for the others, with their number as {0}, e.g. <c>(+{0} more)</c></param>
 	public static (string Title, string Text) Build(string appName, LogEntry entry, int count, string moreFormat)
 	{
-		// A long name of an application is cut, not the level behind it.
-		var level = $" · {entry.Level}";
-		var title = Shorten(appName, MaxTitleLength - level.Length) + level;
+		// A long name of an application is cut, not the level behind it; without a name there is only the level.
+		var level = appName.Length == 0 ? entry.Level.ToString() : $" · {entry.Level}";
+		var title = appName.Length == 0 ? level : Shorten(appName, MaxTitleLength - level.Length) + level;
 
 		var message = Regex.Replace(entry.Message, @"\s+", " ").Trim();
 		var body = string.IsNullOrEmpty(entry.LoggerName) ? message : $"{entry.LoggerName}: {message}";
@@ -29,5 +29,16 @@ public static class TrayNotificationText
 		return (title, Shorten(body, MaxTextLength - more.Length) + more);
 	}
 
-	private static string Shorten(string text, int length) => text.Length <= length ? text : text[..(length - 1)].TrimEnd() + "…";
+	private static string Shorten(string text, int length)
+	{
+		if (text.Length <= length)
+			return text;
+
+		// A character outside the basic range, e.g. an emoji, is two chars; the cut must not leave the first half alone.
+		var cut = length - 1;
+		if (cut > 0 && char.IsHighSurrogate(text[cut - 1]))
+			cut--;
+
+		return text[..cut].TrimEnd() + "…";
+	}
 }

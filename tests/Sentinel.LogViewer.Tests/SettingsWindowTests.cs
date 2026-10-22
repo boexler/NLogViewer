@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Sentinel.LogViewer.Controls;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Tests.ViewModels;
 using Sentinel.LogViewer.ViewModels.Settings;
 using Xunit;
@@ -192,6 +193,27 @@ public class SettingsWindowTests
 			{
 				window.Close();
 			}
+		});
+	}
+
+	/// <summary>The preview loads the symbols of the levels, which needs WPF; it shows no window</summary>
+	[Fact]
+	public void ThePreview_DoesNotUseUpTheNumbersOfTheEntriesOfTheTabs()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var look = environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+			_ = look.Rows;
+			var before = new LogEntry(LogEntryLevel.Info, "L", "m").Id;
+
+			look.Level = "Text";
+			look.RowHeight = "Compact";
+			look.TimeStampFormat = "iso";
+			look.SizeText = "14";
+			_ = look.Rows;
+
+			Assert.Equal(before + 1, new LogEntry(LogEntryLevel.Info, "L", "m").Id);
 		});
 	}
 

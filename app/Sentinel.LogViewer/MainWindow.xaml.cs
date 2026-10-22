@@ -34,7 +34,7 @@ namespace Sentinel.LogViewer
         private TrayAlert? _trayBest;
 
         /// <summary>The tab of the notification that was shown last, which a click on it selects</summary>
-        private LogTabViewModel? _notifiedTab;
+        private WeakReference<LogTabViewModel>? _notifiedTab;
         private DateTime _lastTrayNotification = DateTime.MinValue;
 
         /// <summary>The state to go back to when the window comes back from the tray: minimizing does not remember a maximized window</summary>
@@ -156,9 +156,9 @@ namespace Sentinel.LogViewer
             tray.RestoreRequested += (_, _) => RestoreFromTray();
             tray.NotificationClicked += (_, _) =>
             {
-                var tab = _notifiedTab;
+                var notified = _notifiedTab;
                 RestoreFromTray();
-                if (tab != null && _viewModel.LogTabs.Contains(tab))
+                if (notified != null && notified.TryGetTarget(out var tab) && _viewModel.LogTabs.Contains(tab))
                     _viewModel.SelectedTab = tab;
             };
             tray.ExitRequested += (_, _) => _viewModel.ExitCommand.Execute(null);

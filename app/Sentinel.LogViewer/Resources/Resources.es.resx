@@ -1345,5 +1345,11 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} más)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Área de notificación</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimizar a la bandeja. Las nuevas entradas del nivel elegido muestran una notificación con la aplicación, el logger y el mensaje; un clic en ella abre la pestaña.</value>
+  </data>
 </root>
 

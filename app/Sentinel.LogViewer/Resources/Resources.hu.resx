@@ -1345,6 +1345,12 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} további)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Értesítési terület</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Kicsinyítés a tálcára. A választott szintű új bejegyzések értesítést mutatnak az alkalmazással, a loggerrel és az üzenettel; rákattintva megnyílik a lap.</value>
+  </data>
 </root>
 
 

@@ -1345,6 +1345,12 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} więcej)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Obszar powiadomień</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimalizowanie do zasobnika. Nowe wpisy wybranego poziomu pokazują powiadomienie z aplikacją, loggerem i komunikatem; kliknięcie otwiera kartę.</value>
+  </data>
 </root>
 
 

@@ -50,6 +50,27 @@ public class TrayNotificationTextTests
 	}
 
 	[Fact]
+	public void WithoutAnApplicationName_TheTitleIsTheLevel()
+	{
+		var (title, _) = TrayNotificationText.Build(string.Empty, Entry("Payment failed"), 1, More);
+
+		Assert.Equal("Error", title);
+	}
+
+	[Fact]
+	public void ACutNeverLeavesHalfOfAnEmoji()
+	{
+		// The emoji is two chars and the cut would fall between them.
+		var message = new string('m', TrayNotificationText.MaxTextLength - 2) + "\U0001F600" + "tail";
+
+		var (_, text) = TrayNotificationText.Build("MyApp", Entry(message, logger: ""), 1, More);
+
+		Assert.DoesNotContain(text, char.IsSurrogate);
+		Assert.EndsWith("…", text);
+		Assert.True(text.Length <= TrayNotificationText.MaxTextLength);
+	}
+
+	[Fact]
 	public void ATextThatFits_IsNotCut()
 	{
 		var message = new string('m', 200);

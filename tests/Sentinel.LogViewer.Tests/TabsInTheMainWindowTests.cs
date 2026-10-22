@@ -780,6 +780,23 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void AnApplicationWithoutAName_IsShownBySenderInTheNotification()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Error");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Send(session, new AppInfo { AppName = null, Sender = "10.0.0.7" }, "boom", LogEntryLevel.Error);
+
+			Assert.Equal(new[] { "10.0.0.7 · Error" }, tray.Titles);
+		});
+	}
+
+	[Fact]
 	public void AClickOnTheNotification_OpensTheWindowAndTheTabOfTheEntry_AlsoWhenTheTabIsGone()
 	{
 		_context.RunOnSta(() =>

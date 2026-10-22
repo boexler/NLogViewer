@@ -210,7 +210,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			{
 				// The most important entry of the batch; the first of the highest level (the sort keeps the order of equal ones).
 				var best = alerts.OrderByDescending(logEvent => logEvent.Entry.Level).First();
-				AlertsReceived?.Invoke(this, new TrayAlert(tab, firstEvent.AppInfo.AppName?.Name ?? string.Empty, best.Entry, alerts.Count));
+				// An application that sends no name (no log4japp) is shown by its sender, as its tab is.
+				var appName = firstEvent.AppInfo.AppName?.Name;
+				AlertsReceived?.Invoke(this, new TrayAlert(new WeakReference<LogTabViewModel>(tab), string.IsNullOrEmpty(appName) ? firstEvent.AppInfo.Sender : appName, best.Entry, alerts.Count));
 			}
 		}
 	}

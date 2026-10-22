@@ -1345,6 +1345,12 @@
   <data name="Tray_MoreEntries" xml:space="preserve">
     <value>(+{0} în plus)</value>
   </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Zona de notificare</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimizarea în zona de notificare. Intrările noi de nivelul ales afișează o notificare cu aplicația, loggerul și mesajul; un clic pe ea deschide fila.</value>
+  </data>
 </root>
 
 
