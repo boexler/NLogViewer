@@ -1274,7 +1274,7 @@
     <value>Powiadamiaj o nowych wpisach logów w zasobniku</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Gdy okno jest w zasobniku, pojawia się powiadomienie o nowych wpisach co najmniej tego poziomu, najwyżej raz na 30 sekund. Kliknięcie powiadomienia otwiera okno.</value>
+    <value>Gdy okno jest w zasobniku, pojawia się powiadomienie z aplikacją, loggerem i komunikatem, gdy nadejdą nowe wpisy co najmniej tego poziomu. Kliknięcie otwiera okno i kartę wpisu.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Wyłączone</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Ostrzeżenia, błędy i krytyczne</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Nowe wpisy poziomu {1} lub wyższego: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>Czcionka „{0}” nie jest zainstalowana. Zamiast niej używana jest czcionka domyślna.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Cofa ostatnią zmianę tej karty, wielokrotnie</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Odstęp między powiadomieniami w zasobniku (sekundy)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>Najkrótszy czas między dwoma powiadomieniami. To, co przyjdzie w międzyczasie, zostanie ogłoszone w następnym.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} więcej)</value>
   </data>
 </root>
 

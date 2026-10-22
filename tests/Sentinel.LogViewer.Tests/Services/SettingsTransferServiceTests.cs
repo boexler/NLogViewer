@@ -64,6 +64,24 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheTimeBetweenNotifications_IsExportedAndImported_AndAWrongOneBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.TrayNotifyIntervalSeconds = 75;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal(75, _environment.Saved.TrayNotifyIntervalSeconds);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "TrayNotifyIntervalSeconds": 0 } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal(30, _environment.Saved.TrayNotifyIntervalSeconds);
+	}
+
+	[Fact]
 	public void TheSkippedVersion_StaysOnThisComputer_NotExportedAndNotReplacedByAnImport()
 	{
 		var file = _environment.PathOf("export.json");

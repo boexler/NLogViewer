@@ -557,19 +557,23 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	private sealed class FakeTray : ITrayIcon
 	{
 		public event EventHandler? RestoreRequested;
+		public event EventHandler? NotificationClicked;
 		public event EventHandler? ExitRequested { add { } remove { } }
 		public bool IsVisible { get; private set; }
 		public string ToolTip { get; set; } = string.Empty;
 		public List<string> Notifications { get; } = new();
+		public List<string> Titles { get; } = new();
 		public void Show() => IsVisible = true;
 		public void Hide() => IsVisible = false;
 		public List<bool> Warnings { get; } = new();
 		public void Notify(string title, string text, bool isWarning)
 		{
+			Titles.Add(title);
 			Notifications.Add(text);
 			Warnings.Add(isWarning);
 		}
 		public void Restore() => RestoreRequested?.Invoke(this, EventArgs.Empty);
+		public void Click() => NotificationClicked?.Invoke(this, EventArgs.Empty);
 	}
 
 	private void ConfigureTray(bool minimizeToTray, string notifyLevel)
@@ -693,7 +697,8 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Empty(tray.Notifications);
 
 			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
-			Assert.Equal(new[] { "New entries of level Fatal or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { "Acme.Logger: hello" }, tray.Notifications);
+			Assert.Equal(new[] { "MyApp · Fatal" }, tray.Titles);
 			Assert.Equal(new[] { false }, tray.Warnings);
 		});
 	}
@@ -714,7 +719,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Empty(tray.Notifications);
 
 			Send(session, App("(100)"), level: LogEntryLevel.Warn);
-			Assert.Equal(new[] { "New entries of level Warn or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { "Acme.Logger: hello" }, tray.Notifications);
 			Assert.Equal(new[] { true }, tray.Warnings);
 
 			// Within the interval: nothing yet, but it is not lost.
@@ -727,10 +732,108 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 				WpfTestHelper.Settle();
 			}
 
-			Assert.Equal(new[] { "New entries of level Warn or higher: 1", "New entries of level Warn or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { "MyApp · Warn", "MyApp · Error" }, tray.Titles);
 
 			// A warning has the symbol of a warning, an error that of an error.
 			Assert.Equal(new[] { true, false }, tray.Warnings);
+		});
+	}
+
+	/// <summary>Sends entries of one application at once, so that they come as one batch</summary>
+	private static void SendBatch(Session session, AppInfo app, params (LogEntryLevel Level, string Message)[] entries)
+	{
+		foreach (var (level, message) in entries)
+			session.Events.OnNext(new LogEvent { AppInfo = app, Entry = new LogEntry(level, "Acme.Logger", message) });
+
+		for (var i = 0; i < 10; i++)
+		{
+			Thread.Sleep(60);
+			WpfTestHelper.Settle();
+		}
+	}
+
+	[Fact]
+	public void SeveralEntriesInThePause_ShowTheMostImportantOne_AndHowManyMoreThereAre()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Warn");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+			session.Window.TrayNotificationInterval = TimeSpan.FromSeconds(2);
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Send(session, App("(100)"), "first", LogEntryLevel.Warn);
+			SendBatch(session, App("(100)"), (LogEntryLevel.Warn, "second"), (LogEntryLevel.Error, "boom\n  at Billing.Charge()"), (LogEntryLevel.Warn, "third"));
+			Assert.Equal(new[] { "Acme.Logger: first" }, tray.Notifications);
+
+			for (var i = 0; i < 60 && tray.Notifications.Count < 2; i++)
+			{
+				Thread.Sleep(50);
+				WpfTestHelper.Settle();
+			}
+
+			Assert.Equal(new[] { "MyApp · Warn", "MyApp · Error" }, tray.Titles);
+			Assert.Equal("Acme.Logger: boom at Billing.Charge() (+2 more)", tray.Notifications[1]);
+		});
+	}
+
+	[Fact]
+	public void AClickOnTheNotification_OpensTheWindowAndTheTabOfTheEntry_AlsoWhenTheTabIsGone()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Error");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+			Send(session, App("(1)", name: "First"));
+			Send(session, App("(2)", name: "Second"));
+			var tabs = session.ViewModel.LogTabs;
+			Assert.Equal(2, tabs.Count);
+			session.ViewModel.SelectedTab = tabs[0];
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Send(session, App("(2)", name: "Second"), "boom", LogEntryLevel.Error);
+			Assert.Equal(new[] { "Second · Error" }, tray.Titles);
+			tray.Click();
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.False(tray.IsVisible);
+			Assert.Same(tabs[1], session.ViewModel.SelectedTab);
+
+			// The tab of the last notification was closed meanwhile: the window opens, nothing else happens.
+			session.ViewModel.SelectedTab = tabs[0];
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+			session.Window.TrayNotificationInterval = TimeSpan.Zero;
+			Send(session, App("(2)", name: "Second"), "again", LogEntryLevel.Error);
+			session.ViewModel.CloseTabCommand.Execute(tabs[1]);
+			tray.Click();
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.Same(session.ViewModel.LogTabs[0], session.ViewModel.SelectedTab);
+		});
+	}
+
+	[Fact]
+	public void TheTimeBetweenNotifications_IsTheOneOfTheSettings_AndAWrongOneBecomesTheDefault()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.TrayNotifyIntervalSeconds = 12;
+			_environment.Configuration.SaveConfiguration(configuration);
+			using (var session = Start())
+				Assert.Equal(TimeSpan.FromSeconds(12), session.ViewModel.TrayNotifyInterval);
+
+			configuration.TrayNotifyIntervalSeconds = 0;
+			_environment.Configuration.SaveConfiguration(configuration);
+			using (var session = Start())
+				Assert.Equal(TimeSpan.FromSeconds(30), session.ViewModel.TrayNotifyInterval);
 		});
 	}
 

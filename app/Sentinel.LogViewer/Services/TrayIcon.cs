@@ -9,8 +9,11 @@ namespace Sentinel.LogViewer.Services;
 /// </summary>
 public interface ITrayIcon
 {
-	/// <summary>Raised when the user wants the window back: double-click, a click on a notification or the entry of the menu</summary>
+	/// <summary>Raised when the user wants the window back: double-click or the entry of the menu</summary>
 	event EventHandler? RestoreRequested;
+
+	/// <summary>Raised when the user clicked the notification that was shown last</summary>
+	event EventHandler? NotificationClicked;
 
 	/// <summary>Raised when the user chose to exit in the menu of the icon</summary>
 	event EventHandler? ExitRequested;
@@ -43,7 +46,7 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 		using var stream = Application.GetResourceStream(new Uri("pack://application:,,,/Sentinel.LogViewer;component/Resources/icons/icons8-analysieren-64.ico"))!.Stream;
 		_icon = new System.Windows.Forms.NotifyIcon { Icon = new System.Drawing.Icon(stream), Visible = false };
 		_icon.DoubleClick += (_, _) => RestoreRequested?.Invoke(this, EventArgs.Empty);
-		_icon.BalloonTipClicked += (_, _) => RestoreRequested?.Invoke(this, EventArgs.Empty);
+		_icon.BalloonTipClicked += (_, _) => NotificationClicked?.Invoke(this, EventArgs.Empty);
 
 		var menu = new System.Windows.Forms.ContextMenuStrip();
 		menu.Items.Add(localization.GetString("Tray_Open", "Open"), null, (_, _) => RestoreRequested?.Invoke(this, EventArgs.Empty));
@@ -52,6 +55,8 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 	}
 
 	public event EventHandler? RestoreRequested;
+
+	public event EventHandler? NotificationClicked;
 
 	public event EventHandler? ExitRequested;
 

@@ -1274,7 +1274,7 @@
     <value>Értesítés az új naplóbejegyzésekről a tálcán</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Amíg az ablak a tálcán van, értesítés jelenik meg, ha legalább ilyen szintű új bejegyzések érkeznek, legfeljebb 30 másodpercenként egy. Az értesítésre kattintva megnyílik az ablak.</value>
+    <value>Amíg az ablak a tálcán van, értesítés jelenik meg az alkalmazással, a loggerrel és az üzenettel, ha legalább ilyen szintű új bejegyzések érkeznek. Rákattintva megnyílik az ablak és a bejegyzés lapja.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Ki</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Figyelmeztetések, hibák és végzetesek</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Új bejegyzések {1} vagy magasabb szinten: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>A(z) „{0}” betűtípus nincs telepítve. Helyette az alapértelmezett betűtípus lesz használva.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Visszavonja a kártya utolsó módosítását, akárhányszor</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Értesítések közti idő a tálcán (másodperc)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>A legrövidebb idő két értesítés között. Ami közben érkezik, a következőben kerül bejelentésre.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} további)</value>
   </data>
 </root>
 

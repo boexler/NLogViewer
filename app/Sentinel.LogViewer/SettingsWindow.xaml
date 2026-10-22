@@ -228,6 +228,20 @@
                 </controls:SettingCard>
             </DataTemplate>
 
+            <!-- Number to choose or to type -->
+            <DataTemplate DataType="{x:Type settings:IntChoiceSettingViewModel}">
+                <controls:SettingCard Setting="{Binding}">
+                    <StackPanel>
+                        <ComboBox IsEditable="True" Width="110" ItemsSource="{Binding Suggestions}"
+                                  Text="{Binding Text, UpdateSourceTrigger=LostFocus}"
+                                  SelectedItem="{Binding SelectedSuggestion}"
+                                  AutomationProperties.Name="{Binding Title}"/>
+                        <TextBlock Style="{StaticResource SettingsErrorText}" MaxWidth="220" TextAlignment="Right"
+                                   Text="{Binding Error}"/>
+                    </StackPanel>
+                </controls:SettingCard>
+            </DataTemplate>
+
             <!-- Number -->
             <DataTemplate DataType="{x:Type settings:IntSettingViewModel}">
                 <controls:SettingCard Setting="{Binding}">

@@ -61,6 +61,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private AvailableUpdate? _noticeUpdate;
 	private bool _minimizeToTray;
 	private Core.LogEntryLevel? _trayNotifyLevel;
+	private TimeSpan _trayNotifyInterval = TimeSpan.FromSeconds(SettingsRules.DefaultTrayNotifyInterval);
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -206,7 +207,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			var alerts = logEvents.Where(logEvent => logEvent.Entry.Level >= level).ToList();
 			if (alerts.Count > 0)
-				AlertsReceived?.Invoke(this, (alerts.Count, alerts.Max(logEvent => logEvent.Entry.Level)));
+			{
+				// The most important entry of the batch; the first of the highest level (the sort keeps the order of equal ones).
+				var best = alerts.OrderByDescending(logEvent => logEvent.Entry.Level).First();
+				AlertsReceived?.Invoke(this, new TrayAlert(tab, firstEvent.AppInfo.AppName?.Name ?? string.Empty, best.Entry, alerts.Count));
+			}
 		}
 	}
 
@@ -1011,12 +1016,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>Whether minimizing the window moves it to the tray</summary>
 	public bool MinimizeToTray => _minimizeToTray;
 
-	/// <summary>The text of the notification that tells how many entries of the level of the setting arrived</summary>
-	public string TrayNotificationText(int count) => string.Format(CultureInfo.CurrentCulture,
-		_localizationService.GetString("Tray_NewEntries", "New entries of level {1} or higher: {0}"), count, _trayNotifyLevel);
+	/// <summary>The shortest time between two notifications in the tray</summary>
+	public TimeSpan TrayNotifyInterval => _trayNotifyInterval;
 
-	/// <summary>Raised with the number of entries at or above the level of the tray setting in a batch of received entries and the highest level among them; never when the setting is off</summary>
-	public event EventHandler<(int Count, LogEntryLevel Highest)>? AlertsReceived;
+	/// <summary>The title and the text of the notification for an alert, in the language of the user</summary>
+	public (string Title, string Text) TrayNotificationOf(TrayAlert alert) => TrayNotificationText.Build(alert.AppName, alert.Entry, alert.Count,
+		_localizationService.GetString("Tray_MoreEntries", "(+{0} more)"));
+
+	/// <summary>Raised for the entries at or above the level of the tray setting in a batch of received entries; never when the setting is off</summary>
+	public event EventHandler<TrayAlert>? AlertsReceived;
 
 	/// <summary>Opens the window with the keyboard and mouse commands</summary>
 	public ICommand ShowShortcutsCommand { get; }
@@ -1135,6 +1143,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		NotifyFont();
 		_minimizeToTray = config.MinimizeToTray;
 		_trayNotifyLevel = SettingsRules.ParseTrayNotifyLevel(config.TrayNotifyLevel);
+		_trayNotifyInterval = TimeSpan.FromSeconds(config.TrayNotifyIntervalSeconds);
 		_udpReceiverService.Configure(config.Ports);
 		_ignoreRules = config.IgnoreRules.ToArray();
 

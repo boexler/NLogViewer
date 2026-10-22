@@ -1274,7 +1274,7 @@
     <value>Signaler les nouvelles entrées de log dans la zone de notification</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Tant que la fenêtre est dans la zone de notification, une notification s'affiche à l'arrivée de nouvelles entrées de ce niveau ou plus, au plus une toutes les 30 secondes. Un clic sur la notification ouvre la fenêtre.</value>
+    <value>Tant que la fenêtre est dans la zone de notification, une notification avec l'application, le logger et le message s'affiche à l'arrivée de nouvelles entrées de ce niveau ou plus. Un clic ouvre la fenêtre et l'onglet de l'entrée.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Désactivé</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Avertissements, erreurs et fatales</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Nouvelles entrées de niveau {1} ou plus : {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>La police « {0} » n'est pas installée. La police par défaut est utilisée à la place.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Annule la dernière modification de cette carte, autant de fois que nécessaire</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Délai entre les notifications dans la zone de notification (secondes)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>Le délai minimal entre deux notifications. Ce qui arrive entre-temps est annoncé dans la suivante.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} de plus)</value>
   </data>
 </root>
 

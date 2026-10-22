@@ -249,6 +249,21 @@ namespace Sentinel.LogViewer.ViewModels
                     },
                     getDefault: () => SettingsRules.TrayNotifyOff),
 
+                new IntChoiceSettingViewModel(GeneralId, "",
+                    Text("Settings_TrayNotifyInterval", "Time between notifications in the tray (seconds)"),
+                    Text("Settings_TrayNotifyInterval_Description", "The shortest time between two notifications. What arrives in between is announced in the next one."),
+                    get: () => _configuration.TrayNotifyIntervalSeconds,
+                    set: seconds =>
+                    {
+                        _configuration.TrayNotifyIntervalSeconds = seconds;
+                        Commit();
+                    },
+                    getDefault: () => SettingsRules.DefaultTrayNotifyInterval,
+                    isValid: SettingsRules.IsValidTrayNotifyInterval,
+                    invalidMessage: string.Format(CultureInfo.CurrentCulture,
+                        Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinTrayNotifyInterval, SettingsRules.MaxTrayNotifyInterval),
+                    suggestions: new[] { "5", "10", "30", "60", "300" }),
+
                 new BoolSettingViewModel(ReceivingId, "",
                     Text("Settings_AutoStartListening", "Start listening on launch"),
                     Text("Settings_AutoStartListening_Description", "Starts receiving logs on all ports as soon as the application opens, without clicking “Start listening”."),

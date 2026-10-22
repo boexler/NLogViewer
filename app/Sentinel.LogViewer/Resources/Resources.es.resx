@@ -1274,7 +1274,7 @@
     <value>Avisar de nuevas entradas de log en la bandeja</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Mientras la ventana está en la bandeja, se muestra una notificación cuando llegan nuevas entradas de este nivel o superior, como máximo una cada 30 segundos. Al hacer clic en la notificación se abre la ventana.</value>
+    <value>Mientras la ventana está en la bandeja, se muestra una notificación con la aplicación, el logger y el mensaje cuando llegan nuevas entradas de este nivel o superior. Al hacer clic se abre la ventana y la pestaña de la entrada.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Desactivado</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Advertencias, errores y fatales</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Nuevas entradas de nivel {1} o superior: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>La fuente «{0}» no está instalada. Se usa la fuente predeterminada.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Deshace el último cambio de esta tarjeta, una y otra vez</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Tiempo entre notificaciones en la bandeja (segundos)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>El tiempo mínimo entre dos notificaciones. Lo que llega mientras tanto se anuncia en la siguiente.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} más)</value>
   </data>
 </root>
 

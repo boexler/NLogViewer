@@ -1274,7 +1274,7 @@
     <value>Notifică intrările noi de log în zona de notificare</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Cât timp fereastra este în zona de notificare, apare o notificare când sosesc intrări noi cu cel puțin acest nivel, cel mult una la 30 de secunde. Un clic pe notificare deschide fereastra.</value>
+    <value>Cât timp fereastra este în zona de notificare, apare o notificare cu aplicația, loggerul și mesajul când sosesc intrări noi cu cel puțin acest nivel. Un clic deschide fereastra și fila intrării.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Dezactivat</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Avertismente, erori și fatale</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Intrări noi de nivel {1} sau mai mare: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>Fontul „{0}” nu este instalat. În locul lui se folosește fontul implicit.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Anulează ultima modificare a acestui card, de câte ori este nevoie</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Timpul dintre notificări în zona de notificare (secunde)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>Cel mai scurt timp între două notificări. Ce sosește între timp este anunțat în următoarea.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} în plus)</value>
   </data>
 </root>
 

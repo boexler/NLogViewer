@@ -1274,7 +1274,7 @@
     <value>Im Infobereich über neue Logeinträge informieren</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>Solange das Fenster im Infobereich ist, erscheint eine Benachrichtigung, wenn neue Einträge mindestens dieser Stufe eintreffen, höchstens alle 30 Sekunden. Ein Klick auf die Benachrichtigung öffnet das Fenster.</value>
+    <value>Solange das Fenster im Infobereich ist, erscheint eine Benachrichtigung mit Anwendung, Logger und Meldung, wenn neue Einträge mindestens dieser Stufe eintreffen. Ein Klick darauf öffnet das Fenster und den Tab des Eintrags.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Aus</value>
@@ -1287,9 +1287,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Warnungen, Fehler und Fatal</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>Neue Einträge der Stufe {1} oder höher: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>Die Schrift „{0}“ ist nicht installiert. Stattdessen wird die Standardschrift verwendet.</value>
@@ -1338,6 +1335,15 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Nimmt die letzte Änderung dieser Karte zurück, immer wieder</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Abstand der Benachrichtigungen im Infobereich (Sekunden)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>Die kürzeste Zeit zwischen zwei Benachrichtigungen. Was dazwischen eintrifft, wird in der nächsten gemeldet.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} weitere)</value>
   </data>
 </root>
 

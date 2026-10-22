@@ -410,6 +410,32 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
+	public void TheTimeBetweenNotifications_HasSuggestions_AcceptsOtherNumbers_AndRejectsWrongOnes()
+	{
+		var viewModel = _environment.CreateViewModel();
+		var interval = viewModel.Setting<IntChoiceSettingViewModel>("Time between notifications in the tray (seconds)");
+		Assert.Equal("30", interval.Text);
+		Assert.Equal("30", interval.SelectedSuggestion);
+		Assert.Equal(new[] { "5", "10", "30", "60", "300" }, interval.Suggestions);
+
+		interval.SelectedSuggestion = "10";
+		Assert.Equal(10, _environment.Saved.TrayNotifyIntervalSeconds);
+		interval.Text = "45";
+		Assert.Equal(45, _environment.Saved.TrayNotifyIntervalSeconds);
+		Assert.Null(interval.SelectedSuggestion);
+
+		interval.Text = "0";
+		Assert.True(interval.HasError);
+		interval.Text = "3601";
+		Assert.True(interval.HasError);
+		Assert.Equal(45, _environment.Saved.TrayNotifyIntervalSeconds);
+
+		interval.ResetToDefault();
+		Assert.Equal(30, _environment.Saved.TrayNotifyIntervalSeconds);
+		Assert.Equal("30", interval.SelectedSuggestion);
+	}
+
+	[Fact]
 	public void TheTraySettings_AreOffByDefault_AndSaved()
 	{
 		var viewModel = _environment.CreateViewModel();

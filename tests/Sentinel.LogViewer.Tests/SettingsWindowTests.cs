@@ -196,6 +196,36 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
+	public void TheTimeBetweenNotifications_IsADropDownThatTakesATypedNumber()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var interval = viewModel.Setting<IntChoiceSettingViewModel>("Time between notifications in the tray (seconds)");
+				var box = Descendants<ComboBox>(window).Single(candidate => ReferenceEquals(candidate.ItemsSource, interval.Suggestions));
+				Assert.True(box.IsEditable);
+
+				box.SelectedItem = "60";
+				WpfTestHelper.Settle();
+				Assert.Equal(60, environment.Saved.TrayNotifyIntervalSeconds);
+
+				box.Text = "90";
+				box.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(90, environment.Saved.TrayNotifyIntervalSeconds);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void Switch_WhenToggled_SavesTheSetting()
 	{
 		_context.RunOnSta(() =>
