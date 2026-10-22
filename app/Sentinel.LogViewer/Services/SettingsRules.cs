@@ -27,6 +27,12 @@ public static class SettingsRules
 	/// <summary>The value of the setting for no notification in the tray; the others are the names of the levels Warn, Error and Fatal</summary>
 	public const string TrayNotifyOff = "Off";
 
+	public const int MinTrayNotifyInterval = 1;
+	public const int MaxTrayNotifyInterval = 3600;
+	public const int DefaultTrayNotifyInterval = 30;
+
+	public static bool IsValidTrayNotifyInterval(int seconds) => seconds is >= MinTrayNotifyInterval and <= MaxTrayNotifyInterval;
+
 	public static Core.LogEntryLevel? ParseTrayNotifyLevel(string? text) => text switch
 	{
 		"Warn" => Core.LogEntryLevel.Warn,

@@ -1277,7 +1277,7 @@
     <value>Notify about new log entries in the tray</value>
   </data>
   <data name="Settings_TrayNotify_Description" xml:space="preserve">
-    <value>While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window.</value>
+    <value>While the window is in the tray, a notification shows when new entries of at least this level arrive, with the application, logger and message. Clicking the notification opens the window and the tab of the entry.</value>
   </data>
   <data name="Settings_TrayNotify_Off" xml:space="preserve">
     <value>Off</value>
@@ -1290,9 +1290,6 @@
   </data>
   <data name="Settings_TrayNotify_Warn" xml:space="preserve">
     <value>Warnings, errors and fatal</value>
-  </data>
-  <data name="Tray_NewEntries" xml:space="preserve">
-    <value>New entries of level {1} or higher: {0}</value>
   </data>
   <data name="Message_FontMissing" xml:space="preserve">
     <value>The font “{0}” is not installed. The default font is used instead.</value>
@@ -1341,6 +1338,21 @@
   </data>
   <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
     <value>Takes back the last change of this card, again and again</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval" xml:space="preserve">
+    <value>Time between notifications in the tray (seconds)</value>
+  </data>
+  <data name="Settings_TrayNotifyInterval_Description" xml:space="preserve">
+    <value>The shortest time between two notifications. What arrives in between is announced in the next one.</value>
+  </data>
+  <data name="Tray_MoreEntries" xml:space="preserve">
+    <value>(+{0} more)</value>
+  </data>
+  <data name="Settings_Group_Tray" xml:space="preserve">
+    <value>Notification area</value>
+  </data>
+  <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
+    <value>Minimize to the tray. New entries of the level you choose show a notification with application, logger and message; a click on it opens the tab.</value>
   </data>
 </root>
 

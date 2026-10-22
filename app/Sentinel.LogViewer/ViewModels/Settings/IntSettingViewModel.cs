@@ -6,7 +6,7 @@ namespace Sentinel.LogViewer.ViewModels.Settings;
 /// <summary>
 /// A whole number within limits, edited as text. An invalid input is not saved and shows an error instead.
 /// </summary>
-public sealed class IntSettingViewModel : SettingViewModel
+public class IntSettingViewModel : SettingViewModel
 {
 	private readonly Func<int> _get;
 	private readonly Action<int> _set;

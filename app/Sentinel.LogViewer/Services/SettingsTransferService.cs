@@ -65,6 +65,8 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		if (!SettingsRules.IsValidListFontSize(settings.ListFontSize))
 			settings.ListFontSize = SettingsRules.DefaultListFontSize;
 		settings.ListFontFamily ??= string.Empty;
+		if (!SettingsRules.IsValidTrayNotifyInterval(settings.TrayNotifyIntervalSeconds))
+			settings.TrayNotifyIntervalSeconds = SettingsRules.DefaultTrayNotifyInterval;
 		settings.LevelDisplay = SettingsRules.ParseLevelDisplay(settings.LevelDisplay).ToString();
 		settings.RowHeight = SettingsRules.ParseRowHeight(settings.RowHeight).ToString();
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();

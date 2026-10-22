@@ -131,6 +131,8 @@ namespace Sentinel.LogViewer.Services
                         if (!SettingsRules.IsValidListFontSize(config.ListFontSize))
                             config.ListFontSize = SettingsRules.DefaultListFontSize;
                         config.ListFontFamily ??= string.Empty;
+                        if (!SettingsRules.IsValidTrayNotifyInterval(config.TrayNotifyIntervalSeconds))
+                            config.TrayNotifyIntervalSeconds = SettingsRules.DefaultTrayNotifyInterval;
                         config.LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay).ToString();
                         config.RowHeight = SettingsRules.ParseRowHeight(config.RowHeight).ToString();
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
@@ -230,6 +232,9 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>The lowest level of the entries that show a notification while the window is in the tray: Warn, Error or Fatal; Off for none.</summary>
         public string TrayNotifyLevel { get; set; } = SettingsRules.TrayNotifyOff;
+
+        /// <summary>The shortest time between two notifications in the tray, in seconds.</summary>
+        public int TrayNotifyIntervalSeconds { get; set; } = SettingsRules.DefaultTrayNotifyInterval;
 
         /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
         public string SkippedVersion { get; set; } = string.Empty;

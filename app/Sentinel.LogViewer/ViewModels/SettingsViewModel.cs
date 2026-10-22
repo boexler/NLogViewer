@@ -201,6 +201,11 @@ namespace Sentinel.LogViewer.ViewModels
                 SettingsRules.MaxEntriesPerTab.ToString("N0", CultureInfo.CurrentCulture)
             };
 
+            // Minimizing to the tray and what the tray shows are one card, like the settings of the logger tree.
+            var tray = new SettingGroup("\uE7ED",
+                Text("Settings_Group_Tray", "Notification area"),
+                Text("Settings_Group_Tray_Subtitle", "Minimize to the tray. New entries of the level you choose show a notification with application, logger and message; a click on it opens the tab."));
+
             var settings = new List<SettingViewModel>
             {
                 new ChoiceSettingViewModel(GeneralId, "",
@@ -228,7 +233,10 @@ namespace Sentinel.LogViewer.ViewModels
                         _configuration.MinimizeToTray = value;
                         Commit();
                     },
-                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().MinimizeToTray),
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().MinimizeToTray)
+                {
+                    Group = tray
+                },
 
                 new ChoiceSettingViewModel(GeneralId, "",
                     Text("Settings_TrayNotify", "Notify about new log entries in the tray"),
@@ -247,7 +255,28 @@ namespace Sentinel.LogViewer.ViewModels
                         _configuration.TrayNotifyLevel = level;
                         Commit();
                     },
-                    getDefault: () => SettingsRules.TrayNotifyOff),
+                    getDefault: () => SettingsRules.TrayNotifyOff)
+                {
+                    Group = tray
+                },
+
+                new IntChoiceSettingViewModel(GeneralId, "",
+                    Text("Settings_TrayNotifyInterval", "Time between notifications in the tray (seconds)"),
+                    Text("Settings_TrayNotifyInterval_Description", "The shortest time between two notifications. What arrives in between is announced in the next one."),
+                    get: () => _configuration.TrayNotifyIntervalSeconds,
+                    set: seconds =>
+                    {
+                        _configuration.TrayNotifyIntervalSeconds = seconds;
+                        Commit();
+                    },
+                    getDefault: () => SettingsRules.DefaultTrayNotifyInterval,
+                    isValid: SettingsRules.IsValidTrayNotifyInterval,
+                    invalidMessage: string.Format(CultureInfo.CurrentCulture,
+                        Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinTrayNotifyInterval, SettingsRules.MaxTrayNotifyInterval),
+                    suggestions: new[] { "5", "10", "30", "60", "300" })
+                {
+                    Group = tray
+                },
 
                 new BoolSettingViewModel(ReceivingId, "",
                     Text("Settings_AutoStartListening", "Start listening on launch"),

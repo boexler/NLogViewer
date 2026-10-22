@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Sentinel.LogViewer.Controls;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Tests.ViewModels;
 using Sentinel.LogViewer.ViewModels.Settings;
 using Xunit;
@@ -187,6 +188,57 @@ public class SettingsWindowTests
 				WpfTestHelper.Settle();
 				Assert.Equal(18, Message().FontSize);
 				Assert.Equal(18, environment.Saved.ListFontSize);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	/// <summary>The preview loads the symbols of the levels, which needs WPF; it shows no window</summary>
+	[Fact]
+	public void ThePreview_DoesNotUseUpTheNumbersOfTheEntriesOfTheTabs()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var look = environment.CreateViewModel().Setting<ListLookSettingViewModel>("List appearance");
+			_ = look.Rows;
+			var before = new LogEntry(LogEntryLevel.Info, "L", "m").Id;
+
+			look.Level = "Text";
+			look.RowHeight = "Compact";
+			look.TimeStampFormat = "iso";
+			look.SizeText = "14";
+			_ = look.Rows;
+
+			Assert.Equal(before + 1, new LogEntry(LogEntryLevel.Info, "L", "m").Id);
+		});
+	}
+
+	[Fact]
+	public void TheTimeBetweenNotifications_IsADropDownThatTakesATypedNumber()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var interval = viewModel.Setting<IntChoiceSettingViewModel>("Time between notifications in the tray (seconds)");
+				var box = Descendants<ComboBox>(window).Single(candidate => ReferenceEquals(candidate.ItemsSource, interval.Suggestions));
+				Assert.True(box.IsEditable);
+
+				box.SelectedItem = "60";
+				WpfTestHelper.Settle();
+				Assert.Equal(60, environment.Saved.TrayNotifyIntervalSeconds);
+
+				box.Text = "90";
+				box.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(90, environment.Saved.TrayNotifyIntervalSeconds);
 			}
 			finally
 			{
