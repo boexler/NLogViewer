@@ -7,8 +7,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
+using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.ViewModels;
 
 namespace Sentinel.LogViewer
@@ -19,13 +22,26 @@ namespace Sentinel.LogViewer
     public partial class MainWindow : Window
     {
         private readonly MainViewModel _viewModel;
+        private readonly ITrayIcon? _tray;
+
+        /// <summary>At most one notification in this time, so a burst of entries does not flood the screen; what arrives meanwhile is announced after it</summary>
+        internal TimeSpan TrayNotificationInterval { get; set; } = TimeSpan.FromSeconds(30);
+
+        private readonly DispatcherTimer _trayTimer = new();
+        private int _trayAlerts;
+        private LogEntryLevel _trayHighest;
+        private DateTime _lastTrayNotification = DateTime.MinValue;
+
+        /// <summary>The state to go back to when the window comes back from the tray: minimizing does not remember a maximized window</summary>
+        private WindowState _restoreState = WindowState.Normal;
 
         private Point _logTabDragStart;
         private LogTabViewModel? _logTabDragSource;
 
-        public MainWindow(MainViewModel viewModel)
+        public MainWindow(MainViewModel viewModel, ITrayIcon? tray = null)
         {
             _viewModel = viewModel ?? throw new ArgumentNullException(nameof(viewModel));
+            _tray = tray;
             InitializeComponent();
             DataContext = _viewModel;
 
@@ -41,9 +57,125 @@ namespace Sentinel.LogViewer
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenSettingsCommand,
                 new KeyGesture(Key.OemComma, ModifierKeys.Control)));
 
+            if (_tray != null)
+                SetUpTray(_tray);
+
+            this.InputBindings.Add(new KeyBinding(_viewModel.ShowShortcutsCommand, Key.F1, ModifierKeys.None));
+
+            // Zoom of the log list for this session
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.OemPlus, ModifierKeys.Control | ModifierKeys.Shift));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomInCommand, Key.Add, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomOutCommand, Key.OemMinus, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ZoomOutCommand, Key.Subtract, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ResetFontZoomCommand, Key.D0, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.ResetFontZoomCommand, Key.NumPad0, ModifierKeys.Control));
+            PreviewMouseWheel += (_, e) =>
+            {
+                if (Keyboard.Modifiers != ModifierKeys.Control)
+                    return;
+
+                (e.Delta > 0 ? _viewModel.ZoomInCommand : _viewModel.ZoomOutCommand).Execute(null);
+                e.Handled = true;
+            };
+
+            // Tabs as in a browser
+            this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.W, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.CloseCurrentTabCommand, Key.F4, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectNextTabCommand, Key.PageDown, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectPreviousTabCommand, Key.PageUp, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectNextTabCommand, Key.Tab, ModifierKeys.Control));
+            this.InputBindings.Add(new KeyBinding(_viewModel.SelectPreviousTabCommand, Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
+            for (var number = 1; number <= 9; number++)
+            {
+                // Not the numpad: Alt and numpad digits enter a character by its code in a text box.
+                this.InputBindings.Add(new KeyBinding(_viewModel.SelectTabCommand, Key.D0 + number, ModifierKeys.Alt) { CommandParameter = number });
+            }
+
 #if DEBUG
             AddDebugMenu();
 #endif
+        }
+
+        /// <summary>
+        /// Minimizing moves the window to the tray when the settings say so; the tray icon brings it back, tells how receiving is going and
+        /// announces new errors
+        /// </summary>
+        private void SetUpTray(ITrayIcon tray)
+        {
+            Loaded += (_, _) => _restoreState = WindowState == WindowState.Minimized ? WindowState.Normal : WindowState;
+            _trayTimer.Tick += (_, _) => NotifyTray(tray);
+            StateChanged += (_, _) =>
+            {
+                if (WindowState != WindowState.Minimized)
+                {
+                    _restoreState = WindowState;
+                    return;
+                }
+
+                if (!_viewModel.MinimizeToTray)
+                    return;
+
+                _trayAlerts = 0;
+                _trayHighest = LogEntryLevel.Trace;
+                tray.ToolTip = TrayToolTip();
+                tray.Show();
+                Hide();
+            };
+            _viewModel.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MainViewModel.ReceiveStatusText))
+                    tray.ToolTip = TrayToolTip();
+            };
+            _viewModel.AlertsReceived += (_, alert) =>
+            {
+                if (!tray.IsVisible)
+                    return;
+
+                _trayAlerts += alert.Count;
+                _trayHighest = (LogEntryLevel)Math.Max((int)_trayHighest, (int)alert.Highest);
+                var wait = TrayNotificationInterval - (DateTime.UtcNow - _lastTrayNotification);
+                if (wait <= TimeSpan.Zero)
+                {
+                    NotifyTray(tray);
+                }
+                else if (!_trayTimer.IsEnabled)
+                {
+                    _trayTimer.Interval = wait;
+                    _trayTimer.Start();
+                }
+            };
+            tray.RestoreRequested += (_, _) => RestoreFromTray();
+            tray.ExitRequested += (_, _) => _viewModel.ExitCommand.Execute(null);
+        }
+
+        private void NotifyTray(ITrayIcon tray)
+        {
+            _trayTimer.Stop();
+            if (!tray.IsVisible || _trayAlerts == 0)
+                return;
+
+            _lastTrayNotification = DateTime.UtcNow;
+            var text = _viewModel.TrayNotificationText(_trayAlerts);
+            var isWarning = _trayHighest < LogEntryLevel.Error;
+            _trayAlerts = 0;
+            _trayHighest = LogEntryLevel.Trace;
+            tray.Notify(ProductNames.Display, text, isWarning);
+        }
+
+        private string TrayToolTip() => $"{ProductNames.Display} – {_viewModel.ReceiveStatusText}";
+
+        private void RestoreFromTray()
+        {
+            Show();
+            if (WindowState == WindowState.Minimized)
+                WindowState = _restoreState;
+
+            Activate();
+            _tray?.Hide();
+            _trayTimer.Stop();
+            _trayAlerts = 0;
+            _trayHighest = LogEntryLevel.Trace;
         }
 
         /// <summary>
@@ -51,11 +183,7 @@ namespace Sentinel.LogViewer
         /// </summary>
         public void HandleExternalInvocation(IReadOnlyList<string> arguments)
         {
-            if (WindowState == System.Windows.WindowState.Minimized)
-                WindowState = System.Windows.WindowState.Normal;
-
-            Show();
-            Activate();
+            RestoreFromTray();
 
             if (arguments.Count > 0)
                 _viewModel.BeginImportPathsFromUi(arguments);
@@ -151,6 +279,18 @@ namespace Sentinel.LogViewer
 		        _logTabDragStart = e.GetPosition(null);
 		        _logTabDragSource = vm;
 	        }
+        }
+
+        /// <summary>
+        /// A click with the middle mouse button closes the tab, as in a browser.
+        /// </summary>
+        private void LogTabItem_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Middle && sender is TabItem { DataContext: LogTabViewModel tab })
+            {
+                _viewModel.CloseTabCommand.Execute(tab);
+                e.Handled = true;
+            }
         }
 
         /// <summary>
@@ -274,6 +414,7 @@ namespace Sentinel.LogViewer
 
         protected override void OnClosed(System.EventArgs e)
         {
+            _tray?.Hide();
             _viewModel?.Dispose();
             base.OnClosed(e);
         }

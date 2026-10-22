@@ -52,8 +52,9 @@ namespace Sentinel.LogViewer
             }
             else if (e.Key == Key.Enter && e.OriginalSource is TextBox { IsReadOnly: false } textBox)
             {
-                // A text box saves when it loses focus; Enter saves right away.
+                // A text box saves when it loses focus; Enter saves right away. The box of an editable drop-down belongs to its ComboBox.
                 textBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+                (textBox.TemplatedParent as ComboBox)?.GetBindingExpression(ComboBox.TextProperty)?.UpdateSource();
             }
         }
 

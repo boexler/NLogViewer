@@ -59,6 +59,7 @@ public class MessageDialogWindowTests
 			window.Left = -10000;
 			window.Top = -10000;
 			window.ShowActivated = false;
+			window.ShowInTaskbar = false;
 			window.Show();
 
 			if (click != null)

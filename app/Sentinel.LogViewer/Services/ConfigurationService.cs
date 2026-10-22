@@ -128,6 +128,11 @@ namespace Sentinel.LogViewer.Services
                         ApplicationTabService.Sanitize(config);
                         if (!SettingsRules.IsValidLoggerTreeWidth(config.LoggerTreeWidth))
                             config.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+                        if (!SettingsRules.IsValidListFontSize(config.ListFontSize))
+                            config.ListFontSize = SettingsRules.DefaultListFontSize;
+                        config.ListFontFamily ??= string.Empty;
+                        config.LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay).ToString();
+                        config.RowHeight = SettingsRules.ParseRowHeight(config.RowHeight).ToString();
                         config.SearchFields = SettingsRules.ParseSearchFields(config.SearchFields).ToString();
                         config.Columns = Wpf.LogColumns.Normalize(config.Columns);
                         FilterPresetService.Sanitize(config);
@@ -219,6 +224,27 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>Width of the open logger tree of a new tab in pixels.</summary>
         public int LoggerTreeWidth { get; set; } = SettingsRules.DefaultLoggerTreeWidth;
+
+        /// <summary>Whether minimizing the window moves it to the notification area, where it keeps receiving.</summary>
+        public bool MinimizeToTray { get; set; } = false;
+
+        /// <summary>The lowest level of the entries that show a notification while the window is in the tray: Warn, Error or Fatal; Off for none.</summary>
+        public string TrayNotifyLevel { get; set; } = SettingsRules.TrayNotifyOff;
+
+        /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
+        public string SkippedVersion { get; set; } = string.Empty;
+
+        /// <summary>How the level column of the log list shows the level: Symbol, Text or SymbolAndText.</summary>
+        public string LevelDisplay { get; set; } = nameof(Wpf.LevelDisplayMode.Symbol);
+
+        /// <summary>How high the rows of the log list are: Normal or Compact.</summary>
+        public string RowHeight { get; set; } = nameof(Wpf.RowHeightMode.Normal);
+
+        /// <summary>The font family of the log list; empty is the font of the application.</summary>
+        public string ListFontFamily { get; set; } = string.Empty;
+
+        /// <summary>The font size of the log list.</summary>
+        public int ListFontSize { get; set; } = SettingsRules.DefaultListFontSize;
 
         /// <summary>The fields that the filter and the search of a new tab look into, as the names of <see cref="Core.SearchFields"/> (default: Message and logger name).</summary>
         public string SearchFields { get; set; } = nameof(Core.SearchFields.Default);

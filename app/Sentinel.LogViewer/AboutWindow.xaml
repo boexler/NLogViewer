@@ -91,6 +91,11 @@
                             <Button Style="{StaticResource ActionButton}" Command="{Binding DownloadCommand}"
                                     Content="{helpers:Resource Key=About_Download, DefaultValue=Download update}"
                                     Visibility="{Binding CanDownload, Converter={StaticResource ThemeBoolToVisibility}}"/>
+                            <TextBlock Margin="0,8,0,0" Visibility="{Binding CanSkip, Converter={StaticResource ThemeBoolToVisibility}}">
+                                <Hyperlink Command="{Binding SkipCommand}">
+                                    <Run Text="{helpers:Resource Key=About_Skip, DefaultValue=Skip this version}"/>
+                                </Hyperlink>
+                            </TextBlock>
                             <Button Style="{StaticResource ActionButton}" Command="{Binding RestartCommand}"
                                     Content="{helpers:Resource Key=About_Restart, DefaultValue=Restart to update}"
                                     Visibility="{Binding CanRestart, Converter={StaticResource ThemeBoolToVisibility}}"/>

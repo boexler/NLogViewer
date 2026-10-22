@@ -64,6 +64,24 @@ public class SettingsTransferServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void TheSkippedVersion_StaysOnThisComputer_NotExportedAndNotReplacedByAnImport()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.SkippedVersion = "5.0.0-beta.5";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		Assert.DoesNotContain("5.0.0-beta.5", File.ReadAllText(file));
+
+		configuration.SkippedVersion = "5.0.0-beta.6";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Import(file);
+
+		Assert.Equal("5.0.0-beta.6", _environment.Saved.SkippedVersion);
+	}
+
+	[Fact]
 	public void TheChoicesAndFiltersOfApplications_AreExportedAndImported_AndInvalidValuesAreDropped()
 	{
 		var file = _environment.PathOf("export.json");
@@ -90,6 +108,48 @@ public class SettingsTransferServiceTests : IDisposable
 		File.WriteAllText(file, """{ "Version": 1, "Settings": { "RestartBehavior": "sometimes" } }""");
 		_environment.Transfer.Import(file);
 		Assert.Equal("NewTab", _environment.Saved.RestartBehavior);
+	}
+
+	[Fact]
+	public void TheLookOfTheRows_IsExportedAndImported_AndAnUnknownValueBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.LevelDisplay = "Text";
+		configuration.RowHeight = "Compact";
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal("Text", _environment.Saved.LevelDisplay);
+		Assert.Equal("Compact", _environment.Saved.RowHeight);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "LevelDisplay": "Rainbow", "RowHeight": "42" } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal("Symbol", _environment.Saved.LevelDisplay);
+		Assert.Equal("Normal", _environment.Saved.RowHeight);
+	}
+
+	[Fact]
+	public void TheFontOfTheList_IsExportedAndImported_AndAnInvalidSizeBecomesTheDefault()
+	{
+		var file = _environment.PathOf("export.json");
+		var configuration = _environment.Saved;
+		configuration.ListFontFamily = "Consolas";
+		configuration.ListFontSize = 15;
+		_environment.Configuration.SaveConfiguration(configuration);
+		_environment.Transfer.Export(file);
+
+		_environment.Configuration.SaveConfiguration(ConfigurationService.CreateDefaultConfiguration());
+		_environment.Transfer.Import(file);
+		Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
+		Assert.Equal(15, _environment.Saved.ListFontSize);
+
+		File.WriteAllText(file, """{ "Version": 1, "Settings": { "ListFontSize": 999, "ListFontFamily": null } }""");
+		_environment.Transfer.Import(file);
+		Assert.Equal(12, _environment.Saved.ListFontSize);
+		Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
 	}
 
 	[Fact]

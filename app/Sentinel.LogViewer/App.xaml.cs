@@ -57,6 +57,7 @@ namespace Sentinel.LogViewer
             services.AddSingleton<ApplicationTabService>();
             services.AddSingleton<SettingsTransferService>();
             services.AddSingleton<ThemeService>();
+            services.AddSingleton<ITrayIcon, NotifyIconTray>();
 
             // Register services as scoped (one per window/view)
             services.AddScoped<LogReceiverService>();

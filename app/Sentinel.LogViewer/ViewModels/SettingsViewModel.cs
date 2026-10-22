@@ -219,6 +219,36 @@ namespace Sentinel.LogViewer.ViewModels
                     },
                     getDefault: LocalizationService.DetectWindowsLanguage),
 
+                new BoolSettingViewModel(GeneralId, "",
+                    Text("Settings_MinimizeToTray", "Minimize to the notification area"),
+                    Text("Settings_MinimizeToTray_Description", "Minimizing the window moves it to the notification area (tray), where it keeps receiving logs. The icon shows how receiving is going; double-click it to restore the window."),
+                    get: () => _configuration.MinimizeToTray,
+                    set: value =>
+                    {
+                        _configuration.MinimizeToTray = value;
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().MinimizeToTray),
+
+                new ChoiceSettingViewModel(GeneralId, "",
+                    Text("Settings_TrayNotify", "Notify about new log entries in the tray"),
+                    Text("Settings_TrayNotify_Description", "While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window."),
+                    needsRestart: false,
+                    options: new[]
+                    {
+                        new ChoiceOption(SettingsRules.TrayNotifyOff, Text("Settings_TrayNotify_Off", "Off")),
+                        new ChoiceOption("Fatal", Text("Settings_TrayNotify_Fatal", "Fatal only")),
+                        new ChoiceOption("Error", Text("Settings_TrayNotify_Error", "Errors and fatal")),
+                        new ChoiceOption("Warn", Text("Settings_TrayNotify_Warn", "Warnings, errors and fatal"))
+                    },
+                    get: () => _configuration.TrayNotifyLevel,
+                    set: level =>
+                    {
+                        _configuration.TrayNotifyLevel = level;
+                        Commit();
+                    },
+                    getDefault: () => SettingsRules.TrayNotifyOff),
+
                 new BoolSettingViewModel(ReceivingId, "",
                     Text("Settings_AutoStartListening", "Start listening on launch"),
                     Text("Settings_AutoStartListening_Description", "Starts receiving logs on all ports as soon as the application opens, without clicking “Start listening”."),
@@ -386,7 +416,7 @@ namespace Sentinel.LogViewer.ViewModels
 
                 foreach (var category in Categories)
                 {
-                    var matches = category.Settings.Where(setting => setting.Matches(query)).ToList();
+                    var matches = category.Settings.Where(setting => !setting.IsEmbedded && setting.Matches(query)).ToList();
                     if (matches.Count == 0)
                         continue;
 
@@ -415,7 +445,7 @@ namespace Sentinel.LogViewer.ViewModels
                 group.Clear();
             }
 
-            foreach (var setting in settings)
+            foreach (var setting in settings.Where(setting => !setting.IsEmbedded))
             {
                 if (setting.Group == null)
                 {

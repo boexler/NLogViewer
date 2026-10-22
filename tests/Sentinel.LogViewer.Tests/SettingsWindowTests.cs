@@ -106,6 +106,96 @@ public class SettingsWindowTests
 	}
 
 	[Fact]
+	public void TheListAppearance_IsOneCard_WhosePreviewFollowsEveryControl()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			var viewModel = environment.CreateViewModel();
+			viewModel.SelectedCategory = viewModel.Category("Appearance");
+			var window = ShowOffScreen(new SettingsWindow(viewModel));
+			try
+			{
+				var look = viewModel.Setting<ListLookSettingViewModel>("List appearance");
+				var card = Descendants<SettingCard>(window).Single(candidate => candidate.Setting == look);
+				var boxes = Descendants<ComboBox>(card).ToList();
+				Assert.Equal(7, boxes.Count);
+				var (mode, theme, format, level, height, font, size) = (boxes[0], boxes[1], boxes[2], boxes[3], boxes[4], boxes[5], boxes[6]);
+				Assert.True(size.IsEditable);
+				Assert.DoesNotContain(Descendants<SettingCard>(window), candidate => candidate.Setting?.IsEmbedded == true);
+
+				TextBlock Message() => Descendants<TextBlock>(card).Single(text => text.Text == "Payment failed: timeout");
+				TextBlock LevelText() => Descendants<TextBlock>(card).Single(text => text.Text == "Error");
+				Image Symbol() => Descendants<Image>(card).Last();
+				var normalHeight = Symbol().Height;
+
+				// The controls change the settings, and the preview follows each of them.
+				format.SelectedValue = "german";
+				WpfTestHelper.Settle();
+				Assert.Contains(Descendants<TextBlock>(card), text => text.Text == "18.12.2025 15:11:48.385");
+
+				theme.SelectedValue = "oldschool";
+				mode.SelectedValue = "dark";
+				WpfTestHelper.Settle();
+				Assert.Equal(("dark", "oldschool"), (environment.Saved.ThemeMode, environment.Saved.Theme));
+
+				level.SelectedValue = "SymbolAndText";
+				WpfTestHelper.Settle();
+				Assert.Equal(Visibility.Visible, LevelText().Visibility);
+				Assert.Equal(Visibility.Visible, Symbol().Visibility);
+				level.SelectedValue = "Text";
+				WpfTestHelper.Settle();
+				Assert.Equal(Visibility.Collapsed, Symbol().Visibility);
+
+				height.SelectedValue = "Compact";
+				WpfTestHelper.Settle();
+				Assert.True(Symbol().Height < normalHeight);
+
+				font.SelectedValue = "Consolas";
+				WpfTestHelper.Settle();
+				Assert.Equal("Consolas", Message().FontFamily.Source);
+				Assert.Equal("Consolas", Descendants<TextBlock>(font).Single(text => text.Text == "Consolas").FontFamily.Source);
+
+				size.SelectedItem = "16";
+				WpfTestHelper.Settle();
+				Assert.Equal(16, Message().FontSize);
+				Assert.Equal(16, environment.Saved.ListFontSize);
+
+				size.Text = "18";
+				size.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.Equal(18, environment.Saved.ListFontSize);
+
+				size.Text = "5";
+				size.GetBindingExpression(ComboBox.TextProperty)!.UpdateSource();
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.NotNull(look.Error);
+				Assert.Contains(Descendants<TextBlock>(card), text => text.Text == look.Error);
+
+				var saved = environment.Saved;
+				Assert.Equal(("Text", "Compact", "Consolas"), (saved.LevelDisplay, saved.RowHeight, saved.ListFontFamily));
+
+				// The button takes back the last change, which is the size, and the preview follows.
+				var undo = Descendants<Button>(card).Single(button => button.Command == look.UndoCommand);
+				Assert.True(undo.IsEnabled);
+				look.SizeText = "20";
+				WpfTestHelper.Settle();
+				Assert.Equal(20, Message().FontSize);
+				undo.Command.Execute(null);
+				WpfTestHelper.Settle();
+				Assert.Equal(18, Message().FontSize);
+				Assert.Equal(18, environment.Saved.ListFontSize);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	[Fact]
 	public void Switch_WhenToggled_SavesTheSetting()
 	{
 		_context.RunOnSta(() =>

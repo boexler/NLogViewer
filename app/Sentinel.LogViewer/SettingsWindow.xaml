@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModels:SettingsViewModel}"
         Title="{helpers:Resource Key=Settings_Title, DefaultValue=Settings}"
-        Width="900" Height="640" MinWidth="720" MinHeight="460"
+        Width="1280" Height="780" MinWidth="720" MinHeight="460"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         TextOptions.TextFormattingMode="Display">
@@ -96,6 +96,135 @@
                               DisplayMemberPath="Display" SelectedValuePath="Value"
                               SelectedValue="{Binding Value}"
                               AutomationProperties.Name="{Binding Title}"/>
+                </controls:SettingCard>
+            </DataTemplate>
+
+            <!-- How the log list looks: the settings on the left, a preview of a few rows that follows them on the right -->
+            <DataTemplate DataType="{x:Type settings:ListLookSettingViewModel}">
+                <controls:SettingCard Setting="{Binding}">
+                    <Button Command="{Binding UndoCommand}" Padding="12,5"
+                            ToolTip="{helpers:Resource Key=Settings_ListLookUndo_ToolTip, DefaultValue=Takes back the last change of this card and then the one before}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE7A7;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="11" VerticalAlignment="Center" Margin="0,1,8,0"/>
+                            <TextBlock Text="{helpers:Resource Key=Settings_ListLookUndo, DefaultValue=Undo}"/>
+                        </StackPanel>
+                    </Button>
+                    <controls:SettingCard.Details>
+                        <StackPanel>
+                            <StackPanel.Resources>
+                                <Style x:Key="LookLabel" TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="Margin" Value="0,0,0,3"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <!-- Fields of a fixed width that wrap: the more room the window has, the more of them stand in a row, and no text is cut off; the preview below has the whole width -->
+                            <WrapPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_ThemeMode, DefaultValue=Colour mode}"/>
+                                    <ComboBox ItemsSource="{Binding ColourModeOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding ColourMode}"
+                                              ToolTip="{helpers:Resource Key=Settings_ThemeMode_Description, DefaultValue=Light or dark or like Windows}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_ThemeMode, DefaultValue=Colour mode}"/>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_Theme, DefaultValue=Theme}"/>
+                                    <ComboBox ItemsSource="{Binding ThemeOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding Theme}"
+                                              ToolTip="{helpers:Resource Key=Settings_Theme_Description, DefaultValue=The look of the application}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_Theme, DefaultValue=Theme}"/>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_TimeStampFormat, DefaultValue=Timestamp format}"/>
+                                    <ComboBox ItemsSource="{Binding TimeStampOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding TimeStampFormat}"
+                                              ToolTip="{helpers:Resource Key=Settings_TimeStampFormat_Description, DefaultValue=Format of the timestamp column in the log list}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_TimeStampFormat, DefaultValue=Timestamp format}"/>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}"/>
+                                    <ComboBox ItemsSource="{Binding LevelOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding Level}"
+                                              ToolTip="{helpers:Resource Key=Settings_LevelDisplay_Description, DefaultValue=How the level of an entry is shown in the log list}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_LevelDisplay, DefaultValue=Show level as}"/>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}"/>
+                                    <ComboBox ItemsSource="{Binding RowHeightOptions}" DisplayMemberPath="Display" SelectedValuePath="Value" SelectedValue="{Binding RowHeight}"
+                                              ToolTip="{helpers:Resource Key=Settings_RowHeight_Description, DefaultValue=Compact rows show more entries on the screen.}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_RowHeight, DefaultValue=Row height}"/>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}"/>
+                                    <ComboBox ItemsSource="{Binding FontOptions}" SelectedValuePath="Value" SelectedValue="{Binding Family}"
+                                              ToolTip="{helpers:Resource Key=Settings_ListFontFamily_Description, DefaultValue=The font of the entries and of the column headers in the log list}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontFamily, DefaultValue=Font of the log list}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <!-- A font is listed in its own typeface; the default entry has none -->
+                                            <TextBlock Text="{Binding Display}"
+                                                       FontFamily="{Binding FontFamily, TargetNullValue={x:Static SystemFonts.MessageFontFamily}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Width="250" Margin="0,0,12,10">
+                                    <TextBlock Style="{StaticResource LookLabel}" Text="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}"/>
+                                    <!-- Choose one of the sizes or type another one -->
+                                    <ComboBox IsEditable="True" ItemsSource="{x:Static settings:ListLookSettingViewModel.SizeOptions}"
+                                              Text="{Binding SizeText, UpdateSourceTrigger=LostFocus}"
+                                              SelectedItem="{Binding SelectedSize}"
+                                              ToolTip="{helpers:Resource Key=Settings_ListFontSize_Description, DefaultValue=The size of the text in the log list}"
+                                              AutomationProperties.Name="{helpers:Resource Key=Settings_ListFontSize, DefaultValue=Font size of the log list}"/>
+                                    <TextBlock Style="{StaticResource SettingsErrorText}" Text="{Binding Error}"/>
+                                </StackPanel>
+                            </WrapPanel>
+                                <Border BorderBrush="{DynamicResource ThemeBorder}" BorderThickness="1" CornerRadius="6"
+                                        Grid.IsSharedSizeScope="True" ClipToBounds="True" HorizontalAlignment="Stretch" Margin="0,2,0,0">
+                                    <ItemsControl ItemsSource="{Binding Rows}" Focusable="False"
+                                                  FontFamily="{Binding FontFamily}" FontSize="{Binding FontSize}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type settings:FontPreviewRow}">
+                                                <Grid x:Name="Row">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewId"/>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewLevel"/>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewTime"/>
+                                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PreviewLogger"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Id}" Margin="{Binding Padding}"/>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="{Binding Padding}">
+                                                        <Image Source="{Binding Icon}" Height="{Binding IconHeight}" VerticalAlignment="Center"
+                                                               Visibility="{Binding ShowSymbol, Converter={StaticResource ThemeBoolToVisibility}}"/>
+                                                        <TextBlock Text="{Binding Level}" VerticalAlignment="Center" Margin="4,0,0,0"
+                                                                   Visibility="{Binding ShowText, Converter={StaticResource ThemeBoolToVisibility}}"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" Text="{Binding TimeStamp}" Margin="{Binding Padding}"/>
+                                                    <TextBlock Grid.Column="3" Text="{Binding Logger}" Margin="{Binding Padding}"/>
+                                                    <TextBlock Grid.Column="4" Text="{Binding Message}" Margin="{Binding Padding}" TextTrimming="CharacterEllipsis"/>
+                                                </Grid>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding Kind}" Value="Header">
+                                                        <Setter TargetName="Row" Property="Background" Value="{DynamicResource ThemeSurfaceAlt}"/>
+                                                        <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource ThemeTextSecondary}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Kind}" Value="Info">
+                                                        <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogInfoBackground}"/>
+                                                        <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogInfoForeground}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Kind}" Value="Warn">
+                                                        <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogWarnBackground}"/>
+                                                        <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogWarnForeground}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Kind}" Value="Error">
+                                                        <Setter TargetName="Row" Property="Background" Value="{DynamicResource LogErrorBackground}"/>
+                                                        <Setter TargetName="Row" Property="TextElement.Foreground" Value="{DynamicResource LogErrorForeground}"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                        </StackPanel>
+                    </controls:SettingCard.Details>
                 </controls:SettingCard>
             </DataTemplate>
 

@@ -41,6 +41,12 @@ public abstract class SettingViewModel : INotifyPropertyChanged
 	public SettingGroup? Group { get; init; }
 
 	/// <summary>
+	/// Whether another card shows this setting; it stays in the list, so that it is reset, reloaded and found by the tests, but gets no card of its own
+	/// and is not offered by the search
+	/// </summary>
+	public bool IsEmbedded { get; init; }
+
+	/// <summary>
 	/// Whether a change only takes full effect after restarting the application
 	/// </summary>
 	public bool NeedsRestart { get; }
@@ -128,7 +134,14 @@ public sealed class BoolSettingViewModel(string categoryId, string icon, string 
 /// <summary>
 /// One entry of a <see cref="ChoiceSettingViewModel"/>
 /// </summary>
-public sealed record ChoiceOption(string Value, string Display);
+public sealed record ChoiceOption(string Value, string Display)
+{
+	/// <summary>Finds the font that shows the entry in its own typeface; looked up when the entry is shown, not for the whole list at once</summary>
+	public Func<string?>? FontSource { get; init; }
+
+	/// <summary>The font family of the entry, or null for the font of the window</summary>
+	public string? FontFamily => FontSource?.Invoke();
+}
 
 /// <summary>
 /// A setting with a fixed list of values

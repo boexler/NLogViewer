@@ -17,9 +17,16 @@ namespace Sentinel.LogViewer.ViewModels
         private const string LoggerTreeLeft = "left";
         private const string LoggerTreeRight = "right";
 
+        /// <summary>
+        /// Whether the name of a font reads well in the font itself; the names of symbol fonts, e.g. Wingdings, would show as symbols
+        /// </summary>
+        private static bool ShowsInItsOwnFont(string name) =>
+            new System.Windows.Media.Typeface(new System.Windows.Media.FontFamily(name), System.Windows.FontStyles.Normal, System.Windows.FontWeights.Normal, System.Windows.FontStretches.Normal)
+                .TryGetGlyphTypeface(out var glyphs) && !glyphs.Symbol && glyphs.CharacterToGlyphMap.ContainsKey('A');
+
         private IEnumerable<SettingViewModel> CreateAppearanceSettings()
         {
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE790",
+            var colourMode = new ChoiceSettingViewModel(AppearanceId, "\uE790",
                 Text("Settings_ThemeMode", "Colour mode"),
                 Text("Settings_ThemeMode_Description", "Light or dark, or the same as Windows. The colours below belong to the theme that is in use."),
                 needsRestart: false,
@@ -43,9 +50,9 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.Theme = ThemeCatalog.DefaultThemeId;
                     _configuration.ThemeColors.Clear();
                     ChangeTheme();
-                });
+                }) { IsEmbedded = true };
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE771",
+            var theme = new ChoiceSettingViewModel(AppearanceId, "\uE771",
                 Text("Settings_Theme", "Theme"),
                 Text("Settings_Theme_Description", "Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode."),
                 needsRestart: false,
@@ -56,9 +63,9 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.Theme = id;
                     ChangeTheme();
                 },
-                getDefault: () => ThemeCatalog.DefaultThemeId);
+                getDefault: () => ThemeCatalog.DefaultThemeId) { IsEmbedded = true };
 
-            yield return new ChoiceSettingViewModel(AppearanceId, "\uE121",
+            var timeStampFormat = new ChoiceSettingViewModel(AppearanceId, "\uE121",
                 Text("Settings_TimeStampFormat", "Timestamp format"),
                 Text("Settings_TimeStampFormat_Description", "Format of the timestamp column in the log list."),
                 needsRestart: false,
@@ -75,7 +82,66 @@ namespace Sentinel.LogViewer.ViewModels
                     _configuration.TimeStampFormat = id;
                     Commit();
                 },
-                getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System));
+                getDefault: () => TimeStampFormats.ToId(TimeStampFormat.System)) { IsEmbedded = true };
+
+            yield return new ListLookSettingViewModel(AppearanceId, "\uE8D2",
+                Text("Settings_ListAppearance", "List appearance"),
+                Text("Settings_ListAppearance_Description", "Colour mode, theme, timestamp format, level, row height, font and size of the log list, with a preview of the result."),
+                colourMode, theme, timeStampFormat,
+                levelOptions: new[]
+                {
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.Symbol), Text("Settings_LevelDisplay_Symbol", "Symbol")),
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.Text), Text("Settings_LevelDisplay_Text", "Text")),
+                    new ChoiceOption(nameof(Wpf.LevelDisplayMode.SymbolAndText), Text("Settings_LevelDisplay_SymbolAndText", "Symbol and text"))
+                },
+                rowHeightOptions: new[]
+                {
+                    new ChoiceOption(nameof(Wpf.RowHeightMode.Normal), Text("Settings_RowHeight_Normal", "Normal")),
+                    new ChoiceOption(nameof(Wpf.RowHeightMode.Compact), Text("Settings_RowHeight_Compact", "Compact"))
+                },
+                fontOptions: new[] { new ChoiceOption(string.Empty, Text("Settings_ListFontFamily_Default", "Default (like the rest of the application)")) }
+                    .Concat(System.Windows.Media.Fonts.SystemFontFamilies.Select(family => family.Source).OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
+                        .Select(name => new ChoiceOption(name, name) { FontSource = () => ShowsInItsOwnFont(name) ? name : null })).ToList(),
+                getLevel: () => SettingsRules.ParseLevelDisplay(_configuration.LevelDisplay).ToString(),
+                setLevel: mode =>
+                {
+                    _configuration.LevelDisplay = mode;
+                    Commit();
+                },
+                getRowHeight: () => SettingsRules.ParseRowHeight(_configuration.RowHeight).ToString(),
+                setRowHeight: mode =>
+                {
+                    _configuration.RowHeight = mode;
+                    Commit();
+                },
+                getFamily: () => _configuration.ListFontFamily,
+                setFamily: family =>
+                {
+                    _configuration.ListFontFamily = family;
+                    Commit();
+                },
+                getSize: () => _configuration.ListFontSize,
+                setSize: size =>
+                {
+                    _configuration.ListFontSize = size;
+                    Commit();
+                },
+                invalidSizeMessage: string.Format(CultureInfo.CurrentCulture,
+                    Text("Settings_InvalidNumber", "Enter a whole number between {0} and {1}."), SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize),
+                reset: () =>
+                {
+                    var defaults = ConfigurationService.CreateDefaultConfiguration();
+                    _configuration.LevelDisplay = defaults.LevelDisplay;
+                    _configuration.RowHeight = defaults.RowHeight;
+                    _configuration.ListFontFamily = defaults.ListFontFamily;
+                    _configuration.ListFontSize = defaults.ListFontSize;
+                    Commit();
+                });
+
+            // They are shown in the card above, but stay in the list: the reset of the category and the import take them along.
+            yield return colourMode;
+            yield return theme;
+            yield return timeStampFormat;
 
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),

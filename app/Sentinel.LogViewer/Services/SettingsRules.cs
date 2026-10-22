@@ -24,6 +24,35 @@ public static class SettingsRules
 
 	public static bool IsValidLoggerTreeWidth(int value) => value is >= MinLoggerTreeWidth and <= MaxLoggerTreeWidth;
 
+	/// <summary>The value of the setting for no notification in the tray; the others are the names of the levels Warn, Error and Fatal</summary>
+	public const string TrayNotifyOff = "Off";
+
+	public static Core.LogEntryLevel? ParseTrayNotifyLevel(string? text) => text switch
+	{
+		"Warn" => Core.LogEntryLevel.Warn,
+		"Error" => Core.LogEntryLevel.Error,
+		"Fatal" => Core.LogEntryLevel.Fatal,
+		_ => null
+	};
+
+	/// <summary>Whether a font family is installed, by its name in any language</summary>
+	public static bool IsInstalledFont(string name) => System.Windows.Media.Fonts.SystemFontFamilies.Any(family =>
+		family.FamilyNames.Values.Append(family.Source).Contains(name, StringComparer.OrdinalIgnoreCase));
+
+	public static Wpf.LevelDisplayMode ParseLevelDisplay(string? text) =>
+		Enum.TryParse<Wpf.LevelDisplayMode>(text, out var mode) && Enum.IsDefined(mode) ? mode : Wpf.LevelDisplayMode.Symbol;
+
+	public static Wpf.RowHeightMode ParseRowHeight(string? text) =>
+		Enum.TryParse<Wpf.RowHeightMode>(text, out var mode) && Enum.IsDefined(mode) ? mode : Wpf.RowHeightMode.Normal;
+
+	public const int MinListFontSize = 6;
+	public const int MaxListFontSize = 40;
+
+	/// <summary>The size that the list has without a setting (the size of the message font of Windows)</summary>
+	public const int DefaultListFontSize = 12;
+
+	public static bool IsValidListFontSize(int value) => value is >= MinListFontSize and <= MaxListFontSize;
+
 	/// <summary>
 	/// Reads the fields that filter and search look into from the settings; anything that is not a combination of the known fields
 	/// (or no field at all) gives the default

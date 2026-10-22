@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Reactive.Subjects;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Models;
@@ -63,7 +67,8 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		resources.Add("SvgImageSourceConverter", new Sentinel.LogViewer.Converters.SvgImageSourceConverter());
 	}
 
-	private Session Start()
+	/// <param name="invisible">For tests that minimize or maximize the window: it has no frame and is fully transparent, so it neither shows nor catches clicks on the screen of the user</param>
+	private Session Start(UpdateService? updates = null, ITrayIcon? tray = null, bool invisible = false)
 	{
 		AddResourcesOfTheApplication();
 		var xml = new Log4JEventParser();
@@ -71,10 +76,17 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		var formats = _environment.Formats;
 		var files = new LogFileParserService(xml, new PlainTextParser(), new JsonLogParser(), new TextFileFormatDetector(), formats);
 		var tabs = new ApplicationTabService(_environment.Configuration);
-		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, new UpdateService(), tabs);
+		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, updates ?? new UpdateService(), tabs);
 		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
-		var window = new MainWindow(viewModel) { Left = -10000, Top = -10000, ShowActivated = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
+		var window = new MainWindow(viewModel, tray) { Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
+		if (invisible)
+		{
+			window.WindowStyle = System.Windows.WindowStyle.None;
+			window.AllowsTransparency = true;
+			window.Opacity = 0;
+		}
+
 		window.Show();
 		WpfTestHelper.Settle();
 		return new Session { Window = window, ViewModel = viewModel, Events = events, Tabs = tabs };
@@ -433,6 +445,449 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			var second = ViewerOf(session, session.ViewModel.LogTabs[1]);
 			Assert.Equal(_environment.Saved.Columns, second.ColumnKeys);
 			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message }, first.ColumnKeys);
+		});
+	}
+
+	private Session StartWithTabs(int count)
+	{
+		var session = Start();
+		for (var i = 1; i <= count; i++)
+			Send(session, App($"({i}00)", name: $"App{i}"));
+
+		Assert.Equal(count, session.ViewModel.LogTabs.Count);
+		return session;
+	}
+
+	private static void Press(Session session, Key key, ModifierKeys modifiers)
+	{
+		var binding = session.Window.InputBindings.OfType<KeyBinding>().First(candidate => candidate.Key == key && candidate.Modifiers == modifiers);
+		Assert.True(binding.Command.CanExecute(binding.CommandParameter));
+		binding.Command.Execute(binding.CommandParameter);
+		WpfTestHelper.Settle();
+	}
+
+	[Fact]
+	public void TheTabs_ChangeWithTheKeysOfABrowser_AndGoAroundAtTheEnds()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(4);
+			var tabs = session.ViewModel.LogTabs;
+
+			Press(session, Key.D2, ModifierKeys.Alt);
+			Assert.Same(tabs[1], session.ViewModel.SelectedTab);
+
+			// Alt and numpad digits enter a character by its code in a text box, so they do not change the tab.
+			Assert.DoesNotContain(session.Window.InputBindings.OfType<KeyBinding>(), binding => binding.Modifiers == ModifierKeys.Alt && binding.Key is >= Key.NumPad0 and <= Key.NumPad9);
+
+			Press(session, Key.D9, ModifierKeys.Alt);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			Press(session, Key.PageDown, ModifierKeys.Control);
+			Assert.Same(tabs[0], session.ViewModel.SelectedTab);
+
+			Press(session, Key.PageUp, ModifierKeys.Control);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			Press(session, Key.Tab, ModifierKeys.Control | ModifierKeys.Shift);
+			Assert.Same(tabs[2], session.ViewModel.SelectedTab);
+
+			Press(session, Key.Tab, ModifierKeys.Control);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+
+			// A number beyond the last tab selects the last one.
+			session.ViewModel.SelectTabCommand.Execute(8);
+			Assert.Same(tabs[3], session.ViewModel.SelectedTab);
+		});
+	}
+
+	[Fact]
+	public void TheCurrentTab_IsClosedWithCtrlW_AndWithCtrlF4_WithoutAsking()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			session.ViewModel.SelectedTab = tabs[1];
+			var second = tabs[1];
+
+			Press(session, Key.W, ModifierKeys.Control);
+			Assert.Equal(2, tabs.Count);
+			Assert.DoesNotContain(second, tabs);
+
+			Press(session, Key.F4, ModifierKeys.Control);
+			Assert.Single(tabs);
+		});
+	}
+
+	[Fact]
+	public void AMiddleClickOnATab_ClosesIt_AndOtherButtonsDoNot()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			var first = tabs[0];
+			var item = Descendants<TabItem>(session.Window).First(candidate => ReferenceEquals(candidate.DataContext, first));
+
+			item.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Right) { RoutedEvent = Mouse.PreviewMouseUpEvent, Source = item });
+			Assert.Equal(3, tabs.Count);
+
+			item.RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Middle) { RoutedEvent = Mouse.PreviewMouseUpEvent, Source = item });
+			Assert.Equal(2, tabs.Count);
+			Assert.DoesNotContain(first, tabs);
+		});
+	}
+
+	[Fact]
+	public void CloseTheTabsToTheRight_IsOnlyOfferedWhereThereAreTabsToTheRight()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = StartWithTabs(3);
+			var tabs = session.ViewModel.LogTabs;
+			var command = session.ViewModel.CloseTabsToTheRightCommand;
+
+			Assert.True(command.CanExecute(tabs[0]));
+			Assert.True(command.CanExecute(tabs[1]));
+			Assert.False(command.CanExecute(tabs[2]));
+		});
+	}
+
+	private sealed class FakeTray : ITrayIcon
+	{
+		public event EventHandler? RestoreRequested;
+		public event EventHandler? ExitRequested { add { } remove { } }
+		public bool IsVisible { get; private set; }
+		public string ToolTip { get; set; } = string.Empty;
+		public List<string> Notifications { get; } = new();
+		public void Show() => IsVisible = true;
+		public void Hide() => IsVisible = false;
+		public List<bool> Warnings { get; } = new();
+		public void Notify(string title, string text, bool isWarning)
+		{
+			Notifications.Add(text);
+			Warnings.Add(isWarning);
+		}
+		public void Restore() => RestoreRequested?.Invoke(this, EventArgs.Empty);
+	}
+
+	private void ConfigureTray(bool minimizeToTray, string notifyLevel)
+	{
+		var configuration = _environment.Saved;
+		configuration.MinimizeToTray = minimizeToTray;
+		configuration.TrayNotifyLevel = notifyLevel;
+		_environment.Configuration.SaveConfiguration(configuration);
+	}
+
+	[Fact]
+	public void MinimizingWithTheTraySetting_HidesTheWindow_ShowsTheIcon_AndTheIconBringsTheWindowBack()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Assert.False(session.Window.IsVisible);
+			Assert.True(tray.IsVisible);
+			Assert.Contains(session.ViewModel.ReceiveStatusText, tray.ToolTip);
+
+			tray.Restore();
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.Equal(System.Windows.WindowState.Normal, session.Window.WindowState);
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	/// <summary>The way the list of the shortcuts writes the gesture of a key binding</summary>
+	private static string Gesture(KeyBinding binding)
+	{
+		var key = binding.Key switch
+		{
+			>= Key.D0 and <= Key.D9 => (binding.Key - Key.D0).ToString(),
+			>= Key.NumPad0 and <= Key.NumPad9 => (binding.Key - Key.NumPad0).ToString(),
+			Key.OemPlus or Key.Add => "Plus",
+			Key.OemMinus or Key.Subtract => "Minus",
+			Key.OemComma => ",",
+			Key.Next => "PageDown",
+			Key.Prior => "PageUp",
+			_ => binding.Key.ToString()
+		};
+		if (key is "1" or "2" or "3" or "4" or "5" or "6" or "7" or "8" && binding.Modifiers == ModifierKeys.Alt)
+			key = "1…8";
+
+		var modifiers = (binding.Modifiers.HasFlag(ModifierKeys.Control) ? "Ctrl+" : "")
+			+ (binding.Modifiers.HasFlag(ModifierKeys.Alt) ? "Alt+" : "")
+			+ (binding.Modifiers.HasFlag(ModifierKeys.Shift) && key != "Plus" ? "Shift+" : "");
+		return modifiers + key;
+	}
+
+	[Fact]
+	public void EveryKeyBindingOfTheMainWindow_IsInTheListOfTheShortcuts()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+
+			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).ToHashSet();
+			var missing = session.Window.InputBindings.OfType<KeyBinding>().Select(Gesture).Distinct().Where(gesture => !listed.Contains(gesture)).ToList();
+
+			Assert.Empty(missing);
+		});
+	}
+
+	[Fact]
+	public void TheNotifyIconOfWindows_HasTheIconOfTheApplication_AndAToolTipThatFits()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var tray = new NotifyIconTray(_environment.Localization);
+
+			tray.ToolTip = new string('x', 300);
+			tray.Show();
+			Assert.True(tray.IsVisible);
+
+			tray.Hide();
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	[Fact]
+	public void MinimizingWithoutTheTraySetting_LeavesTheWindowInTheTaskbar()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: false, notifyLevel: "Error");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Assert.True(session.Window.IsVisible);
+			Assert.False(tray.IsVisible);
+		});
+	}
+
+	[Fact]
+	public void TheTrayNotification_FollowsTheLevelOfTheSetting_AndOnlyWhileTheWindowIsInTheTray()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Fatal");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
+			Assert.Empty(tray.Notifications);
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+			Send(session, App("(100)"), level: LogEntryLevel.Error);
+			Assert.Empty(tray.Notifications);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Fatal);
+			Assert.Equal(new[] { "New entries of level Fatal or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { false }, tray.Warnings);
+		});
+	}
+
+	[Fact]
+	public void WarningsAreAnnounced_WhenTheSettingSaysSo_AndWhatArrivesWithinTheIntervalIsAnnouncedAfterIt()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Warn");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+			session.Window.TrayNotificationInterval = TimeSpan.FromSeconds(1.5);
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+
+			Send(session, App("(100)"), level: LogEntryLevel.Info);
+			Assert.Empty(tray.Notifications);
+
+			Send(session, App("(100)"), level: LogEntryLevel.Warn);
+			Assert.Equal(new[] { "New entries of level Warn or higher: 1" }, tray.Notifications);
+			Assert.Equal(new[] { true }, tray.Warnings);
+
+			// Within the interval: nothing yet, but it is not lost.
+			Send(session, App("(100)"), level: LogEntryLevel.Error);
+			Assert.Single(tray.Notifications);
+
+			for (var i = 0; i < 60 && tray.Notifications.Count < 2; i++)
+			{
+				Thread.Sleep(50);
+				WpfTestHelper.Settle();
+			}
+
+			Assert.Equal(new[] { "New entries of level Warn or higher: 1", "New entries of level Warn or higher: 1" }, tray.Notifications);
+
+			// A warning has the symbol of a warning, an error that of an error.
+			Assert.Equal(new[] { true, false }, tray.Warnings);
+		});
+	}
+
+	[Fact]
+	public void TheWindowComesBackFromTheTray_AsItWasBefore()
+	{
+		_context.RunOnSta(() =>
+		{
+			ConfigureTray(minimizeToTray: true, notifyLevel: "Off");
+			var tray = new FakeTray();
+			using var session = Start(tray: tray, invisible: true);
+			session.Window.WindowState = System.Windows.WindowState.Maximized;
+			WpfTestHelper.Settle();
+
+			session.Window.WindowState = System.Windows.WindowState.Minimized;
+			WpfTestHelper.Settle();
+			tray.Restore();
+			WpfTestHelper.Settle();
+
+			Assert.Equal(System.Windows.WindowState.Maximized, session.Window.WindowState);
+		});
+	}
+
+	[Fact]
+	public void AMissingFontOfTheSettings_IsReplacedByTheDefault_WithAMessage()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.ListFontFamily = "Consolas";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using (var installed = Start())
+			{
+				Assert.Equal("Consolas", _environment.Saved.ListFontFamily);
+				Assert.DoesNotContain("not installed", installed.ViewModel.Snackbar.Message);
+			}
+
+			configuration.ListFontFamily = "No Such Font 123";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var missing = Start();
+
+			Assert.Equal(string.Empty, _environment.Saved.ListFontFamily);
+			Assert.Contains("No Such Font 123", missing.ViewModel.Snackbar.Message);
+			Assert.Equal(System.Windows.SystemFonts.MessageFontFamily.Source, missing.ViewModel.ListFontFamily.Source);
+		});
+	}
+
+	private sealed class FeedHandler(string tag) : HttpMessageHandler
+	{
+		public int Requests { get; private set; }
+
+		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		{
+			Requests++;
+			var feed = $"""<feed xmlns="http://www.w3.org/2005/Atom"><entry><link rel="alternate" href="https://github.com/boexler/NLogViewer/releases/tag/{tag}"/></entry></feed>""";
+			return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(feed) });
+		}
+	}
+
+	/// <summary>Starts the window with a feed that offers the given release, and waits until the check has run</summary>
+	private Session StartWithRelease(string tag)
+	{
+		var feed = new FeedHandler(tag);
+		var session = Start(new UpdateService(feed, InstallType.Msi));
+		for (var i = 0; i < 100 && feed.Requests == 0; i++)
+		{
+			Thread.Sleep(50);
+			WpfTestHelper.Settle();
+		}
+
+		Assert.True(feed.Requests > 0);
+		for (var i = 0; i < 5; i++)
+		{
+			Thread.Sleep(50);
+			WpfTestHelper.Settle();
+		}
+
+		return session;
+	}
+
+	[Fact]
+	public void TheUpdateNoticeOfTheStatusBar_CanBeSkipped_AndComesBackForANewerVersion()
+	{
+		_context.RunOnSta(() =>
+		{
+			using (var first = StartWithRelease("v99.0.0"))
+			{
+				Assert.NotNull(first.ViewModel.UpdateNotice);
+				first.ViewModel.SkipUpdateCommand.Execute(null);
+				Assert.Null(first.ViewModel.UpdateNotice);
+				Assert.Equal("99.0.0", _environment.Saved.SkippedVersion);
+			}
+
+			using (var second = StartWithRelease("v99.0.0"))
+				Assert.Null(second.ViewModel.UpdateNotice);
+
+			using var third = StartWithRelease("v100.0.0");
+			Assert.NotNull(third.ViewModel.UpdateNotice);
+		});
+	}
+
+	[Fact]
+	public void TheLookOfTheRows_StartsAsTheSettingsSay()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.LevelDisplay = "SymbolAndText";
+			configuration.RowHeight = "Compact";
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Send(session, App("(100)"));
+
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			Assert.Equal(Sentinel.LogViewer.Wpf.LevelDisplayMode.SymbolAndText, viewer.LevelDisplay);
+			Assert.Equal(Sentinel.LogViewer.Wpf.RowHeightMode.Compact, viewer.RowHeight);
+		});
+	}
+
+	[Fact]
+	public void TheFontOfTheList_IsZoomedForTheSession_AndTheStatusBarOffersToSaveIt()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.ListFontFamily = "Consolas";
+			configuration.ListFontSize = 14;
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Send(session, App("(100)"));
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			Assert.Equal(14, viewer.ListFontSize);
+			Assert.Equal("Consolas", viewer.ListFontFamily.Source);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			Press(session, Key.OemPlus, ModifierKeys.Control);
+			Press(session, Key.Add, ModifierKeys.Control);
+			Assert.Equal(16, viewer.ListFontSize);
+			Assert.True(session.ViewModel.IsFontZoomed);
+			Assert.Equal(14, _environment.Saved.ListFontSize);
+
+			Press(session, Key.D0, ModifierKeys.Control);
+			Assert.Equal(14, viewer.ListFontSize);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			Press(session, Key.OemMinus, ModifierKeys.Control);
+			Press(session, Key.Subtract, ModifierKeys.Control);
+			session.ViewModel.SaveFontZoomCommand.Execute(null);
+			Assert.Equal(12, _environment.Saved.ListFontSize);
+			Assert.Equal(12, viewer.ListFontSize);
+			Assert.False(session.ViewModel.IsFontZoomed);
+
+			for (var i = 0; i < 50; i++)
+				session.ViewModel.ZoomOutCommand.Execute(null);
+
+			Assert.Equal(6, viewer.ListFontSize);
 		});
 	}
 

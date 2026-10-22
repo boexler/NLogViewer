@@ -161,6 +161,37 @@ public class LogViewerColumnsTests
 		});
 
 	[Fact]
+	public void TheFontOfTheList_FollowsTheProperties_AndTheColumnsAreMeasuredAgain() =>
+		WithViewer(viewer =>
+		{
+			var list = (ListView)viewer.Template.FindName("PART_ListView", viewer);
+			var column = ViewOf(viewer).Columns[2];
+			var before = column.Width;
+
+			viewer.ListFontFamily = new System.Windows.Media.FontFamily("Consolas");
+			viewer.ListFontSize = 30;
+			WpfTestHelper.Settle();
+
+			Assert.Equal(30, list.FontSize);
+			Assert.Equal("Consolas", list.FontFamily.Source);
+			Assert.True(column.ActualWidth > before, $"{column.ActualWidth} should be wider than {before}");
+		});
+
+	[Fact]
+	public void SeveralChangesOfTheFont_AreMeasuredOnce() =>
+		WithViewer(viewer =>
+		{
+			var before = viewer.FontRefits;
+
+			for (var size = 13; size <= 20; size++)
+				viewer.ListFontSize = size;
+
+			WpfTestHelper.Settle();
+
+			Assert.Equal(before + 1, viewer.FontRefits);
+		});
+
+	[Fact]
 	public void TheValueOfAProperty_IsFoundWhateverTheCaseOfItsName()
 	{
 		var entry = new LogEntry(LogEntryLevel.Info, "L", "m") { Properties = new Dictionary<string, object?> { ["class"] = "Billing" } };

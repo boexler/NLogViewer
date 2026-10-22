@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Close _all tabs</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Close tab</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Do you really want to close the current tab?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Close all tabs</value>
   </data>
@@ -1086,6 +1080,264 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>The files of this release are not uploaded yet. Try again in a few minutes.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Close tabs to the right</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Close tabs to the right</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Do you really want to close all tabs to the right of this one?</value>
+  </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Font of the log list</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>The font of the entries and of the column headers in the log list, e.g. a monospaced font such as Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Default (like the rest of the application)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Font size of the log list</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>The size of the text in the log list. Ctrl+mouse wheel and Ctrl+Plus / Ctrl+Minus change it for the current session, Ctrl+0 goes back to this size; the status bar then offers to save the new size here.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Font size {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Save as default</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Skip this version</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>Version {0} is skipped. The application only announces newer versions.</value>
+  </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimize to the notification area</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Minimizing the window moves it to the notification area (tray), where it keeps receiving logs. The icon shows how receiving is going; double-click it to restore the window.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Keyboard shortcuts</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Keyboard and mouse commands</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Main window</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Log list</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Filter and search</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Settings and dialogs</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>Page up</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>Page down</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Plus</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Minus</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Mouse wheel</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Right-click</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Middle click</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Drag</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Open a log file</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>Open the settings</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>Show this list of keyboard and mouse commands</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Exit the application</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Drag log files onto the window to open them</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Close the current tab</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Close a tab</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Go to the next tab</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Go to the previous tab</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Go to the tab with that number</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Go to the last tab</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Drag a tab header to change the order of the tabs</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Open the menu of a tab: close, save the filtered list, ignore the sender and more</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>Zoom the log list for this session; the status bar offers to save the size</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Go back to the saved font size</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>Choose the columns of the list; the timestamp column also has its format here</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Drag a column header to change the order of the columns</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Drag the edge of a column header to change the width of the column</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>Add the text of the filter box as a filter term</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Go to the next hit of the search</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Go to the previous hit of the search</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Go to the search box of the settings or of the changelog</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>Clear the search of the settings, then close the window; closes dialogs</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>Save the value of a text box in the settings right away</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Notify about new log entries in the tray</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Fatal only</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Errors and fatal</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Warnings, errors and fatal</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>New entries of level {1} or higher: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>The font “{0}” is not installed. The default font is used instead.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>On the receive button of the status bar: switch single sources on or off</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>On the logger tree: show only one logger or all, expand or collapse all</value>
+  </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Show level as</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>How the level of an entry is shown in the log list: as a symbol, as text, or both. Text helps when rows are copied or exported, and when colours are hard to tell apart.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Symbol and text</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Row height</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Compact rows show more entries on the screen.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compact</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>List appearance</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Colour mode, theme, timestamp format, level, row height, font and size of the log list, with a preview of the result.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Takes back the last change of this card, again and again</value>
   </data>
 </root>
 

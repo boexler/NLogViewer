@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Cerrar _todas las pestañas</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Cerrar pestaña</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>¿Desea cerrar realmente la pestaña actual?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Cerrar todas las pestañas</value>
   </data>
@@ -1086,6 +1080,264 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Los archivos de esta versión aún no se han subido. Inténtelo de nuevo en unos minutos.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Cerrar las pestañas a la derecha</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Cerrar las pestañas a la derecha</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>¿Realmente desea cerrar todas las pestañas a la derecha de esta?</value>
+  </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Fuente de la lista de logs</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>La fuente de las entradas y de los encabezados de columna de la lista de logs, p. ej. una fuente monoespaciada como Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Predeterminada (como el resto de la aplicación)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Tamaño de fuente de la lista de logs</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>El tamaño del texto de la lista de logs. Ctrl+rueda del ratón y Ctrl+Más / Ctrl+Menos lo cambian durante la sesión actual, Ctrl+0 vuelve a este tamaño; la barra de estado ofrece entonces guardar aquí el nuevo tamaño.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Tamaño de fuente {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Guardar como predeterminado</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Restablecer</value>
+  </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Omitir esta versión</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>La versión {0} se omite. La aplicación solo avisará de versiones más nuevas.</value>
+  </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimizar al área de notificación</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Al minimizar, la ventana pasa al área de notificación (bandeja) y sigue recibiendo logs. El icono muestra cómo va la recepción; haga doble clic en él para restaurar la ventana.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Salir</value>
+  </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Atajos de teclado</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Comandos de teclado y ratón</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Ventana principal</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>Pestañas</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Lista de logs</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Filtro y búsqueda</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Configuración y diálogos</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Mayús</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Intro</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>Re Pág</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>Av Pág</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Más</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Menos</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Rueda del ratón</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Clic derecho</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Clic central</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Arrastrar</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Abrir un archivo de log</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>Abrir la configuración</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>Mostrar esta lista de comandos de teclado y ratón</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Salir de la aplicación</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Arrastrar archivos de log a la ventana para abrirlos</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Cerrar la pestaña actual</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Cerrar una pestaña</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Ir a la pestaña siguiente</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Ir a la pestaña anterior</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Ir a la pestaña con ese número</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Ir a la última pestaña</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Arrastrar el encabezado de una pestaña para cambiar el orden de las pestañas</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Abrir el menú de una pestaña: cerrar, guardar la lista filtrada, ignorar al remitente y más</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>Ampliar o reducir la lista de logs durante esta sesión; la barra de estado ofrece guardar el tamaño</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Volver al tamaño de fuente guardado</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>Elegir las columnas de la lista; en la columna de la marca de tiempo también su formato</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Arrastrar el encabezado de una columna para cambiar el orden de las columnas</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Arrastrar el borde del encabezado de una columna para cambiar su ancho</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Abrir el menú de una entrada: mostrar solo un logger u ocultarlo, copiar el texto, añadirlo al filtro</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>Añadir el texto del cuadro de filtro como término de filtro</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Ir al siguiente resultado de la búsqueda</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Ir al resultado anterior de la búsqueda</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Ir al cuadro de búsqueda de la configuración o del registro de cambios</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>Vaciar la búsqueda de la configuración y después cerrar la ventana; cierra los diálogos</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>Guardar al instante el valor de un cuadro de texto de la configuración</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Avisar de nuevas entradas de log en la bandeja</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Mientras la ventana está en la bandeja, se muestra una notificación cuando llegan nuevas entradas de este nivel o superior, como máximo una cada 30 segundos. Al hacer clic en la notificación se abre la ventana.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Solo fatales</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Errores y fatales</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Advertencias, errores y fatales</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Nuevas entradas de nivel {1} o superior: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>La fuente «{0}» no está instalada. Se usa la fuente predeterminada.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>En el botón de recepción de la barra de estado: activar o desactivar fuentes individuales</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>En el árbol de loggers: mostrar solo un logger o todos, expandir o contraer todo</value>
+  </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Mostrar el nivel como</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Cómo se muestra el nivel de una entrada en la lista de logs: como símbolo, como texto o ambos. El texto ayuda al copiar o exportar filas y cuando los colores son difíciles de distinguir.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Símbolo</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Texto</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Símbolo y texto</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Altura de fila</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Las filas compactas muestran más entradas en la pantalla.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compacta</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>Aspecto de la lista de logs</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Modo de color, tema, formato de la marca de tiempo, nivel, altura de fila, fuente y tamaño de la lista de logs, con vista previa del resultado.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Deshacer</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Deshace el último cambio de esta tarjeta, una y otra vez</value>
   </data>
 </root>
 

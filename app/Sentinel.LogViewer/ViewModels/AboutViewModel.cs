@@ -43,6 +43,7 @@ public class AboutViewModel : INotifyPropertyChanged
 	private double _downloadPercentage;
 	private AvailableUpdate? _update;
 	private string? _downloadedFile;
+	private bool _skipped;
 
 	public AboutViewModel(UpdateService updateService, ConfigurationService configService, LocalizationService localizationService,
 		ChangelogService changelogService)
@@ -54,6 +55,7 @@ public class AboutViewModel : INotifyPropertyChanged
 
 		CheckCommand = new AsyncRelayCommand(CheckAsync);
 		DownloadCommand = new AsyncRelayCommand(DownloadAsync);
+		SkipCommand = new RelayCommand(Skip);
 		RestartCommand = new RelayCommand(Restart);
 		CopyChocolateyCommand = new RelayCommand(() => Clipboard.SetText(ChocolateyCommand));
 		ShowChangelogCommand = new RelayCommand(() => ChangelogWindow.Show(Application.Current.Windows.OfType<AboutWindow>().FirstOrDefault()));
@@ -125,8 +127,14 @@ public class AboutViewModel : INotifyPropertyChanged
 	public bool ShowReleaseLink => State == UpdateState.ManualUpdate && _updateService.InstallType != InstallType.Chocolatey;
 	public bool CanRetry => State == UpdateState.Failed;
 
+	/// <summary>Whether the update that is offered can be skipped, which it can once</summary>
+	public bool CanSkip => !_skipped && State is UpdateState.UpdateAvailable or UpdateState.ManualUpdate;
+
 	public ICommand CheckCommand { get; }
 	public ICommand DownloadCommand { get; }
+
+	/// <summary>Skips the version that is offered: the status bar does not announce it or an older one again</summary>
+	public ICommand SkipCommand { get; }
 	public ICommand RestartCommand { get; }
 	public ICommand CopyChocolateyCommand { get; }
 
@@ -138,6 +146,7 @@ public class AboutViewModel : INotifyPropertyChanged
 	/// </summary>
 	public async Task CheckAsync()
 	{
+		_skipped = false;
 		State = UpdateState.Checking;
 		StatusText = GetString("About_Checking", "Checking for updates…");
 		try
@@ -167,6 +176,19 @@ public class AboutViewModel : INotifyPropertyChanged
 			State = UpdateState.UpdateAvailable;
 			StatusText = Format("About_UpdateAvailable", "Update to {0} available", _update.Version);
 		}
+	}
+
+	private void Skip()
+	{
+		if (_update == null)
+			return;
+
+		var config = _configService.LoadConfiguration();
+		config.SkippedVersion = _update.Version.ToString();
+		_configService.SaveConfiguration(config);
+		_skipped = true;
+		StatusText = Format("About_Skipped", "Version {0} is skipped. The application only announces newer versions.", _update.Version);
+		OnPropertyChanged(nameof(CanSkip));
 	}
 
 	private async Task DownloadAsync()

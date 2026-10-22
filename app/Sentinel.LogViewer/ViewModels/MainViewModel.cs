@@ -53,6 +53,14 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private bool _isLoading;
 	private string _loadingProgress = string.Empty;
 	private TimeStampFormat _defaultTimeStampFormat;
+	private Wpf.LevelDisplayMode _levelDisplay;
+	private Wpf.RowHeightMode _rowHeight;
+	private string _listFontFamilyName = string.Empty;
+	private int _listFontSize = SettingsRules.DefaultListFontSize;
+	private int _fontZoom;
+	private AvailableUpdate? _noticeUpdate;
+	private bool _minimizeToTray;
+	private Core.LogEntryLevel? _trayNotifyLevel;
 
 	private readonly CompositeDisposable _subscriptions = new();
 	private readonly ApplicationTabService _applicationTabs;
@@ -116,6 +124,16 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
+		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
+		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
+		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
+		SkipUpdateCommand = new RelayCommand(SkipUpdate, () => _noticeUpdate != null);
+		ShowShortcutsCommand = new RelayCommand(() => ShortcutsWindow.Show(System.Windows.Application.Current.MainWindow));
+		ZoomInCommand = new RelayCommand(() => Zoom(1));
+		ZoomOutCommand = new RelayCommand(() => Zoom(-1));
+		ResetFontZoomCommand = new RelayCommand(() => Zoom(0));
+		SaveFontZoomCommand = new RelayCommand(SaveFontZoom);
+		SelectTabCommand = new RelayCommand<int>(SelectTab, number => LogTabs.Count > 0 && number is >= 1 and <= 9);
 		ToggleTakeOverFiltersCommand = new RelayCommand<LogTabViewModel>(ToggleTakeOverFilters, tab => tab?.SenderKey != null);
 		RemoveTakenOverFiltersCommand = new RelayCommand<LogTabViewModel>(RemoveTakenOverFilters);
 
@@ -183,6 +201,90 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.AddLogEntry(logEvent.Entry);
 		}
 		LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
+
+		if (_trayNotifyLevel is { } level)
+		{
+			var alerts = logEvents.Where(logEvent => logEvent.Entry.Level >= level).ToList();
+			if (alerts.Count > 0)
+				AlertsReceived?.Invoke(this, (alerts.Count, alerts.Max(logEvent => logEvent.Entry.Level)));
+		}
+	}
+
+	/// <summary>How the level column of the log list shows the level</summary>
+	public Wpf.LevelDisplayMode LevelDisplay
+	{
+		get => _levelDisplay;
+		private set
+		{
+			if (_levelDisplay == value)
+				return;
+
+			_levelDisplay = value;
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>How high the rows of the log list are</summary>
+	public Wpf.RowHeightMode RowHeight
+	{
+		get => _rowHeight;
+		private set
+		{
+			if (_rowHeight == value)
+				return;
+
+			_rowHeight = value;
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>The font family of the log list; the font of the application when none is set</summary>
+	public System.Windows.Media.FontFamily ListFontFamily =>
+		string.IsNullOrEmpty(_listFontFamilyName) ? System.Windows.SystemFonts.MessageFontFamily : new System.Windows.Media.FontFamily(_listFontFamilyName);
+
+	private int EffectiveFontSize => Math.Clamp(_listFontSize + _fontZoom, SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize);
+
+	/// <summary>The font size of the log list: the saved one and what the user zoomed in this session</summary>
+	public double ListFontSize => EffectiveFontSize;
+
+	/// <summary>Whether the size of this session differs from the saved one, which the status bar offers to save</summary>
+	public bool IsFontZoomed => EffectiveFontSize != _listFontSize;
+
+	public string FontZoomText => string.Format(CultureInfo.CurrentCulture, _localizationService.GetString("Zoom_FontSize", "Font size {0}"), EffectiveFontSize);
+
+	/// <summary>Zooms the log list for this session</summary>
+	public ICommand ZoomInCommand { get; }
+	public ICommand ZoomOutCommand { get; }
+
+	/// <summary>Goes back to the saved size</summary>
+	public ICommand ResetFontZoomCommand { get; }
+
+	/// <summary>Saves the size of this session as the font size of the settings</summary>
+	public ICommand SaveFontZoomCommand { get; }
+
+	/// <param name="step">1 or -1 to zoom, 0 to go back to the saved size</param>
+	private void Zoom(int step)
+	{
+		_fontZoom = step == 0 ? 0 : Math.Clamp(_listFontSize + _fontZoom + step, SettingsRules.MinListFontSize, SettingsRules.MaxListFontSize) - _listFontSize;
+		NotifyFont();
+	}
+
+	private void SaveFontZoom()
+	{
+		var config = _configService.LoadConfiguration();
+		config.ListFontSize = EffectiveFontSize;
+		_configService.SaveConfiguration(config);
+		_listFontSize = config.ListFontSize;
+		_fontZoom = 0;
+		NotifyFont();
+	}
+
+	private void NotifyFont()
+	{
+		OnPropertyChanged(nameof(ListFontFamily));
+		OnPropertyChanged(nameof(ListFontSize));
+		OnPropertyChanged(nameof(IsFontZoomed));
+		OnPropertyChanged(nameof(FontZoomText));
 	}
 
 	/// <summary>
@@ -250,27 +352,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		((RelayCommand)CloseCurrentTabCommand).RaiseCanExecuteChanged();
 		((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 		((RelayCommand<LogTabViewModel>)CloseOtherTabsCommand).RaiseCanExecuteChanged();
+		((RelayCommand<LogTabViewModel>)CloseTabsToTheRightCommand).RaiseCanExecuteChanged();
+		((RelayCommand)SelectNextTabCommand).RaiseCanExecuteChanged();
+		((RelayCommand)SelectPreviousTabCommand).RaiseCanExecuteChanged();
 	}
 
 	/// <summary>
-	/// Removes the selected tab after user confirms.
+	/// Removes the selected tab; like the close button of a tab, it does not ask.
 	/// </summary>
-	private void CloseCurrentTab()
-	{
-		if (SelectedTab == null)
-			return;
-
-		var caption = _localizationService.GetString("Confirm_CloseCurrentTab_Caption", "Close tab");
-		var message = _localizationService.GetString(
-			"Confirm_CloseCurrentTab_Message",
-			"Do you really want to close the current tab?");
-		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
-		    MessageBoxResult.Yes)
-			return;
-
-		CloseTab(SelectedTab);
-	}
+	private void CloseCurrentTab() => CloseTab(SelectedTab);
 
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
@@ -419,6 +509,55 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			LogTabs.Remove(other);
 
 		SelectedTab = tab;
+	}
+
+	/// <summary>
+	/// Removes the tabs to the right of the given one after the user confirms.
+	/// </summary>
+	private void CloseTabsToTheRight(LogTabViewModel? tab)
+	{
+		var index = tab == null ? -1 : LogTabs.IndexOf(tab);
+		if (index < 0 || index == LogTabs.Count - 1)
+			return;
+
+		var caption = _localizationService.GetString("Confirm_CloseTabsToTheRight_Caption", "Close tabs to the right");
+		var message = _localizationService.GetString(
+			"Confirm_CloseTabsToTheRight_Message",
+			"Do you really want to close all tabs to the right of this one?");
+		var owner = System.Windows.Application.Current.MainWindow;
+		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		    MessageBoxResult.Yes)
+			return;
+
+		var selectedIsClosed = LogTabs.IndexOf(SelectedTab!) > index;
+		foreach (var right in LogTabs.Skip(index + 1).ToList())
+			LogTabs.Remove(right);
+
+		if (selectedIsClosed)
+			SelectedTab = tab;
+	}
+
+	/// <summary>
+	/// Selects the next or the previous tab; after the last one it goes on with the first, as in a browser.
+	/// </summary>
+	private void SelectTabRelative(int step)
+	{
+		if (LogTabs.Count == 0)
+			return;
+
+		var index = SelectedTab == null ? 0 : LogTabs.IndexOf(SelectedTab);
+		SelectedTab = LogTabs[(index + step + LogTabs.Count) % LogTabs.Count];
+	}
+
+	/// <summary>
+	/// Selects the tab with the given number (1 is the first); 9 is always the last tab, as in a browser.
+	/// </summary>
+	private void SelectTab(int number)
+	{
+		if (LogTabs.Count == 0)
+			return;
+
+		SelectedTab = LogTabs[number == 9 ? LogTabs.Count - 1 : Math.Min(number, LogTabs.Count) - 1];
 	}
 
 	/// <summary>
@@ -869,6 +1008,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand ExitCommand { get; }
 	public ICommand AboutCommand { get; }
 
+	/// <summary>Whether minimizing the window moves it to the tray</summary>
+	public bool MinimizeToTray => _minimizeToTray;
+
+	/// <summary>The text of the notification that tells how many entries of the level of the setting arrived</summary>
+	public string TrayNotificationText(int count) => string.Format(CultureInfo.CurrentCulture,
+		_localizationService.GetString("Tray_NewEntries", "New entries of level {1} or higher: {0}"), count, _trayNotifyLevel);
+
+	/// <summary>Raised with the number of entries at or above the level of the tray setting in a batch of received entries and the highest level among them; never when the setting is off</summary>
+	public event EventHandler<(int Count, LogEntryLevel Highest)>? AlertsReceived;
+
+	/// <summary>Opens the window with the keyboard and mouse commands</summary>
+	public ICommand ShowShortcutsCommand { get; }
+
+	/// <summary>Skips the version that the status bar announces: it and older ones are not announced again</summary>
+	public ICommand SkipUpdateCommand { get; }
+
 	/// <summary>
 	/// Status bar text announcing an available update, or null
 	/// </summary>
@@ -896,6 +1051,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand CloseOtherTabsCommand { get; }
 	public ICommand SaveFilteredListCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
+
+	/// <summary>Closes the tabs to the right of the tab; the parameter is the tab</summary>
+	public ICommand CloseTabsToTheRightCommand { get; }
+
+	public ICommand SelectNextTabCommand { get; }
+	public ICommand SelectPreviousTabCommand { get; }
+
+	/// <summary>Selects a tab by its number, 1 to 9 (9 is the last tab); the parameter is the number</summary>
+	public ICommand SelectTabCommand { get; }
 	public ICommand CloseAllTabsCommand { get; }
 
 	/// <summary>
@@ -955,6 +1119,22 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
+		if (config.ListFontFamily.Length > 0 && !SettingsRules.IsInstalledFont(config.ListFontFamily))
+		{
+			Snackbar.ShowError(string.Format(CultureInfo.CurrentCulture,
+				_localizationService.GetString("Message_FontMissing", "The font “{0}” is not installed. The default font is used instead."), config.ListFontFamily));
+			config.ListFontFamily = string.Empty;
+			_configService.SaveConfiguration(config);
+		}
+
+		_listFontFamilyName = config.ListFontFamily;
+		LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay);
+		RowHeight = SettingsRules.ParseRowHeight(config.RowHeight);
+		_listFontSize = config.ListFontSize;
+		_fontZoom = 0;
+		NotifyFont();
+		_minimizeToTray = config.MinimizeToTray;
+		_trayNotifyLevel = SettingsRules.ParseTrayNotifyLevel(config.TrayNotifyLevel);
 		_udpReceiverService.Configure(config.Ports);
 		_ignoreRules = config.IgnoreRules.ToArray();
 
@@ -1448,6 +1628,28 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var provider = App.ServiceProvider ?? throw new InvalidOperationException("Service provider is not initialized.");
 		var aboutWindow = provider.GetRequiredService<AboutWindow>();
 		aboutWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
+
+		// The version may have been skipped in the dialog.
+		if (_noticeUpdate != null && UpdateService.IsSkipped(_noticeUpdate, _configService.LoadConfiguration().SkippedVersion))
+			HideUpdateNotice();
+	}
+
+	private void SkipUpdate()
+	{
+		if (_noticeUpdate == null)
+			return;
+
+		var config = _configService.LoadConfiguration();
+		config.SkippedVersion = _noticeUpdate.Version.ToString();
+		_configService.SaveConfiguration(config);
+		HideUpdateNotice();
+	}
+
+	private void HideUpdateNotice()
+	{
+		_noticeUpdate = null;
+		UpdateNotice = null;
+		((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
 	}
 
 	/// <summary>
@@ -1458,8 +1660,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		try
 		{
 			var update = await _updateService.CheckForUpdateAsync(includePrereleases);
-			if (update != null)
+			if (update != null && !UpdateService.IsSkipped(update, _configService.LoadConfiguration().SkippedVersion))
 			{
+				_noticeUpdate = update;
+				((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
 				UpdateNotice = string.Format(System.Globalization.CultureInfo.CurrentCulture,
 					_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
 			}

@@ -34,6 +34,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 	{
 		var settings = configurationService.LoadConfiguration();
 		settings.LastSeenVersion = string.Empty;
+		settings.SkippedVersion = string.Empty;
 		var bundle = new SettingsBundle
 		{
 			Settings = settings,
@@ -61,13 +62,20 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		ApplicationTabService.Sanitize(settings);
 		if (!SettingsRules.IsValidLoggerTreeWidth(settings.LoggerTreeWidth))
 			settings.LoggerTreeWidth = SettingsRules.DefaultLoggerTreeWidth;
+		if (!SettingsRules.IsValidListFontSize(settings.ListFontSize))
+			settings.ListFontSize = SettingsRules.DefaultListFontSize;
+		settings.ListFontFamily ??= string.Empty;
+		settings.LevelDisplay = SettingsRules.ParseLevelDisplay(settings.LevelDisplay).ToString();
+		settings.RowHeight = SettingsRules.ParseRowHeight(settings.RowHeight).ToString();
 		settings.SearchFields = SettingsRules.ParseSearchFields(settings.SearchFields).ToString();
 		settings.Columns = Wpf.LogColumns.Normalize(settings.Columns);
 		FilterPresetService.Sanitize(settings);
 		IgnoreRule.Sanitize(settings);
 
-		// The version that ran last belongs to this computer, not to the file.
-		settings.LastSeenVersion = configurationService.LoadConfiguration().LastSeenVersion;
+		// The version that ran last and the version that was skipped belong to this computer, not to the file.
+		var local = configurationService.LoadConfiguration();
+		settings.LastSeenVersion = local.LastSeenVersion;
+		settings.SkippedVersion = local.SkippedVersion;
 		configurationService.SaveConfiguration(settings);
 		formatConfigService.ReplaceAll(bundle.TextFileFormats);
 	}

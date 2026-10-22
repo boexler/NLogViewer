@@ -513,6 +513,8 @@
                             <ListView
                                 x:Name="PART_ListView"
                                 Grid.Column="3"
+                                FontFamily="{Binding ListFontFamily, RelativeSource={RelativeSource TemplatedParent}}"
+                                FontSize="{Binding ListFontSize, RelativeSource={RelativeSource TemplatedParent}}"
                                 ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
                                 BorderThickness="0"
                                 ScrollViewer.CanContentScroll="True"
@@ -522,47 +524,52 @@
                                         <Setter Property="BorderBrush" Value="Black" />
                                         <Setter Property="BorderThickness" Value="1" />
                                         <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.RowHeight)}"
+                                                         Value="{x:Static local:RowHeightMode.Compact}">
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="Padding" Value="0" />
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Trace}">
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TraceBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).TraceBackground}" />
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TraceForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).TraceForeground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Debug}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=DebugForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).DebugForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=DebugBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).DebugBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Info}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=InfoForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).InfoForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=InfoBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).InfoBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Warn}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=WarnForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).WarnForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=WarnBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).WarnBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Error}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).ErrorForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).ErrorBackground}" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=Level}"
                                                          Value="{x:Static core:LogEntryLevel.Fatal}">
                                                 <Setter Property="Foreground"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=FatalForeground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).FatalForeground}" />
                                                 <Setter Property="Background"
-                                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=FatalBackground}" />
+                                                        Value="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).FatalBackground}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -573,15 +580,20 @@
                                             <GridViewColumn.DisplayMemberBinding>
                                                 <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
                                                     <Binding Path="."/>
-                                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}" Path="IdResolver"/>
+                                                    <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).IdResolver"/>
                                                 </MultiBinding>
                                             </GridViewColumn.DisplayMemberBinding>
                                         </GridViewColumn>
                                         <GridViewColumn Header="Level" Width="Auto">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
-                                                           Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Image x:Name="Image" RenderOptions.BitmapScalingMode="Linear"
+                                                               Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                        <TextBlock x:Name="LevelText" Text="{Binding Path=Level}" Visibility="Collapsed"
+                                                                   VerticalAlignment="Center" Margin="4,0,0,0"
+                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}"/>
+                                                    </StackPanel>
                                                     <DataTemplate.Triggers>
                                                         <DataTrigger Binding="{Binding Path=Level}"
                                                                      Value="{x:Static core:LogEntryLevel.Trace}">
@@ -613,6 +625,20 @@
                                                             <Setter TargetName="Image" Property="Source"
                                                                     Value="../Images/Small/Fatal.png" />
                                                         </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.LevelDisplay)}"
+                                                                     Value="{x:Static local:LevelDisplayMode.Text}">
+                                                            <Setter TargetName="Image" Property="Visibility" Value="Collapsed" />
+                                                            <Setter TargetName="LevelText" Property="Visibility" Value="Visible" />
+                                                            <Setter TargetName="LevelText" Property="Margin" Value="0" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.LevelDisplay)}"
+                                                                     Value="{x:Static local:LevelDisplayMode.SymbolAndText}">
+                                                            <Setter TargetName="LevelText" Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.RowHeight)}"
+                                                                     Value="{x:Static local:RowHeightMode.Compact}">
+                                                            <Setter TargetName="Image" Property="Height" Value="14" />
+                                                        </DataTrigger>
                                                     </DataTemplate.Triggers>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
@@ -623,12 +649,12 @@
                                                     <TextBlock
                                                         Background="Transparent"
                                                         ContextMenu="{StaticResource TimeStampFormatMenu}"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner)}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.Text>
                                                             <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
                                                                 <Binding Path="."/>
-                                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}" Path="TimeStampResolver"/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).TimeStampResolver"/>
                                                             </MultiBinding>
                                                         </TextBlock.Text>
                                                     </TextBlock>
@@ -639,9 +665,9 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock
-                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=LoggerNameResolver}"
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).LoggerNameResolver}"
                                                         Background="Transparent"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner)}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>
                                                             <ContextMenu>
@@ -677,9 +703,9 @@
                                                 <DataTemplate>
                                                     <TextBlock
                                                         x:Name="TextBlock1"
-                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=MessageResolver}"
+                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).MessageResolver}"
                                                         Background="Transparent"
-                                                        Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                        Tag="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner)}"
                                                         Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
                                                         <TextBlock.ContextMenu>
                                                             <ContextMenu>

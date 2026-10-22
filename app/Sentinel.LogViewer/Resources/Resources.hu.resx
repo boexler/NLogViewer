@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Összes lap _bezárása</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Lap bezárása</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Biztosan bezárja az aktuális lapot?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Összes lap bezárása</value>
   </data>
@@ -1086,6 +1080,264 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>A kiadás fájljai még nincsenek feltöltve. Próbálja újra néhány perc múlva.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>A jobb oldali lapok bezárása</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>A jobb oldali lapok bezárása</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Valóban bezárja az összes lapot ettől jobbra?</value>
+  </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>A naplólista betűtípusa</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>A naplólista bejegyzéseinek és oszlopfejléceinek betűtípusa, pl. egy fix szélességű betűtípus, például a Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Alapértelmezett (mint az alkalmazás többi része)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>A naplólista betűmérete</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>A naplólista szövegének mérete. A Ctrl+egérgörgő és a Ctrl+Plusz / Ctrl+Mínusz az aktuális munkamenetre módosítja, a Ctrl+0 visszaáll erre a méretre; az állapotsor ilyenkor felajánlja az új méret mentését ide.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Betűméret: {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Mentés alapértelmezettként</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Visszaállítás</value>
+  </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Ennek a verziónak a kihagyása</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>A(z) {0} verzió ki van hagyva. Az alkalmazás csak újabb verziókra figyelmeztet.</value>
+  </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Kicsinyítés az értesítési területre</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>Kicsinyítéskor az ablak az értesítési területre (tálca) kerül, és tovább fogadja a naplókat. Az ikon mutatja a fogadás állapotát; dupla kattintással az ablak visszaállítható.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Megnyitás</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Billentyűparancsok</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Billentyűzet- és egérparancsok</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Főablak</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>Lapok</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Naplólista</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Szűrés és keresés</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Beállítások és párbeszédablakok</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>PgUp</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>PgDn</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Plusz</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Mínusz</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Egérgörgő</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Jobb kattintás</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Középső kattintás</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Húzás</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Naplófájl megnyitása</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>A beállítások megnyitása</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>A billentyűzet- és egérparancsok listájának megjelenítése</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Kilépés az alkalmazásból</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Naplófájlok ráhúzása az ablakra a megnyitásukhoz</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Az aktuális lap bezárása</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Egy lap bezárása</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Ugrás a következő lapra</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Ugrás az előző lapra</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Ugrás a megadott számú lapra</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Ugrás az utolsó lapra</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Egy lap fejlécének húzásával módosítható a lapok sorrendje</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Egy lap menüjének megnyitása: bezárás, a szűrt lista mentése, a küldő figyelmen kívül hagyása és más</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>A naplólista nagyítása vagy kicsinyítése erre a munkamenetre; az állapotsor felajánlja a méret mentését</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Visszatérés a mentett betűmérethez</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>A lista oszlopainak kiválasztása; az időbélyeg oszlopnál annak formátuma is</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Egy oszlopfejléc húzásával módosítható az oszlopok sorrendje</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Egy oszlopfejléc szélének húzásával módosítható az oszlop szélessége</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Egy bejegyzés menüjének megnyitása: egy logger egyedüli megjelenítése vagy elrejtése, a szöveg másolása, hozzáadás a szűrőhöz</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>A szűrőmező szövegének hozzáadása szűrőkifejezésként</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Ugrás a keresés következő találatára</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Ugrás a keresés előző találatára</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Ugrás a beállítások vagy a változásnapló keresőmezőjére</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>A beállítások keresésének törlése, majd az ablak bezárása; bezárja a párbeszédablakokat</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>A beállításokban egy szövegmező értékének azonnali mentése</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Értesítés az új naplóbejegyzésekről a tálcán</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Amíg az ablak a tálcán van, értesítés jelenik meg, ha legalább ilyen szintű új bejegyzések érkeznek, legfeljebb 30 másodpercenként egy. Az értesítésre kattintva megnyílik az ablak.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Ki</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Csak végzetes</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Hibák és végzetesek</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Figyelmeztetések, hibák és végzetesek</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Új bejegyzések {1} vagy magasabb szinten: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>A(z) „{0}” betűtípus nincs telepítve. Helyette az alapértelmezett betűtípus lesz használva.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Az állapotsor fogadás gombján: egyes források be- vagy kikapcsolása</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>A logger-fán: egy logger vagy az összes megjelenítése, az összes kibontása vagy összecsukása</value>
+  </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>A szint megjelenítése</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Hogyan jelenik meg egy bejegyzés szintje a naplólistában: szimbólumként, szövegként vagy mindkettőként. A szöveg segít a sorok másolásakor vagy exportálásakor, és ha a színeket nehéz megkülönböztetni.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Szimbólum</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Szimbólum és szöveg</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Sormagasság</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>A kompakt sorok több bejegyzést mutatnak a képernyőn.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normál</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Kompakt</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>A naplólista megjelenése</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Színmód, téma, időbélyeg-formátum, szint, sormagasság, betűtípus és méret a naplólistához, az eredmény előnézetével.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Visszavonás</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Visszavonja a kártya utolsó módosítását, akárhányszor</value>
   </data>
 </root>
 

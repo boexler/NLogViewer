@@ -100,12 +100,6 @@
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Închide _toate filele</value>
   </data>
-  <data name="Confirm_CloseCurrentTab_Caption" xml:space="preserve">
-    <value>Închide fila</value>
-  </data>
-  <data name="Confirm_CloseCurrentTab_Message" xml:space="preserve">
-    <value>Sigur doriți să închideți fila curentă?</value>
-  </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Închide toate filele</value>
   </data>
@@ -1086,6 +1080,264 @@
   </data>
   <data name="About_FilesMissing" xml:space="preserve">
     <value>Fișierele acestei versiuni nu au fost încă încărcate. Încercați din nou peste câteva minute.</value>
+  </data>
+  <data name="Tab_CloseToTheRight" xml:space="preserve">
+    <value>Închide filele din dreapta</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Caption" xml:space="preserve">
+    <value>Închide filele din dreapta</value>
+  </data>
+  <data name="Confirm_CloseTabsToTheRight_Message" xml:space="preserve">
+    <value>Sigur doriți să închideți toate filele din dreapta acesteia?</value>
+  </data>
+  <data name="Settings_ListFontFamily" xml:space="preserve">
+    <value>Fontul listei de loguri</value>
+  </data>
+  <data name="Settings_ListFontFamily_Description" xml:space="preserve">
+    <value>Fontul intrărilor și al antetelor de coloană din lista de loguri, de ex. un font monospațiat precum Consolas.</value>
+  </data>
+  <data name="Settings_ListFontFamily_Default" xml:space="preserve">
+    <value>Implicit (ca restul aplicației)</value>
+  </data>
+  <data name="Settings_ListFontSize" xml:space="preserve">
+    <value>Dimensiunea fontului listei de loguri</value>
+  </data>
+  <data name="Settings_ListFontSize_Description" xml:space="preserve">
+    <value>Dimensiunea textului din lista de loguri. Ctrl+rotița mouse-ului și Ctrl+Plus / Ctrl+Minus o modifică pentru sesiunea curentă, Ctrl+0 revine la această dimensiune; bara de stare oferă apoi salvarea noii dimensiuni aici.</value>
+  </data>
+  <data name="Zoom_FontSize" xml:space="preserve">
+    <value>Dimensiune font {0}</value>
+  </data>
+  <data name="Zoom_Save" xml:space="preserve">
+    <value>Salvează ca implicit</value>
+  </data>
+  <data name="Zoom_Reset" xml:space="preserve">
+    <value>Resetează</value>
+  </data>
+  <data name="About_Skip" xml:space="preserve">
+    <value>Omite această versiune</value>
+  </data>
+  <data name="About_Skipped" xml:space="preserve">
+    <value>Versiunea {0} este omisă. Aplicația anunță doar versiunile mai noi.</value>
+  </data>
+  <data name="Settings_MinimizeToTray" xml:space="preserve">
+    <value>Minimizează în zona de notificare</value>
+  </data>
+  <data name="Settings_MinimizeToTray_Description" xml:space="preserve">
+    <value>La minimizare, fereastra trece în zona de notificare (tray) și continuă să primească loguri. Pictograma arată cum merge recepția; dublu clic pe ea restaurează fereastra.</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Deschide</value>
+  </data>
+  <data name="Tray_Exit" xml:space="preserve">
+    <value>Ieșire</value>
+  </data>
+  <data name="Menu_Shortcuts" xml:space="preserve">
+    <value>_Comenzi rapide</value>
+  </data>
+  <data name="Shortcuts_Title" xml:space="preserve">
+    <value>Comenzi de tastatură și de mouse</value>
+  </data>
+  <data name="Shortcuts_Group_Main" xml:space="preserve">
+    <value>Fereastra principală</value>
+  </data>
+  <data name="Shortcuts_Group_Tabs" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="Shortcuts_Group_List" xml:space="preserve">
+    <value>Lista de loguri</value>
+  </data>
+  <data name="Shortcuts_Group_Filter" xml:space="preserve">
+    <value>Filtru și căutare</value>
+  </data>
+  <data name="Shortcuts_Group_Settings" xml:space="preserve">
+    <value>Setări și dialoguri</value>
+  </data>
+  <data name="Key_Ctrl" xml:space="preserve">
+    <value>Ctrl</value>
+  </data>
+  <data name="Key_Shift" xml:space="preserve">
+    <value>Shift</value>
+  </data>
+  <data name="Key_Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="Key_Esc" xml:space="preserve">
+    <value>Esc</value>
+  </data>
+  <data name="Key_Enter" xml:space="preserve">
+    <value>Enter</value>
+  </data>
+  <data name="Key_PageUp" xml:space="preserve">
+    <value>Page Up</value>
+  </data>
+  <data name="Key_PageDown" xml:space="preserve">
+    <value>Page Down</value>
+  </data>
+  <data name="Key_Tab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="Key_Plus" xml:space="preserve">
+    <value>Plus</value>
+  </data>
+  <data name="Key_Minus" xml:space="preserve">
+    <value>Minus</value>
+  </data>
+  <data name="Key_Wheel" xml:space="preserve">
+    <value>Rotița mouse-ului</value>
+  </data>
+  <data name="Key_RightClick" xml:space="preserve">
+    <value>Clic dreapta</value>
+  </data>
+  <data name="Key_MiddleClick" xml:space="preserve">
+    <value>Clic mijloc</value>
+  </data>
+  <data name="Key_Drag" xml:space="preserve">
+    <value>Tragere</value>
+  </data>
+  <data name="Shortcut_OpenFile" xml:space="preserve">
+    <value>Deschide un fișier de loguri</value>
+  </data>
+  <data name="Shortcut_Settings" xml:space="preserve">
+    <value>Deschide setările</value>
+  </data>
+  <data name="Shortcut_Help" xml:space="preserve">
+    <value>Afișează această listă de comenzi de tastatură și de mouse</value>
+  </data>
+  <data name="Shortcut_Exit" xml:space="preserve">
+    <value>Închide aplicația</value>
+  </data>
+  <data name="Shortcut_DropFiles" xml:space="preserve">
+    <value>Trage fișiere de loguri pe fereastră pentru a le deschide</value>
+  </data>
+  <data name="Shortcut_CloseTab" xml:space="preserve">
+    <value>Închide fila curentă</value>
+  </data>
+  <data name="Shortcut_MiddleCloseTab" xml:space="preserve">
+    <value>Închide o filă</value>
+  </data>
+  <data name="Shortcut_NextTab" xml:space="preserve">
+    <value>Treci la fila următoare</value>
+  </data>
+  <data name="Shortcut_PreviousTab" xml:space="preserve">
+    <value>Treci la fila anterioară</value>
+  </data>
+  <data name="Shortcut_GoToTab" xml:space="preserve">
+    <value>Treci la fila cu acest număr</value>
+  </data>
+  <data name="Shortcut_LastTab" xml:space="preserve">
+    <value>Treci la ultima filă</value>
+  </data>
+  <data name="Shortcut_ReorderTabs" xml:space="preserve">
+    <value>Trage antetul unei file pentru a schimba ordinea filelor</value>
+  </data>
+  <data name="Shortcut_TabMenu" xml:space="preserve">
+    <value>Deschide meniul unei file: închidere, salvarea listei filtrate, ignorarea expeditorului și altele</value>
+  </data>
+  <data name="Shortcut_Zoom" xml:space="preserve">
+    <value>Mărește sau micșorează lista de loguri pentru această sesiune; bara de stare oferă salvarea dimensiunii</value>
+  </data>
+  <data name="Shortcut_ZoomReset" xml:space="preserve">
+    <value>Revino la dimensiunea salvată a fontului</value>
+  </data>
+  <data name="Shortcut_ColumnMenu" xml:space="preserve">
+    <value>Alege coloanele listei; la coloana marcajului de timp și formatul ei</value>
+  </data>
+  <data name="Shortcut_ReorderColumns" xml:space="preserve">
+    <value>Trage antetul unei coloane pentru a schimba ordinea coloanelor</value>
+  </data>
+  <data name="Shortcut_ResizeColumn" xml:space="preserve">
+    <value>Trage marginea antetului unei coloane pentru a-i schimba lățimea</value>
+  </data>
+  <data name="Shortcut_EntryMenu" xml:space="preserve">
+    <value>Deschide meniul unei intrări: arată doar un logger sau ascunde-l, copiază textul, adaugă-l la filtru</value>
+  </data>
+  <data name="Shortcut_AddFilter" xml:space="preserve">
+    <value>Adaugă textul din câmpul de filtru ca termen de filtrare</value>
+  </data>
+  <data name="Shortcut_NextHit" xml:space="preserve">
+    <value>Treci la următoarea potrivire a căutării</value>
+  </data>
+  <data name="Shortcut_PreviousHit" xml:space="preserve">
+    <value>Treci la potrivirea anterioară a căutării</value>
+  </data>
+  <data name="Shortcut_SettingsSearch" xml:space="preserve">
+    <value>Treci la câmpul de căutare al setărilor sau al jurnalului de modificări</value>
+  </data>
+  <data name="Shortcut_Escape" xml:space="preserve">
+    <value>Golește căutarea din setări, apoi închide fereastra; închide dialogurile</value>
+  </data>
+  <data name="Shortcut_ConfirmText" xml:space="preserve">
+    <value>Salvează imediat valoarea unui câmp de text din setări</value>
+  </data>
+  <data name="Settings_TrayNotify" xml:space="preserve">
+    <value>Notifică intrările noi de log în zona de notificare</value>
+  </data>
+  <data name="Settings_TrayNotify_Description" xml:space="preserve">
+    <value>Cât timp fereastra este în zona de notificare, apare o notificare când sosesc intrări noi cu cel puțin acest nivel, cel mult una la 30 de secunde. Un clic pe notificare deschide fereastra.</value>
+  </data>
+  <data name="Settings_TrayNotify_Off" xml:space="preserve">
+    <value>Dezactivat</value>
+  </data>
+  <data name="Settings_TrayNotify_Fatal" xml:space="preserve">
+    <value>Doar fatale</value>
+  </data>
+  <data name="Settings_TrayNotify_Error" xml:space="preserve">
+    <value>Erori și fatale</value>
+  </data>
+  <data name="Settings_TrayNotify_Warn" xml:space="preserve">
+    <value>Avertismente, erori și fatale</value>
+  </data>
+  <data name="Tray_NewEntries" xml:space="preserve">
+    <value>Intrări noi de nivel {1} sau mai mare: {0}</value>
+  </data>
+  <data name="Message_FontMissing" xml:space="preserve">
+    <value>Fontul „{0}” nu este instalat. În locul lui se folosește fontul implicit.</value>
+  </data>
+  <data name="Shortcut_SourceMenu" xml:space="preserve">
+    <value>Pe butonul de recepție din bara de stare: activează sau dezactivează surse individuale</value>
+  </data>
+  <data name="Shortcut_LoggerTreeMenu" xml:space="preserve">
+    <value>Pe arborele de loggeri: arată un singur logger sau pe toți, extinde sau restrânge tot</value>
+  </data>
+  <data name="Settings_LevelDisplay" xml:space="preserve">
+    <value>Afișează nivelul ca</value>
+  </data>
+  <data name="Settings_LevelDisplay_Description" xml:space="preserve">
+    <value>Cum este afișat nivelul unei intrări în lista de loguri: ca simbol, ca text sau ambele. Textul ajută la copierea sau exportul rândurilor și când culorile sunt greu de deosebit.</value>
+  </data>
+  <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
+    <value>Simbol</value>
+  </data>
+  <data name="Settings_LevelDisplay_Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Settings_LevelDisplay_SymbolAndText" xml:space="preserve">
+    <value>Simbol și text</value>
+  </data>
+  <data name="Settings_RowHeight" xml:space="preserve">
+    <value>Înălțimea rândurilor</value>
+  </data>
+  <data name="Settings_RowHeight_Description" xml:space="preserve">
+    <value>Rândurile compacte arată mai multe intrări pe ecran.</value>
+  </data>
+  <data name="Settings_RowHeight_Normal" xml:space="preserve">
+    <value>Normală</value>
+  </data>
+  <data name="Settings_RowHeight_Compact" xml:space="preserve">
+    <value>Compactă</value>
+  </data>
+  <data name="Settings_ListAppearance" xml:space="preserve">
+    <value>Aspectul listei de loguri</value>
+  </data>
+  <data name="Settings_ListAppearance_Description" xml:space="preserve">
+    <value>Modul de culoare, tema, formatul marcajului de timp, nivelul, înălțimea rândurilor, fontul și dimensiunea listei de loguri, cu previzualizarea rezultatului.</value>
+  </data>
+  <data name="Settings_ListLookUndo" xml:space="preserve">
+    <value>Anulează</value>
+  </data>
+  <data name="Settings_ListLookUndo_ToolTip" xml:space="preserve">
+    <value>Anulează ultima modificare a acestui card, de câte ori este nevoie</value>
   </data>
 </root>
 

@@ -24,7 +24,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
         private const double HeaderChromeWidth = 24;
 
         private readonly ListView _listView;
-        private readonly Typeface _typeface;
+        private Typeface _typeface;
         private readonly Dictionary<char, double> _charWidths = new();
         private readonly List<FittedColumn> _columns = new();
         private bool _applyPending;
@@ -87,6 +87,19 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             Include(items);
             ScheduleApply();
+        }
+
+        /// <summary>
+        /// Measures with the font that the list has now and sizes the columns for exactly the given items again
+        /// </summary>
+        public void Refit(IEnumerable items)
+        {
+            _typeface = new Typeface(_listView.FontFamily, _listView.FontStyle, _listView.FontWeight, _listView.FontStretch);
+            _charWidths.Clear();
+            foreach (var column in _columns)
+                column.HeaderWidth = MeasureWidestLine(column.Column.Header as string);
+
+            Reset(items);
         }
 
         /// <summary>
@@ -182,7 +195,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             public Func<LogEntry, string?> GetText { get; }
             public double InitialWidth { get; }
             public double TextWidth { get; set; }
-            public double HeaderWidth { get; init; }
+            public double HeaderWidth { get; set; }
         }
     }
 }
