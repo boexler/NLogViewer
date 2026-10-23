@@ -36,7 +36,7 @@ GitHub **Releases** ship:
 - **MSI installer** (`Sentinel.LogViewer-<version>-win-x64.msi`): installs under Program Files with a license dialog (MIT), Start Menu shortcut, and optional features (desktop shortcut, `.log` association) selectable in **Custom** setup. Silent install: `msiexec /i Sentinel.LogViewer-<version>-win-x64.msi /qn` (optional features with higher install level stay off unless you raise `INSTALLLEVEL` or use transforms).
 - **Portable ZIP** (self-contained and framework-dependent): unpack and run `Sentinel.LogViewer.exe` from any folder; a `NLogViewer.portable` marker file directs settings to `appsettings.json` beside the app (see `README-Portable.txt` in the ZIP). Installed (MSI) copies keep using per-user `%LocalAppData%\Sentinel.LogViewer\`.
 
-Build the installer locally (Windows): `dotnet build installer/viewer/Sentinel.LogViewer.Installer.wixproj -c Release` — output `installer/viewer/bin/Release/Sentinel.LogViewer.msi`.
+Build the installer locally (Windows): `dotnet build installer/Sentinel.LogViewer.Installer/Sentinel.LogViewer.Installer.wixproj -c Release` — output `installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi`.
 
 **Versioning:** MSI, portable ZIPs, and NuGet packages always use GitVersion `fullSemVer` (for example `3.2.0-124-wix-installer-implementation-and-portable-versions.88` on a feature branch, or `3.2.0` on a release tag). The Chocolatey Community package is the only exception; it uses a flattened prerelease such as `3.2.0-dev0000000004001`. See [chocolatey/README.md](chocolatey/README.md).
 

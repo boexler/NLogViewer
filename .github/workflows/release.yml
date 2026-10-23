@@ -94,25 +94,25 @@ jobs:
 
     - name: Build installer MSI
       run: |
-        dotnet build installer/viewer/Sentinel.LogViewer.Installer.wixproj `
+        dotnet build installer/Sentinel.LogViewer.Installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
           -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
           -p:InstallerVersion=$env:INSTALLER_VERSION
-        Copy-Item "installer/viewer/bin/Release/Sentinel.LogViewer.msi" `
+        Copy-Item "installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
 
     - name: Build test application installer MSI
       run: |
-        dotnet build installer/testapp/Sentinel.LogViewer.TestApp.Installer.wixproj `
+        dotnet build installer/Sentinel.LogViewer.TestApp.Installer/Sentinel.LogViewer.TestApp.Installer.wixproj `
           -c Release `
           -m:1 `
           -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
           -p:InstallerVersion=$env:INSTALLER_VERSION
         # The name must not end with -win-x64.msi: the update check of the viewer application takes the release file with that ending.
-        Copy-Item "installer/testapp/bin/Release/Sentinel.LogViewer.TestApp.msi" `
+        Copy-Item "installer/Sentinel.LogViewer.TestApp.Installer/bin/Release/Sentinel.LogViewer.TestApp.msi" `
           "publish/Sentinel.LogViewer.TestApp-$env:VERSION-x64.msi"
 
     - name: Publish portable test application

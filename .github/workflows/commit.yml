@@ -90,11 +90,11 @@ jobs:
         }
     - name: Build installer MSI
       run: |
-        dotnet build installer/viewer/Sentinel.LogViewer.Installer.wixproj `
+        dotnet build installer/Sentinel.LogViewer.Installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
           -p:InstallerVersion=$env:INSTALLER_VERSION
-        Copy-Item "installer/viewer/bin/Release/Sentinel.LogViewer.msi" `
+        Copy-Item "installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$($env:SAFE_VERSION)-win-x64.msi"
     - name: Pack Chocolatey package
       env:

@@ -53,7 +53,7 @@
 
   <ItemGroup>
 
-    <Content Include="..\viewer\License.rtf" Link="License.rtf" />
+    <Content Include="..\Sentinel.LogViewer.Installer\License.rtf" Link="License.rtf" />
 
   </ItemGroup>
 

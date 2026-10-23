@@ -21,7 +21,7 @@
     <Icon Id="AppIcon.ico" SourceFile="..\..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
-    <WixVariable Id="WixUILicenseRtf" Value="..\viewer\License.rtf" />
+    <WixVariable Id="WixUILicenseRtf" Value="..\Sentinel.LogViewer.Installer\License.rtf" />
     <ui:WixUI Id="WixUI_Minimal" />
 
     <Feature Id="FeatureMain"
