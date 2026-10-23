@@ -17,7 +17,14 @@ internal sealed class HostWithNLog : IEmbedding
     public static readonly string LogFile = Path.Combine(Path.GetTempPath(), "Sentinel.LogViewer.TestApp", "controltest.log");
 
     private readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Trace).AddNLog(FileConfiguration()))
+        .ConfigureLogging(logging => logging
+            // Important: Host.CreateDefaultBuilder() adds the console, debug, EventSource and, on Windows, the Windows Event Log as
+            // logging providers. Every ILogger call goes to all providers, so without this the warnings and errors of the application
+            // would also be written to the Event Log of the computer. Clear them and add only what the application wants:
+            // NLog here, and the log viewer below with AddLogViewer.
+            .ClearProviders()
+            .SetMinimumLevel(LogLevel.Trace)
+            .AddNLog(FileConfiguration()))
         .ConfigureServices(services => services.AddLogViewer(options => options.Capacity = 5000))
         .Build();
 

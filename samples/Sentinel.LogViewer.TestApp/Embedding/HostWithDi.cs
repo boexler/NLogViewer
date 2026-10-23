@@ -12,7 +12,13 @@ namespace Sentinel.LogViewer.TestApp.Embedding;
 internal sealed class HostWithDi : IEmbedding
 {
     private readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Trace))
+        .ConfigureLogging(logging => logging
+            // Important: Host.CreateDefaultBuilder() adds the console, debug, EventSource and, on Windows, the Windows Event Log as
+            // logging providers. Every ILogger call goes to all providers, so without this the warnings and errors of the application
+            // would also be written to the Event Log of the computer. Clear them and add only what the application wants.
+            .ClearProviders()
+            // Microsoft.Extensions.Logging drops everything below Information unless a minimum level is set.
+            .SetMinimumLevel(LogLevel.Trace))
         .ConfigureServices(services => services.AddLogViewer(options => options.Capacity = 5000))
         .Build();
 
