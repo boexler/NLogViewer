@@ -20,6 +20,7 @@ namespace Sentinel.LogViewer.Wpf.TestApp
         public TestPopup()
         {
             InitializeComponent();
+            LogViewer1.Source = App.Filtered(entry => entry.Level <= Sentinel.LogViewer.Core.LogEntryLevel.Info);
         }
     }
 }

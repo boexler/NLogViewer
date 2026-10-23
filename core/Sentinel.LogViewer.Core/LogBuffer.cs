@@ -11,6 +11,18 @@ public sealed class LogBuffer : ILogSource
 	/// </summary>
 	public const int DefaultCapacity = 500;
 
+	private static volatile LogBuffer _default = new();
+
+	/// <summary>
+	/// The buffer that a viewer shows when it has neither an items source nor a source of its own, and that <c>AddLogViewer()</c> of the
+	/// logging of .NET writes to. Set it (or use the capacity option of <c>AddLogViewer</c>) before the viewer is loaded.
+	/// </summary>
+	public static LogBuffer Default
+	{
+		get => _default;
+		set => _default = value ?? throw new ArgumentNullException(nameof(value));
+	}
+
 	private readonly object _gate = new();
 	private readonly Queue<LogEntry> _entries = new();
 	private readonly List<Subscription> _subscribers = new();

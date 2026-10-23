@@ -10,10 +10,7 @@ using System.Windows.Controls;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Resolver;
-using Sentinel.LogViewer.Wpf.Targets;
-using NLog;
-using NLog.Config;
-using NLog.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace Sentinel.LogViewer.Wpf.TestApp
 {
@@ -24,8 +21,8 @@ namespace Sentinel.LogViewer.Wpf.TestApp
     {
         public const string LOREM_IPSUM = @"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
-        private readonly Logger _Logger2 = LogManager.GetLogger("Lorem.Ipsum.Foo.Hello.World.Lorem.Ipsum");
+        private readonly ILogger _Logger = App.LoggerFactory.CreateLogger<MainWindow>();
+        private readonly ILogger _Logger2 = App.LoggerFactory.CreateLogger("Lorem.Ipsum.Foo.Hello.World.Lorem.Ipsum");
 
         private int _CntMessage;
         private int _CntError;
@@ -38,6 +35,8 @@ namespace Sentinel.LogViewer.Wpf.TestApp
             DataContext = this;
             
             LogViewer1.TimeStampResolver = new FooTimeStampResolver();
+            LogViewer1.Source = App.Filtered(entry => entry.Level <= LogEntryLevel.Info);
+            LogViewer2.Source = App.Filtered(entry => entry.Level >= LogEntryLevel.Warn);
             
             Stopwatch stopwatch = Stopwatch.StartNew();
             Random random = new Random();
@@ -50,27 +49,27 @@ namespace Sentinel.LogViewer.Wpf.TestApp
                 {
                     case 1:
                         _CntMessage++;
-                        _Logger.Trace($"Hello everyone: {_CntMessage}");
+                        _Logger.LogTrace($"Hello everyone: {_CntMessage}");
                         break;
                     case 2:
                         _CntMessage++;
                         if (stopwatch.Elapsed.Seconds > 5)
                         {
-                            _Logger2.Debug($"Hello everyone: {_CntMessage}");
+                            _Logger2.LogDebug($"Hello everyone: {_CntMessage}");
                         }
                         else
                         {
-                            _Logger.Debug($"Hello everyone: {_CntMessage}");
+                            _Logger.LogDebug($"Hello everyone: {_CntMessage}");
                         }
 
                         break;
                     case 3:
                         _CntMessage++;
-                        _Logger.Info($"Hello everyone: {_CntMessage}");
+                        _Logger.LogInformation($"Hello everyone: {_CntMessage}");
                         break;
                     case 4:
                         _CntError++;
-                        _Logger.Warn($"Hello everyone: {_CntError}");
+                        _Logger.LogWarning($"Hello everyone: {_CntError}");
                         break;
                     case 5:
                         _CntError++;
@@ -83,13 +82,13 @@ namespace Sentinel.LogViewer.Wpf.TestApp
                         }
                         catch (Exception ex)
                         {
-                            _Logger.Error(ex, $"There was an error on divison :/ {_CntError}");
+                            _Logger.LogError(ex, $"There was an error on divison :/ {_CntError}");
                         }
 
                         break;
                     case 6:
                         _CntError++;
-                        _Logger.Fatal($"{_CntError}\n{LOREM_IPSUM}");
+                        _Logger.LogCritical($"{_CntError}\n{LOREM_IPSUM}");
                         break;
                 }
             });
@@ -109,38 +108,15 @@ namespace Sentinel.LogViewer.Wpf.TestApp
         private int _RandomTaskCounter;
         private Task AddNewTabWithLogger()
         {
-            // create unique target name
             var taskNumber = _RandomTaskCounter++;
-            string targetName = $"task{taskNumber}";
             // create a unique logger
             var loggerName = $"MyFoo.Logger.{taskNumber}";
-            var logger = LogManager.GetLogger(loggerName);
+            var logger = App.LoggerFactory.CreateLogger(loggerName);
 
-            // create new CacheTarget
-            CacheTarget target = new CacheTarget
-            {
-                Name = targetName
-            };
-
-            // get config // https://stackoverflow.com/a/3603571/6229375
-            var config = LogManager.Configuration;
-
-            // add target
-            config.AddTarget(targetName, target);
-
-            // create a logging rule for the new logger
-            LoggingRule loggingRule = new LoggingRule(loggerName, LogLevel.Trace, target);
-
-            // add the logger to the existing configuration
-            config.LoggingRules.Add(loggingRule);
-
-            // reassign config back to NLog
-            LogManager.Configuration = config;
-
-            // create a new LogViewer Control with the unique logger target name
+            // create a new LogViewer Control that shows only the entries of this logger
             LogViewer logViewer = new LogViewer
             {
-                TargetName = targetName,
+                Source = App.Filtered(entry => entry.LoggerName == loggerName),
             };
 
             // add it to the tab control
@@ -153,7 +129,7 @@ namespace Sentinel.LogViewer.Wpf.TestApp
             {
                 while (true)
                 {
-                    logger.Info($"Hello from task nr. {taskNumber}. It's {DateTime.Now.ToLongTimeString()}");
+                    logger.LogInformation($"Hello from task nr. {taskNumber}. It's {DateTime.Now.ToLongTimeString()}");
                     await Task.Delay(1000);
                 }
             });

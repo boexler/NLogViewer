@@ -34,10 +34,10 @@
             </Grid.RowDefinitions>
             <TabControl Grid.RowSpan="10" x:Name="TabControl1">
                 <TabItem Header="Messages">
-                    <dj:LogViewer x:Name="LogViewer1" Grid.Row="2" MaxCount="1000" TargetName="target1"/>
+                    <dj:LogViewer x:Name="LogViewer1" Grid.Row="2" MaxCount="1000"/>
                 </TabItem>
                 <TabItem Header="Warnings/Errors">
-                    <dj:LogViewer Grid.Row="6" MaxCount="1000" TargetName="target2" />
+                    <dj:LogViewer x:Name="LogViewer2" Grid.Row="6" MaxCount="1000"/>
                 </TabItem>
             </TabControl>
         </Grid>

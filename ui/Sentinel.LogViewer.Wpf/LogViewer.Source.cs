@@ -6,13 +6,12 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using Sentinel.LogViewer.Core;
-using Sentinel.LogViewer.Wpf.Targets;
 
 namespace Sentinel.LogViewer.Wpf
 {
     /// <summary>
-    /// Where the viewer gets its entries: a collection of the caller (<see cref="ItemsSource"/>), a <see cref="Source"/>, or the
-    /// NLog cache, which is what a viewer without any setting uses
+    /// Where the viewer gets its entries: a collection of the caller (<see cref="ItemsSource"/>), a <see cref="Source"/>, or
+    /// <see cref="LogBuffer.Default"/>, which is what a viewer without any setting uses
     /// </summary>
     public partial class LogViewer
     {
@@ -21,29 +20,13 @@ namespace Sentinel.LogViewer.Wpf
         private bool _columnsInitialized;
 
         /// <summary>
-        /// Looks up a target with this name in the NLog configuration and links it via <see cref="CacheTarget.GetInstance"/>.
-        /// It is used when the viewer has neither an <see cref="ItemsSource"/> nor a <see cref="Source"/>.
-        /// </summary>
-        [Category("LogViewer")]
-        public string TargetName
-        {
-            get => (string)GetValue(TargetNameProperty);
-            set => SetValue(TargetNameProperty, value);
-        }
-
-        /// <summary>
-        /// The <see cref="TargetName"/> DependencyProperty.
-        /// </summary>
-        public static readonly DependencyProperty TargetNameProperty =
-            DependencyProperty.Register(nameof(TargetName), typeof(string), typeof(LogViewer), new PropertyMetadata(null));
-
-        /// <summary>
-        /// The source of the entries. Without it, and without an <see cref="ItemsSource"/>, the viewer shows the logging of NLog.
+        /// The source of the entries. Without it, and without an <see cref="ItemsSource"/>, the viewer shows <see cref="LogBuffer.Default"/>,
+        /// which is what <c>AddLogViewer()</c> of the logging of .NET writes to.
         /// The viewer subscribes while it is loaded and not paused.
         /// </summary>
         [Category("LogViewer")]
         [Browsable(true)]
-        [Description("The source of the entries. Without one the viewer shows the logging of NLog.")]
+        [Description("The source of the entries. Without one the viewer shows LogBuffer.Default.")]
         public ILogSource? Source
         {
             get => (ILogSource?)GetValue(SourceProperty);
@@ -70,7 +53,7 @@ namespace Sentinel.LogViewer.Wpf
         }
 
         /// <summary>
-        /// Starts listening to the entries of <paramref name="source"/> (by default the <see cref="Source"/> of the viewer, or the NLog cache).
+        /// Starts listening to the entries of <paramref name="source"/> (by default the <see cref="Source"/> of the viewer, or <see cref="LogBuffer.Default"/>).
         /// Nothing happens when the viewer listens already, or when the entries come from an <see cref="ItemsSource"/>.
         /// </summary>
         public void StartListen(ILogSource? source = null)
@@ -84,7 +67,7 @@ namespace Sentinel.LogViewer.Wpf
             if (dispatcher == null)
                 return;
 
-            source ??= Source ?? CacheTarget.GetInstance(targetName: TargetName);
+            source ??= Source ?? LogBuffer.Default;
 
             // A source with a cache sends everything it holds to a new subscriber, so what is shown from an earlier subscription goes first.
             _internalLogEntries.Clear();
