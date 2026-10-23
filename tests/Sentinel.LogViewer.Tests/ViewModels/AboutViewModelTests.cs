@@ -107,7 +107,8 @@ public class AboutViewModelTests
 			environment.Localization.Initialize();
 			environment.Localization.SetLanguage("en");
 			var about = ChocolateyAbout(environment);
-			var window = new AboutWindow(about) { Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
+			// A narrow window, so that the command is longer than the card also with a short version number.
+			var window = new AboutWindow(about) { Width = 560, Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
 			try
 			{
 				window.Show();
