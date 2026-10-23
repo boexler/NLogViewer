@@ -113,7 +113,18 @@
                                 <Button Grid.Column="1" Command="{Binding CopyChocolateyCommand}" Margin="6,0,0,0" Padding="8,3" VerticalAlignment="Top"
                                         ToolTip="{helpers:Resource Key=About_Copy, DefaultValue=Copy}"
                                         AutomationProperties.Name="{helpers:Resource Key=About_Copy, DefaultValue=Copy}">
-                                    <TextBlock Text="&#xE8C8;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="14"/>
+                                    <TextBlock FontFamily="{DynamicResource ThemeIconFont}" FontSize="14">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="&#xE8C8;"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CommandCopied}" Value="True">
+                                                        <Setter Property="Text" Value="&#xE73E;"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Button>
                             </Grid>
                             <TextBlock Margin="0,10,0,0"

@@ -1,8 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels;
@@ -10,8 +14,16 @@ using Xunit;
 
 namespace Sentinel.LogViewer.Tests.ViewModels;
 
+[Collection(WpfCollection.Name)]
 public class AboutViewModelTests
 {
+	private readonly WpfStaContextFixture _context;
+
+	public AboutViewModelTests(WpfStaContextFixture fixture)
+	{
+		_context = fixture;
+	}
+
 	private sealed class Handler(Func<HttpRequestMessage, HttpResponseMessage> respond) : HttpMessageHandler
 	{
 		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
@@ -48,5 +60,88 @@ public class AboutViewModelTests
 
 		Assert.Equal(UpdateState.Failed, about.State);
 		Assert.StartsWith("GitHub allows only a limited number of requests per hour. Try again after", about.StatusText);
+	}
+	private static AboutViewModel ChocolateyAbout(SettingsTestEnvironment environment)
+	{
+		var updateService = new UpdateService(new Handler(_ => new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(Feed) }), InstallType.Chocolatey);
+		return new AboutViewModel(updateService, environment.Configuration, environment.Localization,
+			new ChangelogService(updateService, environment.PathOf("changelog.json")));
+	}
+
+	[Fact]
+	public async Task CopyingTheCommand_PutsItOnTheClipboard_AndShowsTheCheckMarkForAMoment()
+	{
+		using var environment = new SettingsTestEnvironment();
+		string? copied = null;
+		var about = ChocolateyAbout(environment);
+		about.SetClipboardText = text => copied = text;
+		about.CopiedFor = TimeSpan.FromMilliseconds(50);
+
+		about.CopyChocolateyCommand.Execute(null);
+
+		Assert.Equal(about.ChocolateyCommand, copied);
+		Assert.True(about.CommandCopied);
+		for (var i = 0; i < 100 && about.CommandCopied; i++)
+			await Task.Delay(20);
+		Assert.False(about.CommandCopied);
+	}
+
+	[Fact]
+	public void WhenAnotherProgramHoldsTheClipboard_CopyingDoesNotThrow_AndShowsNoCheckMark()
+	{
+		using var environment = new SettingsTestEnvironment();
+		var about = ChocolateyAbout(environment);
+		about.SetClipboardText = _ => throw new COMException("The clipboard is in use", unchecked((int)0x800401D0));
+
+		about.CopyChocolateyCommand.Execute(null);
+
+		Assert.False(about.CommandCopied);
+	}
+
+	[Fact]
+	public void TheChocolateyCommand_IsShownInFull_AndTheCopyButtonStaysInTheDialog()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new SettingsTestEnvironment();
+			environment.Localization.Initialize();
+			environment.Localization.SetLanguage("en");
+			var about = ChocolateyAbout(environment);
+			var window = new AboutWindow(about) { Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
+			try
+			{
+				window.Show();
+				for (var i = 0; i < 40 && about.State != UpdateState.ManualUpdate; i++)
+				{
+					Thread.Sleep(50);
+					WpfTestHelper.Settle();
+				}
+
+				Assert.Equal(UpdateState.ManualUpdate, about.State);
+				var box = Descendants<TextBox>(window).Single(candidate => candidate.Text == about.ChocolateyCommand);
+				var button = Descendants<Button>(window).Single(candidate => candidate.Command == about.CopyChocolateyCommand);
+
+				Assert.True(box.ExtentWidth <= box.ViewportWidth, "the command runs past the edge of its box");
+				var right = button.TranslatePoint(new Point(button.ActualWidth, 0), window).X;
+				Assert.True(right <= window.ActualWidth, "the copy button is pushed out of the dialog");
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}
+
+	private static System.Collections.Generic.IEnumerable<T> Descendants<T>(DependencyObject parent) where T : DependencyObject
+	{
+		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+		{
+			var child = VisualTreeHelper.GetChild(parent, i);
+			if (child is T match)
+				yield return match;
+
+			foreach (var nested in Descendants<T>(child))
+				yield return nested;
+		}
 	}
 }
