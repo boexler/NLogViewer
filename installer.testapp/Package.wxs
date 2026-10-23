@@ -1,0 +1,82 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!--
+    The installer of the test application. It is a product of its own (own name, own UpgradeCode, own folder), so that it can be
+    installed next to the viewer application. It has no file associations and no update check.
+  -->
+  <Package Name="Sentinel LogViewer Test Application"
+           Manufacturer="Dominic Böxler"
+           Version="$(var.InstallerVersion)"
+           UpgradeCode="B1A68AC3-CAA3-4F7A-9856-E0EFA19919B4"
+           Scope="perMachine">
+
+    <SummaryInformation Description="Sentinel LogViewer Test Application - test log generator and template for the log viewer control" />
+
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of the Sentinel LogViewer Test Application is already installed." />
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="medium" />
+
+    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+
+    <WixVariable Id="WixUILicenseRtf" Value="..\installer\License.rtf" />
+    <ui:WixUI Id="WixUI_Minimal" />
+
+    <Feature Id="FeatureMain"
+             Title="Sentinel LogViewer Test Application"
+             Level="1"
+             Description="The test application and its Start Menu shortcut.">
+      <ComponentGroupRef Id="HarvestedComponents" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+      <ComponentGroupRef Id="InstallFolderComponents" />
+    </Feature>
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="COMPANYFOLDER" Name="Boexler">
+        <Directory Id="INSTALLFOLDER" Name="Sentinel.LogViewer.TestApp" />
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Sentinel LogViewer Test Application" />
+    </StandardDirectory>
+  </Fragment>
+
+  <Fragment>
+    <!-- The folder of the company is shared with the viewer application; it goes when the last of the two is removed. -->
+    <ComponentGroup Id="InstallFolderComponents" Directory="COMPANYFOLDER">
+      <Component Id="CmpRemoveCompanyFolder" Guid="ED3B4DBA-E209-4F75-B0D8-B8118F10E722">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\LogViewer.TestApp\Setup"
+                       Name="CompanyFolder"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <RemoveFolder Id="RemoveCompanyFolder" On="uninstall" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ShortcutComponents" Directory="ApplicationProgramsFolder">
+      <Component Id="CmpStartMenuShortcut" Guid="74C3A572-FFD5-4FBC-8C77-270E151ADA2A">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Sentinel\LogViewer.TestApp\Setup"
+                       Name="StartMenuShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <Shortcut Id="ScStartMenu"
+                  Name="Sentinel LogViewer Test Application"
+                  Description="Test log generator and control test"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Target="[INSTALLFOLDER]Sentinel.LogViewer.TestApp.exe"
+                  Icon="AppIcon.ico" />
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

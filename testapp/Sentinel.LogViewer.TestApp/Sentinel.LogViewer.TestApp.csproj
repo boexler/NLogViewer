@@ -6,6 +6,9 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>Sentinel.LogViewer.TestApp</RootNamespace>
     <AssemblyName>Sentinel.LogViewer.TestApp</AssemblyName>
+    <ApplicationIcon>..\..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico</ApplicationIcon>
+    <!-- Restore runtime packs for the installer and the portable publish; omit a single RuntimeIdentifier so a plain build is RID-agnostic -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <!-- Test application and template; it comes as an installer and a portable folder with the release, not as a package. -->
     <IsPackable>false</IsPackable>
   </PropertyGroup>

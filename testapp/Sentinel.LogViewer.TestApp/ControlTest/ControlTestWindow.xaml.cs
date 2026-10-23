@@ -24,12 +24,13 @@ public partial class ControlTestWindow : Window
     private int _counter;
     private int _tasks;
 
-    public ControlTestWindow(EmbeddingMode mode)
+    /// <param name="factory">The logger factory of the application, with the log viewer added to it</param>
+    public ControlTestWindow(EmbeddingMode mode, ILoggerFactory factory)
     {
         InitializeComponent();
         ModeText.Text = EmbeddingModes.Describe(mode);
 
-        _factory = App.Embedding!.Factory;
+        _factory = factory;
         _logger = _factory.CreateLogger<ControlTestWindow>();
         _deepLogger = _factory.CreateLogger("Lorem.Ipsum.Foo.Hello.World.Lorem.Ipsum");
 

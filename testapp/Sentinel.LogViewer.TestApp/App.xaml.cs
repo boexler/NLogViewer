@@ -34,7 +34,7 @@ public partial class App : Application
         else
         {
             Embedding = EmbeddingModes.Start(start.EmbeddingMode);
-            window = new ControlTestWindow(start.EmbeddingMode);
+            window = new ControlTestWindow(start.EmbeddingMode, Embedding.Factory);
         }
 
         MainWindow = window;
