@@ -29,10 +29,10 @@ public class TextsOfTheWindowsTests
 	}
 
 	/// <summary>
-	/// The windows of the application; the one for testing the logging is only reachable from the debug menu
+	/// The windows of the application
 	/// </summary>
 	private static IEnumerable<string> WindowFiles() =>
-		Directory.GetFiles(AppFolder, "*Window.xaml").Where(file => Path.GetFileName(file) != "TestLoggingWindow.xaml");
+		Directory.GetFiles(AppFolder, "*Window.xaml");
 
 	[Fact]
 	public void TheWindows_HaveNoFixedTexts()

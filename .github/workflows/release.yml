@@ -94,14 +94,40 @@ jobs:
 
     - name: Build installer MSI
       run: |
-        dotnet build installer/Sentinel.LogViewer.Installer.wixproj `
+        dotnet build installer/Sentinel.LogViewer.Installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
           -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
           -p:InstallerVersion=$env:INSTALLER_VERSION
-        Copy-Item "installer/bin/Release/Sentinel.LogViewer.msi" `
+        Copy-Item "installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
+
+    - name: Build test application installer MSI
+      run: |
+        dotnet build installer/Sentinel.LogViewer.TestApp.Installer/Sentinel.LogViewer.TestApp.Installer.wixproj `
+          -c Release `
+          -m:1 `
+          -p:DisableGitVersionTask=true `
+          -p:Version=$env:VERSION `
+          -p:InstallerVersion=$env:INSTALLER_VERSION
+        # The name must not end with -win-x64.msi: the update check of the viewer application takes the release file with that ending.
+        Copy-Item "installer/Sentinel.LogViewer.TestApp.Installer/bin/Release/Sentinel.LogViewer.TestApp.msi" `
+          "publish/Sentinel.LogViewer.TestApp-$env:VERSION-x64.msi"
+
+    - name: Publish portable test application
+      run: |
+        dotnet publish samples/Sentinel.LogViewer.TestApp/Sentinel.LogViewer.TestApp.csproj `
+          -c Release `
+          -p:SelfContained=true `
+          -p:PublishSingleFile=true `
+          -p:RuntimeIdentifier=win-x64 `
+          -p:DisableGitVersionTask=true `
+          -p:Version=$env:VERSION `
+          -p:IncludeNativeLibrariesForSelfExtract=true `
+          -o publish/testapp
+        # The name must not contain -SelfContained-win-x64-: the update check of the viewer application takes the portable file with that name.
+        Compress-Archive -Path "publish/testapp/*" -DestinationPath "publish/Sentinel.LogViewer.TestApp-$env:VERSION-portable.zip"
 
     - name: Pack Chocolatey package
       env:

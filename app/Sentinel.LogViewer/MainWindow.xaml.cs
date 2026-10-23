@@ -385,16 +385,10 @@ namespace Sentinel.LogViewer
 #if DEBUG
         private void AddDebugMenu()
         {
-            var testLoggingItem = new MenuItem { Header = "_Test logging" };
-            testLoggingItem.Click += (s, _) =>
-            {
-                using var scope = App.ServiceProvider!.CreateScope();
-                var window = scope.ServiceProvider.GetRequiredService<TestLoggingWindow>();
-                window.Owner = this;
-                window.Show();
-            };
+            var testApplicationItem = new MenuItem { Header = "_Test application" };
+            testApplicationItem.Click += (_, _) => Helpers.TestApplicationLauncher.Open();
             var debugMenu = new MenuItem { Header = "_Debug" };
-            debugMenu.Items.Add(testLoggingItem);
+            debugMenu.Items.Add(testApplicationItem);
             MainMenu.Items.Insert(MainMenu.Items.Count - 1, debugMenu);
         }
 #endif
