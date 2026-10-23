@@ -48,6 +48,19 @@ public class UpdateServiceTests
 	};
 
 	[Theory]
+	[InlineData("Sentinel.LogViewer.TestApp-5.0.0-x64.msi")]
+	[InlineData("Sentinel.LogViewer.TestApp-5.0.0-portable.zip")]
+	[InlineData("Sentinel.LogViewer.TestApp-5.0.0-beta.6-portable.zip")]
+	public void TheFilesOfTheTestApplication_AreNeverOfferedAsAnUpdateOfTheViewer(string name)
+	{
+		foreach (var installType in new[] { InstallType.Msi, InstallType.Portable })
+		{
+			Assert.False(UpdateService.IsAssetFor(name, installType, frameworkDependent: false));
+			Assert.False(UpdateService.IsAssetFor(name, installType, frameworkDependent: true));
+		}
+	}
+
+	[Theory]
 	[InlineData("1.0.0-alpha", "1.0.0-alpha.1")]
 	[InlineData("1.0.0-alpha.1", "1.0.0-alpha.beta")]
 	[InlineData("1.0.0-alpha.beta", "1.0.0-beta")]

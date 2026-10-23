@@ -1,9 +1,7 @@
-using NLog;
-
 namespace Sentinel.LogViewer.TestLogging;
 
 /// <summary>
-/// Generates random log messages and exception logs for test logging (no console output).
+/// Generates random log messages and exception logs for test logging. It only makes the data; an <see cref="ILogSink"/> sends it.
 /// </summary>
 public static class TestLogMessageGenerator
 {
@@ -38,78 +36,33 @@ public static class TestLogMessageGenerator
         "Data synchronized with server"
     };
 
-    private static readonly LogLevel[] LogLevels =
-    {
-        LogLevel.Trace, LogLevel.Debug, LogLevel.Info, LogLevel.Warn, LogLevel.Error, LogLevel.Fatal
-    };
+    private static readonly TestLogLevel[] LogLevels = Enum.GetValues<TestLogLevel>();
 
     /// <summary>
-    /// Generates one log message (normal or exception based on exceptionProbability) and returns true if it was an exception log.
+    /// Makes one log (an exception log with the probability <paramref name="exceptionProbability"/>)
     /// </summary>
-    public static bool GenerateOne(Random random, int messageCounter, double exceptionProbability)
+    public static GeneratedLog Create(Random random, int messageCounter, double exceptionProbability)
     {
-        if (random == null)
-            throw new ArgumentNullException(nameof(random));
+        ArgumentNullException.ThrowIfNull(random);
 
-        bool isException = exceptionProbability > 0 && random.NextDouble() < exceptionProbability;
-        if (isException)
-            GenerateExceptionLog(random);
-        else
-            GenerateNormalLog(random, messageCounter);
-        return isException;
+        var logger = LoggerNames[random.Next(LoggerNames.Length)];
+        if (exceptionProbability > 0 && random.NextDouble() < exceptionProbability)
+            return CreateException(random, logger);
+
+        return new GeneratedLog(LogLevels[random.Next(LogLevels.Length)], logger, GenerateRandomMessage(random, messageCounter), null);
     }
 
-    private static void GenerateNormalLog(Random random, int messageCounter)
+    private static GeneratedLog CreateException(Random random, string logger)
     {
-        var logLevel = LogLevels[random.Next(LogLevels.Length)];
-        var message = GenerateRandomMessage(random, messageCounter);
-        var loggerName = LoggerNames[random.Next(LoggerNames.Length)];
-        var logger = LogManager.GetLogger(loggerName);
-
-        switch (logLevel.Name)
+        var (exception, level) = random.Next(1, 4) switch
         {
-            case "Trace": logger.Trace(message); break;
-            case "Debug": logger.Debug(message); break;
-            case "Info": logger.Info(message); break;
-            case "Warn": logger.Warn(message); break;
-            case "Error": logger.Error(message); break;
-            case "Fatal": logger.Fatal(message); break;
-            default: logger.Info(message); break;
-        }
-    }
+            1 => ((Exception)new InvalidOperationException($"Invalid operation occurred at {DateTime.Now:HH:mm:ss}"), TestLogLevel.Error),
+            2 => (new ArgumentNullException("testParameter", "Test parameter was null"), TestLogLevel.Error),
+            _ => (new DivideByZeroException("Division by zero attempted"), TestLogLevel.Fatal)
+        };
 
-    private static void GenerateExceptionLog(Random random)
-    {
-        var exceptionType = random.Next(1, 4);
-        Exception exception;
-        LogLevel logLevel;
-
-        switch (exceptionType)
-        {
-            case 1:
-                exception = new InvalidOperationException($"Invalid operation occurred at {DateTime.Now:HH:mm:ss}");
-                logLevel = LogLevel.Error;
-                break;
-            case 2:
-                exception = new ArgumentNullException("testParameter", "Test parameter was null");
-                logLevel = LogLevel.Error;
-                break;
-            case 3:
-                exception = new DivideByZeroException("Division by zero attempted");
-                logLevel = LogLevel.Fatal;
-                break;
-            default:
-                exception = new Exception("Generic exception occurred");
-                logLevel = LogLevel.Error;
-                break;
-        }
-
-        var logger = LogManager.GetLogger(LoggerNames[random.Next(LoggerNames.Length)]);
-
-        if (logLevel == LogLevel.Fatal)
-            logger.Fatal(exception, $"Fatal exception: {exception.Message}");
-        else
-            logger.Error(exception, $"Error exception: {exception.Message}");
+        var kind = level == TestLogLevel.Fatal ? "Fatal" : "Error";
+        return new GeneratedLog(level, logger, $"{kind} exception: {exception.Message}", exception);
     }
 
     private static string GenerateRandomMessage(Random random, int messageCounter)

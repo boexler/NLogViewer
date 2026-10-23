@@ -3,11 +3,12 @@ using System.Threading;
 namespace Sentinel.LogViewer.TestLogging;
 
 /// <summary>
-/// Runs the test log generator: applies NLog config and a timer that generates log messages at a configurable interval.
+/// Runs the test log generator: starts its sink and a timer that generates log messages at a configurable interval.
 /// </summary>
 public sealed class TestLogGeneratorRunner : IDisposable
 {
     private readonly TestLoggingOptions _options;
+    private readonly ILogSink _sink;
     private readonly Random _random = new();
     private Timer? _timer;
     private int _messageCounter;
@@ -26,13 +27,15 @@ public sealed class TestLogGeneratorRunner : IDisposable
     /// <summary>Raised when message or exception counts change (optional for UI).</summary>
     public event EventHandler? CountsChanged;
 
-    public TestLogGeneratorRunner(TestLoggingOptions options)
+    /// <param name="sink">Sends the logs; NLog when none is given</param>
+    public TestLogGeneratorRunner(TestLoggingOptions options, ILogSink? sink = null)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _sink = sink ?? new NLogSink();
     }
 
     /// <summary>
-    /// Applies NLog config and starts the timer. Idempotent: if already running, does nothing.
+    /// Starts the sink and the timer. Idempotent: if already running, does nothing.
     /// </summary>
     public void Start()
     {
@@ -41,7 +44,7 @@ public sealed class TestLogGeneratorRunner : IDisposable
         if (_timer != null)
             return;
 
-        NLogTestLoggingConfig.Apply(_options);
+        _sink.Start(_options);
         var intervalMs = Math.Max(1, _options.MessageIntervalMs);
         _timer = new Timer(OnTick, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(intervalMs));
     }
@@ -60,12 +63,10 @@ public sealed class TestLogGeneratorRunner : IDisposable
         try
         {
             var totalCount = _messageCounter + _exceptionCounter;
-            var isException = TestLogMessageGenerator.GenerateOne(
-                _random,
-                totalCount,
-                Math.Clamp(_options.ExceptionProbability, 0, 1));
+            var log = TestLogMessageGenerator.Create(_random, totalCount, Math.Clamp(_options.ExceptionProbability, 0, 1));
+            _sink.Write(log);
 
-            if (isException)
+            if (log.Exception != null)
                 Interlocked.Increment(ref _exceptionCounter);
             else
                 Interlocked.Increment(ref _messageCounter);
@@ -83,6 +84,7 @@ public sealed class TestLogGeneratorRunner : IDisposable
     {
         if (_disposed) return;
         Stop();
+        _sink.Dispose();
         _disposed = true;
         GC.SuppressFinalize(this);
     }

@@ -28,6 +28,8 @@ public static class NLogTestLoggingConfig
             Name = TargetName,
             Address = address
         };
+        if (!string.IsNullOrEmpty(options.ApplicationName))
+            target.AppInfo = options.ApplicationName;
 
         config.AddRule(LogLevel.Trace, LogLevel.Fatal, target);
         LogManager.Configuration = config;

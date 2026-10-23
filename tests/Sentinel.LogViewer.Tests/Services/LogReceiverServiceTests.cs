@@ -46,12 +46,8 @@ public class LogReceiverServiceTests
 	[Fact]
 	public async Task StartListeningAsync_PortInUse_ReturnsNoStartedAndNonEmptyError()
 	{
-		// Get a free port, then bind it so the service cannot bind
-		var listener = new TcpListener(IPAddress.Loopback, 0);
-		listener.Start();
-		var port = ((IPEndPoint)listener.LocalEndpoint!).Port;
-		listener.Stop();
-
+		// Get a free UDP port, then bind it so the service cannot bind (a free TCP port can be forbidden or taken for UDP, e.g. on a CI runner)
+		var port = FreeUdpPort();
 		using var occupyingClient = new UdpClient(port);
 		var address = $"udp://0.0.0.0:{port}";
 

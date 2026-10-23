@@ -1,0 +1,47 @@
+<Window x:Class="Sentinel.LogViewer.TestApp.Generator.MessageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Send a message" Width="560" Height="640" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="Label">
+            <Setter Property="Margin" Value="0,10,0,3"/>
+            <Setter Property="Foreground" Value="#6B6B6B"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="12">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="#6B6B6B"/>
+            <Button Content="Close" Padding="14,5" Margin="0,0,8,0" Click="OnClose"/>
+            <Button Content="Send" Padding="14,5" IsDefault="False" Click="OnSend"/>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource Label}" Margin="0,0,0,3" Text="Level"/>
+                        <ComboBox x:Name="LevelBox" SelectionChanged="OnFieldChanged"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                        <TextBlock Style="{StaticResource Label}" Margin="0,0,0,3" Text="Application"/>
+                        <TextBox x:Name="ApplicationBox" Text="TestApp" TextChanged="OnFieldChanged"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Style="{StaticResource Label}" Text="Logger"/>
+                <TextBox x:Name="LoggerBox" Text="Acme.Billing.PaymentClient" TextChanged="OnFieldChanged"/>
+                <TextBlock Style="{StaticResource Label}" Text="Message"/>
+                <TextBox x:Name="MessageBox" Text="Payment failed: timeout after 30 s" AcceptsReturn="True" MinLines="3" TextWrapping="Wrap" TextChanged="OnFieldChanged"/>
+                <TextBlock Style="{StaticResource Label}" Text="Exception (optional)"/>
+                <TextBox x:Name="ExceptionBox" AcceptsReturn="True" MinLines="2" TextWrapping="Wrap" TextChanged="OnFieldChanged"/>
+                <TextBlock Style="{StaticResource Label}" Text="Properties (one name=value per line)"/>
+                <TextBox x:Name="PropertiesBox" Text="Class=PaymentClient" AcceptsReturn="True" MinLines="2" TextChanged="OnFieldChanged"/>
+                <CheckBox x:Name="RawBox" Margin="0,12,0,3" Content="Edit the XML as raw text (to send broken XML on purpose)" Checked="OnRawChanged" Unchecked="OnRawChanged"/>
+                <TextBox x:Name="XmlBox" FontFamily="Consolas" FontSize="12" MinLines="8" MaxLines="12" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto" IsReadOnly="True" Background="#F4F4F4"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>
