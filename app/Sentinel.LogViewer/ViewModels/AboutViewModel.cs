@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -44,6 +45,8 @@ public class AboutViewModel : INotifyPropertyChanged
 	private AvailableUpdate? _update;
 	private string? _downloadedFile;
 	private bool _skipped;
+	private bool _commandCopied;
+	private int _copies;
 
 	public AboutViewModel(UpdateService updateService, ConfigurationService configService, LocalizationService localizationService,
 		ChangelogService changelogService)
@@ -57,8 +60,31 @@ public class AboutViewModel : INotifyPropertyChanged
 		DownloadCommand = new AsyncRelayCommand(DownloadAsync);
 		SkipCommand = new RelayCommand(Skip);
 		RestartCommand = new RelayCommand(Restart);
-		CopyChocolateyCommand = new RelayCommand(() => Clipboard.SetText(ChocolateyCommand));
+		CopyChocolateyCommand = new RelayCommand(CopyChocolateyCommandText);
 		ShowChangelogCommand = new RelayCommand(() => ChangelogWindow.Show(Application.Current.Windows.OfType<AboutWindow>().FirstOrDefault()));
+	}
+
+	private void CopyChocolateyCommandText()
+	{
+		try
+		{
+			SetClipboardText(ChocolateyCommand);
+		}
+		catch (COMException)
+		{
+			// Another program holds the clipboard; the button shows no check mark, so the user can try again.
+			return;
+		}
+
+		CommandCopied = true;
+		_ = ResetCommandCopiedAsync(++_copies);
+	}
+
+	private async Task ResetCommandCopiedAsync(int copy)
+	{
+		await Task.Delay(CopiedFor);
+		if (copy == _copies)
+			CommandCopied = false;
 	}
 
 	public string ProductName => ProductNames.Display;
@@ -137,6 +163,23 @@ public class AboutViewModel : INotifyPropertyChanged
 	public ICommand SkipCommand { get; }
 	public ICommand RestartCommand { get; }
 	public ICommand CopyChocolateyCommand { get; }
+
+	/// <summary>True for a moment after the command was copied, so the button can show that it worked</summary>
+	public bool CommandCopied
+	{
+		get => _commandCopied;
+		private set
+		{
+			_commandCopied = value;
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>Puts a text on the clipboard; the tests give their own</summary>
+	internal Action<string> SetClipboardText { get; set; } = Clipboard.SetText;
+
+	/// <summary>How long <see cref="CommandCopied"/> stays true</summary>
+	internal TimeSpan CopiedFor { get; set; } = TimeSpan.FromMilliseconds(1500);
 
 	/// <summary>Opens the changelog of all versions</summary>
 	public ICommand ShowChangelogCommand { get; }
