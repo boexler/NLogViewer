@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1EBF655C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{1860D2E4-5C43-71D5-59A5-599A4DE1DF67}"
 EndProject
-Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Sentinel.LogViewer.Installer", "installer\Sentinel.LogViewer.Installer.wixproj", "{BFA0BBF7-DF4D-4818-AAB3-AFEDA6FDD41D}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Sentinel.LogViewer.Installer", "installer\viewer\Sentinel.LogViewer.Installer.wixproj", "{BFA0BBF7-DF4D-4818-AAB3-AFEDA6FDD41D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{5C0C4B92-CA80-40A5-A78C-B18E67C10527}"
 	ProjectSection(SolutionItems) = preProject
@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.LogViewer.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sentinel.LogViewer.Extensions.Logging", "core\Sentinel.LogViewer.Extensions.Logging\Sentinel.LogViewer.Extensions.Logging.csproj", "{9D1C8CED-16BB-4229-AE7E-8A9EEDF23510}"
 EndProject
-Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Sentinel.LogViewer.TestApp.Installer", "installer.testapp\Sentinel.LogViewer.TestApp.Installer.wixproj", "{4F7086CC-4743-40AE-BD0D-798BAE0C5DD0}"
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "Sentinel.LogViewer.TestApp.Installer", "installer\testapp\Sentinel.LogViewer.TestApp.Installer.wixproj", "{4F7086CC-4743-40AE-BD0D-798BAE0C5DD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

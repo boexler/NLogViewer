@@ -20,7 +20,7 @@
 
     <MediaTemplate EmbedCab="yes" CompressionLevel="medium" />
 
-    <Icon Id="AppIcon.ico" SourceFile="..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico" />
+    <Icon Id="AppIcon.ico" SourceFile="..\..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
 
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
