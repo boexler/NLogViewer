@@ -9,6 +9,8 @@ namespace Sentinel.LogViewer.TestApp.Generator;
 /// </summary>
 public sealed class XmlTransport : IDisposable
 {
+    private static readonly TimeSpan ConnectTimeout = TimeSpan.FromSeconds(5);
+
     private readonly bool _tcp;
     private readonly string _host;
     private readonly int _port;
@@ -77,8 +79,24 @@ public sealed class XmlTransport : IDisposable
         if (_client is not { Connected: true })
         {
             _client?.Dispose();
-            _client = new TcpClient();
-            _client.Connect(_host, _port);
+            var client = new TcpClient { SendTimeout = (int)ConnectTimeout.TotalMilliseconds };
+            try
+            {
+                if (!client.ConnectAsync(_host, _port).Wait(ConnectTimeout))
+                    throw new TimeoutException($"No connection to {_host}:{_port} within {ConnectTimeout.TotalSeconds:0} seconds.");
+            }
+            catch (AggregateException ex) when (ex.InnerException != null)
+            {
+                client.Dispose();
+                throw ex.InnerException;
+            }
+            catch
+            {
+                client.Dispose();
+                throw;
+            }
+
+            _client = client;
         }
 
         return _client;

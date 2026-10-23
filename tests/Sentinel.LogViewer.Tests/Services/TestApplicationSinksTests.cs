@@ -9,10 +9,48 @@ namespace Sentinel.LogViewer.Tests.Services;
 
 /// <summary>
 /// Tests for what the test application sends: the events that the viewer receives have to be read by the viewer's parser, whichever
-/// library or writer sends them. They run on loopback, without a window.
+/// library or writer sends them. They run on loopback, without a window. NLog has one global setup, and the window tests of the test
+/// application use it too, so they run in the same collection, one after the other.
 /// </summary>
+[Collection(WpfCollection.Name)]
 public class TestApplicationSinksTests
 {
+	private sealed class SlowSink : ILogSink
+	{
+		private int _running;
+
+		public int MostAtOnce { get; private set; }
+
+		public void Start(TestLoggingOptions options)
+		{
+		}
+
+		public void Write(GeneratedLog log)
+		{
+			var now = Interlocked.Increment(ref _running);
+			MostAtOnce = Math.Max(MostAtOnce, now);
+			Thread.Sleep(150);
+			Interlocked.Decrement(ref _running);
+		}
+
+		public void Dispose()
+		{
+		}
+	}
+
+	[Fact]
+	public void TheGenerator_StartsTheNextLog_OnlyWhenTheLastOneIsSent()
+	{
+		var sink = new SlowSink();
+		using (var runner = new TestLogGeneratorRunner(new TestLoggingOptions { MessageIntervalMs = 5 }, sink))
+		{
+			runner.Start();
+			Thread.Sleep(700);
+		}
+
+		Assert.Equal(1, sink.MostAtOnce);
+	}
+
 	private static readonly GeneratedLog Error = new(TestLogLevel.Error, "Acme.Billing", "Payment failed: Ünïcödé ✓ 😀 <tag> & \"quotes\"", new InvalidOperationException("boom"));
 
 	private static Log4JEvent Parse(string xml) => new Log4JEventParser().Parse(xml);

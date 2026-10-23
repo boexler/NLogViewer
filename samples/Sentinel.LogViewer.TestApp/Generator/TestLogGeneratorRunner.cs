@@ -45,8 +45,8 @@ public sealed class TestLogGeneratorRunner : IDisposable
             return;
 
         _sink.Start(_options);
-        var intervalMs = Math.Max(1, _options.MessageIntervalMs);
-        _timer = new Timer(OnTick, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(intervalMs));
+        // One shot: the next tick is set when this one has finished, so a slow send cannot pile up threads.
+        _timer = new Timer(OnTick, null, 0, Timeout.Infinite);
     }
 
     /// <summary>
@@ -76,6 +76,17 @@ public sealed class TestLogGeneratorRunner : IDisposable
         catch
         {
             // Avoid crashing the timer; ignore generation errors
+        }
+        finally
+        {
+            try
+            {
+                _timer?.Change(Math.Max(1, _options.MessageIntervalMs), Timeout.Infinite);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Stopped while this tick was running.
+            }
         }
     }
 

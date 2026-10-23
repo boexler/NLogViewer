@@ -25,14 +25,31 @@ public partial class MessageWindow : Window
     {
         // The fields change the XML only while it is not edited by hand.
         if (XmlBox != null && RawBox.IsChecked != true)
-            XmlBox.Text = BuildXml();
+            ShowXml();
     }
 
     private void OnRawChanged(object sender, RoutedEventArgs e)
     {
         XmlBox.IsReadOnly = RawBox.IsChecked != true;
         if (RawBox.IsChecked != true)
+            ShowXml();
+    }
+
+    /// <summary>
+    /// Shows the XML of the fields. A character that XML cannot hold (e.g. ESC from a coloured console line) is explained, not thrown.
+    /// </summary>
+    private void ShowXml()
+    {
+        try
+        {
             XmlBox.Text = BuildXml();
+            StatusText.Text = string.Empty;
+        }
+        catch (ArgumentException ex)
+        {
+            XmlBox.Text = string.Empty;
+            StatusText.Text = $"Not valid in XML: {ex.Message} To send it anyway, edit the XML as raw text.";
+        }
     }
 
     private string BuildXml()
@@ -53,12 +70,20 @@ public partial class MessageWindow : Window
             properties);
     }
 
-    private void OnSend(object sender, RoutedEventArgs e)
+    private async void OnSend(object sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(XmlBox.Text))
+        {
+            StatusText.Text = "There is nothing to send.";
+            return;
+        }
+
         try
         {
             _transport ??= new XmlTransport(_settings.Protocol, _settings.Host, _settings.Port);
-            _transport.Send(XmlBox.Text);
+            var transport = _transport;
+            var xml = XmlBox.Text;
+            await Task.Run(() => transport.Send(xml));
             StatusText.Text = $"Sent at {DateTime.Now:HH:mm:ss}";
         }
         catch (Exception ex)

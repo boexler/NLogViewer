@@ -34,6 +34,18 @@ public class TestApplicationWindowsTests
 		});
 
 	[Fact]
+	public void ACharacterThatXmlCannotHold_DoesNotBreakTheMessageWindow() =>
+		_context.RunOnSta(() =>
+		{
+			var window = new MessageWindow(new GeneratorSettings(GeneratorLibrary.PlainXml, "udp", "127.0.0.1", 4000));
+			var message = (System.Windows.Controls.TextBox)window.FindName("MessageBox");
+
+			message.Text = "coloured \u001b[31mred\u001b[0m";
+
+			Assert.Contains("Not valid in XML", ((System.Windows.Controls.TextBlock)window.FindName("StatusText")).Text);
+		});
+
+	[Fact]
 	public void TheControlTest_CanBeMade_ForTheThreeWaysToConnectTheLogging() =>
 		_context.RunOnSta(() =>
 		{

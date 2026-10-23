@@ -14,7 +14,7 @@ public partial class StartWindow : Window
     public StartWindow()
     {
         InitializeComponent();
-        foreach (var host in new[] { "127.0.0.1", "0.0.0.0", Broadcast }.Concat(LocalAddresses()))
+        foreach (var host in new[] { "127.0.0.1", Broadcast }.Concat(LocalAddresses()))
             HostBox.Items.Add(host);
     }
 
@@ -45,7 +45,7 @@ public partial class StartWindow : Window
         : GeneratorLibrary.NLog;
 
     /// <summary>
-    /// log4net has no TCP appender, and a broadcast only works with UDP: say so before the generator opens
+    /// Clears the old message when the library or the protocol changes
     /// </summary>
     private void OnProtocolRulesChanged(object sender, RoutedEventArgs e)
     {
