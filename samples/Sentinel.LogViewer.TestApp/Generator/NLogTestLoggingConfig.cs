@@ -2,7 +2,7 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Applies NLog configuration for test logging: UDP target (Log4JXml, compatible with Chainsaw/LogViewer) with configurable address.

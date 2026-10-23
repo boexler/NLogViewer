@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Runs the test log generator: starts its sink and a timer that generates log messages at a configurable interval.

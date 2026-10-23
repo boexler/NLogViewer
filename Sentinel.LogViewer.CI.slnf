@@ -3,11 +3,10 @@
     "path": "Sentinel.LogViewer.sln",
     "projects": [
       "app\\Sentinel.LogViewer\\Sentinel.LogViewer.csproj",
-      "app\\Sentinel.LogViewer.TestLogging\\Sentinel.LogViewer.TestLogging.csproj",
       "core\\Sentinel.LogViewer.Core\\Sentinel.LogViewer.Core.csproj",
       "core\\Sentinel.LogViewer.Extensions.Logging\\Sentinel.LogViewer.Extensions.Logging.csproj",
       "ui\\Sentinel.LogViewer.Wpf\\Sentinel.LogViewer.Wpf.csproj",
-      "testapp\\Sentinel.LogViewer.TestApp\\Sentinel.LogViewer.TestApp.csproj",
+      "samples\\Sentinel.LogViewer.TestApp\\Sentinel.LogViewer.TestApp.csproj",
       "tests\\Sentinel.LogViewer.Tests\\Sentinel.LogViewer.Tests.csproj"
     ]
   }

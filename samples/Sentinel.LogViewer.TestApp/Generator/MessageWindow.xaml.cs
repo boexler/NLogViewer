@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using Sentinel.LogViewer.TestLogging;
 
 namespace Sentinel.LogViewer.TestApp.Generator;
 

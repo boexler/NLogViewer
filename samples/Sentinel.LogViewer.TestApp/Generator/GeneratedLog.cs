@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>The levels of a generated log</summary>
 public enum TestLogLevel

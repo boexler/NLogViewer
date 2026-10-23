@@ -1,6 +1,6 @@
 using System.Xml.Linq;
 
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Writes a log as the log4j XML event that the viewer receives, without a logging library, so that it can also be changed

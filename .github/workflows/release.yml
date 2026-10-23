@@ -117,7 +117,7 @@ jobs:
 
     - name: Publish portable test application
       run: |
-        dotnet publish testapp/Sentinel.LogViewer.TestApp/Sentinel.LogViewer.TestApp.csproj `
+        dotnet publish samples/Sentinel.LogViewer.TestApp/Sentinel.LogViewer.TestApp.csproj `
           -c Release `
           -p:SelfContained=true `
           -p:PublishSingleFile=true `

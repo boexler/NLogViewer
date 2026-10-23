@@ -1,7 +1,8 @@
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Sends text to the viewer over UDP or TCP as it is, so that events can also be sent in pieces or broken

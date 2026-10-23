@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System.Text;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.TestApp.Generator;
-using Sentinel.LogViewer.TestLogging;
 using Xunit;
 
 namespace Sentinel.LogViewer.Tests.Services;

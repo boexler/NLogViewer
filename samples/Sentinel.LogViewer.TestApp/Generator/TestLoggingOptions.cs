@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Options for the test log generator (NLog target, UDP address, interval, exception probability).

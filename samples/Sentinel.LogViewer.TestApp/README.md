@@ -29,7 +29,7 @@ To try another way, use *Back to start*: the logging is built once at the start 
 ## Run, install
 
 ```powershell
-dotnet run --project testapp/Sentinel.LogViewer.TestApp
+dotnet run --project samples/Sentinel.LogViewer.TestApp
 ```
 
 The releases have an installer (`Sentinel.LogViewer.TestApp-<version>-x64.msi`, it installs next to the viewer application) and a portable ZIP (`Sentinel.LogViewer.TestApp-<version>-portable.zip`). There is no Chocolatey package, no NuGet package and no update check.

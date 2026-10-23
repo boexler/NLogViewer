@@ -1,4 +1,3 @@
-using Sentinel.LogViewer.TestLogging;
 
 namespace Sentinel.LogViewer.TestApp.Generator;
 

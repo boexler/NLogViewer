@@ -1,6 +1,6 @@
 using NLog;
 
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Sends the generated logs with NLog (the Log4JXml target of <see cref="NLogTestLoggingConfig"/>)

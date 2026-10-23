@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Sends generated logs to the viewer, with a logging library or on its own

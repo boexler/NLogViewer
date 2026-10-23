@@ -17,10 +17,10 @@
     <PackageReference Include="log4net" Version="3.3.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="NLog.Extensions.Logging" Version="6.0.4" />
+    <PackageReference Include="NLog.Targets.Network" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\app\Sentinel.LogViewer.TestLogging\Sentinel.LogViewer.TestLogging.csproj" />
     <ProjectReference Include="..\..\core\Sentinel.LogViewer.Extensions.Logging\Sentinel.LogViewer.Extensions.Logging.csproj" />
     <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
   </ItemGroup>

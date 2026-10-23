@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Sends the generated logs as log4j XML that it writes itself (<see cref="Log4JXmlWriter"/>), without a logging library. The

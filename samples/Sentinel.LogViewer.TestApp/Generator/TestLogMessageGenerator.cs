@@ -1,4 +1,4 @@
-namespace Sentinel.LogViewer.TestLogging;
+namespace Sentinel.LogViewer.TestApp.Generator;
 
 /// <summary>
 /// Generates random log messages and exception logs for test logging. It only makes the data; an <see cref="ILogSink"/> sends it.
