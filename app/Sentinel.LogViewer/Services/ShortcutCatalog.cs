@@ -47,7 +47,7 @@ public static class ShortcutCatalog
 			new("RightClick", "Shortcut_ColumnMenu", "Choose the columns of the list; the timestamp column also has its format here"),
 			new("Drag", "Shortcut_ReorderColumns", "Drag a column header to change the order of the columns"),
 			new("Drag", "Shortcut_ResizeColumn", "Drag the edge of a column header to change the width of the column"),
-			new("RightClick", "Shortcut_EntryMenu", "Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter"),
+			new("RightClick", "Shortcut_EntryMenu", "Open the menu of an entry: show only or hide a logger, show it in the logger tree, copy the text, add it to the filter, set the time range, jump to a level or a time"),
 			new("RightClick", "Shortcut_LoggerTreeMenu", "On the logger tree: show only one logger or all, expand or collapse all"),
 		}),
 		new("Shortcuts_Group_Filter", "Filter and search", new Shortcut[]

@@ -107,6 +107,7 @@ namespace Sentinel.LogViewer.Wpf
 
             gridView.Columns.CollectionChanged += OnGridColumnsChanged;
             PART_ListView.PreviewMouseRightButtonUp += OnListViewPreviewMouseRightButtonUp;
+            PART_ListView.PreviewMouseRightButtonDown += OnListViewPreviewMouseRightButtonDown;
             _columnsReady = true;
             UpdateTimeStampHeader();
 

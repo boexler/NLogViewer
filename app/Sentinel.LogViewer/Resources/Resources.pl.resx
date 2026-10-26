@@ -1253,7 +1253,7 @@
     <value>Przeciągnij krawędź nagłówka kolumny, aby zmienić jej szerokość</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Otwórz menu wpisu: pokaż tylko jeden logger lub ukryj go, skopiuj tekst, dodaj do filtra</value>
+    <value>Otwórz menu wpisu: pokaż tylko jeden logger lub go ukryj, pokaż go w drzewie loggerów, skopiuj tekst, dodaj do filtra, ustaw zakres czasu, przejdź do poziomu lub czasu</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Dodaj tekst pola filtra jako wyrażenie filtra</value>

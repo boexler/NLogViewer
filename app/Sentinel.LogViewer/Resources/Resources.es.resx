@@ -1253,7 +1253,7 @@
     <value>Arrastrar el borde del encabezado de una columna para cambiar su ancho</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Abrir el menú de una entrada: mostrar solo un logger u ocultarlo, copiar el texto, añadirlo al filtro</value>
+    <value>Abrir el menú de una entrada: mostrar solo un logger u ocultarlo, mostrarlo en el árbol de loggers, copiar el texto, añadirlo al filtro, fijar el intervalo de tiempo, saltar a un nivel o a una hora</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Añadir el texto del cuadro de filtro como término de filtro</value>

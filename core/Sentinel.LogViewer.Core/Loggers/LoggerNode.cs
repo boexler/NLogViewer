@@ -11,6 +11,7 @@ public sealed class LoggerNode : INotifyPropertyChanged
 {
 	private bool _isExpanded = true;
 	private bool _isListed = true;
+	private bool _isSelected;
 
 	internal LoggerNode(LoggerTree tree, LoggerNode? parent, string name, string fullName)
 	{
@@ -86,6 +87,22 @@ public sealed class LoggerNode : INotifyPropertyChanged
 				return;
 
 			_isExpanded = value;
+			OnPropertyChanged();
+		}
+	}
+
+	/// <summary>
+	/// Whether the logger is the selected one in the tree
+	/// </summary>
+	public bool IsSelected
+	{
+		get => _isSelected;
+		set
+		{
+			if (_isSelected == value)
+				return;
+
+			_isSelected = value;
 			OnPropertyChanged();
 		}
 	}

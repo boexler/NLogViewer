@@ -1253,7 +1253,7 @@
     <value>Egy oszlopfejléc szélének húzásával módosítható az oszlop szélessége</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Egy bejegyzés menüjének megnyitása: egy logger egyedüli megjelenítése vagy elrejtése, a szöveg másolása, hozzáadás a szűrőhöz</value>
+    <value>Egy bejegyzés menüjének megnyitása: csak egy logger megjelenítése vagy elrejtése, megjelenítése a loggerfában, a szöveg másolása, hozzáadás a szűrőhöz, az időtartomány beállítása, ugrás egy szintre vagy időpontra</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>A szűrőmező szövegének hozzáadása szűrőkifejezésként</value>

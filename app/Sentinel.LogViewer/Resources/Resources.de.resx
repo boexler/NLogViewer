@@ -1253,7 +1253,7 @@
     <value>Den Rand eines Spaltenkopfs ziehen, um die Breite der Spalte zu ändern</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Das Menü eines Eintrags öffnen: nur einen Logger zeigen oder ausblenden, Text kopieren, zum Filter hinzufügen</value>
+    <value>Das Menü eines Eintrags öffnen: nur einen Logger zeigen oder ausblenden, im Logger-Baum zeigen, Text kopieren, zum Filter hinzufügen, den Zeitbereich setzen, zu einem Level oder einer Zeit springen</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Den Text des Filterfelds als Filterbegriff hinzufügen</value>

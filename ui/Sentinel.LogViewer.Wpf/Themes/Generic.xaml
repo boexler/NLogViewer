@@ -821,12 +821,13 @@
                                     </Grid>
                                     <TextBox DockPanel.Dock="Top" Margin="0,0,0,6" ToolTip="Search loggers"
                                              Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TreeView ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
+                                    <TreeView x:Name="PART_LoggerTreeView" ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
                                               BorderThickness="0" Background="Transparent"
                                               VirtualizingPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                                                 <Setter Property="Visibility" Value="{Binding IsListed, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             </Style>

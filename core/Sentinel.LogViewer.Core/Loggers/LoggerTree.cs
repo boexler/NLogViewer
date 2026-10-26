@@ -94,6 +94,11 @@ public sealed class LoggerTree : INotifyPropertyChanged
 	public bool IsVisible(string? loggerName) => Rules.IsVisible(loggerName ?? string.Empty);
 
 	/// <summary>
+	/// The node of a logger by its whole name, or null when there is none
+	/// </summary>
+	public LoggerNode? Find(string? fullName) => fullName != null && _nodes.TryGetValue(fullName, out var node) ? node : null;
+
+	/// <summary>
 	/// Counts an entry
 	/// </summary>
 	public void Add(LogEntry entry)

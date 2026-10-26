@@ -1253,7 +1253,7 @@
     <value>Glisser le bord de l'en-tête d'une colonne pour changer sa largeur</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Ouvrir le menu d'une entrée : afficher seulement un logger ou le masquer, copier le texte, l'ajouter au filtre</value>
+    <value>Ouvrir le menu d’une entrée : n’afficher qu’un logger ou le masquer, l’afficher dans l’arbre des loggers, copier le texte, l’ajouter au filtre, définir la période, aller à un niveau ou à une heure</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Ajouter le texte du champ de filtre comme terme de filtre</value>

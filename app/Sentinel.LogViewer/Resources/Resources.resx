@@ -1256,7 +1256,7 @@
     <value>Drag the edge of a column header to change the width of the column</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter</value>
+    <value>Open the menu of an entry: show only or hide a logger, show it in the logger tree, copy the text, add it to the filter, set the time range, jump to a level or a time</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Add the text of the filter box as a filter term</value>
