@@ -1396,6 +1396,15 @@
   <data name="Shortcut_TimeRange" xml:space="preserve">
     <value>A lista időtartományának kiválasztása: csak egy időszak bejegyzései láthatók</value>
   </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Ugrás egy időpontra: kijelöli az onnan első bejegyzést</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Ugrás egy szint következő bejegyzésére: F4 Trace, F5 Debug, F6 Info, F7 Figyelmeztetés, F8 Hiba, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Ugrás az adott szint előző bejegyzésére</value>
+  </data>
 </root>
 
 

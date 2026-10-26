@@ -1396,5 +1396,14 @@
   <data name="Shortcut_TimeRange" xml:space="preserve">
     <value>Elegir el intervalo de tiempo de la lista: solo se muestran las entradas de un período</value>
   </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Ir a una hora: selecciona la primera entrada a partir de ella</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Ir a la siguiente entrada de un nivel: F4 Trace, F5 Debug, F6 Info, F7 Advertencia, F8 Error, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Ir a la entrada anterior de ese nivel</value>
+  </data>
 </root>
 

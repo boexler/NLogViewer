@@ -1399,5 +1399,14 @@
   <data name="Shortcut_TimeRange" xml:space="preserve">
     <value>Choose the time range of the list: only the entries of a period are shown</value>
   </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Go to a time: selects the first entry from then on</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Go to the next entry of a level: F4 Trace, F5 Debug, F6 Info, F7 Warn, F8 Error, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Go to the previous entry of that level</value>
+  </data>
 </root>
 

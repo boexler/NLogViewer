@@ -1396,6 +1396,15 @@
   <data name="Shortcut_TimeRange" xml:space="preserve">
     <value>Wybierz zakres czasu listy: widoczne są tylko wpisy z danego okresu</value>
   </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Przejdź do czasu: zaznacza pierwszy wpis od tej chwili</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Przejdź do następnego wpisu danego poziomu: F4 Trace, F5 Debug, F6 Info, F7 Ostrzeżenie, F8 Błąd, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Przejdź do poprzedniego wpisu tego poziomu</value>
+  </data>
 </root>
 
 

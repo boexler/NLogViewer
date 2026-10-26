@@ -530,6 +530,9 @@
                                     </WrapPanel>
                                 </StackPanel>
                             </GroupBox>
+
+                            <!-- What a jump has to say, e.g. that there is no further entry of a level -->
+                            <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,10,3" VerticalAlignment="Center" Opacity="0.8"/>
                         </WrapPanel>
 
                         <Grid Grid.Row="2">

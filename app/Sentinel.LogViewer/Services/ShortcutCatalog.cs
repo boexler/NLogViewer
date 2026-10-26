@@ -56,6 +56,9 @@ public static class ShortcutCatalog
 			new("Enter / F3", "Shortcut_NextHit", "Go to the next hit of the search"),
 			new("Shift+Enter / Shift+F3", "Shortcut_PreviousHit", "Go to the previous hit of the search"),
 			new("Ctrl+Shift+T", "Shortcut_TimeRange", "Choose the time range of the list: only the entries of a period are shown"),
+			new("Ctrl+T", "Shortcut_GoToTime", "Go to a time: selects the first entry from then on"),
+			new("F4…F9", "Shortcut_NextLevel", "Go to the next entry of a level: F4 Trace, F5 Debug, F6 Info, F7 Warn, F8 Error, F9 Fatal"),
+			new("Shift+F4…F9", "Shortcut_PreviousLevel", "Go to the previous entry of that level"),
 		}),
 		new("Shortcuts_Group_Settings", "Settings and dialogs", new Shortcut[]
 		{

@@ -1396,6 +1396,15 @@
   <data name="Shortcut_TimeRange" xml:space="preserve">
     <value>Alegeți intervalul de timp al listei: sunt afișate doar intrările unei perioade</value>
   </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Mergeți la o oră: selectează prima intrare de atunci</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Mergeți la următoarea intrare a unui nivel: F4 Trace, F5 Debug, F6 Info, F7 Avertisment, F8 Eroare, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Mergeți la intrarea anterioară a acelui nivel</value>
+  </data>
 </root>
 
 

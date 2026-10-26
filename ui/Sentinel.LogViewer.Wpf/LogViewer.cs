@@ -1563,6 +1563,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             FindPreviousCommand = new RelayCommand(() => FindNext(forward: false));
             InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
             InputBindings.Add(new KeyBinding(ChooseTimeRangeCommand, Key.T, ModifierKeys.Control | ModifierKeys.Shift));
+            AddJumpKeyBindings();
             InputBindings.Add(new KeyBinding(FindPreviousCommand, Key.F3, ModifierKeys.Shift));
             ScrollToEndCommand = new RelayCommand(() =>
             {
