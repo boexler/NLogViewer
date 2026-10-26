@@ -57,7 +57,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="NLog" Version="6.0.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
     <PackageReference Include="SharpVectors" Version="1.8.5" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
@@ -65,7 +64,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
-    <ProjectReference Include="..\Sentinel.LogViewer.TestLogging\Sentinel.LogViewer.TestLogging.csproj" />
+    <!-- The debug menu opens the test application; this only builds it first. -->
+    <ProjectReference Include="..\..\samples\Sentinel.LogViewer.TestApp\Sentinel.LogViewer.TestApp.csproj" Condition="'$(Configuration)' == 'Debug'" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

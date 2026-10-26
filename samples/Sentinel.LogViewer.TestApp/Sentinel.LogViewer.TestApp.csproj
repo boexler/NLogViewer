@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Sentinel.LogViewer.TestApp</RootNamespace>
+    <AssemblyName>Sentinel.LogViewer.TestApp</AssemblyName>
+    <ApplicationIcon>..\..\app\Sentinel.LogViewer\Resources\icons\icons8-analysieren-64.ico</ApplicationIcon>
+    <!-- Restore runtime packs for the installer and the portable publish; omit a single RuntimeIdentifier so a plain build is RID-agnostic -->
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!-- Test application and template; it comes as an installer and a portable folder with the release, not as a package. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="3.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="6.0.4" />
+    <PackageReference Include="NLog.Targets.Network" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Sentinel.LogViewer.Extensions.Logging\Sentinel.LogViewer.Extensions.Logging.csproj" />
+    <ProjectReference Include="..\..\ui\Sentinel.LogViewer.Wpf\Sentinel.LogViewer.Wpf.csproj" />
+  </ItemGroup>
+
+</Project>

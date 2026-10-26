@@ -1,0 +1,33 @@
+<Window x:Class="Sentinel.LogViewer.TestApp.ControlTest.ControlTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lv="clr-namespace:Sentinel.LogViewer.Wpf;assembly=Sentinel.LogViewer.Wpf"
+        Title="Control test" Width="1000" Height="620" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <WrapPanel Margin="6">
+            <Button Content="Open a popup" Padding="10,3" Click="OnOpenPopup"/>
+            <Button Content="Add a task" Padding="10,3" Margin="6,0,0,0" Click="OnAddTask"/>
+            <Button Content="Back to start" Padding="10,3" Margin="6,0,0,0" Click="OnBackToStart"/>
+            <Separator Margin="10,0"/>
+            <TextBlock Text="Columns of the first viewer:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+            <CheckBox Content="ID" IsChecked="{Binding ElementName=MessagesViewer, Path=ShowIdColumn}" Margin="2,0" VerticalAlignment="Center"/>
+            <CheckBox Content="Level" IsChecked="{Binding ElementName=MessagesViewer, Path=ShowLevelColumn}" Margin="2,0" VerticalAlignment="Center"/>
+            <CheckBox Content="TimeStamp" IsChecked="{Binding ElementName=MessagesViewer, Path=ShowTimeStampColumn}" Margin="2,0" VerticalAlignment="Center"/>
+            <CheckBox Content="LoggerName" IsChecked="{Binding ElementName=MessagesViewer, Path=ShowLoggerNameColumn}" Margin="2,0" VerticalAlignment="Center"/>
+        </WrapPanel>
+        <TabControl x:Name="Tabs" Grid.Row="1">
+            <TabItem Header="Messages (Info and below)">
+                <lv:LogViewer x:Name="MessagesViewer" MaxCount="1000"/>
+            </TabItem>
+            <TabItem Header="Warnings and errors">
+                <lv:LogViewer x:Name="ProblemsViewer" MaxCount="1000"/>
+            </TabItem>
+        </TabControl>
+        <TextBlock x:Name="ModeText" Grid.Row="2" Margin="8,4" Foreground="#6B6B6B" TextWrapping="Wrap"/>
+    </Grid>
+</Window>

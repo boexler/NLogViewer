@@ -19,10 +19,6 @@ namespace Sentinel.LogViewer
         private readonly SingleInstanceService _singleInstanceService = new();
         private IHost? _host;
 
-#if DEBUG
-        private TestLoggingService? _testLoggingService;
-#endif
-
         public App()
         {
             if (!_singleInstanceService.IsPrimaryInstance)
@@ -79,12 +75,6 @@ namespace Sentinel.LogViewer
             services.AddTransient<SettingsWindow>();
             services.AddTransient<LanguageSelectionWindow>();
             services.AddTransient<AboutWindow>();
-
-#if DEBUG
-            services.AddSingleton<TestLoggingService>();
-            services.AddTransient<TestLoggingViewModel>();
-            services.AddTransient<TestLoggingWindow>();
-#endif
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -121,21 +111,6 @@ namespace Sentinel.LogViewer
                     mainWindow.Loaded += (_, _) => mainWindow.HandleExternalInvocation(e.Args);
 
                 mainWindow.Show();
-
-#if DEBUG
-                _testLoggingService = _host.Services.GetRequiredService<TestLoggingService>();
-                if (ShouldAutoStartTestLogging())
-                {
-                    _testLoggingService.Start(new Sentinel.LogViewer.TestLogging.TestLoggingOptions
-                    {
-                        TargetName = "chainsaw",
-                        UdpHost = "127.0.0.1",
-                        UdpPort = 4000,
-                        MessageIntervalMs = 1000,
-                        ExceptionProbability = 0.2
-                    });
-                }
-#endif
             }
         }
 
@@ -170,27 +145,8 @@ namespace Sentinel.LogViewer
             }
         }
 
-#if DEBUG
-        private bool ShouldAutoStartTestLogging()
-        {
-            if (_host == null) return false;
-            try
-            {
-                var configService = _host.Services.GetRequiredService<ConfigurationService>();
-                return configService.LoadConfiguration().AutoStartTestLogging;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-#endif
-
         protected override void OnExit(ExitEventArgs e)
         {
-#if DEBUG
-            _testLoggingService?.Stop();
-#endif
             // Dispose the host and all registered services
             _host?.Dispose();
             _singleInstanceService.Dispose();

@@ -1,0 +1,85 @@
+<Window x:Class="Sentinel.LogViewer.TestApp.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sentinel.LogViewer test application" Width="780" Height="470"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="Card">
+            <Setter Property="BorderBrush" Value="#C8C8C8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="Heading">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="Label">
+            <Setter Property="Margin" Value="0,10,0,4"/>
+            <Setter Property="Foreground" Value="#6B6B6B"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource Heading}" Text="Log generator"/>
+                        <TextBlock Foreground="#6B6B6B" Text="Sends test logs to the viewer application."/>
+                        <TextBlock Style="{StaticResource Label}" Text="Library"/>
+                        <RadioButton x:Name="NLogRadio" Content="NLog 6" IsChecked="True" Checked="OnProtocolRulesChanged"/>
+                        <RadioButton x:Name="Log4NetRadio" Content="log4net (UDP only)" Checked="OnProtocolRulesChanged"/>
+                        <RadioButton x:Name="PlainRadio" Content="Plain XML, written by the test application" Checked="OnProtocolRulesChanged"/>
+                        <TextBlock Style="{StaticResource Label}" Text="Protocol, host and port"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="70"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ProtocolBox" SelectedIndex="0" SelectionChanged="OnProtocolRulesChanged">
+                                <ComboBoxItem Content="UDP"/>
+                                <ComboBoxItem Content="TCP"/>
+                            </ComboBox>
+                            <ComboBox x:Name="HostBox" Grid.Column="1" Margin="6,0" IsEditable="True" Text="127.0.0.1"/>
+                            <TextBox x:Name="PortBox" Grid.Column="2" Text="4000" VerticalContentAlignment="Center"/>
+                        </Grid>
+                        <TextBlock x:Name="GeneratorError" Foreground="#B3261E" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                    </StackPanel>
+                    <Button x:Name="GeneratorButton" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="0,12,0,0" Padding="10,6"
+                            Content="Open the generator" Click="OnOpenGenerator"/>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource Card}">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource Heading}" Text="Control test"/>
+                        <TextBlock Foreground="#6B6B6B" Text="The control in a window with popups and tasks."/>
+                        <TextBlock Style="{StaticResource Label}" Text="How the logging is connected"/>
+                        <RadioButton x:Name="NoDiRadio" Content="Logging of .NET, no dependency injection" IsChecked="True"/>
+                        <RadioButton x:Name="HostRadio" Content="Generic Host with dependency injection"/>
+                        <RadioButton x:Name="NLogHostRadio" Content="Host and NLog behind ILogger (also writes a file)"/>
+                    </StackPanel>
+                    <Button DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="0,12,0,0" Padding="10,6"
+                            Content="Open the control test" Click="OnOpenControlTest"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+        <TextBlock Grid.Row="1" Margin="6,6,6,0" Foreground="#6B6B6B"
+                   Text="A test tool and a template for embedding the control. It has no updates and is not installed with the viewer application."/>
+    </Grid>
+</Window>

@@ -162,7 +162,6 @@ namespace Sentinel.LogViewer.Services
                 Language = string.Empty, // Empty means auto-detect on first start
                 MaxLogEntriesPerTab = 10000,
                 AutoStartListening = false,
-                AutoStartTestLogging = false,
                 CheckForUpdates = true
             };
         }
@@ -192,7 +191,6 @@ namespace Sentinel.LogViewer.Services
         public bool AutoStartListening { get; set; } = false;
 
         /// <summary>When true (Debug only), auto-start the test log generator on startup.</summary>
-        public bool AutoStartTestLogging { get; set; } = false;
 
         /// <summary>When true, GitHub Releases are checked for a newer version on startup.</summary>
         public bool CheckForUpdates { get; set; } = true;
