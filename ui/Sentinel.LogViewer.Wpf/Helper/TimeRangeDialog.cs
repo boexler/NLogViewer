@@ -1,106 +1,114 @@
-using System;
-using System.Windows;
-using System.Windows.Controls;
-using Sentinel.LogViewer.Core;
-
-namespace Sentinel.LogViewer.Wpf.Helper
-{
-    /// <summary>
-    /// The dialog for the time range of a viewer: the start and the end as the times that the viewer shows, either of them may be empty
-    /// </summary>
-    internal sealed class TimeRangeDialog : Window
-    {
-        private readonly TextBox _from = new() { MinWidth = 190 };
-        private readonly TextBox _to = new() { MinWidth = 190 };
-        private readonly TextBlock _error = new() { Foreground = System.Windows.Media.Brushes.Firebrick, TextWrapping = TextWrapping.Wrap, MaxWidth = 340 };
-        private readonly TimeZoneInfo? _zone;
-
-        public TimeRangeDialog(TimeZoneInfo? zone, DateTime? from, DateTime? to)
-        {
-            _zone = zone;
-            Title = "Time range";
-            SizeToContent = SizeToContent.WidthAndHeight;
-            ResizeMode = ResizeMode.NoResize;
-            ShowInTaskbar = false;
-            WindowStartupLocation = WindowStartupLocation.CenterOwner;
-
-            _from.Text = TimeRangeInput.Format(from, zone);
-            _to.Text = TimeRangeInput.Format(to, zone);
-
-            var grid = new Grid { Margin = new Thickness(14) };
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            for (var i = 0; i < 4; i++)
-                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-
-            Place(grid, new TextBlock { Text = "From", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 8) }, 0, 0);
-            Place(grid, _from, 0, 1);
-            _from.Margin = new Thickness(0, 0, 0, 8);
-            Place(grid, new TextBlock { Text = "Until", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 8) }, 1, 0);
-            Place(grid, _to, 1, 1);
-            _to.Margin = new Thickness(0, 0, 0, 8);
-
-            var hint = new TextBlock
-            {
-                Text = $"Times of the list ({EntryTime.Label(zone)}), e.g. 2025-12-18 14:30. An empty box has no limit; an end without a time includes the whole day.",
-                TextWrapping = TextWrapping.Wrap,
-                MaxWidth = 340,
-                Opacity = 0.7,
-                Margin = new Thickness(0, 0, 0, 8)
-            };
-            Grid.SetColumnSpan(hint, 2);
-            Place(grid, hint, 2, 0);
-            Grid.SetColumnSpan(_error, 2);
-            _error.Margin = new Thickness(0, 0, 0, 8);
-            Place(grid, _error, 3, 0);
-
-            var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 80, Margin = new Thickness(0, 0, 6, 0), Padding = new Thickness(14, 4, 14, 4) };
-            ok.Click += (_, _) => Accept();
-            var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
-            var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
-
-            var root = new StackPanel { Children = { grid, buttons }, Margin = new Thickness(0, 0, 14, 14) };
-            Content = root;
-        }
-
-        /// <summary>The start that was chosen, a moment in UTC; null for none</summary>
-        public DateTime? From { get; private set; }
-
-        /// <summary>The end that was chosen, a moment in UTC; null for none</summary>
-        public DateTime? To { get; private set; }
-
-        private static void Place(Grid grid, UIElement element, int row, int column)
-        {
-            Grid.SetRow(element, row);
-            Grid.SetColumn(element, column);
-            grid.Children.Add(element);
-        }
-
-        private void Accept()
-        {
-            if (!TimeRangeInput.TryParse(_from.Text, _zone, false, out var from))
-            {
-                _error.Text = "The start is not a date and time.";
-                _from.Focus();
-                return;
-            }
-
-            if (!TimeRangeInput.TryParse(_to.Text, _zone, true, out var to))
-            {
-                _error.Text = "The end is not a date and time.";
-                _to.Focus();
-                return;
-            }
-
-            if (from > to)
-            {
-                _error.Text = "The start is after the end.";
-                return;
-            }
-
-            From = from;
-            To = to;
-            DialogResult = true;
-        }
-    }
-}
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using Sentinel.LogViewer.Core;
+
+namespace Sentinel.LogViewer.Wpf.Helper
+{
+    /// <summary>
+    /// The dialog for the time range of a viewer: a date and a time for the start and for the end, either of them may be switched off. The first
+    /// and the last entry are offered, and they are what an end that is switched off starts with.
+    /// </summary>
+    internal sealed class TimeRangeDialog : Window
+    {
+        private readonly MomentPicker _from = new("From", withCheckBox: true);
+        private readonly MomentPicker _to = new("Until", withCheckBox: true);
+        private readonly TextBlock _error = new() { Foreground = System.Windows.Media.Brushes.Firebrick, TextWrapping = TextWrapping.Wrap, MaxWidth = 440 };
+        private readonly TimeZoneInfo? _zone;
+        private readonly DateTime? _fromBefore;
+        private readonly DateTime? _toBefore;
+
+        /// <param name="zone">The zone of the display; the dates and times are in it</param>
+        /// <param name="from">The start now, a moment in UTC</param>
+        /// <param name="to">The end now, a moment in UTC</param>
+        /// <param name="first">The time of the first entry of the viewer, a moment in UTC, or null when there is none</param>
+        /// <param name="last">The time of the last entry of the viewer, a moment in UTC, or null when there is none</param>
+        public TimeRangeDialog(TimeZoneInfo? zone, DateTime? from, DateTime? to, DateTime? first, DateTime? last)
+        {
+            _zone = zone;
+            _fromBefore = from;
+            _toBefore = to;
+            Title = "Time range";
+            SizeToContent = SizeToContent.WidthAndHeight;
+            ResizeMode = ResizeMode.NoResize;
+            ShowInTaskbar = false;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            // A switched off end shows the first or the last entry, so that a pick starts from something useful; changing it switches it on.
+            Prepare(_from, from ?? first, from != null);
+            Prepare(_to, to ?? last, to != null);
+
+            var hint = new TextBlock
+            {
+                Text = $"Dates and times of the list ({EntryTime.Label(zone)}). An end that is switched off has no limit; changing it switches it on.",
+                TextWrapping = TextWrapping.Wrap,
+                MaxWidth = 440,
+                Opacity = 0.7,
+                Margin = new Thickness(0, 4, 0, 8)
+            };
+            _error.Margin = new Thickness(0, 0, 0, 8);
+
+            var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 80, Margin = new Thickness(0, 0, 6, 0), Padding = new Thickness(14, 4, 14, 4) };
+            ok.Click += (_, _) => Accept();
+            var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
+            var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
+
+            Content = new StackPanel
+            {
+                Margin = new Thickness(14),
+                Children =
+                {
+                    Row(_from, "First entry", first),
+                    Row(_to, "Last entry", last),
+                    hint,
+                    _error,
+                    buttons
+                }
+            };
+        }
+
+        /// <summary>The start that was chosen, a moment in UTC; null for none</summary>
+        public DateTime? From { get; private set; }
+
+        /// <summary>The end that was chosen, a moment in UTC; null for none</summary>
+        public DateTime? To { get; private set; }
+
+        private void Prepare(MomentPicker picker, DateTime? moment, bool active)
+        {
+            if (moment is { } value)
+                picker.Clock = TimeRangeInput.ToClock(value, _zone);
+
+            picker.IsActive = active;
+        }
+
+        private UIElement Row(MomentPicker picker, string buttonText, DateTime? offered)
+        {
+            var button = new Button
+            {
+                Content = buttonText,
+                Margin = new Thickness(10, 0, 0, 0),
+                Padding = new Thickness(8, 2, 8, 2),
+                VerticalAlignment = VerticalAlignment.Center,
+                IsEnabled = offered != null,
+                ToolTip = "Take the time of this entry"
+            };
+            button.Click += (_, _) => picker.Set(TimeRangeInput.ToClock(offered!.Value, _zone));
+            return new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6), Children = { picker, button } };
+        }
+
+        private void Accept()
+        {
+            var from = _from.IsActive ? TimeRangeInput.StartOf(_from.Clock, _zone, _fromBefore) : (DateTime?)null;
+            var to = _to.IsActive ? TimeRangeInput.EndOf(_to.Clock, _zone, _toBefore) : (DateTime?)null;
+            if (from > to)
+            {
+                _error.Text = "The start is after the end.";
+                return;
+            }
+
+            From = from;
+            To = to;
+            DialogResult = true;
+        }
+    }
+}

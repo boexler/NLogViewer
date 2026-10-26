@@ -79,41 +79,40 @@ public class TimeRangeTests
 		Assert.Null(restored.TimeTo);
 	}
 
-	[Fact]
-	public void WhatTheUserTypes_IsATimeOfTheListInItsZone_AndTheEndIncludesWhatWasNotTyped()
-	{
-		Assert.True(TimeRangeInput.TryParse("", Tokyo, false, out var none));
-		Assert.Null(none);
-
-		Assert.True(TimeRangeInput.TryParse("2025-12-18 14:30", Tokyo, false, out var start));
-		Assert.Equal(Utc(5, 30), start);
-
-		// An end without seconds is the end of the minute, without a time the end of the day, with milliseconds exactly that.
-		Assert.True(TimeRangeInput.TryParse("2025-12-18 14:30", Tokyo, true, out var minute));
-		Assert.Equal(Utc(5, 30).AddMinutes(1).AddTicks(-1), minute);
-		Assert.True(TimeRangeInput.TryParse("2025-12-18 14:30:15", Tokyo, true, out var second));
-		Assert.Equal(Utc(5, 30, 15).AddSeconds(1).AddTicks(-1), second);
-		Assert.True(TimeRangeInput.TryParse("2025-12-18", TimeZoneInfo.Utc, true, out var day));
-		Assert.Equal(new DateTime(2025, 12, 19, 0, 0, 0, DateTimeKind.Utc).AddTicks(-1), day);
-		Assert.True(TimeRangeInput.TryParse("2025-12-18 14:30:15.250", TimeZoneInfo.Utc, true, out var exact));
-		Assert.Equal(Utc(14, 30, 15).AddMilliseconds(250), exact);
-
-		Assert.False(TimeRangeInput.TryParse("yesterday-ish", null, false, out _));
-	}
-
-	[Fact]
-	public void TheRangeIsShownInTheZoneOfTheList_AndReadBackTheSame()
-	{
-		Assert.Equal("2025-12-18 14:30:00", TimeRangeInput.Format(Utc(5, 30), Tokyo));
-		Assert.Equal("2025-12-18 05:30:00.250", TimeRangeInput.Format(Utc(5, 30).AddMilliseconds(250), TimeZoneInfo.Utc));
-		Assert.Equal(string.Empty, TimeRangeInput.Format(null, Tokyo));
-
-		Assert.True(TimeRangeInput.TryParse(TimeRangeInput.Format(Utc(5, 30), Tokyo), Tokyo, false, out var again));
-		Assert.Equal(Utc(5, 30), again);
-
-		Assert.Equal("2025-12-18 05:00:00 – 2025-12-18 06:00:00 (UTC)", TimeRangeInput.Describe(Utc(5), Utc(6), TimeZoneInfo.Utc));
-		Assert.Equal("from 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(Utc(5), null, Tokyo));
-		Assert.Equal("until 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(null, Utc(5), Tokyo));
-		Assert.Equal(string.Empty, TimeRangeInput.Describe(null, null, Tokyo));
-	}
+	[Fact]
+	public void APickedTime_IsAMomentInTheZoneOfTheList_AndTheEndIncludesTheWholeSecond()
+	{
+		var clock = new DateTime(2025, 12, 18, 14, 30, 15);
+
+		Assert.Equal(Utc(5, 30).AddSeconds(15), TimeRangeInput.StartOf(clock, Tokyo, null));
+		Assert.Equal(Utc(5, 30).AddSeconds(16).AddTicks(-1), TimeRangeInput.EndOf(clock, Tokyo, null));
+		Assert.Equal(clock, TimeRangeInput.ToClock(TimeRangeInput.StartOf(clock, Tokyo, null), Tokyo));
+	}
+
+	[Fact]
+	public void ADialogThatIsClosedWithoutAChange_KeepsTheMomentsToTheMillisecond()
+	{
+		var start = Utc(5, 30).AddSeconds(15).AddMilliseconds(385);
+		var end = Utc(6, 0).AddSeconds(20).AddMilliseconds(120);
+
+		// The pickers show the seconds only; what lies in the second that they show is not changed.
+		Assert.Equal(start, TimeRangeInput.StartOf(TimeRangeInput.ToClock(start, Tokyo).AddMilliseconds(-385), Tokyo, start));
+		Assert.Equal(end, TimeRangeInput.EndOf(TimeRangeInput.ToClock(end, Tokyo).AddMilliseconds(-120), Tokyo, end));
+
+		// Another second is another moment.
+		Assert.NotEqual(start, TimeRangeInput.StartOf(TimeRangeInput.ToClock(start, Tokyo).AddSeconds(1), Tokyo, start));
+	}
+
+	[Fact]
+	public void TheRangeIsShownInTheZoneOfTheList()
+	{
+		Assert.Equal("2025-12-18 14:30:00", TimeRangeInput.Format(Utc(5, 30), Tokyo));
+		Assert.Equal("2025-12-18 05:30:00.250", TimeRangeInput.Format(Utc(5, 30).AddMilliseconds(250), TimeZoneInfo.Utc));
+		Assert.Equal(string.Empty, TimeRangeInput.Format(null, Tokyo));
+
+		Assert.Equal("2025-12-18 05:00:00 \u2013 2025-12-18 06:00:00 (UTC)", TimeRangeInput.Describe(Utc(5), Utc(6), TimeZoneInfo.Utc));
+		Assert.Equal("from 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(Utc(5), null, Tokyo));
+		Assert.Equal("until 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(null, Utc(5), Tokyo));
+		Assert.Equal(string.Empty, TimeRangeInput.Describe(null, null, Tokyo));
+	}
 }

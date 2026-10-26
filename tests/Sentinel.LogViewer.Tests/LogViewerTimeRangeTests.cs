@@ -166,4 +166,17 @@ public class LogViewerTimeRangeTests
 
 			Assert.Same(viewer.ChooseTimeRangeCommand, binding.Command);
 		});
+
+	[Fact]
+	public void TheFirstAndTheLastEntry_AreOfferedToTheDialog_AsMoments() =>
+		WithViewer((viewer, entries) =>
+		{
+			viewer.FileTimeZone = Tokyo;
+
+			// 05:00 UTC for the entry without a zone, then 10:00 to 12:00 UTC.
+			Assert.Equal((Utc(5), Utc(12)), (viewer.EntryTimeSpan().First!.Value, viewer.EntryTimeSpan().Last!.Value));
+
+			entries.Clear();
+			Assert.Equal(((DateTime?)null, (DateTime?)null), viewer.EntryTimeSpan());
+		});
 }

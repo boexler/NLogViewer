@@ -109,8 +109,9 @@ namespace Sentinel.LogViewer.Wpf
 
         private void GoToTimeDialog()
         {
+            // It starts at the selected entry, or at the first one.
             var shown = PART_ListView?.SelectedItem as LogEntry;
-            var initial = shown == null ? string.Empty : TimeRangeInput.Format(EntryTime.ToUtc(shown.TimeStamp, FileTimeZone), DisplayTimeZone);
+            DateTime? initial = shown != null ? EntryTime.ToUtc(shown.TimeStamp, FileTimeZone) : EntryTimeSpan().First;
             var dialog = new GoToTimeDialog(DisplayTimeZone, initial) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true && dialog.Moment is { } moment)
                 GoToTime(moment);

@@ -161,9 +161,30 @@ namespace Sentinel.LogViewer.Wpf
             SetValue(TimeRangeTextPropertyKey, TimeRangeInput.Describe(TimeFrom, TimeTo, DisplayTimeZone));
         }
 
+        /// <summary>
+        /// The times of the earliest and of the latest of all the entries, moments in UTC; null when there are none
+        /// </summary>
+        internal (DateTime? First, DateTime? Last) EntryTimeSpan()
+        {
+            DateTime? first = null;
+            DateTime? last = null;
+            foreach (var entry in GetEffectiveEntries())
+            {
+                var moment = EntryTime.ToUtc(entry.TimeStamp, FileTimeZone);
+                if (first == null || moment < first)
+                    first = moment;
+
+                if (last == null || moment > last)
+                    last = moment;
+            }
+
+            return (first, last);
+        }
+
         private void ChooseTimeRange()
         {
-            var dialog = new TimeRangeDialog(DisplayTimeZone, TimeFrom, TimeTo) { Owner = Window.GetWindow(this) };
+            var (first, last) = EntryTimeSpan();
+            var dialog = new TimeRangeDialog(DisplayTimeZone, TimeFrom, TimeTo, first, last) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true)
                 ApplyTimeRange(dialog.From, dialog.To);
         }
