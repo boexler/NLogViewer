@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
@@ -81,5 +83,21 @@ public static class WpfTestHelper
 	{
 		for (var i = 0; i < 3; i++)
 			Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.ApplicationIdle, () => { });
+	}
+
+	/// <summary>
+	/// All the elements of a type below an element in the visual tree, depth first
+	/// </summary>
+	public static IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
+	{
+		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+		{
+			var child = VisualTreeHelper.GetChild(root, i);
+			if (child is T match)
+				yield return match;
+
+			foreach (var descendant in Descendants<T>(child))
+				yield return descendant;
+		}
 	}
 }

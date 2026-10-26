@@ -205,6 +205,9 @@
   <data name="About_Copy" xml:space="preserve">
     <value>Copiar</value>
   </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Copiado</value>
+  </data>
   <data name="About_OpenRelease" xml:space="preserve">
     <value>Abrir la página de la versión</value>
   </data>

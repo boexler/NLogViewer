@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Wpf;
 using Xunit;
+using static Sentinel.LogViewer.Tests.WpfTestHelper;
 
 namespace Sentinel.LogViewer.Tests;
 
@@ -28,19 +29,6 @@ public class LogViewerLookTests
 		new LogEntry(LogEntryLevel.Info, "Acme.Orders", "created"),
 		new LogEntry(LogEntryLevel.Error, "Acme.Billing", "failed")
 	};
-
-	private static IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
-	{
-		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-		{
-			var child = VisualTreeHelper.GetChild(root, i);
-			if (child is T match)
-				yield return match;
-
-			foreach (var descendant in Descendants<T>(child))
-				yield return descendant;
-		}
-	}
 
 	private void WithViewer(System.Action<Wpf.LogViewer> test) => _context.RunOnSta(() =>
 	{
