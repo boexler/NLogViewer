@@ -158,7 +158,10 @@ namespace Sentinel.LogViewer.Wpf
         private void UpdateTimeRangeText()
         {
             SetValue(HasTimeRangePropertyKey, TimeFrom != null || TimeTo != null);
-            SetValue(TimeRangeTextPropertyKey, TimeRangeInput.Describe(TimeFrom, TimeTo, DisplayTimeZone));
+            // It is written like the list is, in the format of the time stamp column.
+            var resolver = TimeStampResolver as Resolver.TimeStampResolver;
+            Func<DateTime, string>? format = resolver == null ? null : resolver.FormatClock;
+            SetValue(TimeRangeTextPropertyKey, TimeRangeInput.Describe(TimeFrom, TimeTo, DisplayTimeZone, format));
         }
 
         /// <summary>

@@ -114,5 +114,8 @@ public class TimeRangeTests
 		Assert.Equal("from 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(Utc(5), null, Tokyo));
 		Assert.Equal("until 2025-12-18 14:00:00 (UTC+9)", TimeRangeInput.Describe(null, Utc(5), Tokyo));
 		Assert.Equal(string.Empty, TimeRangeInput.Describe(null, null, Tokyo));
+
+		// With the format of the list.
+		Assert.Equal("18.12.2025 14:00:00 – 18.12.2025 15:00:00 (UTC+9)", TimeRangeInput.Describe(Utc(5), Utc(6), Tokyo, clock => clock.ToString("dd.MM.yyyy HH:mm:ss")));
 	}
 }

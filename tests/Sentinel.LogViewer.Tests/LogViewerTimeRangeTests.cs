@@ -148,14 +148,19 @@ public class LogViewerTimeRangeTests
 		{
 			Assert.Equal(string.Empty, viewer.TimeRangeText);
 
+			viewer.CustomTimeStampFormat = TimeStampFormat.Iso;
 			viewer.DisplayTimeZone = TimeZoneInfo.Utc;
 			viewer.TimeFrom = Utc(11);
 			viewer.TimeTo = Utc(12, 30);
-			Assert.Equal("2025-12-18 11:00:00 – 2025-12-18 12:30:00 (UTC)", viewer.TimeRangeText);
+			Assert.Equal("2025-12-18 11:00:00.000 – 2025-12-18 12:30:00.000 (UTC)", viewer.TimeRangeText);
 
 			viewer.DisplayTimeZone = Tokyo;
-			Assert.Equal("2025-12-18 20:00:00 – 2025-12-18 21:30:00 (UTC+9)", viewer.TimeRangeText);
+			Assert.Equal("2025-12-18 20:00:00.000 – 2025-12-18 21:30:00.000 (UTC+9)", viewer.TimeRangeText);
 			Assert.Equal((Utc(11), Utc(12, 30)), (viewer.TimeFrom!.Value, viewer.TimeTo!.Value));
+
+			// It is written like the list is: in the format of the time stamp column.
+			viewer.CustomTimeStampFormat = TimeStampFormat.German;
+			Assert.Equal("18.12.2025 20:00:00.000 – 18.12.2025 21:30:00.000 (UTC+9)", viewer.TimeRangeText);
 		});
 
 	[Fact]
