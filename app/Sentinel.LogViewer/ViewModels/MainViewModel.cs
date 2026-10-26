@@ -53,6 +53,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private bool _isLoading;
 	private string _loadingProgress = string.Empty;
 	private TimeStampFormat _defaultTimeStampFormat;
+	private TimeZoneInfo? _lastFileTimeZone;
 	private Wpf.LevelDisplayMode _levelDisplay;
 	private Wpf.RowHeightMode _rowHeight;
 	private string _listFontFamilyName = string.Empty;
@@ -123,6 +124,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		CloseTabCommand = new RelayCommand<LogTabViewModel>(CloseTab);
 		CloseOtherTabsCommand = new RelayCommand<LogTabViewModel>(CloseOtherTabs, _ => LogTabs.Count > 1);
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
+		ChangeTimeZoneCommand = new RelayCommand<LogTabViewModel>(ChangeTimeZone);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
 		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
@@ -565,6 +567,31 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			return;
 
 		SelectedTab = LogTabs[number == 9 ? LogTabs.Count - 1 : Math.Min(number, LogTabs.Count) - 1];
+	}
+
+	/// <summary>
+	/// Opens the dialog for the time zones of the tab. The zone that is chosen for a file is the one that the next file without a zone in its
+	/// times takes, until the app is closed; logs from the network never take it.
+	/// </summary>
+	private void ChangeTimeZone(LogTabViewModel? tab)
+	{
+		if (tab == null)
+			return;
+
+		// The times of a live tab all have a zone, so its first entry is as good as any, and the search through a long list is saved.
+		var sample = tab.IsLive
+			? tab.LogEntries.FirstOrDefault()
+			: tab.LogEntries.FirstOrDefault(entry => entry.TimeStamp.Kind == DateTimeKind.Unspecified) ?? tab.LogEntries.FirstOrDefault();
+		var viewModel = new TimeZoneViewModel(tab.IsLive, tab.FileTimeZone, tab.DisplayTimeZone, sample, _localizationService);
+		if (new TimeZoneWindow(viewModel).ShowDialog(System.Windows.Application.Current.MainWindow) != true)
+			return;
+
+		tab.DisplayTimeZone = viewModel.DisplayZone;
+		if (!tab.IsLive)
+		{
+			tab.FileTimeZone = viewModel.FileZone;
+			_lastFileTimeZone = viewModel.FileZone;
+		}
 	}
 
 	/// <summary>
@@ -1060,6 +1087,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand RemoveTakenOverFiltersCommand { get; }
 	public ICommand CloseOtherTabsCommand { get; }
 	public ICommand SaveFilteredListCommand { get; }
+
+	/// <summary>Opens the dialog for the time zones of a tab; the parameter is the tab</summary>
+	public ICommand ChangeTimeZoneCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
 
 	/// <summary>Closes the tabs to the right of the tab; the parameter is the tab</summary>
@@ -1452,11 +1482,35 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			return;
 		}
 
+		// The zone of a file: the one saved with its mapping, otherwise the one that was chosen last; only for times without a zone.
+		string? savedZoneId = null;
+		var extension = Path.GetExtension(filePath).ToLowerInvariant();
+		if (extension is not (".xml" or ".json") && logEvents.Any(entry => entry.TimeStamp.Kind == DateTimeKind.Unspecified))
+			savedZoneId = (textFormat ?? _fileParserService.GetTextFileFormat(filePath))?.TimeZoneId;
+
 		await dispatcher.InvokeAsync(() =>
 		{
-			ApplyParsedLogs(logEvents, filePath, ctx);
+			ApplyParsedLogs(logEvents, filePath, ctx, savedZoneId);
 			LastLogTimestamp = DateTime.Now.ToString("HH:mm:ss");
 		}).Task.ConfigureAwait(false);
+	}
+
+	/// <summary>
+	/// The entries of a file that is added to a tab that exists, with the times of the file read in its own zone (see
+	/// <see cref="TimeZoneChoices.FitToTab"/>); when the zone is not known, the user is asked once for the whole import
+	/// </summary>
+	private List<LogEntry> FitToTab(List<LogEntry> logEvents, string? savedZoneId, LogTabViewModel tab, string filePath, LogFileImportBatchContext ctx) =>
+		TimeZoneChoices.FitToTab(logEvents, savedZoneId, tab.FileTimeZone, () => ctx.ReadLikeTab ??= AskToReadLikeTab(tab.FileTimeZone, filePath));
+
+	private bool AskToReadLikeTab(TimeZoneInfo? tabZone, string filePath)
+	{
+		var zone = EntryTime.Label(tabZone);
+		var message = string.Format(System.Globalization.CultureInfo.CurrentCulture,
+			_localizationService.GetString("TimeZone_AskText", "This tab reads times without a zone as {0}. Read the times of the file {1} as {0} too? Choose No to read them as local time."),
+			zone, Path.GetFileName(filePath));
+		var caption = _localizationService.GetString("TimeZone_AskTitle", "Time zone of the new file");
+		return MessageDialogWindow.Show(System.Windows.Application.Current.MainWindow, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
+		       MessageBoxResult.No;
 	}
 
 	private string FormatParseProgress(string filePath, int fileIndex, int fileTotal, int current, int parsedTotal,
@@ -1473,17 +1527,19 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Appends parsed rows to the tab chosen for this import batch.
 	/// </summary>
-	private void ApplyParsedLogs(List<LogEntry> logEvents, string filePath, LogFileImportBatchContext ctx)
+	private void ApplyParsedLogs(List<LogEntry> logEvents, string filePath, LogFileImportBatchContext ctx, string? savedZoneId = null)
 	{
 		if (logEvents == null || logEvents.Count == 0)
 			return;
 
 		LogTabViewModel tab;
+		var newTabZone = TimeZoneChoices.ForNewFile(logEvents, savedZoneId, _lastFileTimeZone);
 		switch (ctx.Mode)
 		{
 			case LogFileImportBatchContext.DestinationMode.ExistingTab:
 				tab = ctx.ExistingTargetTab
 				      ?? throw new InvalidOperationException("Existing tab target is not set.");
+				logEvents = FitToTab(logEvents, savedZoneId, tab, filePath, ctx);
 				break;
 			case LogFileImportBatchContext.DestinationMode.SingleNewTab:
 				if (ctx.SharedNewTab == null)
@@ -1492,10 +1548,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 					{
 						Header = ctx.SharedTabHeaderWhenSingleNewTab ?? Path.GetFileName(filePath),
 						TargetName = $"FileImport_{Guid.NewGuid()}",
-						MaxCount = int.MaxValue
+						MaxCount = int.MaxValue,
+						FileTimeZone = newTabZone
 					};
 					LogTabs.Add(ctx.SharedNewTab);
 					SelectedTab = ctx.SharedNewTab;
+				}
+				else
+				{
+					logEvents = FitToTab(logEvents, savedZoneId, ctx.SharedNewTab, filePath, ctx);
 				}
 
 				tab = ctx.SharedNewTab;
@@ -1505,7 +1566,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				{
 					Header = Path.GetFileName(filePath),
 					TargetName = $"FileImport_{Guid.NewGuid()}",
-					MaxCount = int.MaxValue
+					MaxCount = int.MaxValue,
+					FileTimeZone = newTabZone
 				};
 				LogTabs.Add(tab);
 				SelectedTab = tab;

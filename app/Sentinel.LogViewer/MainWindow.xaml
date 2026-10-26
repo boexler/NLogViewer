@@ -65,13 +65,18 @@
                 <MenuItem Header="{helpers:Resource Key=Tab_SaveFilteredList, DefaultValue=Save filtered list...}"
                           Command="{Binding PlacementTarget.Tag.SaveFilteredListCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
-                <Separator/>
+                <MenuItem Header="{helpers:Resource Key=Tab_TimeZone, DefaultValue=Time zone...}"
+                          Command="{Binding PlacementTarget.Tag.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <!-- A file has no sender and no restart, so what belongs to an application is only shown for a tab of logs from the network -->
+                <Separator Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_TakeOverFilters, DefaultValue=Take over the filters into new tabs of this application}"
+                          Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"
                           IsChecked="{Binding TakesOverFilters, Mode=OneWay}"
                           Command="{Binding PlacementTarget.Tag.ToggleTakeOverFiltersCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_AfterRestart, DefaultValue=After a restart of this application}"
-                          IsEnabled="{Binding IsLive}">
+                          Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}">
                     <MenuItem Header="{helpers:Resource Key=Restart_Extend, DefaultValue=Continue in the existing tab}"
                               Tag="ExtendTab" IsChecked="{Binding RestartExtendsTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
                     <MenuItem Header="{helpers:Resource Key=Restart_NewTab, DefaultValue=Open a new tab}"
@@ -79,14 +84,17 @@
                     <MenuItem Header="{helpers:Resource Key=Restart_Replace, DefaultValue=Open a new tab and close the old one}"
                               Tag="ReplaceTab" IsChecked="{Binding RestartReplacesTab, Mode=OneWay}" Click="RestartBehaviorMenuItem_Click"/>
                 </MenuItem>
-                <Separator/>
+                <Separator Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_IgnoreApplicationFromSender, DefaultValue=Ignore this application (from this IP address)}"
+                          Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"
                           Command="{Binding PlacementTarget.Tag.IgnoreApplicationFromSenderCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_IgnoreApplication, DefaultValue=Ignore this application (from any IP address)}"
+                          Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"
                           Command="{Binding PlacementTarget.Tag.IgnoreApplicationCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_IgnoreSender, DefaultValue=Ignore this IP address}"
+                          Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"
                           Command="{Binding PlacementTarget.Tag.IgnoreSenderCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
             </ContextMenu>
@@ -148,6 +156,9 @@
                     VisibleEntryCount="{Binding DataContext.VisibleEntryCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
                     SearchFields="{Binding DataContext.SearchFields, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     ColumnKeys="{Binding DataContext.ColumnKeys, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    FileTimeZone="{Binding DataContext.FileTimeZone, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    DisplayTimeZone="{Binding DataContext.DisplayTimeZone, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    ChangeTimeZoneCommand="{Binding DataContext.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                     MaxCount="{Binding DataContext.MaxCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}}">
                     <dj:LogViewer.Resources>
                         <!-- The buttons of the control have a fixed size, so they get less padding than the buttons of the dialogs -->

@@ -1351,5 +1351,44 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Minimize to the tray. New entries of the level you choose show a notification with application, logger and message; a click on it opens the tab.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>The times in this file were written in:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Only times without a zone are read in this zone. Times that carry a zone (like 10:00Z) and logs from the network are converted by themselves.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Show the times in:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Local time (this computer)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Time zone...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Time zone of the file:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>The zone in which the times without a zone were written. They are shown in your time. It can be changed later in the menu of the tab.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Reset zones</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Not specified (as in the tab)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Time zone of the new file</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>This tab reads times without a zone as {0}. Read the times of the file {1} as {0} too? Choose No to read them as local time.</value>
+  </data>
 </root>
 

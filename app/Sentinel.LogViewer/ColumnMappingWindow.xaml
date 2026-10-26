@@ -94,6 +94,15 @@
                               MinWidth="180"
                               ToolTip="{helpers:Resource Key=ColumnMapping_DateOrder_Tooltip, DefaultValue=How day and month are ordered in dates like 01/02/2025. Dates with a day above 12 tell it by themselves.}" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <Label Content="{helpers:Resource Key=ColumnMapping_TimeZone, DefaultValue=Time zone of the file:}" VerticalAlignment="Center" Padding="0,0,5,0" />
+                    <ComboBox ItemsSource="{Binding TimeZones}"
+                              DisplayMemberPath="Name"
+                              SelectedValuePath="Id"
+                              SelectedValue="{Binding TimeZoneId}"
+                              MinWidth="180" MaxWidth="360"
+                              ToolTip="{helpers:Resource Key=ColumnMapping_TimeZone_Tooltip, DefaultValue=The zone in which the times without a zone were written. They are shown in your time. It can be changed later in the menu of the tab.}"/>
+                </StackPanel>
                 <CheckBox Content="{helpers:Resource Key=ColumnMapping_HasHeaderLine, DefaultValue=First line is a header/info line}"
                           IsChecked="{Binding HasHeaderLine}"
                           Margin="0,5"/>

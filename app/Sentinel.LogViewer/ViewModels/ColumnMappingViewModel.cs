@@ -25,6 +25,7 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 	private string _separator;
 	private bool _hasHeaderLine;
 	private DateOrder _dateOrder;
+	private string _timeZoneId;
 	private bool _saveForPattern;
 	private string _filePattern = string.Empty;
 	private ObservableCollection<ColumnMappingItem> _columns = new();
@@ -41,10 +42,12 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 		_separator = format.Separator;
 		_hasHeaderLine = format.HasHeaderLine;
 		_dateOrder = format.DateOrder;
+		_timeZoneId = format.TimeZoneId ?? string.Empty;
 		_filePattern = System.IO.Path.GetFileName(filePath);
 
 		FieldTypes = FieldNames.Select(field => new FieldTypeOption(field, Text("ColumnMapping_Field_" + field, field))).ToList();
 		DateOrders = CreateDateOrders();
+		TimeZones = TimeZoneChoices.Create(localization, withNotSet: true);
 		Separators = CreateSeparators();
 
 		InitializeColumns();
@@ -119,6 +122,27 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 			}
 		}
 	}
+
+	/// <summary>
+	/// Gets or sets the id of the time zone in which the times of the file were written; empty for the local time of the computer
+	/// </summary>
+	public string TimeZoneId
+	{
+		get => _timeZoneId;
+		set
+		{
+			if (_timeZoneId != value)
+			{
+				_timeZoneId = value ?? string.Empty;
+				OnPropertyChanged();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Gets the zones that can be chosen for the times of the file
+	/// </summary>
+	public IReadOnlyList<TimeZoneChoice> TimeZones { get; }
 
 	/// <summary>
 	/// Gets the selectable orders of day and month by display name; the automatic one names what this computer uses
@@ -252,7 +276,8 @@ public class ColumnMappingViewModel : INotifyPropertyChanged
 				StartLineIndex = HasHeaderLine ? 1 : 0,
 				ColumnCount = Columns.Count,
 				ColumnMapping = mapping,
-				DateOrder = DateOrder
+				DateOrder = DateOrder,
+				TimeZoneId = TimeZoneId
 			};
 		}
 	}

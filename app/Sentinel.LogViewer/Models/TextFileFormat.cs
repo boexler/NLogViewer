@@ -45,6 +45,12 @@ public class TextFileFormat
 	/// not tell; the culture of the computer decides then.
 	/// </summary>
 	public DateOrder DateOrder { get; set; } = DateOrder.Auto;
+
+	/// <summary>
+	/// Gets or sets the id of the time zone in which the times of the file were written, for times that give no zone; empty for the local time
+	/// of the computer
+	/// </summary>
+	public string TimeZoneId { get; set; } = string.Empty;
 }
 
 /// <summary>

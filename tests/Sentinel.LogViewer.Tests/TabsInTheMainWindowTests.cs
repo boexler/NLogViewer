@@ -1151,4 +1151,74 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			}
 		});
 	}
+
+	[Fact]
+	public void TheMenuOfAFileTab_HasNoEntriesForAnApplication_AndTheMenuOfALiveTab_HasThem()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var liveTab = session.ViewModel.LogTabs[0];
+			var fileTab = new LogTabViewModel { Header = "tokyo.log", TargetName = "FileImport_x", MaxCount = int.MaxValue };
+			session.ViewModel.LogTabs.Add(fileTab);
+			session.ViewModel.SelectedTab = fileTab;
+			WpfTestHelper.Settle();
+
+			string[] ofAnApplication =
+			{
+				"Take over the filters into new tabs of this application",
+				"After a restart of this application",
+				"Ignore this application (from this IP address)",
+				"Ignore this application (from any IP address)",
+				"Ignore this IP address"
+			};
+
+			System.Windows.Visibility VisibilityOf(LogTabViewModel tab, string header)
+			{
+				var menu = Descendants<TabItem>(session.Window).First(item => ReferenceEquals(item.DataContext, tab)).ContextMenu!;
+				menu.IsOpen = true;
+				WpfTestHelper.Settle();
+				try
+				{
+					return menu.Items.OfType<MenuItem>().Single(item => item.Header?.ToString() == header).Visibility;
+				}
+				finally
+				{
+					menu.IsOpen = false;
+				}
+			}
+
+			foreach (var header in ofAnApplication)
+			{
+				Assert.Equal(System.Windows.Visibility.Collapsed, VisibilityOf(fileTab, header));
+				Assert.Equal(System.Windows.Visibility.Visible, VisibilityOf(liveTab, header));
+			}
+
+			Assert.Equal(System.Windows.Visibility.Visible, VisibilityOf(fileTab, "Time zone..."));
+			Assert.Equal(System.Windows.Visibility.Visible, VisibilityOf(liveTab, "Time zone..."));
+		});
+	}
+
+	[Fact]
+	public void TheZonesOfATab_AndOfItsViewer_FollowEachOther_AndTheViewerOpensTheDialogOfTheApplication()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tokyo = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+			var tab = new LogTabViewModel { Header = "tokyo.log", TargetName = "FileImport_y", MaxCount = int.MaxValue };
+			session.ViewModel.LogTabs.Add(tab);
+			session.ViewModel.SelectedTab = tab;
+			WpfTestHelper.Settle();
+			var viewer = ViewerOf(session, tab);
+
+			tab.FileTimeZone = tokyo;
+			Assert.Equal(tokyo, viewer.FileTimeZone);
+
+			viewer.DisplayTimeZone = TimeZoneInfo.Utc;
+			Assert.Equal(TimeZoneInfo.Utc, tab.DisplayTimeZone);
+			Assert.Same(session.ViewModel.ChangeTimeZoneCommand, viewer.ChangeTimeZoneCommand);
+		});
+	}
 }

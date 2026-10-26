@@ -29,6 +29,23 @@ public static class EntryTime
 	}
 
 	/// <summary>
+	/// The id that stands for the local time of the computer where a zone is chosen from a list or saved
+	/// </summary>
+	public const string LocalId = "local";
+
+	/// <summary>
+	/// A time stamp as a moment: a time without a zone is read in the zone of the file and becomes UTC; the others stay as they are
+	/// </summary>
+	public static DateTime ToMoment(DateTime timeStamp, TimeZoneInfo? fileZone)
+	{
+		if (timeStamp.Kind != DateTimeKind.Unspecified)
+			return timeStamp;
+
+		var zone = fileZone ?? TimeZoneInfo.Local;
+		return new DateTimeOffset(timeStamp, zone.GetUtcOffset(timeStamp)).UtcDateTime;
+	}
+
+	/// <summary>
 	/// The zone that the clock time of a time stamp is in: the one of the kind, or the zone of the file for a time without a zone
 	/// </summary>
 	public static TimeZoneInfo ZoneOf(DateTime timeStamp, TimeZoneInfo? fileZone) => timeStamp.Kind switch
@@ -60,7 +77,7 @@ public static class EntryTime
 	/// </summary>
 	public static TimeZoneInfo? FindZone(string? id)
 	{
-		if (string.IsNullOrWhiteSpace(id))
+		if (string.IsNullOrWhiteSpace(id) || string.Equals(id, LocalId, StringComparison.OrdinalIgnoreCase))
 			return null;
 
 		try

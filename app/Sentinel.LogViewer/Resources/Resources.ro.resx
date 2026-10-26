@@ -1351,6 +1351,45 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Minimizarea în zona de notificare. Intrările noi de nivelul ales afișează o notificare cu aplicația, loggerul și mesajul; un clic pe ea deschide fila.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Fus orar</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>Orele din acest fișier au fost scrise în:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Doar orele fără fus orar sunt citite în acest fus. Orele care au fus orar (ca 10:00Z) și jurnalele din rețea sunt convertite automat.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Afișează orele în:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Ora locală (acest computer)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Previzualizare</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Fus orar...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Fusul orar al fișierului:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>Fusul în care au fost scrise orele fără fus orar. Sunt afișate în ora dumneavoastră. Se poate schimba mai târziu din meniul filei.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Resetează fusurile</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Nespecificat (ca în filă)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Fusul orar al fișierului nou</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Această filă citește orele fără fus orar ca {0}. Citiți orele fișierului {1} tot ca {0}? Cu Nu sunt citite ca ora locală.</value>
+  </data>
 </root>
 
 

@@ -1351,5 +1351,44 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Minimieren in den Infobereich. Neue Einträge der gewählten Stufe zeigen eine Benachrichtigung mit Anwendung, Logger und Meldung, ein Klick darauf öffnet den Tab.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Zeitzone</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>Die Zeiten in dieser Datei wurden geschrieben in:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Nur Zeiten ohne Zeitzone werden in dieser Zone gelesen. Zeiten mit Zone (wie 10:00Z) und Logs aus dem Netzwerk werden selbst umgerechnet.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Zeiten anzeigen in:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Lokale Zeit (dieser Computer)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Zeitzone...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Zeitzone der Datei:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>Die Zone, in der die Zeiten ohne Zeitzone geschrieben wurden. Sie werden in Ihrer Zeit angezeigt. Das lässt sich später im Menü des Tabs ändern.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Zonen zurücksetzen</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Nicht festgelegt (wie im Tab)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Zeitzone der neuen Datei</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Dieses Tab liest Zeiten ohne Zeitzone als {0}. Die Zeiten der Datei {1} auch als {0} lesen? Mit Nein werden sie als lokale Zeit gelesen.</value>
+  </data>
 </root>
 

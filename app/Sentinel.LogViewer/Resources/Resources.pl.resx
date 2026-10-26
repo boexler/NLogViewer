@@ -1351,6 +1351,45 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Minimalizowanie do zasobnika. Nowe wpisy wybranego poziomu pokazują powiadomienie z aplikacją, loggerem i komunikatem; kliknięcie otwiera kartę.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>Czasy w tym pliku zapisano w strefie:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Tylko czasy bez strefy są odczytywane w tej strefie. Czasy ze strefą (np. 10:00Z) i logi z sieci są przeliczane automatycznie.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Pokaż czasy w strefie:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Czas lokalny (ten komputer)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Podgląd</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Strefa czasowa...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Strefa czasowa pliku:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>Strefa, w której zapisano czasy bez strefy. Są pokazywane w Twoim czasie. Można ją później zmienić w menu karty.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Zresetuj strefy</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Nie określono (jak na karcie)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Strefa czasowa nowego pliku</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Ta karta odczytuje czasy bez strefy jako {0}. Czy odczytać czasy pliku {1} również jako {0}? Wybranie Nie odczyta je jako czas lokalny.</value>
+  </data>
 </root>
 
 

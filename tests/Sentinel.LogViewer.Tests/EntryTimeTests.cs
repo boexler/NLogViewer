@@ -113,4 +113,34 @@ public class EntryTimeTests
 		Assert.Equal(DateTimeKind.Utc, logEvent.Entry.TimeStamp.Kind);
 		Assert.Equal(new DateTime(2009, 2, 13, 23, 31, 30, DateTimeKind.Utc), logEvent.Entry.TimeStamp);
 	}
+
+	[Fact]
+	public void ATimeWithoutAZone_BecomesAMoment_InTheZoneOfTheFile_AndOtherTimesStay()
+	{
+		var written = new DateTime(2025, 12, 18, 14, 2, 11, 385);
+
+		Assert.Equal(new DateTime(2025, 12, 18, 5, 2, 11, 385, DateTimeKind.Utc), EntryTime.ToMoment(written, Tokyo));
+
+		var moment = new DateTime(2025, 12, 18, 10, 0, 0, DateTimeKind.Utc);
+		Assert.Equal(moment, EntryTime.ToMoment(moment, Tokyo));
+		Assert.Equal(DateTimeKind.Utc, EntryTime.ToMoment(written, null).Kind);
+	}
+
+	[Fact]
+	public void ACopyWithAnotherTimeStamp_KeepsTheRestOfTheEntry()
+	{
+		var entry = new LogEntry(LogEntryLevel.Warn, "Logger", "text")
+		{
+			TimeStamp = new DateTime(2025, 12, 18, 14, 2, 11),
+			Exception = "boom",
+			Properties = new Dictionary<string, object?> { ["Class"] = "A" }
+		};
+
+		var copy = entry.WithTimeStamp(new DateTime(2025, 12, 18, 5, 2, 11, DateTimeKind.Utc));
+
+		Assert.Equal(new DateTime(2025, 12, 18, 5, 2, 11, DateTimeKind.Utc), copy.TimeStamp);
+		Assert.Equal((entry.Level, entry.LoggerName, entry.Message, entry.Exception, entry.Id), (copy.Level, copy.LoggerName, copy.Message, copy.Exception, copy.Id));
+		Assert.Same(entry.Properties, copy.Properties);
+		Assert.Equal(new DateTime(2025, 12, 18, 14, 2, 11), entry.TimeStamp);
+	}
 }

@@ -30,6 +30,17 @@ public sealed class LogEntry
 		Id = Interlocked.Increment(ref _lastId);
 	}
 
+	/// <summary>
+	/// A copy of the entry with another time stamp, with the same number
+	/// </summary>
+	public LogEntry WithTimeStamp(DateTime timeStamp) => new(Level, LoggerName, Message)
+	{
+		TimeStamp = timeStamp,
+		Exception = Exception,
+		Properties = Properties,
+		Id = Id
+	};
+
 	public LogEntryLevel Level { get; }
 
 	public string LoggerName { get; }
