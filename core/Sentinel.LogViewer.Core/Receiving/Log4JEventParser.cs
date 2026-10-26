@@ -57,7 +57,8 @@ public class Log4JEventParser
 			Thread = (string?)root.Attribute("thread") ?? string.Empty,
 			Timestamp = ParseTimestamp((string?)root.Attribute("timestamp")),
 			Message = ExtractMessage(root, ns),
-			Throwable = ExtractValue(root.Element(ns + "throwable")),
+			// The Log4J layouts call it throwable, the XmlLayout of log4net exception.
+			Throwable = ExtractValue(root.Element(ns + "throwable") ?? root.Element(ns + "exception")),
 			LocationInfo = ExtractLocationInfo(root, ns),
 			Properties = ExtractProperties(root, ns)
 		};

@@ -183,15 +183,17 @@ System.Exception: Test
 	[Fact]
 	public void Parse_XmlLayoutOfLog4Net_GivesTheMomentOfTheSender()
 	{
-		// What log4net.Layout.XmlLayout writes: no prefix and no namespace, and the time as ISO text.
-		var xml = @"<event logger=""L"" timestamp=""2025-12-18T15:00:00.000+01:00"" level=""INFO"" thread=""T"" domain=""d"" username=""u"">
-                        <message>m</message>
-                    </event>";
+		// What log4net.Layout.XmlLayout writes (rendered with log4net 2.0.17): its own prefix and namespace, the time as ISO text, and the
+		// exception as "exception", not "throwable".
+		var xml = @"<log4net:event logger=""Logger"" timestamp=""2025-12-18T15:00:00+01:00"" level=""ERROR"" thread=""t"" domain=""d"" xmlns:log4net=""log4net""><log4net:message>message</log4net:message><log4net:properties><log4net:data name=""log4japp"" value=""d"" /></log4net:properties><log4net:exception>System.InvalidOperationException: boom at A.B()</log4net:exception></log4net:event>";
 
 		var entry = _parser.Parse(xml).ToLogEvent("sender").Entry;
 
 		Assert.Equal(DateTimeKind.Utc, entry.TimeStamp.Kind);
 		Assert.Equal(new DateTime(2025, 12, 18, 14, 0, 0, DateTimeKind.Utc), entry.TimeStamp);
-		Assert.Equal("m", entry.Message);
+		Assert.Equal("Logger", entry.LoggerName);
+		Assert.Equal("message", entry.Message);
+		Assert.Equal(LogEntryLevel.Error, entry.Level);
+		Assert.Equal("System.InvalidOperationException: boom at A.B()", entry.Exception);
 	}
 }
