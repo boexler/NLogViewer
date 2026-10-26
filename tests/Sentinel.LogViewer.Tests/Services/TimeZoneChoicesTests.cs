@@ -53,6 +53,8 @@ public class TimeZoneChoicesTests
 		Assert.Equal(choices.Count, choices.Select(choice => choice.Id).Distinct().Count());
 		Assert.Equal(EntryTime.LocalId, TimeZoneChoices.Find(choices, null).Id);
 		Assert.Equal(EntryTime.LocalId, TimeZoneChoices.Find(choices, TimeZoneInfo.Local).Id);
+		// Also on a computer that runs in UTC, where the local zone is equal to UTC.
+		Assert.Equal(TimeZoneInfo.Utc.Id, TimeZoneChoices.Find(choices, TimeZoneInfo.Utc).Id);
 		Assert.Equal(Tokyo.Id, TimeZoneChoices.Find(choices, Tokyo).Id);
 		Assert.Null(choices[0].Zone);
 		Assert.Equal(Tokyo, TimeZoneChoices.Find(choices, Tokyo).Zone);

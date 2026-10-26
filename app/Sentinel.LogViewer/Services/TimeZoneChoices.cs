@@ -82,11 +82,16 @@ public static class TimeZoneChoices
 	}
 
 	/// <summary>
-	/// The choice of a zone; the local time for null and for the zone of the computer
+	/// The choice of a zone; the local time for null and for <see cref="TimeZoneInfo.Local"/> itself. Compared by instance, because on a computer
+	/// that runs in UTC the local zone is equal to UTC, and a chosen UTC must stay UTC.
 	/// </summary>
 	public static TimeZoneChoice Find(IReadOnlyList<TimeZoneChoice> choices, TimeZoneInfo? zone)
 	{
 		var local = choices.First(choice => choice.Id == EntryTime.LocalId);
-		return zone == null || zone.Equals(TimeZoneInfo.Local) ? local : choices.FirstOrDefault(choice => choice.Id == zone.Id) ?? local;
+		if (zone == null || ReferenceEquals(zone, TimeZoneInfo.Local))
+			return local;
+
+		var id = zone.Equals(TimeZoneInfo.Utc) ? TimeZoneInfo.Utc.Id : zone.Id;
+		return choices.FirstOrDefault(choice => choice.Id == id) ?? local;
 	}
 }
