@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Sentinel.LogViewer.Core;
@@ -54,7 +55,7 @@ public class Log4JEventParser
 			Logger = (string?)root.Attribute("logger") ?? string.Empty,
 			Level = ParseLogLevel((string?)root.Attribute("level")),
 			Thread = (string?)root.Attribute("thread") ?? string.Empty,
-			Timestamp = ParseLong((string?)root.Attribute("timestamp")),
+			Timestamp = ParseTimestamp((string?)root.Attribute("timestamp")),
 			Message = ExtractMessage(root, ns),
 			Throwable = ExtractValue(root.Element(ns + "throwable")),
 			LocationInfo = ExtractLocationInfo(root, ns),
@@ -173,15 +174,20 @@ public class Log4JEventParser
 	}
 
 	/// <summary>
-	/// Parses a string representation of a long integer value.
+	/// Parses the time stamp of an event as milliseconds since the epoch: the number that the Log4J layouts write, or the ISO text with
+	/// an offset that the <c>XmlLayout</c> of log4net writes (<c>2025-12-18T15:00:00+01:00</c>).
 	/// </summary>
-	/// <param name="value">The string to parse.</param>
-	/// <returns>The parsed long value, or 0 if parsing fails.</returns>
-	private long ParseLong(string? value)
+	/// <param name="value">The attribute of the event.</param>
+	/// <returns>The milliseconds since the epoch, or 0 if parsing fails.</returns>
+	private long ParseTimestamp(string? value)
 	{
 		if (string.IsNullOrEmpty(value))
 			return 0L;
-		return long.TryParse(value, out long result) ? result : 0L;
+
+		if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var milliseconds))
+			return milliseconds;
+
+		return DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var time) ? time.ToUnixTimeMilliseconds() : 0L;
 	}
 
 	/// <summary>

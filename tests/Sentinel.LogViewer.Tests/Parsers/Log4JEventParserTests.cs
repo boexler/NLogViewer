@@ -163,4 +163,35 @@ System.Exception: Test
 
 		Assert.Equal("Test <xml> & weird chars", evt.Message);
 	}
+
+	[Theory]
+	[InlineData("1766066400000", 1766066400000L)]
+	[InlineData("2025-12-18T15:00:00+01:00", 1766066400000L)]
+	[InlineData("2025-12-18T14:00:00Z", 1766066400000L)]
+	[InlineData("2025-12-18T14:00:00.250Z", 1766066400250L)]
+	[InlineData("not a time", 0L)]
+	[InlineData("", 0L)]
+	public void Parse_TimeStamp_IsTheNumberOfTheLog4JLayouts_OrTheIsoTextOfTheXmlLayoutOfLog4Net(string timestamp, long expected)
+	{
+		var xml = $@"<log4j:event logger=""L"" level=""INFO"" timestamp=""{timestamp}"" thread=""T"" xmlns:log4j=""http://jakarta.apache.org/log4j/"">
+                        <log4j:message>m</log4j:message>
+                    </log4j:event>";
+
+		Assert.Equal(expected, _parser.Parse(xml).Timestamp);
+	}
+
+	[Fact]
+	public void Parse_XmlLayoutOfLog4Net_GivesTheMomentOfTheSender()
+	{
+		// What log4net.Layout.XmlLayout writes: no prefix and no namespace, and the time as ISO text.
+		var xml = @"<event logger=""L"" timestamp=""2025-12-18T15:00:00.000+01:00"" level=""INFO"" thread=""T"" domain=""d"" username=""u"">
+                        <message>m</message>
+                    </event>";
+
+		var entry = _parser.Parse(xml).ToLogEvent("sender").Entry;
+
+		Assert.Equal(DateTimeKind.Utc, entry.TimeStamp.Kind);
+		Assert.Equal(new DateTime(2025, 12, 18, 14, 0, 0, DateTimeKind.Utc), entry.TimeStamp);
+		Assert.Equal("m", entry.Message);
+	}
 }
