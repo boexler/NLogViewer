@@ -1176,7 +1176,9 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 
 			System.Windows.Visibility VisibilityOf(LogTabViewModel tab, string header)
 			{
-				var menu = Descendants<TabItem>(session.Window).First(item => ReferenceEquals(item.DataContext, tab)).ContextMenu!;
+				var tabItem = Descendants<TabItem>(session.Window).First(item => ReferenceEquals(item.DataContext, tab));
+				var menu = tabItem.ContextMenu!;
+				menu.PlacementTarget = tabItem;
 				menu.IsOpen = true;
 				WpfTestHelper.Settle();
 				try
