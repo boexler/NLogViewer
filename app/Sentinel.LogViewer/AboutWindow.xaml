@@ -112,7 +112,7 @@
                                          TextWrapping="Wrap" Padding="6,3"/>
                                 <Button Grid.Column="1" Command="{Binding CopyChocolateyCommand}" Margin="6,0,0,0" Padding="8,3" VerticalAlignment="Top"
                                         ToolTip="{helpers:Resource Key=About_Copy, DefaultValue=Copy}"
-                                        AutomationProperties.Name="{helpers:Resource Key=About_Copy, DefaultValue=Copy}">
+                                        AutomationProperties.Name="{Binding CopyButtonName}">
                                     <TextBlock FontFamily="{DynamicResource ThemeIconFont}" FontSize="14">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">

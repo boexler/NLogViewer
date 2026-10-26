@@ -208,6 +208,9 @@
   <data name="About_Copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
   <data name="About_OpenRelease" xml:space="preserve">
     <value>Open the release page</value>
   </data>

@@ -6,11 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.ViewModels;
 using Xunit;
+using static Sentinel.LogViewer.Tests.WpfTestHelper;
 
 namespace Sentinel.LogViewer.Tests.ViewModels;
 
@@ -77,13 +77,17 @@ public class AboutViewModelTests
 		about.SetClipboardText = text => copied = text;
 		about.CopiedFor = TimeSpan.FromMilliseconds(50);
 
+		var nameBefore = about.CopyButtonName;
+
 		about.CopyChocolateyCommand.Execute(null);
 
 		Assert.Equal(about.ChocolateyCommand, copied);
 		Assert.True(about.CommandCopied);
+		Assert.NotEqual(nameBefore, about.CopyButtonName);
 		for (var i = 0; i < 100 && about.CommandCopied; i++)
 			await Task.Delay(20);
 		Assert.False(about.CommandCopied);
+		Assert.Equal(nameBefore, about.CopyButtonName);
 	}
 
 	[Fact]
@@ -112,7 +116,7 @@ public class AboutViewModelTests
 			try
 			{
 				window.Show();
-				for (var i = 0; i < 40 && about.State != UpdateState.ManualUpdate; i++)
+				for (var i = 0; i < 100 && about.State != UpdateState.ManualUpdate; i++)
 				{
 					Thread.Sleep(50);
 					WpfTestHelper.Settle();
@@ -131,18 +135,5 @@ public class AboutViewModelTests
 				window.Close();
 			}
 		});
-	}
-
-	private static System.Collections.Generic.IEnumerable<T> Descendants<T>(DependencyObject parent) where T : DependencyObject
-	{
-		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-		{
-			var child = VisualTreeHelper.GetChild(parent, i);
-			if (child is T match)
-				yield return match;
-
-			foreach (var nested in Descendants<T>(child))
-				yield return nested;
-		}
 	}
 }

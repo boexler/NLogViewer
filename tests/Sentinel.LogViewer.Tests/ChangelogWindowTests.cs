@@ -14,6 +14,7 @@ using Sentinel.LogViewer.Services.Updates;
 using Sentinel.LogViewer.Tests.ViewModels;
 using Sentinel.LogViewer.ViewModels;
 using Xunit;
+using static Sentinel.LogViewer.Tests.WpfTestHelper;
 
 namespace Sentinel.LogViewer.Tests;
 
@@ -48,19 +49,6 @@ public class ChangelogWindowTests
 	{
 		Assert.True(ReleaseVersion.TryParse(text, out var version));
 		return version;
-	}
-
-	private static IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
-	{
-		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-		{
-			var child = VisualTreeHelper.GetChild(root, i);
-			if (child is T match)
-				yield return match;
-
-			foreach (var descendant in Descendants<T>(child))
-				yield return descendant;
-		}
 	}
 
 	private static string TextOf(Block block) => new TextRange(block.ContentStart, block.ContentEnd).Text.Trim();

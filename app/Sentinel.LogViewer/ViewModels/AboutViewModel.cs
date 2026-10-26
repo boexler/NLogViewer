@@ -172,8 +172,12 @@ public class AboutViewModel : INotifyPropertyChanged
 		{
 			_commandCopied = value;
 			OnPropertyChanged();
+			OnPropertyChanged(nameof(CopyButtonName));
 		}
 	}
+
+	/// <summary>The name of the copy button for screen readers; it says that the command was copied while the check mark is shown</summary>
+	public string CopyButtonName => CommandCopied ? GetString("About_Copied", "Copied") : GetString("About_Copy", "Copy");
 
 	/// <summary>Puts a text on the clipboard; the tests give their own</summary>
 	internal Action<string> SetClipboardText { get; set; } = Clipboard.SetText;

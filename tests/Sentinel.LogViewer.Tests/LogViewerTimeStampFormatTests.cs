@@ -12,6 +12,7 @@ using Sentinel.LogViewer.Wpf;
 using Sentinel.LogViewer.Wpf.Models;
 using Sentinel.LogViewer.Wpf.Resolver;
 using Xunit;
+using static Sentinel.LogViewer.Tests.WpfTestHelper;
 
 namespace Sentinel.LogViewer.Tests;
 
@@ -224,19 +225,6 @@ public class LogViewerTimeStampFormatTests
 
 			foreach (var text in Descendants<TextBlock>(row))
 				yield return text.Text;
-		}
-	}
-
-	private static IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
-	{
-		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-		{
-			var child = VisualTreeHelper.GetChild(root, i);
-			if (child is T match)
-				yield return match;
-
-			foreach (var descendant in Descendants<T>(child))
-				yield return descendant;
 		}
 	}
 

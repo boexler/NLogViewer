@@ -9,6 +9,7 @@ using Sentinel.LogViewer.Core;
 using Sentinel.LogViewer.Tests.ViewModels;
 using Sentinel.LogViewer.ViewModels.Settings;
 using Xunit;
+using static Sentinel.LogViewer.Tests.WpfTestHelper;
 
 namespace Sentinel.LogViewer.Tests;
 
@@ -314,18 +315,5 @@ public class SettingsWindowTests
 		window.Show();
 		WpfTestHelper.Settle();
 		return window;
-	}
-
-	private static IEnumerable<T> Descendants<T>(DependencyObject root) where T : DependencyObject
-	{
-		for (var i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
-		{
-			var child = VisualTreeHelper.GetChild(root, i);
-			if (child is T match)
-				yield return match;
-
-			foreach (var descendant in Descendants<T>(child))
-				yield return descendant;
-		}
 	}
 }

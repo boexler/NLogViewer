@@ -205,6 +205,9 @@
   <data name="About_Copy" xml:space="preserve">
     <value>Másolás</value>
   </data>
+  <data name="About_Copied" xml:space="preserve">
+    <value>Másolva</value>
+  </data>
   <data name="About_OpenRelease" xml:space="preserve">
     <value>Kiadási oldal megnyitása</value>
   </data>
