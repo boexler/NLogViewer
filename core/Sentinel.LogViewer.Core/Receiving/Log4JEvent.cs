@@ -89,9 +89,9 @@ public class Log4JEvent : ILogEvent
 			? $"{machineName} ({sender})" 
 			: sender;
 
-		// Convert timestamp from milliseconds since epoch to DateTime
+		// The time stamp is the milliseconds since the epoch, a moment (UTC); the viewer shows it in the zone that is chosen for the tab.
 		var timestamp = Timestamp > 0
-			? DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime
+			? DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).UtcDateTime
 			: DateTime.Now;
 
 		var properties = new Dictionary<string, object?>();

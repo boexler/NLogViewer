@@ -1354,5 +1354,44 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Réduire dans la zone de notification. Les nouvelles entrées du niveau choisi affichent une notification avec l'application, le logger et le message ; un clic dessus ouvre l'onglet.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Fuseau horaire</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>Les heures de ce fichier ont été écrites en :</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Seules les heures sans fuseau sont lues dans ce fuseau. Les heures qui portent un fuseau (comme 10:00Z) et les journaux du réseau sont convertis automatiquement.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Afficher les heures en :</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Heure locale (cet ordinateur)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Fuseau horaire...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Fuseau horaire du fichier :</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>Le fuseau dans lequel les heures sans fuseau ont été écrites. Elles sont affichées dans votre heure. Il peut être modifié plus tard dans le menu de l’onglet.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Réinitialiser les fuseaux</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Non défini (comme dans l’onglet)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Fuseau horaire du nouveau fichier</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Cet onglet lit les heures sans fuseau comme {0}. Lire aussi les heures du fichier {1} comme {0} ? Avec Non, elles sont lues comme heure locale.</value>
+  </data>
 </root>
 

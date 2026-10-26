@@ -12,6 +12,7 @@
 
     <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <xamlMultiValueConverter:ILogEntryResolverToStringConverter x:Key="ILogEntryResolverToStringConverter"/>
+    <xamlMultiValueConverter:TimeStampOriginalConverter x:Key="TimeStampOriginalConverter"/>
     <xamlConverter:ContextMenuHeaderConverter x:Key="ContextMenuHeaderConverter"/>
 
     <xamlConverter:EqualityConverter x:Key="EqualityConverter"/>
@@ -40,6 +41,20 @@
         <Separator/>
         <MenuItem Header="Default view"
                   Command="{Binding PlacementTarget.Tag.ResetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+        <!-- The application gives the command; without one there is nothing to show -->
+        <MenuItem Header="Time zone..."
+                  Command="{Binding PlacementTarget.Tag.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                  CommandParameter="{Binding PlacementTarget.Tag.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+            <MenuItem.Style>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PlacementTarget.Tag.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </MenuItem.Style>
+        </MenuItem>
     </ContextMenu>
 
     <Style TargetType="{x:Type local:LogViewer}">
@@ -657,6 +672,12 @@
                                                                 <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).TimeStampResolver"/>
                                                             </MultiBinding>
                                                         </TextBlock.Text>
+                                                        <TextBlock.ToolTip>
+                                                            <MultiBinding Converter="{StaticResource TimeStampOriginalConverter}">
+                                                                <Binding Path="."/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).TimeStampResolver"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.ToolTip>
                                                     </TextBlock>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>

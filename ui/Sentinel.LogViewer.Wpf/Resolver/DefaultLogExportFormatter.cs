@@ -23,7 +23,8 @@ namespace Sentinel.LogViewer.Wpf.Resolver
             ILogEntryResolver messageResolver)
         {
             // Format: yyyy-MM-dd HH:mm:ss.ffff | LEVEL | LoggerName | Message
-            var timestamp = logEntry.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss.ffff");
+            var shown = timeStampResolver is TimeStampResolver zoned ? zoned.ToDisplay(logEntry) : logEntry.TimeStamp;
+            var timestamp = shown.ToString("yyyy-MM-dd HH:mm:ss.ffff");
             var level = logEntry.Level.ToString().ToUpper();
             var loggerName = loggerNameResolver?.Resolve(logEntry) ?? logEntry.LoggerName ?? "Unknown";
             var message = messageResolver?.Resolve(logEntry) ?? logEntry.Message ?? string.Empty;

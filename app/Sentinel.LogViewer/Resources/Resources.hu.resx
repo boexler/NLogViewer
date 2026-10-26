@@ -1354,6 +1354,45 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Kicsinyítés a tálcára. A választott szintű új bejegyzések értesítést mutatnak az alkalmazással, a loggerrel és az üzenettel; rákattintva megnyílik a lap.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Időzóna</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>A fájl időpontjait ebben írták:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Csak az időzóna nélküli időpontokat olvassa ebben az időzónában. Az időzónával rendelkező időpontokat (például 10:00Z) és a hálózati naplókat magától átszámítja.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Időpontok megjelenítése ebben:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Helyi idő (ez a számítógép)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Időzóna...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>A fájl időzónája:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>Az időzóna, amelyben az időzóna nélküli időpontokat írták. A saját idejében jelennek meg. Később a fül menüjében módosítható.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Zónák visszaállítása</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Nincs megadva (mint a fülön)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Az új fájl időzónája</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Ez a fül az időzóna nélküli időpontokat {0} szerint olvassa. A(z) {1} fájl időpontjait is {0} szerint olvassa? A Nem a helyi idő szerint olvassa őket.</value>
+  </data>
 </root>
 
 

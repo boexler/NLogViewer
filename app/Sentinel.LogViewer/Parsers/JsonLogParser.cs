@@ -125,7 +125,7 @@ namespace Sentinel.LogViewer.Parsers
             // Try Unix timestamp
             if (long.TryParse(timestampString, out var unixTime))
             {
-                return DateTimeOffset.FromUnixTimeMilliseconds(unixTime).DateTime;
+                return DateTimeOffset.FromUnixTimeMilliseconds(unixTime).UtcDateTime;
             }
 
             return DateTime.Now;

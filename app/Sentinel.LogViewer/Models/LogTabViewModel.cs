@@ -24,6 +24,8 @@ namespace Sentinel.LogViewer.Models
         private double _loggerTreeWidth = Services.SettingsRules.DefaultLoggerTreeWidth;
         private SearchFields _searchFields = SearchFields.Default;
         private IReadOnlyList<string> _columnKeys = Wpf.LogColumns.Default;
+        private TimeZoneInfo? _fileTimeZone;
+        private TimeZoneInfo? _displayTimeZone;
         private int _visibleEntryCount;
 
         /// <summary>
@@ -249,6 +251,38 @@ namespace Sentinel.LogViewer.Models
                 if (!_columnKeys.SequenceEqual(value))
                 {
                     _columnKeys = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The zone in which the times without a zone of this tab were written (a file); null for the local time. Only what is shown changes.
+        /// </summary>
+        public TimeZoneInfo? FileTimeZone
+        {
+            get => _fileTimeZone;
+            set
+            {
+                if (!Equals(_fileTimeZone, value))
+                {
+                    _fileTimeZone = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The zone in which the times of this tab are shown; null for the local time
+        /// </summary>
+        public TimeZoneInfo? DisplayTimeZone
+        {
+            get => _displayTimeZone;
+            set
+            {
+                if (!Equals(_displayTimeZone, value))
+                {
+                    _displayTimeZone = value;
                     OnPropertyChanged();
                 }
             }

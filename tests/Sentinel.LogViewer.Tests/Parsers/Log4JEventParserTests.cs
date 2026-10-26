@@ -163,4 +163,37 @@ System.Exception: Test
 
 		Assert.Equal("Test <xml> & weird chars", evt.Message);
 	}
+
+	[Theory]
+	[InlineData("1766066400000", 1766066400000L)]
+	[InlineData("2025-12-18T15:00:00+01:00", 1766066400000L)]
+	[InlineData("2025-12-18T14:00:00Z", 1766066400000L)]
+	[InlineData("2025-12-18T14:00:00.250Z", 1766066400250L)]
+	[InlineData("not a time", 0L)]
+	[InlineData("", 0L)]
+	public void Parse_TimeStamp_IsTheNumberOfTheLog4JLayouts_OrTheIsoTextOfTheXmlLayoutOfLog4Net(string timestamp, long expected)
+	{
+		var xml = $@"<log4j:event logger=""L"" level=""INFO"" timestamp=""{timestamp}"" thread=""T"" xmlns:log4j=""http://jakarta.apache.org/log4j/"">
+                        <log4j:message>m</log4j:message>
+                    </log4j:event>";
+
+		Assert.Equal(expected, _parser.Parse(xml).Timestamp);
+	}
+
+	[Fact]
+	public void Parse_XmlLayoutOfLog4Net_GivesTheMomentOfTheSender()
+	{
+		// What log4net.Layout.XmlLayout writes (rendered with log4net 2.0.17): its own prefix and namespace, the time as ISO text, and the
+		// exception as "exception", not "throwable".
+		var xml = @"<log4net:event logger=""Logger"" timestamp=""2025-12-18T15:00:00+01:00"" level=""ERROR"" thread=""t"" domain=""d"" xmlns:log4net=""log4net""><log4net:message>message</log4net:message><log4net:properties><log4net:data name=""log4japp"" value=""d"" /></log4net:properties><log4net:exception>System.InvalidOperationException: boom at A.B()</log4net:exception></log4net:event>";
+
+		var entry = _parser.Parse(xml).ToLogEvent("sender").Entry;
+
+		Assert.Equal(DateTimeKind.Utc, entry.TimeStamp.Kind);
+		Assert.Equal(new DateTime(2025, 12, 18, 14, 0, 0, DateTimeKind.Utc), entry.TimeStamp);
+		Assert.Equal("Logger", entry.LoggerName);
+		Assert.Equal("message", entry.Message);
+		Assert.Equal(LogEntryLevel.Error, entry.Level);
+		Assert.Equal("System.InvalidOperationException: boom at A.B()", entry.Exception);
+	}
 }

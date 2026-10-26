@@ -164,7 +164,7 @@ public class LogViewerTimeStampFormatTests
 				var formats = new[] { "System", "ISO  2025-12-18 15:11:48.385", "German  18.12.2025 15:11:48.385", "English  12/18/2025 03:11:48.385 PM", "Default view" };
 				var headerFormats = viewer.BuildColumnMenu(header.Column, header).Items.OfType<MenuItem>().Single(item => item.Header as string == "Timestamp format");
 				Assert.Equal(formats, headerFormats.Items.OfType<MenuItem>().Select(item => (string)item.Header));
-				Assert.Equal(formats, cell.ContextMenu.Items.OfType<MenuItem>().Skip(1).Select(item => (string)item.Header));
+				Assert.Equal(formats, cell.ContextMenu.Items.OfType<MenuItem>().Where(item => item.Header as string != "Time zone...").Skip(1).Select(item => (string)item.Header));
 				Assert.Same(viewer, cell.Tag);
 			}
 			finally
@@ -193,7 +193,8 @@ public class LogViewerTimeStampFormatTests
 				WpfTestHelper.Settle();
 				try
 				{
-					var items = menu.Items.OfType<MenuItem>().ToList();
+					// The entry for the time zones is only shown when the application gives the command.
+					var items = menu.Items.OfType<MenuItem>().Where(item => item.Header as string != "Time zone...").ToList();
 					Assert.Equal(new[] { false, true, false, false }, items.Skip(1).Take(4).Select(item => item.IsChecked));
 					Assert.False(items.Last().IsEnabled);
 

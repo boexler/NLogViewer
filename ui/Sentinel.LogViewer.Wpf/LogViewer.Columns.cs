@@ -108,6 +108,7 @@ namespace Sentinel.LogViewer.Wpf
             gridView.Columns.CollectionChanged += OnGridColumnsChanged;
             PART_ListView.PreviewMouseRightButtonUp += OnListViewPreviewMouseRightButtonUp;
             _columnsReady = true;
+            UpdateTimeStampHeader();
 
             CollectPropertyNames(GetEffectiveEntries());
             ApplyColumns();
@@ -307,9 +308,23 @@ namespace Sentinel.LogViewer.Wpf
             {
                 menu.Items.Add(new Separator());
                 menu.Items.Add(TimeStampFormatItems());
+                if (ChangeTimeZoneCommand != null)
+                    menu.Items.Add(new MenuItem { Header = "Time zone...", Command = ChangeTimeZoneCommand, CommandParameter = DataContext });
             }
 
             return menu;
+        }
+
+        /// <summary>
+        /// The header of the time stamp column says which zones are converted, e.g. <c>TimeStamp (UTC+9 → local)</c>
+        /// </summary>
+        private void UpdateTimeStampHeader()
+        {
+            if (!_columnsByKey.TryGetValue(LogColumns.TimeStamp, out var column))
+                return;
+
+            var label = (TimeStampResolver as Resolver.TimeStampResolver)?.ZoneLabel;
+            column.Header = string.IsNullOrEmpty(label) ? "TimeStamp" : $"TimeStamp ({label})";
         }
 
         private MenuItem TimeStampFormatItems()

@@ -77,6 +77,34 @@ public class LogReceiverServiceTests
 		return ((IPEndPoint)probe.Client.LocalEndPoint!).Port;
 	}
 
+	/// <summary>
+	/// A port that is free for TCP and for UDP: a number that is free for one of them can be taken or forbidden for the other
+	/// </summary>
+	private static int FreeTcpAndUdpPort()
+	{
+		for (var attempt = 0; attempt < 50; attempt++)
+		{
+			var listener = new TcpListener(IPAddress.Any, 0);
+			try
+			{
+				listener.Start();
+				var port = ((IPEndPoint)listener.LocalEndpoint).Port;
+				using var probe = new UdpClient(port);
+				return port;
+			}
+			catch (SocketException)
+			{
+				// Try another one.
+			}
+			finally
+			{
+				listener.Stop();
+			}
+		}
+
+		throw new InvalidOperationException("There is no port that is free for TCP and UDP.");
+	}
+
 	private static void Send(int port, string message = "x")
 	{
 		var xml = $@"<log4j:event logger=""L"" level=""INFO"" timestamp=""1"" xmlns:log4j=""http://jakarta.apache.org/log4j/""><log4j:message>{message}</log4j:message></log4j:event>";
@@ -207,7 +235,7 @@ public class LogReceiverServiceTests
 	[Fact]
 	public async Task ATcpSource_ReceivesEvents_FromSeveralClients_AlsoWhenTheyArriveInPieces()
 	{
-		var port = FreeUdpPort();
+		var port = FreeTcpAndUdpPort();
 		using var service = CreateService();
 		var received = new System.Collections.Concurrent.ConcurrentBag<string>();
 		using var subscription = System.ObservableExtensions.Subscribe(service.Log4JEventObservable, e => received.Add(e.Entry.Message));
@@ -226,7 +254,7 @@ public class LogReceiverServiceTests
 	[Fact]
 	public async Task UdpAndTcpCanUseTheSamePort_AndStoppingStopsTheClients()
 	{
-		var port = FreeUdpPort();
+		var port = FreeTcpAndUdpPort();
 		using var service = CreateService();
 		await service.StartListeningAsync(new List<string> { $"udp://0.0.0.0:{port}", $"tcp://0.0.0.0:{port}" });
 		Assert.Equal(new[] { ReceiveSourceState.Listening, ReceiveSourceState.Listening }, service.Sources.Select(source => source.State));

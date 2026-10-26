@@ -38,6 +38,11 @@ public sealed class LogFileImportBatchContext
 	public LogTabViewModel? SharedNewTab { get; set; }
 
 	/// <summary>
+	/// The answer to the question whether the times of a file without a zone are read like the tab reads them; asked once for a batch
+	/// </summary>
+	public bool? ReadLikeTab { get; set; }
+
+	/// <summary>
 	/// Whether the column mapping dialog is shown for each text file before it is parsed.
 	/// </summary>
 	public bool AskColumnMapping { get; set; }

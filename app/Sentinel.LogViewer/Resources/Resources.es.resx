@@ -1354,5 +1354,44 @@
   <data name="Settings_Group_Tray_Subtitle" xml:space="preserve">
     <value>Minimizar a la bandeja. Las nuevas entradas del nivel elegido muestran una notificación con la aplicación, el logger y el mensaje; un clic en ella abre la pestaña.</value>
   </data>
+  <data name="TimeZone_Title" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="TimeZone_FileLabel" xml:space="preserve">
+    <value>Las horas de este archivo se escribieron en:</value>
+  </data>
+  <data name="TimeZone_FileHint" xml:space="preserve">
+    <value>Solo las horas sin zona se leen en esta zona. Las horas que llevan zona (como 10:00Z) y los registros de la red se convierten solos.</value>
+  </data>
+  <data name="TimeZone_DisplayLabel" xml:space="preserve">
+    <value>Mostrar las horas en:</value>
+  </data>
+  <data name="TimeZone_Local" xml:space="preserve">
+    <value>Hora local (este equipo)</value>
+  </data>
+  <data name="TimeZone_Preview" xml:space="preserve">
+    <value>Vista previa</value>
+  </data>
+  <data name="Tab_TimeZone" xml:space="preserve">
+    <value>Zona horaria...</value>
+  </data>
+  <data name="ColumnMapping_TimeZone" xml:space="preserve">
+    <value>Zona horaria del archivo:</value>
+  </data>
+  <data name="ColumnMapping_TimeZone_Tooltip" xml:space="preserve">
+    <value>La zona en la que se escribieron las horas sin zona. Se muestran en su hora. Se puede cambiar más tarde en el menú de la pestaña.</value>
+  </data>
+  <data name="TimeZone_Reset" xml:space="preserve">
+    <value>Restablecer zonas</value>
+  </data>
+  <data name="TimeZone_NotSet" xml:space="preserve">
+    <value>Sin especificar (como en la pestaña)</value>
+  </data>
+  <data name="TimeZone_AskTitle" xml:space="preserve">
+    <value>Zona horaria del archivo nuevo</value>
+  </data>
+  <data name="TimeZone_AskText" xml:space="preserve">
+    <value>Esta pestaña lee las horas sin zona como {0}. ¿Leer también las horas del archivo {1} como {0}? Con No se leen como hora local.</value>
+  </data>
 </root>
 

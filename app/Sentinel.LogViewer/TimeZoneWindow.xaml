@@ -1,0 +1,42 @@
+<Window x:Class="Sentinel.LogViewer.TimeZoneWindow"
+        Background="{DynamicResource ThemePageBackground}"
+        Foreground="{DynamicResource ThemeTextPrimary}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
+        mc:Ignorable="d"
+        Title="{helpers:Resource Key=TimeZone_Title, DefaultValue=Time zone}"
+        Width="560"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <StackPanel Margin="15">
+        <!-- The zone of the file: only for a tab of a file -->
+        <StackPanel Visibility="{Binding ShowFileZone, Converter={StaticResource ThemeBoolToVisibility}}">
+            <TextBlock Text="{helpers:Resource Key=TimeZone_FileLabel, DefaultValue=The times in this file were written in:}"
+                       Margin="0,0,0,4"/>
+            <ComboBox ItemsSource="{Binding Zones}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedFileZone}"/>
+            <TextBlock Text="{helpers:Resource Key=TimeZone_FileHint, DefaultValue=Only times without a zone are read in this zone. Times that carry a zone (like 10:00Z) and logs from the network are converted by themselves.}"
+                       TextWrapping="Wrap" Margin="0,4,0,12" FontSize="11" Foreground="{DynamicResource ThemeTextSecondary}"/>
+        </StackPanel>
+
+        <TextBlock Text="{helpers:Resource Key=TimeZone_DisplayLabel, DefaultValue=Show the times in:}" Margin="0,0,0,4"/>
+        <ComboBox ItemsSource="{Binding Zones}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDisplayZone}"/>
+
+        <TextBlock Text="{Binding PreviewTitle}" Margin="0,14,0,4" Foreground="{DynamicResource ThemeTextSecondary}"/>
+        <TextBlock Text="{Binding Preview}" FontFamily="Consolas" TextWrapping="Wrap"/>
+
+        <Grid Margin="0,18,0,0">
+            <Button Content="{helpers:Resource Key=TimeZone_Reset, DefaultValue=Reset zones}"
+                    Command="{Binding ResetCommand}" HorizontalAlignment="Left" Padding="14,5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{helpers:Resource Key=MessageBox_OK, DefaultValue=OK}"
+                        IsDefault="True" Click="OkButton_Click" Margin="0,0,5,0" Padding="20,5" MinWidth="80"/>
+                <Button Content="{helpers:Resource Key=MessageBox_Cancel, DefaultValue=Cancel}"
+                        IsCancel="True" Padding="20,5" MinWidth="80"/>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>
