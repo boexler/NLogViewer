@@ -1393,5 +1393,8 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Cet onglet lit les heures sans fuseau comme {0}. Lire aussi les heures du fichier {1} comme {0} ? Avec Non, elles sont lues comme heure locale.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Choisir la période de la liste : seules les entrées d’une période sont affichées</value>
+  </data>
 </root>
 

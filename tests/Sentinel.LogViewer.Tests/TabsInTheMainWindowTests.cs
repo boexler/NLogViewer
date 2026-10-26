@@ -1211,4 +1211,40 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Same(session.ViewModel.ChangeTimeZoneCommand, viewer.ChangeTimeZoneCommand);
 		});
 	}
+
+	[Fact]
+	public void TheTimeRange_CountsInTheSummary_StaysWhenAPresetIsApplied_AndTheResetClearsIt()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Send(session, App("(100)"), "alpha");
+			Send(session, App("(100)"), "beta");
+			Send(session, App("(100)"), "gamma");
+			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
+
+			// A start in the future hides everything; the summary counts it, but does not name it (the viewer shows it).
+			viewer.TimeFrom = DateTime.UtcNow.AddHours(1);
+			WpfTestHelper.Settle();
+			Assert.True(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 0 of 3", viewModel.TabSummary);
+
+			var service = new FilterPresetService(_environment.Configuration);
+			service.Save("No debug", new LogViewerFilterState { HiddenLevels = { "Debug" }, TimeFrom = DateTime.UtcNow.AddDays(-9) });
+			viewModel.RefreshFilterPresets();
+			Assert.Null(Assert.Single(viewModel.FilterPresets).Filters.TimeFrom);
+
+			viewModel.ApplyFilterPresetCommand.Execute(viewModel.FilterPresets[0]);
+			Assert.True(viewer.DebugFilter);
+			Assert.NotNull(viewer.TimeFrom);
+			Assert.True(viewer.TimeFrom > DateTime.UtcNow);
+
+			viewModel.ResetFilterCommand.Execute(null);
+			WpfTestHelper.Settle();
+			Assert.Null(viewer.TimeFrom);
+			Assert.False(viewModel.HasActiveFilter);
+			Assert.Equal("Entries: 3", viewModel.TabSummary);
+		});
+	}
 }

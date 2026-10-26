@@ -1393,5 +1393,8 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Esta pestaña lee las horas sin zona como {0}. ¿Leer también las horas del archivo {1} como {0}? Con No se leen como hora local.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Elegir el intervalo de tiempo de la lista: solo se muestran las entradas de un período</value>
+  </data>
 </root>
 

@@ -1393,6 +1393,9 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Ta karta odczytuje czasy bez strefy jako {0}. Czy odczytać czasy pliku {1} również jako {0}? Wybranie Nie odczyta je jako czas lokalny.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Wybierz zakres czasu listy: widoczne są tylko wpisy z danego okresu</value>
+  </data>
 </root>
 
 

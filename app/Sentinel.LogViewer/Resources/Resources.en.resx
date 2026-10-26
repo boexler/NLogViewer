@@ -1393,5 +1393,8 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>This tab reads times without a zone as {0}. Read the times of the file {1} as {0} too? Choose No to read them as local time.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Choose the time range of the list: only the entries of a period are shown</value>
+  </data>
 </root>
 

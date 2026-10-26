@@ -1393,6 +1393,9 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Această filă citește orele fără fus orar ca {0}. Citiți orele fișierului {1} tot ca {0}? Cu Nu sunt citite ca ora locală.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Alegeți intervalul de timp al listei: sunt afișate doar intrările unei perioade</value>
+  </data>
 </root>
 
 

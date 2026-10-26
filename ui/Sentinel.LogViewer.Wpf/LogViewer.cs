@@ -497,11 +497,18 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             if (listView != null)
                 _scrollAnchorKeeper.Capture(listView);
 
+            var timeFrom = TimeFrom;
+            var timeTo = TimeTo;
+            var fileZone = FileTimeZone;
+
             collectionView.Filter = item =>
             {
                 if (item is not LogEntry logEvent) return true;
 
                 if (!LoggerTree.IsVisible(logEvent.LoggerName)) return false;
+
+                // The time range: only the entries of the period, a time without a zone read in the zone of the file.
+                if ((timeFrom != null || timeTo != null) && !EntryTime.IsInRange(logEvent.TimeStamp, fileZone, timeFrom, timeTo)) return false;
 
                 // Apply level filters first
                 var levelFilterPassed = logEvent.Level switch
@@ -1555,6 +1562,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             FindNextCommand = new RelayCommand(() => FindNext());
             FindPreviousCommand = new RelayCommand(() => FindNext(forward: false));
             InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
+            InputBindings.Add(new KeyBinding(ChooseTimeRangeCommand, Key.T, ModifierKeys.Control | ModifierKeys.Shift));
             InputBindings.Add(new KeyBinding(FindPreviousCommand, Key.F3, ModifierKeys.Shift));
             ScrollToEndCommand = new RelayCommand(() =>
             {

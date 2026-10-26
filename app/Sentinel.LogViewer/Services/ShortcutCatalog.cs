@@ -55,6 +55,7 @@ public static class ShortcutCatalog
 			new("Enter", "Shortcut_AddFilter", "Add the text of the filter box as a filter term"),
 			new("Enter / F3", "Shortcut_NextHit", "Go to the next hit of the search"),
 			new("Shift+Enter / Shift+F3", "Shortcut_PreviousHit", "Go to the previous hit of the search"),
+			new("Ctrl+Shift+T", "Shortcut_TimeRange", "Choose the time range of the list: only the entries of a period are shown"),
 		}),
 		new("Shortcuts_Group_Settings", "Settings and dialogs", new Shortcut[]
 		{

@@ -79,7 +79,7 @@ public class FilterPresetService(ConfigurationService configurationService)
 	/// </summary>
 	public static LogViewerFilterState ForPreset(LogViewerFilterState filters)
 	{
-		var copy = filters.Clone();
+		var copy = filters.WithoutTimeRange();
 		copy.TimeStampFormat = null;
 		return copy;
 	}

@@ -303,6 +303,9 @@
                                                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
                                             </MenuItem>
                                         </Menu>
+                                        <Button Content="Time range..." Margin="10,0,0,0" Padding="6,0" VerticalAlignment="Center"
+                                                Command="{Binding ChooseTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                                ToolTip="Show only the entries of a period (Ctrl+Shift+T)"/>
                                         <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
                                         <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"
@@ -424,6 +427,20 @@
                                             </DataTemplate>
                                         </ItemsControl.Resources>
                                     </ItemsControl>
+
+                                    <!-- The time range, with one click to clear it -->
+                                    <Border Margin="2" Padding="4,2" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left"
+                                            Visibility="{Binding HasTimeRange, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Background="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"
+                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"
+                                            TextElement.Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermForeground}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding TimeRangeText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
+                                            <Button Content="&#x2715;" Margin="6,0,0,0" Padding="3,0" MinWidth="0" MinHeight="0" BorderThickness="0" Background="Transparent"
+                                                    VerticalAlignment="Center" ToolTip="Show all the entries again"
+                                                    Command="{Binding ClearTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </GroupBox>
 

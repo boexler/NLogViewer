@@ -890,7 +890,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var levels = state?.HiddenLevels.Count ?? 0;
 		var terms = state?.Terms.Count ?? 0;
 		var loggers = state?.LoggerRules.Count ?? 0;
-		var filtered = levels + terms + loggers > 0;
+		var filtered = levels + terms + loggers > 0 || state is { TimeFrom: not null } or { TimeTo: not null };
 
 		string Text(string key, string defaultValue, params object[] arguments) =>
 			string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, defaultValue), arguments);
@@ -1660,6 +1660,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		var filters = preset.Filters.Clone();
 		filters.TimeStampFormat = tab.FilterState?.TimeStampFormat;
+		filters.TimeFrom = tab.FilterState?.TimeFrom;
+		filters.TimeTo = tab.FilterState?.TimeTo;
 
 		_applyingFilterPreset = true;
 		try

@@ -1393,5 +1393,8 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Dieses Tab liest Zeiten ohne Zeitzone als {0}. Die Zeiten der Datei {1} auch als {0} lesen? Mit Nein werden sie als lokale Zeit gelesen.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Zeitbereich der Liste wählen: nur die Einträge eines Zeitraums werden gezeigt</value>
+  </data>
 </root>
 

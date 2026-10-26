@@ -1393,6 +1393,9 @@
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Ez a fül az időzóna nélküli időpontokat {0} szerint olvassa. A(z) {1} fájl időpontjait is {0} szerint olvassa? A Nem a helyi idő szerint olvassa őket.</value>
   </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>A lista időtartományának kiválasztása: csak egy időszak bejegyzései láthatók</value>
+  </data>
 </root>
 
 

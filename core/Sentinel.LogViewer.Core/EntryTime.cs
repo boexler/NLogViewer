@@ -29,6 +29,27 @@ public static class EntryTime
 	}
 
 	/// <summary>
+	/// A time stamp as a moment in UTC, to compare it with a time range: a time without a zone is read in the zone of the file
+	/// </summary>
+	public static DateTime ToUtc(DateTime timeStamp, TimeZoneInfo? fileZone)
+	{
+		var moment = ToMoment(timeStamp, fileZone);
+		return moment.Kind == DateTimeKind.Local ? moment.ToUniversalTime() : moment;
+	}
+
+	/// <summary>
+	/// Whether the time stamp of an entry lies in the time range; an open end is null, and both ends are inclusive
+	/// </summary>
+	public static bool IsInRange(DateTime timeStamp, TimeZoneInfo? fileZone, DateTime? from, DateTime? to)
+	{
+		if (from == null && to == null)
+			return true;
+
+		var moment = ToUtc(timeStamp, fileZone);
+		return (from == null || moment >= from) && (to == null || moment <= to);
+	}
+
+	/// <summary>
 	/// The id that stands for the local time of the computer where a zone is chosen from a list or saved
 	/// </summary>
 	public const string LocalId = "local";
