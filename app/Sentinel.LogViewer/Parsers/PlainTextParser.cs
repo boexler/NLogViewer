@@ -22,6 +22,11 @@ public class PlainTextParser : IDisposable
 		@"\b(TRACE|DEBUG|INFO|WARN|WARNING|ERROR|FATAL)\b",
 		RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+	/// <summary>A time that ends in a zone: <c>Z</c> or an offset like <c>+01:00</c>, <c>+0100</c> or <c>-05</c>, also after a space</summary>
+	private static readonly Regex ZoneAfterTime = new(
+		@"\d{2}:\d{2}(?::\d{2}(?:[.,]\d+)?)?\s?(?:Z|[+-]\d{2}(?::?\d{2})?)\s*$",
+		RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 	private bool _disposed;
 
 	/// <summary>Name of the event property that holds the 1-based line number of the entry in its file.</summary>
@@ -446,22 +451,21 @@ public class PlainTextParser : IDisposable
 			"yyyy-MM-ddTHH:mm:ss.ffff",     // ISO 8601 with microseconds
 			"yyyy-MM-ddTHH:mm:ss.fff",       // ISO 8601 with milliseconds
 			"yyyy-MM-ddTHH:mm:ss",           // ISO 8601
-			"yyyy-MM-ddTHH:mm:ss.ffffZ",     // ISO 8601 with microseconds and UTC (Z)
-			"yyyy-MM-ddTHH:mm:ss.fffZ",      // ISO 8601 with milliseconds and UTC (Z)
-			"yyyy-MM-ddTHH:mm:ssZ",          // ISO 8601 with UTC (Z)
+			"yyyy-MM-ddTHH:mm:ss.ffffK",     // ISO 8601 with microseconds and a zone (Z or an offset)
+			"yyyy-MM-ddTHH:mm:ss.fffK",      // ISO 8601 with milliseconds and a zone
+			"yyyy-MM-ddTHH:mm:ssK",          // ISO 8601 with a zone
 			"yyyy-MM-dd HH:mm:ss.ffffK",     // With timezone
 			"yyyy-MM-dd HH:mm:ss.fffK",      // With timezone
 			"yyyy-MM-dd HH:mm:ssK"           // With timezone
 		};
 
+		// A time with a zone (Z or an offset) is a moment and is kept as UTC, however it is written; one without a zone stays a clock time
+		// of an unknown zone (the kind Unspecified), which the viewer reads in the zone of the file.
+		var styles = ZoneAfterTime.IsMatch(timestampStr) ? DateTimeStyles.AdjustToUniversal : DateTimeStyles.None;
+
 		// Try parsing with exact formats first (using InvariantCulture to avoid locale issues)
 		foreach (var format in formats)
 		{
-			// Use RoundtripKind for formats with 'Z' to preserve UTC
-			var styles = format.EndsWith("Z")
-				? DateTimeStyles.RoundtripKind
-				: DateTimeStyles.None;
-
 			if (DateTime.TryParseExact(timestampStr, format, CultureInfo.InvariantCulture, styles, out result))
 			{
 				return true;
@@ -476,18 +480,13 @@ public class PlainTextParser : IDisposable
 		}
 
 		// Fallback: Try parsing with InvariantCulture (handles ISO formats better)
-		// Use RoundtripKind to preserve UTC for timestamps ending with 'Z'
-		var fallbackStyles = timestampStr.EndsWith("Z", StringComparison.OrdinalIgnoreCase)
-			? DateTimeStyles.RoundtripKind
-			: DateTimeStyles.None;
-
-		if (DateTime.TryParse(timestampStr, CultureInfo.InvariantCulture, fallbackStyles, out result))
+		if (DateTime.TryParse(timestampStr, CultureInfo.InvariantCulture, styles, out result))
 		{
 			return true;
 		}
 
 		// Last resort: Try with current culture (but this may cause issues)
-		if (DateTime.TryParse(timestampStr, out result))
+		if (DateTime.TryParse(timestampStr, CultureInfo.CurrentCulture, styles, out result))
 		{
 			return true;
 		}
