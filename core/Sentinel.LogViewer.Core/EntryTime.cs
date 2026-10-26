@@ -60,11 +60,15 @@ public static class EntryTime
 	/// </summary>
 	public static string Label(TimeZoneInfo? zone)
 	{
-		if (zone == null || zone.Equals(TimeZoneInfo.Local))
+		if (zone == null)
 			return "local";
 
+		// UTC first: on a computer that runs in UTC, the zone that is named UTC is the local one as well, and it should still say UTC.
 		if (zone.Equals(TimeZoneInfo.Utc))
 			return "UTC";
+
+		if (zone.Equals(TimeZoneInfo.Local))
+			return "local";
 
 		var offset = zone.BaseUtcOffset;
 		var sign = offset < TimeSpan.Zero ? "-" : "+";

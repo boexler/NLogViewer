@@ -18,6 +18,7 @@ namespace Sentinel.LogViewer.Tests;
 public class LogViewerTimeZoneTests
 {
 	private static readonly TimeZoneInfo Tokyo = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+	private static readonly TimeZoneInfo Pacific = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
 	private readonly WpfStaContextFixture _context;
 
@@ -72,11 +73,12 @@ public class LogViewerTimeZoneTests
 			viewer.FileTimeZone = Tokyo;
 			Assert.Equal("TimeStamp (UTC+9 → local)", header());
 
-			viewer.DisplayTimeZone = TimeZoneInfo.Utc;
-			Assert.Equal("TimeStamp (UTC+9 → UTC)", header());
+			// Not UTC: on a computer that runs in UTC (a build server) UTC is the local time, and nothing would be converted.
+			viewer.DisplayTimeZone = Pacific;
+			Assert.Equal("TimeStamp (UTC+9 → UTC-8)", header());
 
 			viewer.FileTimeZone = null;
-			Assert.Equal("TimeStamp (UTC)", header());
+			Assert.Equal("TimeStamp (UTC-8)", header());
 
 			viewer.DisplayTimeZone = null;
 			Assert.Equal("TimeStamp", header());

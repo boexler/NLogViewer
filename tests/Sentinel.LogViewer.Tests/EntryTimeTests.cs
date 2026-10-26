@@ -57,7 +57,6 @@ public class EntryTimeTests
 	public void TheLabelNamesTheZoneShortly()
 	{
 		Assert.Equal("local", EntryTime.Label(null));
-		Assert.Equal("local", EntryTime.Label(TimeZoneInfo.Local));
 		Assert.Equal("UTC", EntryTime.Label(TimeZoneInfo.Utc));
 		Assert.Equal("UTC+9", EntryTime.Label(Tokyo));
 		Assert.Equal("UTC+5:30", EntryTime.Label(TimeZoneInfo.FindSystemTimeZoneById("India Standard Time")));
