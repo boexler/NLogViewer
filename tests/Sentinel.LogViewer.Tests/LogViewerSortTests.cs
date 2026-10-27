@@ -173,4 +173,88 @@ public class LogViewerSortTests
 
 			Assert.Null(viewer.SortKey);
 		});
-}
+
+	private sealed class LineNumberResolver : Wpf.Resolver.ILogEntryResolver
+	{
+		public string Resolve(LogEntry logEntry) => logEntry.Message.Split(' ')[1];
+	}
+
+	[Fact]
+	public void TheIdColumn_FollowsAResolverThatIsSetWhileTheListIsSorted() =>
+		WithViewer((viewer, entries) =>
+		{
+			entries.Clear();
+			foreach (var message in new[] { "a 2", "a 1", "b 2", "b 1" })
+				entries.Add(new LogEntry(LogEntryLevel.Info, "A", message));
+			viewer.CycleSort(LogColumns.Id);
+			Assert.Equal(new[] { "a 2", "a 1", "b 2", "b 1" }, Shown(viewer));
+
+			viewer.IdResolver = new LineNumberResolver();
+
+			Assert.Equal(new[] { "a 1", "b 1", "a 2", "b 2" }, Shown(viewer));
+		});
+
+	[Fact]
+	public void TheSort_StaysWhenTheListOfEntriesIsReplaced() =>
+		WithViewer((viewer, _) =>
+		{
+			viewer.CycleSort(LogColumns.Logger);
+
+			viewer.ItemsSource = new ObservableCollection<LogEntry>
+			{
+				new LogEntry(LogEntryLevel.Info, "Zulu", "z"),
+				new LogEntry(LogEntryLevel.Info, "Alpha", "a"),
+				new LogEntry(LogEntryLevel.Info, "Mike", "m")
+			};
+			WpfTestHelper.Settle();
+
+			Assert.Equal(new[] { "a", "m", "z" }, Shown(viewer));
+		});
+
+	[Fact]
+	public void TheSortByTime_FollowsTheZoneOfTheFile_AndTheChipLeavesTheZoneOut() =>
+		WithViewer((viewer, entries) =>
+		{
+			entries.Clear();
+			// 14:00 written in Tokyo is 05:00 UTC, so it is before 10:00 UTC; written in UTC it is after.
+			entries.Add(new LogEntry(LogEntryLevel.Info, "A", "written") { TimeStamp = new DateTime(2025, 12, 18, 14, 0, 0) });
+			entries.Add(new LogEntry(LogEntryLevel.Info, "A", "utc") { TimeStamp = new DateTime(2025, 12, 18, 10, 0, 0, DateTimeKind.Utc) });
+			viewer.FileTimeZone = TimeZoneInfo.Utc;
+			viewer.CycleSort(LogColumns.TimeStamp);
+			Assert.Equal(new[] { "utc", "written" }, Shown(viewer));
+
+			viewer.FileTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+
+			Assert.Equal(new[] { "written", "utc" }, Shown(viewer));
+			Assert.Equal("Sorted by TimeStamp ▲", viewer.SortText);
+		});
+
+	[Fact]
+	public void WhenTheTopEntryIsHidden_TheListStaysAtItsNeighbourInTheShownOrder() =>
+		_context.RunOnSta(() =>
+		{
+			// The loggers go down while the entries arrive, so the sort by logger is the order of arrival the other way round.
+			var entries = new ObservableCollection<LogEntry>(Enumerable.Range(0, 200).Select(i =>
+				new LogEntry(i == 99 ? LogEntryLevel.Debug : LogEntryLevel.Info, $"L{199 - i:000}", $"entry {i}")));
+			var (window, viewer) = WpfTestHelper.ShowInWindow(entries);
+			try
+			{
+				window.Height = 800;
+				viewer.CycleSort(LogColumns.Logger);
+				var listView = (ListView)viewer.Template.FindName("PART_ListView", viewer);
+				var scrollViewer = (ScrollViewer)Wpf.ScrollingHelper.GetDescendantByType(listView, typeof(ScrollViewer))!;
+				scrollViewer.ScrollToVerticalOffset(100);
+				WpfTestHelper.Settle();
+				Assert.Equal("L100", ((LogEntry)listView.Items[(int)scrollViewer.VerticalOffset]!).LoggerName);
+
+				viewer.DebugFilter = true;
+				WpfTestHelper.Settle();
+
+				// L100 is hidden; the row before it in the shown order is L099. (In the order of arrival the neighbour would be L101.)
+				Assert.Equal("L099", ((LogEntry)listView.Items[(int)scrollViewer.VerticalOffset]!).LoggerName);
+			}
+			finally
+			{
+				window.Close();
+			}
+		});}

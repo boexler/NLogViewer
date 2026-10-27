@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace Sentinel.LogViewer.Wpf.Helper
@@ -16,6 +18,11 @@ namespace Sentinel.LogViewer.Wpf.Helper
         private bool _anchorSelected;
         private bool _anchorAtEnd;
         private object? _restoredEntry;
+
+        // The entries around the anchor in the order that is shown, nearest first. With a sort on, the order of arrival is not the order of the rows.
+        private const int NeighbourCount = 200;
+        private readonly List<object> _before = new();
+        private readonly List<object> _after = new();
 
         /// <summary>
         /// Remembers the entry to keep in place; call before the filter changes
@@ -45,6 +52,14 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _anchor = listView.Items[anchorIndex];
             _anchorRow = anchorIndex - topIndex;
             _anchorAtEnd = scrollViewer.ScrollableHeight > 0 && scrollViewer.VerticalOffset >= scrollViewer.ScrollableHeight;
+
+            _before.Clear();
+            for (var i = anchorIndex - 1; i >= Math.Max(0, anchorIndex - NeighbourCount); i--)
+                _before.Add(listView.Items[i]);
+
+            _after.Clear();
+            for (var i = anchorIndex + 1; i <= Math.Min(listView.Items.Count - 1, anchorIndex + NeighbourCount); i++)
+                _after.Add(listView.Items[i]);
         }
 
         /// <summary>
@@ -52,7 +67,9 @@ namespace Sentinel.LogViewer.Wpf.Helper
         /// </summary>
         /// <param name="source">All entries in their original order, including the hidden ones</param>
         /// <param name="isInList">Whether an entry passes the list's filter</param>
-        public void Restore(ListView listView, IList source, Predicate<object> isInList)
+        /// <param name="shownOrder">Whether the list is sorted: then the nearest entry is looked for around the anchor in the order of the rows,
+        /// not in the order of arrival</param>
+        public void Restore(ListView listView, IList source, Predicate<object> isInList, bool shownOrder = false)
         {
             if (_anchor == null || ScrollingHelper.GetDescendantByType(listView, typeof(ScrollViewer)) is not ScrollViewer scrollViewer)
                 return;
@@ -64,7 +81,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 return;
             }
 
-            var target = FindNearestEntryInList(source, _anchor, isInList);
+            var target = (shownOrder ? FindNearestEntryInShownOrder(isInList) : null) ?? FindNearestEntryInList(source, _anchor, isInList);
             var index = target == null ? -1 : listView.Items.IndexOf(target);
             if (index < 0)
                 return;
@@ -84,6 +101,14 @@ namespace Sentinel.LogViewer.Wpf.Helper
             var index = listView.Items.IndexOf(_restoredEntry);
             var expectedTop = Math.Clamp(index - _anchorRow, 0, Math.Max(0, (int)scrollViewer.ScrollableHeight));
             return index >= 0 && topIndex == expectedTop;
+        }
+
+        private object? FindNearestEntryInShownOrder(Predicate<object> isInList)
+        {
+            if (_anchor != null && isInList(_anchor))
+                return _anchor;
+
+            return _before.Concat(_after).FirstOrDefault(candidate => isInList(candidate));
         }
 
         private static object? FindNearestEntryInList(IList source, object entry, Predicate<object> isInList)

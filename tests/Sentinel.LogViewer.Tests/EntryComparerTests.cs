@@ -62,4 +62,20 @@ public class EntryComparerTests
 
 		Assert.Equal(new[] { "written", "utc" }, Sorted(LogColumns.TimeStamp, false, tokyo, utc, written));
 	}
-}
+
+	private sealed class LineNumberResolver : Wpf.Resolver.ILogEntryResolver
+	{
+		public string Resolve(LogEntry logEntry) => LogColumns.ValueOf(logEntry, "Line") ?? string.Empty;
+	}
+
+	[Fact]
+	public void TheIdColumn_IsSortedByWhatItShows_ForTwoFilesWithTheSameLineNumbers()
+	{
+		LogEntry Line(string message, int line) => new(LogEntryLevel.Info, "A", message) { Properties = new Dictionary<string, object?> { ["Line"] = line.ToString() } };
+		var entries = new[] { Line("a1", 1), Line("a2", 2), Line("a3", 3), Line("b1", 1), Line("b2", 2), Line("b3", 3) };
+		var comparer = new EntryComparer(LogColumns.Id, false, null, new LineNumberResolver());
+
+		var sorted = entries.OrderBy(entry => entry, Comparer<LogEntry>.Create((x, y) => comparer.Compare(x, y))).Select(entry => entry.Message);
+
+		Assert.Equal(new[] { "a1", "b1", "a2", "b2", "a3", "b3" }, sorted);
+	}}

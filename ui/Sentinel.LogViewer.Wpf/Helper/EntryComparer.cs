@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Globalization;
 using Sentinel.LogViewer.Core;
+using Sentinel.LogViewer.Wpf.Resolver;
 
 namespace Sentinel.LogViewer.Wpf.Helper
 {
@@ -13,14 +14,24 @@ namespace Sentinel.LogViewer.Wpf.Helper
         private readonly string _key;
         private readonly bool _descending;
         private readonly TimeZoneInfo? _fileZone;
+        private readonly ILogEntryResolver? _idResolver;
+        private readonly ILogEntryResolver? _loggerResolver;
+        private readonly ILogEntryResolver? _messageResolver;
 
         /// <param name="key">The key of the column, see <see cref="LogColumns"/></param>
         /// <param name="fileZone">The zone in which times without a zone are read, so that the time stamps are compared as moments</param>
-        public EntryComparer(string key, bool descending, TimeZoneInfo? fileZone)
+        /// <param name="idResolver">What the ID column shows; the entries are put in the order of what is shown, not of what is behind it</param>
+        /// <param name="loggerResolver">What the logger column shows</param>
+        /// <param name="messageResolver">What the message column shows</param>
+        public EntryComparer(string key, bool descending, TimeZoneInfo? fileZone, ILogEntryResolver? idResolver = null,
+            ILogEntryResolver? loggerResolver = null, ILogEntryResolver? messageResolver = null)
         {
             _key = key;
             _descending = descending;
             _fileZone = fileZone;
+            _idResolver = idResolver;
+            _loggerResolver = loggerResolver;
+            _messageResolver = messageResolver;
         }
 
         public int Compare(object? x, object? y)
@@ -40,15 +51,15 @@ namespace Sentinel.LogViewer.Wpf.Helper
             switch (_key)
             {
                 case LogColumns.Id:
-                    return left.Id.CompareTo(right.Id);
+                    return _idResolver == null ? left.Id.CompareTo(right.Id) : CompareText(_idResolver.Resolve(left), _idResolver.Resolve(right));
                 case LogColumns.Level:
                     return left.Level.CompareTo(right.Level);
                 case LogColumns.TimeStamp:
                     return EntryTime.ToMoment(left.TimeStamp, _fileZone).CompareTo(EntryTime.ToMoment(right.TimeStamp, _fileZone));
                 case LogColumns.Logger:
-                    return CompareText(left.LoggerName, right.LoggerName);
+                    return _loggerResolver == null ? CompareText(left.LoggerName, right.LoggerName) : CompareText(_loggerResolver.Resolve(left), _loggerResolver.Resolve(right));
                 case LogColumns.Message:
-                    return CompareText(left.Message, right.Message);
+                    return _messageResolver == null ? CompareText(left.Message, right.Message) : CompareText(_messageResolver.Resolve(left), _messageResolver.Resolve(right));
                 case LogColumns.Thread:
                     return CompareText(LogColumns.ValueOf(left, FilterTerm.ThreadProperty), LogColumns.ValueOf(right, FilterTerm.ThreadProperty));
                 default:

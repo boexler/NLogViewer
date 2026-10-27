@@ -107,6 +107,15 @@ namespace Sentinel.LogViewer.Wpf
         private static void OnSortChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (d as LogViewer)?.ApplySort();
 
         /// <summary>
+        /// The ID, logger and message columns are sorted by what their resolvers show, so a new resolver sorts again
+        /// </summary>
+        private static void OnSortResolverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is LogViewer { SortKey: not null } viewer)
+                viewer.SetViewSort();
+        }
+
+        /// <summary>
         /// Puts the list in the order of <see cref="SortKey"/>. A new entry takes its place in that order. Auto-scroll is switched off while the
         /// list is sorted, because the end of the list is not where the new entries are, and comes back when the sort is reset.
         /// </summary>
@@ -135,7 +144,7 @@ namespace Sentinel.LogViewer.Wpf
         private void SetViewSort()
         {
             if (LogEvents?.View is ListCollectionView view)
-                view.CustomSort = SortKey == null ? null : new EntryComparer(SortKey, SortDescending, FileTimeZone);
+                view.CustomSort = SortKey == null ? null : new EntryComparer(SortKey, SortDescending, FileTimeZone, IdResolver, LoggerNameResolver, MessageResolver);
         }
 
         /// <summary>
@@ -150,7 +159,7 @@ namespace Sentinel.LogViewer.Wpf
                 var mark = key == SortKey ? (SortDescending ? DescendingMark : AscendingMark) : string.Empty;
                 column.Header = title + mark;
                 if (mark.Length > 0)
-                    text = $"Sorted by {title}{mark}";
+                    text = $"Sorted by {title.Split(" (")[0]}{mark}";
             }
 
             SetValue(SortTextPropertyKey, text);
