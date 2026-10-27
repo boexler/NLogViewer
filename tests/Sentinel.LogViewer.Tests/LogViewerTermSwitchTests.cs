@@ -85,7 +85,7 @@ public class LogViewerTermSwitchTests
 			viewer.AddRegexSearchTerm("beta");
 			WpfTestHelper.Settle();
 
-			var box = WpfTestHelper.Descendants<CheckBox>(viewer).Single(candidate => System.Windows.Automation.AutomationProperties.GetName(candidate) == "Term on");
+			var box = WpfTestHelper.Descendants<CheckBox>(viewer).Single(candidate => System.Windows.Automation.AutomationProperties.GetName(candidate) == "Apply the term beta");
 			Assert.True(box.IsChecked);
 
 			box.Command.Execute(box.CommandParameter);

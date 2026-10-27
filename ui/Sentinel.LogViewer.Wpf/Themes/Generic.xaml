@@ -404,9 +404,6 @@
                                                               <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
                                                               <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
                                                               <Style.Triggers>
-                                                                  <DataTrigger Binding="{Binding IsEnabled}" Value="False">
-                                                                      <Setter Property="Opacity" Value="0.55"/>
-                                                                  </DataTrigger>
                                                                   <DataTrigger Binding="{Binding IsRegex}" Value="True">
                                                                       <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}"/>
                                                                       <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}"/>
@@ -421,7 +418,7 @@
                                                           </Style>
                                                       </Border.Style>
                                                       <StackPanel Orientation="Horizontal">
-                                                          <CheckBox Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Switch this term on or off" AutomationProperties.Name="Term on"
+                                                          <CheckBox Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Switch this term on or off" AutomationProperties.Name="{Binding Text, StringFormat='Apply the term {0}'}"
                                                                     IsChecked="{Binding IsEnabled, Mode=OneWay}"
                                                                     Command="{Binding ToggleSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                     CommandParameter="{Binding}"/>
@@ -450,7 +447,18 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="{Binding Text}" Margin="0,0,4,0"/>
+                                                          <TextBlock Text="{Binding Text}" Margin="0,0,4,0">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                                                              <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                                              <Setter Property="Opacity" Value="0.75"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
                                                           <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Match case">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
@@ -494,7 +502,7 @@
                                                                   Margin="0,0,2,0"
                                                                   Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                   CommandParameter="{Binding}"
-                                                                  ToolTip="Edit filter term"/>
+                                                                  ToolTip="Edit filter term" AutomationProperties.Name="{Binding Text, StringFormat='Edit the term {0}'}"/>
                                                           <Button Content="×"
                                                                   Width="16"
                                                                   Height="16"
@@ -503,7 +511,7 @@
                                                                   Margin="0"
                                                                   Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                   CommandParameter="{Binding}"
-                                                                  ToolTip="Remove filter term"/>
+                                                                  ToolTip="Remove filter term" AutomationProperties.Name="{Binding Text, StringFormat='Remove the term {0}'}"/>
                                                       </StackPanel>
                                                   </Border>
                                               </DataTemplate>
