@@ -442,7 +442,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			return;
 
 		_applicationTabs.RememberFilters(key, tab.FilterState);
-		if (tab.FilterState is not { IsEmpty: false })
+		// The time range is not taken over, so it does not keep the notice of taken over filters.
+		if (tab.FilterState?.WithoutTimeRange().IsEmpty != false)
 			tab.FiltersTakenOver = false;
 	}
 

@@ -11,6 +11,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
     internal sealed class GoToTimeDialog : Window
     {
         private readonly MomentPicker _time = new("Time", withCheckBox: false);
+        private readonly TextBlock _error = new() { Foreground = System.Windows.Media.Brushes.Firebrick, TextWrapping = TextWrapping.Wrap, MaxWidth = 400 };
         private readonly TimeZoneInfo? _zone;
 
         /// <param name="zone">The zone of the display; the date and the time are in it</param>
@@ -37,13 +38,34 @@ namespace Sentinel.LogViewer.Wpf.Helper
             var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 80, Margin = new Thickness(0, 0, 6, 0), Padding = new Thickness(14, 4, 14, 4) };
             ok.Click += (_, _) =>
             {
-                Moment = TimeRangeInput.StartOf(_time.Clock, _zone, null);
-                DialogResult = true;
+                if (TryAccept())
+                    DialogResult = true;
             };
             var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
 
-            Content = new StackPanel { Margin = new Thickness(14), Children = { _time, hint, buttons } };
+            Content = new StackPanel { Margin = new Thickness(14), Children = { _time, hint, _error, buttons } };
+        }
+
+        internal MomentPicker Picker => _time;
+
+        internal string Error => _error.Text;
+
+        /// <summary>
+        /// Takes the time from the picker into <see cref="Moment"/>; without a date nothing is taken and <see cref="Error"/> says so
+        /// </summary>
+        /// <returns>Whether the input is right</returns>
+        internal bool TryAccept()
+        {
+            if (!_time.HasDate)
+            {
+                _error.Text = "Pick a date.";
+                return false;
+            }
+
+            _error.Text = string.Empty;
+            Moment = TimeRangeInput.StartOf(_time.Clock, _zone, null);
+            return true;
         }
 
         /// <summary>The time that was given, a moment in UTC</summary>

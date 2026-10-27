@@ -208,4 +208,21 @@ public class LogViewerTimeRangeTests
 			viewer.TimeRangeLastCommand.Execute("1:00:00");
 			Assert.False(viewer.HasTimeRange);
 		});
+
+	[Fact]
+	public void TheSameRangeAgain_DoesNotFilterTheListAgain() =>
+		WithViewer((viewer, entries) =>
+		{
+			var resets = 0;
+			((System.Collections.Specialized.INotifyCollectionChanged)viewer.LogEvents.View).CollectionChanged += (_, _) => resets++;
+
+			viewer.TimeFromHereCommand.Execute(entries[1]);
+			Assert.True(resets > 0);
+
+			// The same start again changes nothing, so the list is not filtered again.
+			resets = 0;
+			viewer.TimeFromHereCommand.Execute(entries[1]);
+			Assert.Equal(0, resets);
+			Assert.Equal(Utc(11), viewer.TimeFrom);
+		});
 }

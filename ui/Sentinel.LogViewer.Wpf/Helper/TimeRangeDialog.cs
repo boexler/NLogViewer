@@ -17,6 +17,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
         private readonly TimeZoneInfo? _zone;
         private readonly DateTime? _fromBefore;
         private readonly DateTime? _toBefore;
+        private readonly DateTime? _first;
+        private readonly DateTime? _last;
 
         /// <param name="zone">The zone of the display; the dates and times are in it</param>
         /// <param name="from">The start now, a moment in UTC</param>
@@ -28,6 +30,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _zone = zone;
             _fromBefore = from;
             _toBefore = to;
+            _first = first;
+            _last = last;
             Title = "Time range";
             SizeToContent = SizeToContent.WidthAndHeight;
             ResizeMode = ResizeMode.NoResize;
@@ -49,7 +53,11 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _error.Margin = new Thickness(0, 0, 0, 8);
 
             var ok = new Button { Content = "OK", IsDefault = true, MinWidth = 80, Margin = new Thickness(0, 0, 6, 0), Padding = new Thickness(14, 4, 14, 4) };
-            ok.Click += (_, _) => Accept();
+            ok.Click += (_, _) =>
+            {
+                if (TryAccept())
+                    DialogResult = true;
+            };
             var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
 
@@ -58,8 +66,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 Margin = new Thickness(14),
                 Children =
                 {
-                    Row(_from, "First entry", first),
-                    Row(_to, "Last entry", last),
+                    Row(_from, "First entry", first, UseFirst),
+                    Row(_to, "Last entry", last, UseLast),
                     hint,
                     _error,
                     buttons
@@ -81,7 +89,20 @@ namespace Sentinel.LogViewer.Wpf.Helper
             picker.IsActive = active;
         }
 
-        private UIElement Row(MomentPicker picker, string buttonText, DateTime? offered)
+        internal MomentPicker FromPicker => _from;
+
+        internal MomentPicker ToPicker => _to;
+
+        /// <summary>What the dialog says about a wrong input; empty when there is none</summary>
+        internal string Error => _error.Text;
+
+        /// <summary>Takes the time of the first entry as the start, and switches the start on</summary>
+        internal void UseFirst() => _from.Set(TimeRangeInput.ToClock(_first!.Value, _zone));
+
+        /// <summary>Takes the time of the last entry as the end, and switches the end on</summary>
+        internal void UseLast() => _to.Set(TimeRangeInput.ToClock(_last!.Value, _zone));
+
+        private UIElement Row(MomentPicker picker, string buttonText, DateTime? offered, Action use)
         {
             var button = new Button
             {
@@ -92,23 +113,35 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 IsEnabled = offered != null,
                 ToolTip = "Take the time of this entry"
             };
-            button.Click += (_, _) => picker.Set(TimeRangeInput.ToClock(offered!.Value, _zone));
+            button.Click += (_, _) => use();
             return new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6), Children = { picker, button } };
         }
 
-        private void Accept()
+        /// <summary>
+        /// Takes the start and the end from the pickers: <see cref="From"/> and <see cref="To"/> are set, an end that is switched off is null.
+        /// Without a date for an end that is on, or with the start after the end, nothing is taken and <see cref="Error"/> says why.
+        /// </summary>
+        /// <returns>Whether the input is right</returns>
+        internal bool TryAccept()
         {
+            _error.Text = string.Empty;
+            if (_from.IsActive && !_from.HasDate || _to.IsActive && !_to.HasDate)
+            {
+                _error.Text = "Pick a date.";
+                return false;
+            }
+
             var from = _from.IsActive ? TimeRangeInput.StartOf(_from.Clock, _zone, _fromBefore) : (DateTime?)null;
             var to = _to.IsActive ? TimeRangeInput.EndOf(_to.Clock, _zone, _toBefore) : (DateTime?)null;
             if (from > to)
             {
                 _error.Text = "The start is after the end.";
-                return;
+                return false;
             }
 
             From = from;
             To = to;
-            DialogResult = true;
+            return true;
         }
     }
 }

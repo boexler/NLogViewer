@@ -1247,4 +1247,26 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Equal("Entries: 3", viewModel.TabSummary);
 		});
 	}
+
+	[Fact]
+	public void TheNoticeOfTakenOverFilters_GoesWhenOnlyATimeRangeIsLeft()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var firstViewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+			firstViewer.TraceFilter = true;
+			WpfTestHelper.Settle();
+			Send(session, App("(200)"));
+			var second = session.ViewModel.LogTabs[1];
+			Assert.True(second.FiltersTakenOver);
+
+			// The filters are taken away by hand, and a time range is set: nothing is taken over any more.
+			ViewerOf(session, second).ApplyFilterState(new LogViewerFilterState { TimeFrom = DateTime.UtcNow.AddDays(-1) });
+			WpfTestHelper.Settle();
+
+			Assert.False(second.FiltersTakenOver);
+		});
+	}
 }

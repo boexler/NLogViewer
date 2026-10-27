@@ -146,6 +146,10 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         private void ApplyTimeRange(DateTime? from, DateTime? to)
         {
+            // Applying the filters of a tab sets the range as well; with the same range the whole list is not filtered again.
+            if (TimeFrom == from && TimeTo == to)
+                return;
+
             _applyingTimeRange = true;
             try
             {

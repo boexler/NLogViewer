@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 
 namespace Sentinel.LogViewer.Wpf.Helper
@@ -41,12 +42,24 @@ namespace Sentinel.LogViewer.Wpf.Helper
             Children.Add(Colon());
             Children.Add(_second);
 
+            AutomationProperties.SetName(_date, $"{label} date");
+            AutomationProperties.SetName(_hour, $"{label} hour");
+            AutomationProperties.SetName(_minute, $"{label} minute");
+            AutomationProperties.SetName(_second, $"{label} second");
+
             _date.SelectedDateChanged += (_, _) => Changed();
             foreach (var part in new[] { _hour, _minute, _second })
                 part.SelectionChanged += (_, _) => Changed();
 
             Clock = DateTime.Today;
         }
+
+        internal DatePicker DateBox => _date;
+
+        internal ComboBox HourBox => _hour;
+
+        /// <summary>Whether a date is in the date picker; without one the clock time would silently be today</summary>
+        public bool HasDate => _date.SelectedDate != null;
 
         /// <summary>Whether the value is switched on; always true for a picker without a check box</summary>
         public bool IsActive
