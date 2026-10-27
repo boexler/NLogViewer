@@ -16,6 +16,7 @@ namespace Sentinel.LogViewer.Wpf
         private ICommand? _timeUntilHereCommand;
         private ICommand? _clearTimeRangeCommand;
         private ICommand? _chooseTimeRangeCommand;
+        private ICommand? _timeRangeLastCommand;
         private bool _applyingTimeRange;
 
         #region Time Range Properties
@@ -116,6 +117,16 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         public ICommand ClearTimeRangeCommand => _clearTimeRangeCommand ??= new RelayCommand(
             () => ApplyTimeRange(null, null), () => HasTimeRange);
+
+        /// <summary>
+        /// Limits the entries to the last period, counted back from the last entry (not from now, so that it also works for an old file): the
+        /// parameter is the length as a text like <c>1:00:00</c> for an hour. The end is open.
+        /// </summary>
+        public ICommand TimeRangeLastCommand => _timeRangeLastCommand ??= new RelayCommand<string>(text =>
+        {
+            if (TimeSpan.TryParse(text, System.Globalization.CultureInfo.InvariantCulture, out var length) && EntryTimeSpan().Last is { } last)
+                ApplyTimeRange(last - length, null);
+        });
 
         /// <summary>
         /// Opens the dialog for the time range (Ctrl+Shift+T)

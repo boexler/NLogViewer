@@ -303,9 +303,18 @@
                                                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
                                             </MenuItem>
                                         </Menu>
-                                        <Button Content="Time range..." Margin="10,0,0,0" Padding="6,0" VerticalAlignment="Center"
-                                                Command="{Binding ChooseTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                                ToolTip="Show only the entries of a period (Ctrl+Shift+T)"/>
+                                        <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
+                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                            <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
+                                                <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
+                                                <MenuItem Header="Last hour" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
+                                                <MenuItem Header="Last 24 hours" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
+                                                <MenuItem Header="Last 7 days" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
+                                                <Separator/>
+                                                <MenuItem Header="Choose..." InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
+                                                <MenuItem Header="Clear the time range" Command="{Binding ClearTimeRangeCommand}"/>
+                                            </MenuItem>
+                                        </Menu>
                                         <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
                                         <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"

@@ -184,4 +184,28 @@ public class LogViewerTimeRangeTests
 			entries.Clear();
 			Assert.Equal(((DateTime?)null, (DateTime?)null), viewer.EntryTimeSpan());
 		});
+
+	[Fact]
+	public void TheQuickChoices_CountBackFromTheLastEntry_AndLeaveTheEndOpen() =>
+		WithViewer((viewer, entries) =>
+		{
+			viewer.FileTimeZone = Tokyo;
+
+			// The last entry is at 12:00 UTC.
+			viewer.TimeRangeLastCommand.Execute("1:00:00");
+			Assert.Equal((Utc(11), (DateTime?)null), (viewer.TimeFrom!.Value, viewer.TimeTo));
+			Assert.Equal(new[] { "eleven", "twelve" }, Visible(viewer));
+
+			viewer.TimeRangeLastCommand.Execute("7.00:00:00");
+			Assert.Equal(Utc(12).AddDays(-7), viewer.TimeFrom!.Value);
+			Assert.Equal(4, Visible(viewer).Length);
+
+			// Nothing that is not a length changes anything, and no entry means no range.
+			viewer.TimeRangeLastCommand.Execute("soon");
+			Assert.Equal(Utc(12).AddDays(-7), viewer.TimeFrom!.Value);
+			entries.Clear();
+			viewer.ClearTimeRangeCommand.Execute(null);
+			viewer.TimeRangeLastCommand.Execute("1:00:00");
+			Assert.False(viewer.HasTimeRange);
+		});
 }
