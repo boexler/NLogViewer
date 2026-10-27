@@ -16,6 +16,7 @@ namespace Sentinel.LogViewer.Wpf
     {
         private FilterTerm? _findTerm;
         private ICommand? _toggleSearchFieldCommand;
+        private ICommand? _toggleSearchTermCommand;
         private ICommand? _insertRegexTemplateCommand;
         private ICommand? _insertFindRegexTemplateCommand;
 
@@ -39,6 +40,19 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         public ICommand ToggleSearchFieldCommand => _toggleSearchFieldCommand ??=
             new RelayCommand<SearchFields>(toggled => SearchFields ^= toggled);
+
+        /// <summary>
+        /// Switches a filter term on or off; the parameter is the term. A term that is off stays in the list but does not filter and does not mark
+        /// anything.
+        /// </summary>
+        public ICommand ToggleSearchTermCommand => _toggleSearchTermCommand ??=
+            new RelayCommand<FilterTerm>(term =>
+            {
+                term.IsEnabled = !term.IsEnabled;
+                UpdateFilter();
+                if (PART_ListView != null)
+                    MessageHighlighter.Refresh(PART_ListView);
+            });
 
         /// <summary>
         /// Puts a <see cref="RegexTemplate"/> into the filter input and switches the input to regular expressions

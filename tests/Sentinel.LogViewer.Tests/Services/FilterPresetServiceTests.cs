@@ -113,4 +113,15 @@ public class FilterPresetServiceTests : IDisposable
 		Assert.Equal("Timeouts", preset.Name);
 		Assert.True(preset.Filters.IsSameAs(FilterPresetService.ForPreset(Filters())));
 	}
-}
+
+	[Fact]
+	public void APreset_KeepsTheTermsThatAreOff_WithTheirState()
+	{
+		var filters = Filters();
+		filters.Terms.Add(new LogViewerFilterTerm { Text = "retry", IsEnabled = false });
+		Service.Save("Some off", filters);
+
+		var preset = Assert.Single(new FilterPresetService(_environment.Configuration).GetAll());
+
+		Assert.Equal(new[] { true, false }, preset.Filters.Terms.Select(term => term.IsEnabled));
+	}}

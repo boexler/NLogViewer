@@ -1304,6 +1304,29 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void ATermThatIsOff_IsKeptInTheTab_AndTakenOverByANewTabOfTheApplication()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"));
+			var first = Assert.Single(session.ViewModel.LogTabs);
+			var firstViewer = ViewerOf(session, first);
+			firstViewer.AddRegexSearchTermCommand.Execute("timeout");
+			firstViewer.ToggleSearchTermCommand.Execute(firstViewer.ActiveSearchTerms[0]);
+			WpfTestHelper.Settle();
+
+			Assert.False(Assert.Single(first.FilterState!.Terms).IsEnabled);
+
+			Send(session, App("(200)"));
+
+			var second = session.ViewModel.LogTabs[1];
+			Assert.False(Assert.Single(second.FilterState!.Terms).IsEnabled);
+			Assert.False(Assert.Single(ViewerOf(session, second).ActiveSearchTerms).IsEnabled);
+		});
+	}
+
+	[Fact]
 	public void TheNoticeOfTakenOverFilters_GoesWhenOnlyATimeRangeIsLeft()
 	{
 		_context.RunOnSta(() =>

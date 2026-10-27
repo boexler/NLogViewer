@@ -141,7 +141,7 @@ namespace Sentinel.LogViewer.Wpf
             var total = GetEffectiveEntries().Count;
             var shown = LogEvents?.View is CollectionView view ? view.Count : 0;
             var loggerRules = LoggerTree.Rules.Count;
-            var hasFilters = LevelNames.Any(IsLevelHidden) || ActiveSearchTerms.Count > 0 || loggerRules > 0 || TimeFrom != null || TimeTo != null;
+            var hasFilters = LevelNames.Any(IsLevelHidden) || ActiveSearchTerms.Any(term => term.IsEnabled) || loggerRules > 0 || TimeFrom != null || TimeTo != null;
 
             SetValue(HasActiveFilterPropertyKey, hasFilters);
             SetValue(LoggerRuleCountPropertyKey, loggerRules);

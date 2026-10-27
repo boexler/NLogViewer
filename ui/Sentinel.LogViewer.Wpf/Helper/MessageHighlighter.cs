@@ -100,7 +100,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             var highlights = new Brush?[message.Length];
             var highlighted = false;
             // A term that excludes hides the entries it matches, so there is nothing of it to see.
-            foreach (var term in (terms ?? Enumerable.Empty<FilterTerm>()).Where(term => !term.IsExclude))
+            foreach (var term in (terms ?? Enumerable.Empty<FilterTerm>()).Where(term => term.IsEnabled && !term.IsExclude))
             {
                 foreach (var (start, length) in term.FindMatches(message))
                 {
