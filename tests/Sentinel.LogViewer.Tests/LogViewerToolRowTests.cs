@@ -167,4 +167,19 @@ public class LogViewerToolRowTests
 				box.Text = "x";
 				Assert.Equal(System.Windows.Visibility.Collapsed, shown.Visibility);
 			}
+		});
+
+	[Fact]
+	public void TheBoxOfTheLoggerTree_HasAHintAndASymbol_AndNarrowsTheTree() =>
+		WithViewer(viewer =>
+		{
+			viewer.IsLoggerTreeExpanded = true;
+			WpfTestHelper.Settle();
+			var box = (Wpf.Helper.WatermarkTextBox)WpfTestHelper.Descendants<TextBox>(viewer).Single(candidate => System.Windows.Automation.AutomationProperties.GetName(candidate) == "Search loggers");
+			Assert.Equal(("Search loggers", "\uE721"), (box.Hint, box.Glyph));
+			Assert.Equal(System.Windows.Visibility.Visible, ((TextBlock)box.Template.FindName("Hint", box)).Visibility);
+
+			box.Text = "B";
+			Assert.Equal("B", viewer.LoggerTree.SearchText);
+			Assert.False(viewer.LoggerTree.Find("A")!.IsListed);
 		});}

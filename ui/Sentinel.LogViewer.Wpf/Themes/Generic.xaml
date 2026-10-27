@@ -882,8 +882,10 @@
                                             </TextBlock>
                                         </ToggleButton>
                                     </Grid>
-                                    <TextBox DockPanel.Dock="Top" Margin="0,0,0,6" ToolTip="Search loggers"
-                                             Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <helper:WatermarkTextBox DockPanel.Dock="Top" Height="26" Margin="0,0,0,6" Style="{StaticResource WatermarkBox}"
+                                                             Glyph="&#xE721;" Hint="Search loggers" AutomationProperties.Name="Search loggers"
+                                                             ToolTip="Show only the loggers whose name contains the text; the entries of the list do not change"
+                                                             Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TreeView x:Name="PART_LoggerTreeView" ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
                                               BorderThickness="0" Background="Transparent"
                                               VirtualizingPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
