@@ -1564,6 +1564,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
             InputBindings.Add(new KeyBinding(ChooseTimeRangeCommand, Key.T, ModifierKeys.Control | ModifierKeys.Shift));
             AddJumpKeyBindings();
+            AddRoutedCommandBindings();
             InputBindings.Add(new KeyBinding(FindPreviousCommand, Key.F3, ModifierKeys.Shift));
             ScrollToEndCommand = new RelayCommand(() =>
             {

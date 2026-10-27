@@ -82,17 +82,11 @@
   <data name="Menu_About" xml:space="preserve">
     <value>_Névjegy...</value>
   </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Naplók</value>
-  </data>
   <data name="Menu_Export" xml:space="preserve">
     <value>_Exportálás</value>
   </data>
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>*.log formátum</value>
-  </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_Lapok</value>
   </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
     <value>Aktuális _lap bezárása</value>
@@ -608,7 +602,7 @@
     <value>Téma</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
+    <value>A Warm lágy: fehér és krémszín, lekerekített elemekkel és nyugodt betűtípussal. A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Időbélyeg formátuma</value>
@@ -874,17 +868,14 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Nyelv kiválasztása</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Szűrő</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
-    <value>_Előbeállítás alkalmazása</value>
+    <value>Előbeállítás _alkalmazása</value>
   </data>
   <data name="Menu_FilterSavePreset" xml:space="preserve">
     <value>Az aktuális szűrő _mentése előbeállításként...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
-    <value>Előbeállítások _kezelése...</value>
+    <value>Előbeállítások kezelé_se...</value>
   </data>
   <data name="FilterPreset_SaveTitle" xml:space="preserve">
     <value>Szűrő-előbeállítás mentése</value>
@@ -993,24 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Figyelés _leállítása</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Bejegyzések: {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Bejegyzések: {0:N0} / {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Elrejtett szintek: {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Kifejezések: {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Naplózó-szabályok: {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Szűrő visszaállítása</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>A nyelv megváltozott. Indítsa újra az alkalmazást, hogy a módosítás teljesen érvényesüljön.</value>
@@ -1304,7 +1277,7 @@
     <value>A szint megjelenítése</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>Hogyan jelenik meg egy bejegyzés szintje a naplólistában: szimbólumként, szövegként vagy mindkettőként. A szöveg segít a sorok másolásakor vagy exportálásakor, és ha a színeket nehéz megkülönböztetni.</value>
+    <value>Hogyan jelenik meg egy bejegyzés szintje a naplólistában: szimbólumként, szövegként vagy mindkettőként. A szöveg segít a sorok másolásakor vagy exportálásakor, és ha a színeket nehéz megkülönböztetni. A lista feletti szintgombok követik; szövegként egy betűt mutatnak.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Szimbólum</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Ugrás az adott szint előző bejegyzésére</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>_Lap</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>Fi_gyelés</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>_Időzóna...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>Idő_tartomány</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Elmúlt _15 perc</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Elmúlt ó_ra</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Elmúlt _24 óra</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Elmúlt _7 nap</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Kiválasztás...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>A tartomány tör_lése</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>_Ugrás időponthoz...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>_Következő bejegyzés szintje</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>Elő_ző bejegyzés szintje</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>Ke_resés</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>Szűrő _visszaállítása</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>_Logger-fa</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>_Források</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>A keresősáv megnyitása; az Esc a sávban bezárja és törli a keresést</value>
   </data>
 </root>
 

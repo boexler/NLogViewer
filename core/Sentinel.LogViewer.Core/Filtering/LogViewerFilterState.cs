@@ -71,6 +71,11 @@ public sealed class LogViewerFilterState
 		&& TimeFrom == null && TimeTo == null;
 
 	/// <summary>
+	/// Whether anything hides entries: a level, a term, a rule for loggers or a time range; the fields and the time stamp format do not
+	/// </summary>
+	public bool HasFilters => HiddenLevels.Count > 0 || Terms.Count > 0 || LoggerRules.Count > 0 || TimeFrom != null || TimeTo != null;
+
+	/// <summary>
 	/// A copy of the filters without the time range
 	/// </summary>
 	public LogViewerFilterState WithoutTimeRange()

@@ -6,6 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dj="clr-namespace:Sentinel.LogViewer.Wpf;assembly=Sentinel.LogViewer.Wpf"
+        xmlns:core="clr-namespace:Sentinel.LogViewer.Core;assembly=Sentinel.LogViewer.Core"
         xmlns:viewModels="clr-namespace:Sentinel.LogViewer.ViewModels"
         xmlns:helpers="clr-namespace:Sentinel.LogViewer.Helpers"
         xmlns:models="clr-namespace:Sentinel.LogViewer.Models"
@@ -125,6 +126,7 @@
                     DefaultTimeStampFormat="{Binding DataContext.DefaultTimeStampFormat, RelativeSource={RelativeSource AncestorType=Window}}"
                     ListFontFamily="{Binding DataContext.ListFontFamily, RelativeSource={RelativeSource AncestorType=Window}}"
                     LevelDisplay="{Binding DataContext.LevelDisplay, RelativeSource={RelativeSource AncestorType=Window}}"
+                    LevelButtonDisplay="{Binding DataContext.LevelDisplay, RelativeSource={RelativeSource AncestorType=Window}}"
                     RowHeight="{Binding DataContext.RowHeight, RelativeSource={RelativeSource AncestorType=Window}}"
                     ListFontSize="{Binding DataContext.ListFontSize, RelativeSource={RelativeSource AncestorType=Window}}"
                     TraceBackground="{DynamicResource LogTraceBackground}"
@@ -153,7 +155,6 @@
                     IsLoggerTreeOnLeft="{Binding DataContext.LoggerTreeOnLeft, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeExpanded="{Binding DataContext.LoggerTreeOpen, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     LoggerTreeWidth="{Binding DataContext.LoggerTreeWidth, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
-                    VisibleEntryCount="{Binding DataContext.VisibleEntryCount, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
                     SearchFields="{Binding DataContext.SearchFields, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     ColumnKeys="{Binding DataContext.ColumnKeys, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     FileTimeZone="{Binding DataContext.FileTimeZone, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
@@ -187,22 +188,86 @@
         <!-- Menu Bar -->
         <Menu x:Name="MainMenu">
             <MenuItem Header="{helpers:Resource Key=Menu_File, DefaultValue=_File}">
-                <MenuItem Header="{helpers:Resource Key=Menu_OpenFile, DefaultValue=_Open File...}" 
-                          Command="{Binding OpenFileCommand}" 
+                <MenuItem Header="{helpers:Resource Key=Menu_OpenFile, DefaultValue=_Open File...}"
+                          Command="{Binding OpenFileCommand}"
                           InputGestureText="Ctrl+O"/>
                 <MenuItem Header="{helpers:Resource Key=Menu_OpenFileWithMapping, DefaultValue=Open File with Column _Mapping...}"
                           Command="{Binding OpenFileWithMappingCommand}"/>
                 <Separator />
-                <MenuItem Header="{helpers:Resource Key=Menu_Exit, DefaultValue=E_xit}" 
-                          Command="{Binding ExitCommand}" 
+                <MenuItem Header="{helpers:Resource Key=Menu_Settings, DefaultValue=_Settings...}"
+                          Command="{Binding OpenSettingsCommand}"
+                          InputGestureText="Ctrl+,"/>
+                <Separator />
+                <MenuItem Header="{helpers:Resource Key=Menu_Exit, DefaultValue=E_xit}"
+                          Command="{Binding ExitCommand}"
                           InputGestureText="Alt+F4"/>
             </MenuItem>
-            <MenuItem Header="{helpers:Resource Key=Menu_View, DefaultValue=_View}">
-                <MenuItem Header="{helpers:Resource Key=Menu_Settings, DefaultValue=_Settings...}" 
-                          Command="{Binding OpenSettingsCommand}" 
-                          InputGestureText="Ctrl+,"/>
-            </MenuItem>
-            <MenuItem Header="{helpers:Resource Key=Menu_Filter, DefaultValue=_Filter}">
+            <!-- What acts on the selected tab; the entries of the viewer are sent to the viewer of the tab (see LogViewerCommands) -->
+            <MenuItem Header="{helpers:Resource Key=Menu_Tab, DefaultValue=_Tab}">
+                <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
+                          Command="{Binding CloseCurrentTabCommand}"
+                          InputGestureText="Ctrl+W"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_CloseAllTabs, DefaultValue=Close a_ll tabs}"
+                          Command="{Binding CloseAllTabsCommand}"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_Export, DefaultValue=_Export}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_ExportLogFormat, DefaultValue=*.log format}"
+                              Command="{Binding ExportLogsCommand}"/>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="{helpers:Resource Key=Menu_TimeZone, DefaultValue=Time _zone...}"
+                          Command="{Binding ChangeTimeZoneCommand}"
+                          CommandParameter="{Binding SelectedTab}"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_TimeRange, DefaultValue=Time _range}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeLast15, DefaultValue=Last _15 minutes}"
+                              Command="{x:Static dj:LogViewerCommands.TimeRangeLast}" CommandParameter="0:15:00"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeLastHour, DefaultValue=Last _hour}"
+                              Command="{x:Static dj:LogViewerCommands.TimeRangeLast}" CommandParameter="1:00:00"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeLast24, DefaultValue=Last _24 hours}"
+                              Command="{x:Static dj:LogViewerCommands.TimeRangeLast}" CommandParameter="24:00:00"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeLast7, DefaultValue=Last _7 days}"
+                              Command="{x:Static dj:LogViewerCommands.TimeRangeLast}" CommandParameter="7.00:00:00"/>
+                    <Separator />
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeChoose, DefaultValue=_Choose...}"
+                              Command="{x:Static dj:LogViewerCommands.ChooseTimeRange}" InputGestureText="Ctrl+Shift+T"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_TimeRangeClear, DefaultValue=C_lear the time range}"
+                              Command="{x:Static dj:LogViewerCommands.ClearTimeRange}"/>
+                </MenuItem>
+                <MenuItem Header="{helpers:Resource Key=Menu_GoToTime, DefaultValue=_Go to time...}"
+                          Command="{x:Static dj:LogViewerCommands.GoToTime}" InputGestureText="Ctrl+T"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_NextEntry, DefaultValue=_Next entry of a level}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelTrace, DefaultValue=Trace}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Trace}" InputGestureText="F4"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelDebug, DefaultValue=Debug}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Debug}" InputGestureText="F5"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelInfo, DefaultValue=Info}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Info}" InputGestureText="F6"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelWarn, DefaultValue=Warning}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Warn}" InputGestureText="F7"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelError, DefaultValue=Error}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Error}" InputGestureText="F8"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelFatal, DefaultValue=Fatal}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Fatal}" InputGestureText="F9"/>
+                </MenuItem>
+                <MenuItem Header="{helpers:Resource Key=Menu_PreviousEntry, DefaultValue=_Previous entry of a level}">
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelTrace, DefaultValue=Trace}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Trace}" InputGestureText="Shift+F4"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelDebug, DefaultValue=Debug}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Debug}" InputGestureText="Shift+F5"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelInfo, DefaultValue=Info}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Info}" InputGestureText="Shift+F6"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelWarn, DefaultValue=Warning}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Warn}" InputGestureText="Shift+F7"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelError, DefaultValue=Error}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Error}" InputGestureText="Shift+F8"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_LevelFatal, DefaultValue=Fatal}" Command="{x:Static dj:LogViewerCommands.PreviousLevel}"
+                              CommandParameter="{x:Static core:LogEntryLevel.Fatal}" InputGestureText="Shift+F9"/>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="{helpers:Resource Key=Menu_Find, DefaultValue=_Find}"
+                          Command="{x:Static ApplicationCommands.Find}" InputGestureText="Ctrl+F"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_ResetFilter, DefaultValue=Re_set filter}"
+                          Command="{x:Static dj:LogViewerCommands.ResetFilter}"/>
+                <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_FilterApplyPreset, DefaultValue=_Apply preset}"
                           IsEnabled="{Binding HasFilterPresets}"
                           ItemsSource="{Binding FilterPresets}"
@@ -215,35 +280,39 @@
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="{helpers:Resource Key=Menu_FilterSavePreset, DefaultValue=_Save current filter as preset...}"
+                <MenuItem Header="{helpers:Resource Key=Menu_FilterSavePreset, DefaultValue=Sa_ve current filter as preset...}"
                           Command="{Binding SaveFilterPresetCommand}"/>
-                <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_FilterManagePresets, DefaultValue=_Manage presets...}"
                           Command="{Binding ManageFilterPresetsCommand}"/>
             </MenuItem>
-            <MenuItem Header="{helpers:Resource Key=Menu_Logs, DefaultValue=_Logs}">
+            <MenuItem Header="{helpers:Resource Key=Menu_View, DefaultValue=_View}">
+                <MenuItem Header="{helpers:Resource Key=Menu_LoggerTree, DefaultValue=_Logger tree}"
+                          IsCheckable="True" IsChecked="{Binding SelectedTab.LoggerTreeOpen, Mode=TwoWay}">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedTab}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="{helpers:Resource Key=Menu_Receiving, DefaultValue=_Listening}">
                 <MenuItem Header="{helpers:Resource Key=Menu_StartReceiving, DefaultValue=_Start receiving}"
                           Command="{Binding StartListeningCommand}"/>
                 <MenuItem Header="{helpers:Resource Key=Menu_StopReceiving, DefaultValue=S_top receiving}"
                           Command="{Binding StopListeningCommand}"/>
                 <Separator />
-                <MenuItem Header="{helpers:Resource Key=Menu_Logs_Tabs, DefaultValue=_Tabs}">
-                    <MenuItem Header="{helpers:Resource Key=Menu_CloseCurrentTab, DefaultValue=Close _current tab}"
-                              Command="{Binding CloseCurrentTabCommand}"
-                              InputGestureText="Ctrl+W"/>
-                    <MenuItem Header="{helpers:Resource Key=Menu_CloseAllTabs, DefaultValue=Close _all tabs}"
-                              Command="{Binding CloseAllTabsCommand}"/>
-                </MenuItem>
-                <MenuItem Header="{helpers:Resource Key=Menu_Export, DefaultValue=_Export}">
-                    <MenuItem Header="{helpers:Resource Key=Menu_ExportLogFormat, DefaultValue=*.log format}" 
-                              Command="{Binding ExportLogsCommand}"/>
-                </MenuItem>
+                <MenuItem Header="{helpers:Resource Key=Menu_SourcesPanel, DefaultValue=S_ources}"
+                          Command="{Binding ToggleSourcesPanelCommand}"/>
             </MenuItem>
             <MenuItem Header="{helpers:Resource Key=Menu_Help, DefaultValue=_Help}">
                 <MenuItem Header="{helpers:Resource Key=Menu_Shortcuts, DefaultValue=_Keyboard shortcuts}"
                           Command="{Binding ShowShortcutsCommand}"
                           InputGestureText="F1"/>
-                <MenuItem Header="{helpers:Resource Key=Menu_About, DefaultValue=_About...}" 
+                <MenuItem Header="{helpers:Resource Key=Menu_About, DefaultValue=_About...}"
                           Command="{Binding AboutCommand}"/>
             </MenuItem>
         </Menu>
@@ -451,18 +520,6 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </Button>
-                </StackPanel>
-            </StatusBarItem>
-            <!-- The selected tab: entries and what filters them -->
-            <StatusBarItem Grid.Column="1" HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding TabSummary}" VerticalAlignment="Center"/>
-                    <TextBlock Margin="10,0,0,0" VerticalAlignment="Center"
-                               Visibility="{Binding HasActiveFilter, Converter={StaticResource ThemeBoolToVisibility}}">
-                        <Hyperlink Command="{Binding ResetFilterCommand}">
-                            <Run Text="{helpers:Resource Key=Summary_Reset, DefaultValue=Reset filter}"/>
-                        </Hyperlink>
-                    </TextBlock>
                 </StackPanel>
             </StatusBarItem>
             <!-- Timestamp and language (Right) -->

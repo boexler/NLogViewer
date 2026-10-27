@@ -56,6 +56,25 @@ namespace Sentinel.LogViewer
             // After an update the changelog opens once, when the window is up.
             Loaded += (_, _) => Dispatcher.BeginInvoke(new Action(_viewModel.AnnounceUpdate), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
+            // The functions of the viewer (menu Tab) go to the viewer of the selected tab, wherever the focus is
+            foreach (var command in Wpf.LogViewerCommands.All)
+            {
+                CommandBindings.Add(new CommandBinding(command,
+                    (_, e) =>
+                    {
+                        if (e.OriginalSource is not Wpf.LogViewer && SelectedViewer() is { } viewer)
+                            command.Execute(e.Parameter, viewer);
+                    },
+                    (_, e) =>
+                    {
+                        if (e.OriginalSource is Wpf.LogViewer)
+                            return;
+
+                        e.CanExecute = SelectedViewer() is { } viewer && command.CanExecute(e.Parameter, viewer);
+                        e.Handled = true;
+                    }));
+            }
+
             // Setup keyboard shortcuts
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenFileCommand,
                 new KeyGesture(Key.O, ModifierKeys.Control)));
@@ -100,6 +119,16 @@ namespace Sentinel.LogViewer
 #if DEBUG
             AddDebugMenu();
 #endif
+        }
+
+        /// <summary>
+        /// The viewer in the selected tab; only the content of the selected tab is in the window
+        /// </summary>
+        internal Wpf.LogViewer? SelectedViewer()
+        {
+            var tabItem = LogTabsControl.ItemContainerGenerator.ContainerFromItem(LogTabsControl.SelectedItem);
+            var content = tabItem == null ? null : AttachedProperties.TabContent.GetInternalCachedContent(tabItem);
+            return Wpf.ScrollingHelper.GetDescendantByType(content, typeof(Wpf.LogViewer)) as Wpf.LogViewer;
         }
 
         /// <summary>

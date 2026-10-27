@@ -46,7 +46,7 @@ public class LogViewerFindTests
 			{
 				viewer.FindText = "entry 1";
 
-				Assert.Equal("– / 111", viewer.FindResultText);
+				Assert.Equal("111 hits", viewer.FindResultText);
 				Assert.Equal(1000, listView.Items.Count);
 
 				viewer.FindText = "nothing like this";
@@ -75,7 +75,7 @@ public class LogViewerFindTests
 
 				viewer.FindNextCommand.Execute(null);
 				Assert.Equal("Entry 1", SelectedMessage(listView));
-				Assert.Equal("1 / 111", viewer.FindResultText);
+				Assert.Equal("Entry 1 of 111", viewer.FindResultText);
 				Assert.False(viewer.AutoScroll);
 
 				viewer.FindNextCommand.Execute(null);
@@ -84,7 +84,7 @@ public class LogViewerFindTests
 				viewer.FindPreviousCommand.Execute(null);
 				viewer.FindPreviousCommand.Execute(null);
 				Assert.Equal("Entry 199", SelectedMessage(listView));
-				Assert.Equal("111 / 111", viewer.FindResultText);
+				Assert.Equal("Entry 111 of 111", viewer.FindResultText);
 			}
 			finally
 			{
@@ -128,11 +128,11 @@ public class LogViewerFindTests
 				// Debug hides the odd entries: Entry 10-18 and 100-198, even only.
 				viewer.DebugFilter = true;
 				WpfTestHelper.Settle();
-				Assert.Equal("– / 55", viewer.FindResultText);
+				Assert.Equal("55 hits", viewer.FindResultText);
 
 				entries.Add(new LogEntry(LogEntryLevel.Info, "Logger", "Entry 1000"));
 				WpfTestHelper.Settle();
-				Assert.Equal("– / 56", viewer.FindResultText);
+				Assert.Equal("56 hits", viewer.FindResultText);
 			}
 			finally
 			{

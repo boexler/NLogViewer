@@ -52,7 +52,7 @@ namespace Sentinel.LogViewer.Wpf
         public static readonly DependencyProperty FindResultTextProperty = FindResultTextPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Position of the current hit and number of hits, e.g. "3 / 17"; empty when nothing is searched
+        /// The current hit and the number of hits, e.g. "Entry 3 of 17", or "17 hits" before one is selected; empty when nothing is searched
         /// </summary>
         public string FindResultText => (string)GetValue(FindResultTextProperty);
 
@@ -233,8 +233,10 @@ namespace Sentinel.LogViewer.Wpf
                 text = "Invalid pattern";
             else if (_findMatches.Count == 0)
                 text = "No results";
+            else if (_currentFindMatch == null)
+                text = _findMatches.Count == 1 ? "1 hit" : $"{_findMatches.Count} hits";
             else
-                text = $"{(_currentFindMatch == null ? "–" : (_findMatches.IndexOf(_currentFindMatch) + 1).ToString())} / {_findMatches.Count}";
+                text = $"Entry {_findMatches.IndexOf(_currentFindMatch) + 1} of {_findMatches.Count}";
 
             SetValue(FindResultTextPropertyKey, text);
         }

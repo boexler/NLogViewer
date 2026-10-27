@@ -61,6 +61,107 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LogViewer}">
+                    <ControlTemplate.Resources>
+                        <Style x:Key="ToolButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Width" Value="28"/>
+                            <Setter Property="Height" Value="26"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,2,0"/>
+                        </Style>
+                        <Style x:Key="ToolToggle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                            <Setter Property="MinWidth" Value="28"/>
+                            <Setter Property="Height" Value="26"/>
+                            <Setter Property="Padding" Value="4,0"/>
+                            <Setter Property="Margin" Value="0,0,2,0"/>
+                        </Style>
+                        <!-- The icon of a level button: hidden when the buttons show a letter only -->
+                        <Style x:Key="LevelIcon" TargetType="Image">
+                            <Setter Property="Width" Value="16"/>
+                            <Setter Property="Height" Value="16"/>
+                            <Setter Property="Stretch" Value="Uniform"/>
+                            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LevelButtonDisplay, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="Text">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                        <!-- The letter of a level button: shown when the buttons show a letter, alone or next to the icon -->
+                        <Style x:Key="LevelLetter" TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LevelButtonDisplay, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="Text">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding LevelButtonDisplay, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="SymbolAndText">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Margin" Value="4,0,0,0"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                        <!-- A filter shown as a chip in the result row -->
+                        <Style x:Key="Chip" TargetType="Border">
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="Padding" Value="8,2"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="CornerRadius" Value="10"/>
+                            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"/>
+                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
+                            <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
+                        </Style>
+                        <Style x:Key="ChipClose" TargetType="Button">
+                            <Setter Property="Content" Value="&#x2715;"/>
+                            <Setter Property="Margin" Value="6,0,0,0"/>
+                            <Setter Property="Padding" Value="3,0"/>
+                            <Setter Property="MinWidth" Value="0"/>
+                            <Setter Property="MinHeight" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                        <!-- A text box with a symbol in front and a hint while it is empty -->
+                        <Style x:Key="WatermarkBox" TargetType="helper:WatermarkTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="helper:WatermarkTextBox">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{TemplateBinding Glyph}"
+                                                           FontFamily="Segoe MDL2 Assets" FontSize="13" Margin="8,0,0,0" VerticalAlignment="Center"
+                                                           IsHitTestVisible="False" Opacity="0.6"/>
+                                                <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                                                <TextBlock x:Name="Hint" Grid.Column="1" Margin="{TemplateBinding Padding}" VerticalAlignment="Center" Visibility="Collapsed"
+                                                           Text="{TemplateBinding Hint}"
+                                                           IsHitTestVisible="False" TextTrimming="CharacterEllipsis"
+                                                           Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter TargetName="Hint" Property="Visibility" Value="Visible"/>
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.5"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style x:Key="ToolSeparator" TargetType="Rectangle">
+                            <Setter Property="Width" Value="1"/>
+                            <Setter Property="Height" Value="20"/>
+                            <Setter Property="Margin" Value="6,0,8,0"/>
+                            <Setter Property="Fill" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+                        </Style>
+                    </ControlTemplate.Resources>
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -68,481 +169,434 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Standard Control Group; wraps into a second line when the control is narrow -->
-                        <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,5">
-                            <GroupBox Header="Controls" Margin="0,0,10,3" Padding="5,2"
-                                      Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <StackPanel Orientation="Horizontal">
-                                    <ToggleButton
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Scroll to the newest entry when new entries arrive"
-                                        IsChecked="{Binding Path=AutoScroll, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Small/ScrollDown.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Auto-Scroll" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
+                        <StackPanel Grid.Row="1">
+                            <!-- The tool row; wraps into a second line when the control is narrow -->
+                            <WrapPanel Orientation="Horizontal" Margin="0,5,0,3">
+                                <!-- Controls -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
+                                            Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Auto-Scroll"
+                                                  ToolTip="Auto-Scroll: scroll to the newest entry when new entries arrive"
+                                                  IsChecked="{Binding Path=AutoScroll, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <Image Source="../Images/Small/ScrollDown.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </ToggleButton>
-                                    <Button
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Remove all entries from the list"
-                                        Command="{Binding Path=ClearCommand, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <Button.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Small/Clear.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Clear" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </Button.Content>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Pause"
+                                                  ToolTip="Pause: no new entries are added to the list while it is pressed"
+                                                  IsChecked="{Binding Path=Pause, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <Image Source="../Images/Small/Pause.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </ToggleButton>
+                                    <Button Style="{StaticResource ToolButton}" AutomationProperties.Name="Clear"
+                                            ToolTip="Clear: remove all entries from the list"
+                                            Command="{Binding Path=ClearCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Image Source="../Images/Small/Clear.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </Button>
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Pause: no new entries are added to the list while it is pressed"
-                                        IsChecked="{Binding Path=Pause, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Small/Pause.png"
-                                                       RenderOptions.BitmapScalingMode="NearestNeighbor" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Pause" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
+                                    <Rectangle Style="{StaticResource ToolSeparator}"/>
                                 </StackPanel>
-                            </GroupBox>
 
-                            <GroupBox Header="Level" Margin="0,0,10,3" Padding="5,2"
-                                      Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <StackPanel Orientation="Horizontal">
-                                    <ToggleButton
-                                        Margin="0,0,2,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Trace entries (press again to show them)"
-                                        IsChecked="{Binding Path=TraceFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Trace.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Trace" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                    
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Debug entries (press again to show them)"
-                                        IsChecked="{Binding Path=DebugFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Debug.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Debug" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                    
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Info entries (press again to show them)"
-                                        IsChecked="{Binding Path=InfoFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Info.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Info" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                    
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Warn entries (press again to show them)"
-                                        IsChecked="{Binding Path=WarnFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Warning.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Warn" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                    
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Error entries (press again to show them)"
-                                        IsChecked="{Binding Path=ErrorFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Error.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Error" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                    
-                                    <ToggleButton
-                                        Margin="2,0,0,0"
-                                        Width="60"
-                                        Height="40"
-                                        ToolTip="Hide the Fatal entries (press again to show them)"
-                                        IsChecked="{Binding Path=FatalFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                        <ToggleButton.Content>
-                                            <StackPanel Orientation="Vertical">
-                                                <Image Source="../Images/Large/Fatal.png"
-                                                       RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform" 
-                                                       Height="18" Width="18" />
-                                                <TextBlock Text="Fatal" HorizontalAlignment="Center" FontSize="10" />
-                                            </StackPanel>
-                                        </ToggleButton.Content>
-                                    </ToggleButton>
-                                </StackPanel>
-                            </GroupBox>
-
-                            <!-- Filter: hides entries that do not match the terms -->
-                            <GroupBox Header="Filter" Margin="0,0,10,3" Padding="5,2"
-                                      Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <StackPanel>
-                                    <!-- Filter Input -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                        <TextBox Height="22" Padding="4,1" Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
-                                                 Width="200"
-                                                 Margin="0,0,6,0"
-                                                 ToolTip="Filter the entries by the chosen fields (Press Enter to add)">
-                                            <TextBox.InputBindings>
-                                                <KeyBinding Key="Return" Command="{Binding AddSearchTermCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                            </TextBox.InputBindings>
-                                            <TextBox.Style>
-                                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding FilterError, RelativeSource={RelativeSource AncestorType=local:LogViewer}, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Null}}" Value="False">
-                                                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBox.Style>
-                                        </TextBox>
-                                        <ComboBox Width="100" Height="22" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
-                                                  SelectedValuePath="Tag"
-                                                  SelectedValue="{Binding FilterIsExclude, RelativeSource={RelativeSource TemplatedParent}}"
-                                                  ToolTip="Show the entries that match, or hide them">
-                                            <ComboBoxItem Content="Show"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                            <ComboBoxItem Content="Hide"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                        </ComboBox>
-                                        <ComboBox Width="90" Height="22" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
-                                                  SelectedIndex="{Binding FilterLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
-                                                  ToolTip="Only entries of this level">
-                                            <ComboBoxItem Content="Any level"/>
-                                            <ComboBoxItem Content="Trace"/>
-                                            <ComboBoxItem Content="Debug"/>
-                                            <ComboBoxItem Content="Info"/>
-                                            <ComboBoxItem Content="Warn"/>
-                                            <ComboBoxItem Content="Error"/>
-                                            <ComboBoxItem Content="Fatal"/>
-                                        </ComboBox>
-                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                            <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
-                                                      ToolTip="Put a ready-made regular expression into the input">
-                                                <MenuItem.ItemContainerStyle>
-                                                    <Style TargetType="MenuItem">
-                                                        <Setter Property="Header" Value="{Binding Name}"/>
-                                                        <Setter Property="ToolTip" Value="{Binding Pattern}"/>
-                                                        <Setter Property="Command" Value="{Binding Tag.InsertRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                                        <Setter Property="CommandParameter" Value="{Binding}"/>
-                                                    </Style>
-                                                </MenuItem.ItemContainerStyle>
-                                            </MenuItem>
-                                        </Menu>
-                                    </StackPanel>
-                                    <WrapPanel Margin="0,0,0,2">
-                                        <CheckBox Content="Match case" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                        <CheckBox Content="Whole word" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding FilterWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                        <CheckBox Content="Regex" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}}"
-                                                  ToolTip="Use regex pattern matching"/>
-                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                            <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
-                                                <MenuItem Header="Message" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
-                                                <MenuItem Header="Logger name" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
-                                                <MenuItem Header="Exception" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
-                                                <MenuItem Header="Thread" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
-                                                <MenuItem Header="Other properties" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
-                                            </MenuItem>
-                                        </Menu>
-                                        <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
-                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                            <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
-                                                <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
-                                                <MenuItem Header="Last hour" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
-                                                <MenuItem Header="Last 24 hours" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
-                                                <MenuItem Header="Last 7 days" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
-                                                <Separator/>
-                                                <MenuItem Header="Choose..." InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
-                                                <MenuItem Header="Clear the time range" Command="{Binding ClearTimeRangeCommand}"/>
-                                            </MenuItem>
-                                        </Menu>
-                                        <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
-                                        <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                   Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"
-                                                   ToolTip="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    </WrapPanel>
-
-                                    <!-- Active Filter Terms -->
-                                    <ItemsControl ItemsSource="{Binding ActiveSearchTerms, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel Orientation="Horizontal"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.Resources>
-                                            <!-- Template for a filter term: plain text, regex or exclude, with its options -->
-                                            <DataTemplate DataType="{x:Type core:FilterTerm}">
-                                                <Border BorderThickness="1" CornerRadius="3" Margin="2" Padding="4,2">
-                                                    <Border.Style>
-                                                        <Style TargetType="Border">
-                                                            <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"/>
-                                                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
-                                                            <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsRegex}" Value="True">
-                                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}"/>
-                                                                    <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}"/>
-                                                                    <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermForeground}"/>
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding IsExclude}" Value="True">
-                                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorBackground}"/>
-                                                                    <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
-                                                                    <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="Hides the entries that match">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsExclude}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
-                                                                   Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsRegex}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <TextBlock Text="{Binding Text}" Margin="0,0,4,0"/>
-                                                        <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Match case">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding MatchCase}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <TextBlock Text="W" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Whole word">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding WholeWord}" Value="True">
-                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Only entries of this level">
-                                                            <TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Level}" Value="{x:Null}">
-                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>
-                                                        </TextBlock>
-                                                        <Button Content="✏"
-                                                                Width="16"
-                                                                Height="16"
-                                                                FontSize="10"
-                                                                Padding="0"
-                                                                Margin="0,0,2,0"
-                                                                Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
-                                                                CommandParameter="{Binding}"
-                                                                ToolTip="Edit filter term"/>
-                                                        <Button Content="×"
-                                                                Width="16"
-                                                                Height="16"
-                                                                FontSize="10"
-                                                                Padding="0"
-                                                                Margin="0"
-                                                                Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
-                                                                CommandParameter="{Binding}"
-                                                                ToolTip="Remove filter term"/>
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.Resources>
-                                    </ItemsControl>
-
-                                    <!-- The time range, with one click to clear it -->
-                                    <Border Margin="2" Padding="4,2" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left"
-                                            Visibility="{Binding HasTimeRange, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
-                                            Background="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"
-                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"
-                                            TextElement.Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermForeground}">
+                                <!-- Levels: pressed hides the entries of the level -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
+                                            Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Trace"
+                                                  ToolTip="Hide the Trace entries (press again to show them)"
+                                                  IsChecked="{Binding Path=TraceFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding TimeRangeText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
-                                            <Button Content="&#x2715;" Margin="6,0,0,0" Padding="3,0" MinWidth="0" MinHeight="0" BorderThickness="0" Background="Transparent"
-                                                    VerticalAlignment="Center" ToolTip="Show all the entries again"
-                                                    Command="{Binding ClearTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            <Image Source="../Images/Large/Trace.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="T" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
-                                    </Border>
+                                    </ToggleButton>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Debug"
+                                                  ToolTip="Hide the Debug entries (press again to show them)"
+                                                  IsChecked="{Binding Path=DebugFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="../Images/Large/Debug.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="D" Style="{StaticResource LevelLetter}"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Info"
+                                                  ToolTip="Hide the Info entries (press again to show them)"
+                                                  IsChecked="{Binding Path=InfoFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="../Images/Large/Info.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="I" Style="{StaticResource LevelLetter}"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Warn"
+                                                  ToolTip="Hide the Warn entries (press again to show them)"
+                                                  IsChecked="{Binding Path=WarnFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="../Images/Large/Warning.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="W" Style="{StaticResource LevelLetter}"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Error"
+                                                  ToolTip="Hide the Error entries (press again to show them)"
+                                                  IsChecked="{Binding Path=ErrorFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="../Images/Large/Error.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="E" Style="{StaticResource LevelLetter}"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Fatal"
+                                                  ToolTip="Hide the Fatal entries (press again to show them)"
+                                                  IsChecked="{Binding Path=FatalFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="../Images/Large/Fatal.png" Style="{StaticResource LevelIcon}"/>
+                                            <TextBlock Text="F" Style="{StaticResource LevelLetter}"/>
+                                        </StackPanel>
+                                    </ToggleButton>
+                                    <Rectangle Style="{StaticResource ToolSeparator}"/>
                                 </StackPanel>
-                            </GroupBox>
 
-                            <!-- Search: finds entries without hiding any -->
-                            <GroupBox Header="Search" Margin="0,0,10,3" Padding="5,2"
-                                      Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                <StackPanel VerticalAlignment="Top">
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                        <TextBox Height="22" Padding="4,1" Text="{Binding FindText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
-                                                 Width="200"
-                                                 Margin="0,0,6,0"
-                                                 ToolTip="Find in the chosen fields without hiding entries (Enter / Shift+Enter or F3 / Shift+F3: next / previous hit)">
-                                            <TextBox.InputBindings>
-                                                <KeyBinding Key="Return" Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                <KeyBinding Key="Return" Modifiers="Shift" Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                            </TextBox.InputBindings>
-                                            <TextBox.Style>
-                                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding FindError, RelativeSource={RelativeSource AncestorType=local:LogViewer}, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Null}}" Value="False">
-                                                            <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
+                                <!-- Filter: hides entries that do not match the terms -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
+                                            Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helper:WatermarkTextBox Height="26" Padding="4,1" VerticalContentAlignment="Center" Width="220" Margin="0,0,6,0"
+                                             AutomationProperties.Name="Filter" Glyph="&#xE71C;" Hint="Filter the entries"
+                                             Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                             ToolTip="Filter the entries by the chosen fields (Press Enter to add)">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Return" Command="{Binding AddSearchTermCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </TextBox.InputBindings>
+                                        <TextBox.Style>
+                                            <Style TargetType="helper:WatermarkTextBox" BasedOn="{StaticResource WatermarkBox}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding FilterError, RelativeSource={RelativeSource AncestorType=local:LogViewer}, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Null}}" Value="False">
+                                                        <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </helper:WatermarkTextBox>
+                                    <ComboBox Width="70" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                              SelectedValuePath="Tag" AutomationProperties.Name="Show or hide the entries that match"
+                                              SelectedValue="{Binding FilterIsExclude, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ToolTip="Show the entries that match, or hide them">
+                                        <ComboBoxItem Content="Show"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        <ComboBoxItem Content="Hide"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                    </ComboBox>
+                                    <ComboBox Width="90" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                              AutomationProperties.Name="Level of the filter"
+                                              SelectedIndex="{Binding FilterLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
+                                              ToolTip="Only entries of this level">
+                                        <ComboBoxItem Content="Any level"/>
+                                        <ComboBoxItem Content="Trace"/>
+                                        <ComboBoxItem Content="Debug"/>
+                                        <ComboBoxItem Content="Info"/>
+                                        <ComboBoxItem Content="Warn"/>
+                                        <ComboBoxItem Content="Error"/>
+                                        <ComboBoxItem Content="Fatal"/>
+                                    </ComboBox>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case"
+                                                  IsChecked="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word"
+                                                  IsChecked="{Binding FilterWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <ToggleButton Style="{StaticResource ToolToggle}" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex"
+                                                  IsChecked="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                        <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
+                                                  ToolTip="Put a ready-made regular expression into the input">
+                                            <MenuItem.ItemContainerStyle>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Header" Value="{Binding Name}"/>
+                                                    <Setter Property="ToolTip" Value="{Binding Pattern}"/>
+                                                    <Setter Property="Command" Value="{Binding Tag.InsertRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                                                    <Setter Property="CommandParameter" Value="{Binding}"/>
                                                 </Style>
-                                            </TextBox.Style>
-                                        </TextBox>
-                                        <ComboBox Width="90" Height="22" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
-                                                  SelectedIndex="{Binding FindLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
-                                                  ToolTip="Only entries of this level">
-                                            <ComboBoxItem Content="Any level"/>
-                                            <ComboBoxItem Content="Trace"/>
-                                            <ComboBoxItem Content="Debug"/>
-                                            <ComboBoxItem Content="Info"/>
-                                            <ComboBoxItem Content="Warn"/>
-                                            <ComboBoxItem Content="Error"/>
-                                            <ComboBoxItem Content="Fatal"/>
-                                        </ComboBox>
-                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                            <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
-                                                      ToolTip="Put a ready-made regular expression into the input">
-                                                <MenuItem.ItemContainerStyle>
-                                                    <Style TargetType="MenuItem">
-                                                        <Setter Property="Header" Value="{Binding Name}"/>
-                                                        <Setter Property="ToolTip" Value="{Binding Pattern}"/>
-                                                        <Setter Property="Command" Value="{Binding Tag.InsertFindRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                                        <Setter Property="CommandParameter" Value="{Binding}"/>
-                                                    </Style>
-                                                </MenuItem.ItemContainerStyle>
-                                            </MenuItem>
-                                        </Menu>
-                                        <Button Content="▲" Width="22" Height="22" Padding="0" Margin="0,0,2,0"
-                                                Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                                ToolTip="Previous hit (Shift+F3)"/>
-                                        <Button Content="▼" Width="22" Height="22" Padding="0" Margin="0,0,0,0"
-                                                Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                                ToolTip="Next hit (F3)"/>
-                                    </StackPanel>
-                                    <WrapPanel>
-                                        <CheckBox Content="Match case" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                        <CheckBox Content="Whole word" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                        <CheckBox Content="Regex" Margin="0,0,10,0" VerticalAlignment="Center"
-                                                  IsChecked="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}}"
-                                                  ToolTip="Use regex pattern matching"/>
-                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                            <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
-                                                <MenuItem Header="Message" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
-                                                <MenuItem Header="Logger name" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
-                                                <MenuItem Header="Exception" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
-                                                <MenuItem Header="Thread" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
-                                                <MenuItem Header="Other properties" StaysOpenOnClick="True"
-                                                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
-                                                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
-                                            </MenuItem>
-                                        </Menu>
-                                        <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="60" Margin="10,0,0,0" VerticalAlignment="Center"
-                                                   ToolTip="{Binding FindError, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    </WrapPanel>
+                                            </MenuItem.ItemContainerStyle>
+                                        </MenuItem>
+                                        <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
+                                            <MenuItem Header="Message" StaysOpenOnClick="True"
+                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
+                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
+                                            <MenuItem Header="Logger name" StaysOpenOnClick="True"
+                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
+                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
+                                            <MenuItem Header="Exception" StaysOpenOnClick="True"
+                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
+                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
+                                            <MenuItem Header="Thread" StaysOpenOnClick="True"
+                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
+                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
+                                            <MenuItem Header="Other properties" StaysOpenOnClick="True"
+                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
+                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
+                                        </MenuItem>
+                                        <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
+                                        <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
+                                            <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
+                                            <MenuItem Header="Last hour" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
+                                            <MenuItem Header="Last 24 hours" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
+                                            <MenuItem Header="Last 7 days" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
+                                            <Separator/>
+                                            <MenuItem Header="Choose..." InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
+                                            <MenuItem Header="Clear the time range" Command="{Binding ClearTimeRangeCommand}"/>
+                                        </MenuItem>
+                                    </Menu>
+                                    <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
+                                    <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 </StackPanel>
-                            </GroupBox>
 
-                            <!-- What a jump has to say, e.g. that there is no further entry of a level -->
-                            <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,10,3" VerticalAlignment="Center" Opacity="0.8"/>
-                        </WrapPanel>
+                                <Button Style="{StaticResource ToolButton}" Margin="8,0,0,2" AutomationProperties.Name="Search" ToolTip="Search (Ctrl+F)"
+                                        Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Command="{Binding OpenFindCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+                                </Button>
+
+                                <!-- What a jump has to say, e.g. that there is no further entry of a level -->
+                                <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,2" VerticalAlignment="Center" Opacity="0.8"/>
+                            </WrapPanel>
+
+                            <!-- The search bar (Ctrl+F): finds entries without hiding any -->
+                            <WrapPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                <WrapPanel.Style>
+                                    <Style TargetType="WrapPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding IsFindOpen, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="True"/>
+                                                    <Condition Binding="{Binding ShowFindControls, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="True"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </WrapPanel.Style>
+                                <helper:WatermarkTextBox x:Name="PART_FindBox" Height="26" Padding="4,1" VerticalContentAlignment="Center" Width="220" Margin="0,0,6,2"
+                                         AutomationProperties.Name="Search" Glyph="&#xE721;" Hint="Find in the entries"
+                                         Text="{Binding FindText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Find in the chosen fields without hiding entries (Enter / Shift+Enter or F3 / Shift+F3: next / previous hit, Esc: close)">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Return" Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <KeyBinding Key="Return" Modifiers="Shift" Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <KeyBinding Key="Escape" Command="{Binding CloseFindCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </TextBox.InputBindings>
+                                    <TextBox.Style>
+                                        <Style TargetType="helper:WatermarkTextBox" BasedOn="{StaticResource WatermarkBox}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding FindError, RelativeSource={RelativeSource AncestorType=local:LogViewer}, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Null}}" Value="False">
+                                                    <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </helper:WatermarkTextBox>
+                                <ComboBox Width="90" Height="26" Padding="6,0" Margin="0,0,6,2" VerticalAlignment="Center"
+                                          AutomationProperties.Name="Level of the search"
+                                          SelectedIndex="{Binding FindLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
+                                          ToolTip="Only entries of this level">
+                                    <ComboBoxItem Content="Any level"/>
+                                    <ComboBoxItem Content="Trace"/>
+                                    <ComboBoxItem Content="Debug"/>
+                                    <ComboBoxItem Content="Info"/>
+                                    <ComboBoxItem Content="Warn"/>
+                                    <ComboBoxItem Content="Error"/>
+                                    <ComboBoxItem Content="Fatal"/>
+                                </ComboBox>
+                                <ToggleButton Style="{StaticResource ToolToggle}" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case of the search" Margin="0,0,2,2"
+                                              IsChecked="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <ToggleButton Style="{StaticResource ToolToggle}" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word of the search" Margin="0,0,2,2"
+                                              IsChecked="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <ToggleButton Style="{StaticResource ToolToggle}" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex of the search" Margin="0,0,2,2"
+                                              IsChecked="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                    <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
+                                              ToolTip="Put a ready-made regular expression into the input">
+                                        <MenuItem.ItemContainerStyle>
+                                            <Style TargetType="MenuItem">
+                                                <Setter Property="Header" Value="{Binding Name}"/>
+                                                <Setter Property="ToolTip" Value="{Binding Pattern}"/>
+                                                <Setter Property="Command" Value="{Binding Tag.InsertFindRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                                            </Style>
+                                        </MenuItem.ItemContainerStyle>
+                                    </MenuItem>
+                                    <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
+                                        <MenuItem Header="Message" StaysOpenOnClick="True"
+                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
+                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
+                                        <MenuItem Header="Logger name" StaysOpenOnClick="True"
+                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
+                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
+                                        <MenuItem Header="Exception" StaysOpenOnClick="True"
+                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
+                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
+                                        <MenuItem Header="Thread" StaysOpenOnClick="True"
+                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
+                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
+                                        <MenuItem Header="Other properties" StaysOpenOnClick="True"
+                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
+                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
+                                    </MenuItem>
+                                </Menu>
+                                <Button Content="▲" Style="{StaticResource ToolButton}" Margin="6,0,2,2" AutomationProperties.Name="Previous hit"
+                                        Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Previous hit (Shift+F3)"/>
+                                <Button Content="▼" Style="{StaticResource ToolButton}" Margin="0,0,0,2" AutomationProperties.Name="Next hit"
+                                        Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ToolTip="Next hit (F3)"/>
+                                <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="80" Margin="10,0,0,2" VerticalAlignment="Center"
+                                           ToolTip="{Binding FindError, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Button Style="{StaticResource ToolButton}" Margin="6,0,0,2" Content="&#x2715;" AutomationProperties.Name="Close the search" ToolTip="Close the search (Esc)"
+                                        Command="{Binding CloseFindCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </WrapPanel>
+
+                            <!-- The result row: how many entries are shown, what filters them, and one click to take the filters off -->
+                            <WrapPanel Orientation="Horizontal" Margin="0,0,0,5" MinHeight="32"
+                                       Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBlock Text="{Binding FilterResultText, RelativeSource={RelativeSource TemplatedParent}}" Margin="2,0,10,0" VerticalAlignment="Center"/>
+                                <!-- Active Filter Terms -->
+                                <ItemsControl ItemsSource="{Binding ActiveSearchTerms, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.Resources>
+                                              <!-- Template for a filter term: plain text, regex or exclude, with its options -->
+                                              <DataTemplate DataType="{x:Type core:FilterTerm}">
+                                                  <Border BorderThickness="1" CornerRadius="10" Margin="2" Padding="8,2">
+                                                      <Border.Style>
+                                                          <Style TargetType="Border">
+                                                              <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"/>
+                                                              <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
+                                                              <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
+                                                              <Style.Triggers>
+                                                                  <DataTrigger Binding="{Binding IsRegex}" Value="True">
+                                                                      <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}"/>
+                                                                      <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}"/>
+                                                                      <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermForeground}"/>
+                                                                  </DataTrigger>
+                                                                  <DataTrigger Binding="{Binding IsExclude}" Value="True">
+                                                                      <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorBackground}"/>
+                                                                      <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                                      <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=ErrorForeground}"/>
+                                                                  </DataTrigger>
+                                                              </Style.Triggers>
+                                                          </Style>
+                                                      </Border.Style>
+                                                      <StackPanel Orientation="Horizontal">
+                                                          <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="Hides the entries that match">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Setter Property="Visibility" Value="Collapsed"/>
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding IsExclude}" Value="True">
+                                                                              <Setter Property="Visibility" Value="Visible"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
+                                                          <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
+                                                                     Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Setter Property="Visibility" Value="Collapsed"/>
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding IsRegex}" Value="True">
+                                                                              <Setter Property="Visibility" Value="Visible"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
+                                                          <TextBlock Text="{Binding Text}" Margin="0,0,4,0"/>
+                                                          <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Match case">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Setter Property="Visibility" Value="Collapsed"/>
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding MatchCase}" Value="True">
+                                                                              <Setter Property="Visibility" Value="Visible"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
+                                                          <TextBlock Text="W" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Whole word">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Setter Property="Visibility" Value="Collapsed"/>
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding WholeWord}" Value="True">
+                                                                              <Setter Property="Visibility" Value="Visible"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
+                                                          <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Only entries of this level">
+                                                              <TextBlock.Style>
+                                                                  <Style TargetType="TextBlock">
+                                                                      <Style.Triggers>
+                                                                          <DataTrigger Binding="{Binding Level}" Value="{x:Null}">
+                                                                              <Setter Property="Visibility" Value="Collapsed"/>
+                                                                          </DataTrigger>
+                                                                      </Style.Triggers>
+                                                                  </Style>
+                                                              </TextBlock.Style>
+                                                          </TextBlock>
+                                                          <Button Content="✏"
+                                                                  Width="16"
+                                                                  Height="16"
+                                                                  FontSize="10"
+                                                                  Padding="0"
+                                                                  Margin="0,0,2,0"
+                                                                  Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                                  CommandParameter="{Binding}"
+                                                                  ToolTip="Edit filter term"/>
+                                                          <Button Content="×"
+                                                                  Width="16"
+                                                                  Height="16"
+                                                                  FontSize="10"
+                                                                  Padding="0"
+                                                                  Margin="0"
+                                                                  Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                                  CommandParameter="{Binding}"
+                                                                  ToolTip="Remove filter term"/>
+                                                      </StackPanel>
+                                                  </Border>
+                                              </DataTemplate>
+                                    </ItemsControl.Resources>
+                                </ItemsControl>
+
+                                <!-- The time range, with one click to clear it -->
+                                <Border Style="{StaticResource Chip}" HorizontalAlignment="Left"
+                                        Visibility="{Binding HasTimeRange, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding TimeRangeText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show all the entries again" AutomationProperties.Name="Clear the time range"
+                                                Command="{Binding ClearTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- The rules for loggers -->
+                                <Border HorizontalAlignment="Left">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Chip}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LoggerRuleCount, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Loggers" VerticalAlignment="Center" ToolTip="Rules of the logger tree: loggers that are shown only, or hidden"/>
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show all loggers" AutomationProperties.Name="Show all loggers"
+                                                Command="{Binding LoggerTree.ShowAllCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Button Content="Reset filter" Margin="6,0,0,0" Padding="8,1" Height="24" VerticalAlignment="Center"
+                                        ToolTip="Take the levels, terms, loggers and the time range off"
+                                        Visibility="{Binding HasActiveFilter, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Command="{Binding ResetFilterCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </WrapPanel>
+                        </StackPanel>
 
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>

@@ -311,47 +311,6 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
-	public void TheStatusBar_SummarizesTheSelectedTab_AndTheFilterCanBeReset()
-	{
-		_context.RunOnSta(() =>
-		{
-			using var session = Start();
-			var viewModel = session.ViewModel;
-			Assert.Equal(string.Empty, viewModel.TabSummary);
-			Assert.False(viewModel.HasActiveFilter);
-
-			Send(session, App("(100)"), "alpha");
-			Send(session, App("(100)"), "beta", LogEntryLevel.Error);
-			Send(session, App("(100)"), "beta again");
-			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
-			Assert.False(viewModel.HasActiveFilter);
-
-			viewer.AddRegexSearchTerm("beta");
-			viewer.InfoFilter = true;
-			WpfTestHelper.Settle();
-
-			Assert.True(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 1 of 3 · Levels off: 1 · Terms: 1", viewModel.TabSummary);
-			Assert.Equal(1, viewModel.LogTabs[0].VisibleEntryCount);
-
-			viewer.SearchFields = SearchFields.All;
-			viewer.CustomTimeStampFormat = TimeStampFormat.German;
-			viewModel.ResetFilterCommand.Execute(null);
-			WpfTestHelper.Settle();
-
-			Assert.False(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
-			Assert.Empty(viewer.ActiveSearchTerms);
-			Assert.False(viewer.InfoFilter);
-			Assert.Equal((SearchFields.All, TimeStampFormat.German), (viewer.SearchFields, viewer.CustomTimeStampFormat));
-
-			viewModel.LogTabs.Clear();
-			Assert.Equal(string.Empty, viewModel.TabSummary);
-		});
-	}
-
-	[Fact]
 	public void LogsOfAnIgnoredSender_DoNotOpenATab_AndIgnoringATabClosesItsTabs()
 	{
 		_context.RunOnSta(() =>
@@ -1213,7 +1172,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
-	public void TheTimeRange_CountsInTheSummary_StaysWhenAPresetIsApplied_AndTheResetClearsIt()
+	public void TheTimeRange_StaysWhenAPresetIsApplied_AndTheResetClearsIt()
 	{
 		_context.RunOnSta(() =>
 		{
@@ -1224,11 +1183,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Send(session, App("(100)"), "gamma");
 			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
 
-			// A start in the future hides everything; the summary counts it, but does not name it (the viewer shows it).
 			viewer.TimeFrom = DateTime.UtcNow.AddHours(1);
-			WpfTestHelper.Settle();
-			Assert.True(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 0 of 3", viewModel.TabSummary);
 
 			var service = new FilterPresetService(_environment.Configuration);
 			service.Save("No debug", new LogViewerFilterState { HiddenLevels = { "Debug" }, TimeFrom = DateTime.UtcNow.AddDays(-9) });
@@ -1240,11 +1195,55 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.NotNull(viewer.TimeFrom);
 			Assert.True(viewer.TimeFrom > DateTime.UtcNow);
 
-			viewModel.ResetFilterCommand.Execute(null);
-			WpfTestHelper.Settle();
+			viewer.ResetFilterCommand.Execute(null);
 			Assert.Null(viewer.TimeFrom);
-			Assert.False(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
+		});
+	}
+
+	[Fact]
+	public void TheCommandsOfTheViewer_GoToTheViewerOfTheSelectedTab_AndCannotRunWithoutATab()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Assert.False(System.Windows.Input.ApplicationCommands.Find.CanExecute(null, session.Window));
+			Assert.Null(session.Window.SelectedViewer());
+
+			Send(session, App("(100)"), "alpha");
+			Send(session, App("(200)"), "beta");
+			var first = ViewerOf(session, viewModel.LogTabs[0]);
+			Assert.Same(first, session.Window.SelectedViewer());
+			Assert.True(System.Windows.Input.ApplicationCommands.Find.CanExecute(null, session.Window));
+
+			Wpf.LogViewerCommands.TimeRangeLast.Execute("1:00:00", session.Window);
+			Assert.NotNull(first.TimeFrom);
+
+			viewModel.SelectedTab = viewModel.LogTabs[1];
+			WpfTestHelper.Settle();
+			var second = ViewerOf(session, viewModel.LogTabs[1]);
+			Assert.Same(second, session.Window.SelectedViewer());
+			Assert.False(Wpf.LogViewerCommands.ResetFilter.CanExecute(null, session.Window));
+
+			System.Windows.Input.ApplicationCommands.Find.Execute(null, session.Window);
+			Assert.True(second.IsFindOpen);
+			Assert.False(first.IsFindOpen);
+			Assert.Null(second.TimeFrom);
+		});
+	}
+
+	[Fact]
+	public void TheFilterBox_ShowsItsHintAndSymbol_WithTheStylesOfTheApplication()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "alpha");
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			var box = Descendants<System.Windows.Controls.TextBox>(viewer).First(candidate => System.Windows.Automation.AutomationProperties.GetName(candidate) == "Filter");
+			Assert.Equal(System.Windows.Visibility.Visible, ((System.Windows.Controls.TextBlock)box.Template.FindName("Hint", box)).Visibility);
+			Assert.Equal("\uE71C", ((Wpf.Helper.WatermarkTextBox)box).Glyph);
 		});
 	}
 

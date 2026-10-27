@@ -60,7 +60,7 @@ public class AppearanceSettingsTests : IDisposable
 	public void Theme_IsNewschoolByDefault_AndSavedWhenChanged()
 	{
 		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(ThemeTitle);
-		Assert.Equal(ThemeCatalog.NewschoolId, theme.Value);
+		Assert.Equal(ThemeCatalog.DefaultThemeId, theme.Value);
 
 		theme.Value = ThemeCatalog.OldschoolId;
 
@@ -196,7 +196,7 @@ public class AppearanceSettingsTests : IDisposable
 	{
 		var theme = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>(ThemeTitle);
 
-		Assert.Equal(new[] { ThemeCatalog.NewschoolId, ThemeCatalog.OldschoolId }, theme.Options.Select(option => option.Value));
+		Assert.Equal(new[] { ThemeCatalog.WarmId, ThemeCatalog.NewschoolId, ThemeCatalog.OldschoolId }, theme.Options.Select(option => option.Value));
 	}
 
 	[Fact]

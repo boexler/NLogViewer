@@ -65,13 +65,13 @@
     <value>_Ver</value>
   </data>
   <data name="Menu_Help" xml:space="preserve">
-    <value>_Ayuda</value>
+    <value>Ay_uda</value>
   </data>
   <data name="Menu_OpenFile" xml:space="preserve">
     <value>_Abrir archivo...</value>
   </data>
   <data name="Menu_OpenFileWithMapping" xml:space="preserve">
-    <value>Abrir archivo con asignación de _columnas...</value>
+    <value>Abrir archivo con asignación de co_lumnas...</value>
   </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>_Salir</value>
@@ -80,10 +80,7 @@
     <value>_Configuración...</value>
   </data>
   <data name="Menu_About" xml:space="preserve">
-    <value>_Acerca de...</value>
-  </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Registros</value>
+    <value>A_cerca de...</value>
   </data>
   <data name="Menu_Export" xml:space="preserve">
     <value>_Exportar</value>
@@ -91,11 +88,8 @@
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>formato *.log</value>
   </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_Pestañas</value>
-  </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
-    <value>Cerrar pestaña _actual</value>
+    <value>Cerrar pestaña a_ctual</value>
   </data>
   <data name="Menu_CloseAllTabs" xml:space="preserve">
     <value>Cerrar _todas las pestañas</value>
@@ -608,7 +602,7 @@
     <value>Tema</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Newschool es plano y moderno; Oldschool conserva el aspecto clásico y los colores clásicos de la lista de registros. Funciona en modo claro y oscuro.</value>
+    <value>Warm es suave: blanco y crema con controles redondeados y una fuente tranquila. Newschool es plano y moderno; Oldschool conserva el aspecto clásico y los colores clásicos de la lista de registros. Funciona en modo claro y oscuro.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Formato de la marca de tiempo</value>
@@ -874,9 +868,6 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Seleccionar idioma</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Filtro</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
     <value>_Aplicar preajuste</value>
   </data>
@@ -884,7 +875,7 @@
     <value>_Guardar el filtro actual como preajuste...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
-    <value>_Administrar preajustes...</value>
+    <value>A_dministrar preajustes...</value>
   </data>
   <data name="FilterPreset_SaveTitle" xml:space="preserve">
     <value>Guardar preajuste de filtro</value>
@@ -993,24 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Detener escucha</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Entradas: {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Entradas: {0:N0} de {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Niveles ocultos: {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Términos: {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Reglas de logger: {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Restablecer filtro</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>Idioma cambiado. Reinicie la aplicación para que el cambio surta pleno efecto.</value>
@@ -1304,7 +1277,7 @@
     <value>Mostrar el nivel como</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>Cómo se muestra el nivel de una entrada en la lista de logs: como símbolo, como texto o ambos. El texto ayuda al copiar o exportar filas y cuando los colores son difíciles de distinguir.</value>
+    <value>Cómo se muestra el nivel de una entrada en la lista de logs: como símbolo, como texto o ambos. El texto ayuda al copiar o exportar filas y cuando los colores son difíciles de distinguir. Los botones de nivel sobre la lista la siguen; como texto muestran una letra.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Símbolo</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Ir a la entrada anterior de ese nivel</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>_Pestaña</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>_Escucha</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>_Zona horaria...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>_Intervalo de tiempo</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Últimos _15 minutos</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Última _hora</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Últimas _24 horas</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Últimos _7 días</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Elegir...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>_Borrar el intervalo</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>Ir a la _hora...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>_Siguiente entrada de un nivel</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>A_nterior entrada de un nivel</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>_Buscar</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>_Restablecer filtro</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>Árbol de _loggers</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>_Fuentes</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Advertencia</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>Abrir la barra de búsqueda; Esc en la barra la cierra y borra la búsqueda</value>
   </data>
 </root>
 

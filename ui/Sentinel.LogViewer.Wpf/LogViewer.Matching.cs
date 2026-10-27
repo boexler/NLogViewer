@@ -225,6 +225,8 @@ namespace Sentinel.LogViewer.Wpf
             var count = LogEvents?.View is CollectionView view ? view.Count : 0;
             if (VisibleEntryCount != count)
                 SetCurrentValue(VisibleEntryCountProperty, count);
+
+            UpdateFilterSummary();
         }
 
         #endregion

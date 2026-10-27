@@ -65,7 +65,7 @@
     <value>_Vizualizare</value>
   </data>
   <data name="Menu_Help" xml:space="preserve">
-    <value>_Ajutor</value>
+    <value>A_jutor</value>
   </data>
   <data name="Menu_OpenFile" xml:space="preserve">
     <value>_Deschide fișier...</value>
@@ -82,17 +82,11 @@
   <data name="Menu_About" xml:space="preserve">
     <value>_Despre...</value>
   </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Jurnale</value>
-  </data>
   <data name="Menu_Export" xml:space="preserve">
     <value>_Exportă</value>
   </data>
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>format *.log</value>
-  </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_File</value>
   </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
     <value>Închide fila _curentă</value>
@@ -608,7 +602,7 @@
     <value>Temă</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
+    <value>Warm este blând: alb și crem, cu elemente rotunjite și un font calm. Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Formatul marcajului de timp</value>
@@ -874,14 +868,11 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Selectați limba</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Filtru</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
-    <value>_Aplică presetarea</value>
+    <value>Aplică _presetarea</value>
   </data>
   <data name="Menu_FilterSavePreset" xml:space="preserve">
-    <value>_Salvează filtrul curent ca presetare...</value>
+    <value>Sa_lvează filtrul curent ca presetare...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
     <value>_Gestionează presetările...</value>
@@ -993,24 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Oprește ascultarea</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Intrări: {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Intrări: {0:N0} din {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Niveluri ascunse: {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Termeni: {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Reguli de logger: {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Resetează filtrul</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>Limba a fost schimbată. Reporniți aplicația pentru ca modificarea să aibă efect complet.</value>
@@ -1304,7 +1277,7 @@
     <value>Afișează nivelul ca</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>Cum este afișat nivelul unei intrări în lista de loguri: ca simbol, ca text sau ambele. Textul ajută la copierea sau exportul rândurilor și când culorile sunt greu de deosebit.</value>
+    <value>Cum este afișat nivelul unei intrări în lista de loguri: ca simbol, ca text sau ambele. Textul ajută la copierea sau exportul rândurilor și când culorile sunt greu de deosebit. Butoanele de nivel de deasupra listei o urmează; ca text afișează o literă.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Simbol</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Mergeți la intrarea anterioară a acelui nivel</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>Fi_lă</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>_Ascultare</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>Fus _orar...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>_Interval de timp</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Ultimele _15 minute</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Ultima _oră</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Ultimele _24 de ore</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Ultimele _7 zile</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Alege...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>Șterge _intervalul</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>_Salt la oră...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>Intrarea _următoare a unui nivel</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>Intrarea _anterioară a unui nivel</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>Căuta_re</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>Resetează _filtrul</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>Arborele de _loggere</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>S_ursele</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Avertisment</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Eroare</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>Deschide bara de căutare; Esc în bară o închide și șterge căutarea</value>
   </data>
 </root>
 

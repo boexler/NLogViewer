@@ -40,9 +40,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string? _updateNotice;
 	private bool _isListening;
 	private bool _hasStarted;
-	private LogTabViewModel? _summaryTab;
-	private string _tabSummary = string.Empty;
-	private bool _hasActiveFilter;
 	private bool _sourcesPanelOpen;
 	private string _receiveStatusText = string.Empty;
 	private ReceiveStatus _receiveStatus;
@@ -101,7 +98,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				_ = StartListeningAsync();
 		});
 		ToggleSourcesPanelCommand = new RelayCommand(() => IsSourcesPanelOpen = !IsSourcesPanelOpen);
-		ResetFilterCommand = new RelayCommand(ResetFilter, () => HasActiveFilter);
 		IgnoreApplicationCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Application), tab => tab?.SenderKey != null);
 		IgnoreApplicationFromSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.ApplicationFromSender), HasIpAddress);
 		IgnoreSenderCommand = new RelayCommand<LogTabViewModel>(tab => ConfirmAndIgnore(tab, IgnoreScope.Sender), HasIpAddress);
@@ -329,7 +325,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 				((RelayCommand)CloseAllTabsCommand).RaiseCanExecuteChanged();
 				((RelayCommand)SaveFilterPresetCommand).RaiseCanExecuteChanged();
 				((RelayCommand<FilterPreset>)ApplyFilterPresetCommand).RaiseCanExecuteChanged();
-				FollowSummaryOfSelectedTab();
 			}
 		}
 	}
@@ -737,39 +732,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	}
 
 	/// <summary>
-	/// What the status bar says about the selected tab, e.g. "Entries: 1,204 of 27,851 · Levels off: 2 · Terms: 1"; empty without a tab
-	/// </summary>
-	public string TabSummary
-	{
-		get => _tabSummary;
-		private set
-		{
-			if (_tabSummary != value)
-			{
-				_tabSummary = value;
-				OnPropertyChanged();
-			}
-		}
-	}
-
-	/// <summary>
-	/// Whether the selected tab has a filter: a level that is hidden, a term or a rule for loggers
-	/// </summary>
-	public bool HasActiveFilter
-	{
-		get => _hasActiveFilter;
-		private set
-		{
-			if (_hasActiveFilter != value)
-			{
-				_hasActiveFilter = value;
-				OnPropertyChanged();
-				((RelayCommand)ResetFilterCommand).RaiseCanExecuteChanged();
-			}
-		}
-	}
-
-	/// <summary>
 	/// Drops the logs of the application of the tab, from any IP address, from now on and closes its tabs; the parameter is the <see cref="LogTabViewModel"/>
 	/// </summary>
 	public ICommand IgnoreApplicationCommand { get; }
@@ -840,77 +802,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_ignoreRules = configuration.IgnoreRules.ToArray();
 		foreach (var matching in LogTabs.Where(candidate => candidate.IsLive && rule.Matches(candidate.ApplicationName, candidate.Sender)).ToList())
 			CloseTab(matching);
-	}
-
-	/// <summary>
-	/// Takes the levels, terms and logger rules off the selected tab; the fields and the time stamp format stay
-	/// </summary>
-	public ICommand ResetFilterCommand { get; }
-
-	private void ResetFilter()
-	{
-		if (SelectedTab is not { } tab)
-			return;
-
-		var current = tab.FilterState;
-		tab.FilterState = new LogViewerFilterState
-		{
-			SearchFields = current?.SearchFields ?? SearchFields.Default,
-			TimeStampFormat = current?.TimeStampFormat
-		};
-	}
-
-	private void FollowSummaryOfSelectedTab()
-	{
-		if (_summaryTab != null)
-			_summaryTab.PropertyChanged -= OnSummaryTabChanged;
-
-		_summaryTab = _selectedTab;
-		if (_summaryTab != null)
-			_summaryTab.PropertyChanged += OnSummaryTabChanged;
-
-		UpdateTabSummary();
-	}
-
-	private void OnSummaryTabChanged(object? sender, PropertyChangedEventArgs e)
-	{
-		if (e.PropertyName is nameof(LogTabViewModel.LogCount) or nameof(LogTabViewModel.VisibleEntryCount) or nameof(LogTabViewModel.FilterState))
-			UpdateTabSummary();
-	}
-
-	private void UpdateTabSummary()
-	{
-		if (_summaryTab is not { } tab)
-		{
-			TabSummary = string.Empty;
-			HasActiveFilter = false;
-			return;
-		}
-
-		var state = tab.FilterState;
-		var levels = state?.HiddenLevels.Count ?? 0;
-		var terms = state?.Terms.Count ?? 0;
-		var loggers = state?.LoggerRules.Count ?? 0;
-		var filtered = levels + terms + loggers > 0 || state is { TimeFrom: not null } or { TimeTo: not null };
-
-		string Text(string key, string defaultValue, params object[] arguments) =>
-			string.Format(CultureInfo.CurrentCulture, _localizationService.GetString(key, defaultValue), arguments);
-
-		var parts = new List<string>
-		{
-			filtered
-				? Text("Summary_EntriesOf", "Entries: {0:N0} of {1:N0}", tab.VisibleEntryCount, tab.LogCount)
-				: Text("Summary_Entries", "Entries: {0:N0}", tab.LogCount)
-		};
-		if (levels > 0)
-			parts.Add(Text("Summary_LevelsOff", "Levels off: {0}", levels));
-		if (terms > 0)
-			parts.Add(Text("Summary_Terms", "Terms: {0}", terms));
-		if (loggers > 0)
-			parts.Add(Text("Summary_Loggers", "Logger rules: {0}", loggers));
-
-		TabSummary = string.Join(" · ", parts);
-		HasActiveFilter = filtered;
 	}
 
 	/// <summary>

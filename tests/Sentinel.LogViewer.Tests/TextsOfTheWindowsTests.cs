@@ -70,6 +70,44 @@ public class TextsOfTheWindowsTests
 	}
 
 	[Fact]
+	public void TheMenusOfTheMainWindow_HaveNoLetterTwiceThatIsUnderlined_InAnyLanguage()
+	{
+		XNamespace presentation = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+		var mainMenu = XDocument.Load(Path.Combine(AppFolder, "MainWindow.xaml")).Descendants(presentation + "Menu").Single();
+		var headerKey = new Regex(@"Resource Key=(?<key>\w+)");
+		var mnemonic = new Regex(@"(?<!_)_(?<letter>[^_])");
+
+		// The items that sit side by side in a menu or in a submenu share the letters.
+		var menus = mainMenu.DescendantsAndSelf()
+			.Where(element => element.Name == presentation + "Menu" || element.Name == presentation + "MenuItem")
+			.Select(parent => parent.Elements(presentation + "MenuItem")
+				.Select(item => headerKey.Match((string?)item.Attribute("Header") ?? string.Empty))
+				.Where(match => match.Success)
+				.Select(match => match.Groups["key"].Value)
+				.ToList())
+			.Where(keys => keys.Count > 1)
+			.ToList();
+		Assert.NotEmpty(menus);
+
+		var twice = new List<string>();
+		foreach (var file in Directory.GetFiles(Path.Combine(AppFolder, "Resources"), "Resources*.resx"))
+		{
+			var texts = XDocument.Load(file).Descendants("data").ToDictionary(data => (string)data.Attribute("name")!, data => (string)data.Element("value")!);
+			foreach (var keys in menus)
+			{
+				var letters = keys.Where(texts.ContainsKey)
+					.Select(key => (Key: key, Match: mnemonic.Match(texts[key])))
+					.Where(item => item.Match.Success)
+					.GroupBy(item => item.Match.Groups["letter"].Value, StringComparer.CurrentCultureIgnoreCase)
+					.Where(group => group.Count() > 1);
+				twice.AddRange(letters.Select(group => $"{Path.GetFileName(file)}: {group.Key} in {string.Join(", ", group.Select(item => item.Key))}"));
+			}
+		}
+
+		Assert.Empty(twice);
+	}
+
+	[Fact]
 	public void EveryTextOfTheShortcutsWindow_ExistsInEveryLanguageFile()
 	{
 		var keys = new[] { "Menu_Shortcuts", "Shortcuts_Title" }
