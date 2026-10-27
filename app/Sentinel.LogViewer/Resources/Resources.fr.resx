@@ -602,7 +602,7 @@
     <value>Thème</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Warm est doux : blanc et crème, avec des contrôles arrondis et une police sobre. Newschool est plat et moderne, Oldschool conserve l’aspect classique et les couleurs classiques de la liste des journaux. Fonctionne en mode clair et sombre.</value>
+    <value>Newschool est plat et moderne, Oldschool conserve l’aspect classique et les couleurs classiques de la liste des journaux. Fonctionne en mode clair et sombre.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Format de l’horodatage</value>

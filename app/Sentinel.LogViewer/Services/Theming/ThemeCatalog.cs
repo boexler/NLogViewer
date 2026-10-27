@@ -70,10 +70,8 @@ public sealed class ThemeDefinition
 /// </summary>
 public static class ThemeCatalog
 {
-	public const string WarmId = "warm";
 	public const string NewschoolId = "newschool";
 	public const string OldschoolId = "oldschool";
-	public const string WarmDarkId = WarmId + DarkSuffix;
 	public const string NewschoolDarkId = NewschoolId + DarkSuffix;
 	public const string OldschoolDarkId = OldschoolId + DarkSuffix;
 	public const string DefaultThemeId = NewschoolId;
@@ -231,10 +229,8 @@ public static class ThemeCatalog
 
 	private static IReadOnlyList<ThemeDefinition> CreateThemes() => new[]
 	{
-		new ThemeDefinition(WarmId, "Warm", "WarmLight"),
 		new ThemeDefinition(NewschoolId, "Newschool", "NewschoolLight"),
 		new ThemeDefinition(OldschoolId, "Oldschool", "OldschoolLight"),
-		new ThemeDefinition(WarmDarkId, "Warm dark", "WarmDark", isDark: true),
 		new ThemeDefinition(NewschoolDarkId, "Newschool dark", "NewschoolDark", isDark: true),
 		new ThemeDefinition(OldschoolDarkId, "Oldschool dark", "OldschoolDark", isDark: true)
 	};

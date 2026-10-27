@@ -605,7 +605,7 @@
     <value>Theme</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Warm is soft: white and cream with rounded controls and a calm font. Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode.</value>
+    <value>Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Timestamp format</value>

@@ -207,7 +207,7 @@ namespace Sentinel.LogViewer.Services
         /// <summary>Whether the application is light, dark or follows Windows, see <see cref="Theming.ThemeCatalog"/>.</summary>
         public string ThemeMode { get; set; } = Theming.ThemeCatalog.ModeSystem;
 
-        /// <summary>Id of the design, warm, newschool or oldschool; it exists in a light and in a dark version, see <see cref="Theming.ThemeCatalog"/>.</summary>
+        /// <summary>Id of the design, newschool or oldschool; it exists in a light and in a dark version, see <see cref="Theming.ThemeCatalog"/>.</summary>
         public string Theme { get; set; } = Theming.ThemeCatalog.DefaultThemeId;
 
         /// <summary>Default format of the timestamp column: system, iso, german or english.</summary>

@@ -7,7 +7,6 @@
 
     <!-- Title-bar / Alt-Tab icon for every Window; the EXE icon comes from ApplicationIcon. -->
     <Style TargetType="Window">
-        <Setter Property="FontFamily" Value="{DynamicResource ThemeFontFamily}"/>
         <Setter Property="Icon" Value="pack://application:,,,/Sentinel.LogViewer;component/Resources/icons/icons8-analysieren-64.ico"/>
     </Style>
 

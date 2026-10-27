@@ -602,7 +602,7 @@
     <value>Téma</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>A Warm lágy: fehér és krémszín, lekerekített elemekkel és nyugodt betűtípussal. A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
+    <value>A Newschool lapos és modern, az Oldschool megtartja a klasszikus megjelenést és a naplólista klasszikus színeit. Világos és sötét módban is érvényes.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Időbélyeg formátuma</value>

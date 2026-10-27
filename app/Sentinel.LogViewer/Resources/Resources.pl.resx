@@ -602,7 +602,7 @@
     <value>Motyw</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Warm jest łagodny: biel i krem, zaokrąglone elementy i spokojna czcionka. Newschool jest płaski i nowoczesny, Oldschool zachowuje klasyczny wygląd i klasyczne kolory listy logów. Działa w trybie jasnym i ciemnym.</value>
+    <value>Newschool jest płaski i nowoczesny, Oldschool zachowuje klasyczny wygląd i klasyczne kolory listy logów. Działa w trybie jasnym i ciemnym.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Format znacznika czasu</value>

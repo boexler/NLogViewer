@@ -602,7 +602,7 @@
     <value>Temă</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Warm este blând: alb și crem, cu elemente rotunjite și un font calm. Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
+    <value>Newschool este plat și modern, Oldschool păstrează aspectul clasic și culorile clasice ale listei de jurnale. Funcționează în modul luminos și întunecat.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Formatul marcajului de timp</value>

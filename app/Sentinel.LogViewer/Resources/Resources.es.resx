@@ -602,7 +602,7 @@
     <value>Tema</value>
   </data>
   <data name="Settings_Theme_Description" xml:space="preserve">
-    <value>Warm es suave: blanco y crema con controles redondeados y una fuente tranquila. Newschool es plano y moderno; Oldschool conserva el aspecto clásico y los colores clásicos de la lista de registros. Funciona en modo claro y oscuro.</value>
+    <value>Newschool es plano y moderno; Oldschool conserva el aspecto clásico y los colores clásicos de la lista de registros. Funciona en modo claro y oscuro.</value>
   </data>
   <data name="Settings_TimeStampFormat" xml:space="preserve">
     <value>Formato de la marca de tiempo</value>

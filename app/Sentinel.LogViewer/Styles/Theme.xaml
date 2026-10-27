@@ -10,7 +10,4 @@
 
     <!-- Glyphs of the symbol font: Segoe MDL2 Assets -->
     <FontFamily x:Key="ThemeIconFont">Segoe MDL2 Assets</FontFamily>
-
-    <!-- The font of the windows; a theme may set another one, which is merged behind this one -->
-    <x:Static x:Key="ThemeFontFamily" Member="SystemFonts.MessageFontFamily"/>
 </ResourceDictionary>
