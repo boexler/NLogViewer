@@ -1253,7 +1253,7 @@
     <value>Egy oszlopfejléc szélének húzásával módosítható az oszlop szélessége</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Egy bejegyzés menüjének megnyitása: egy logger egyedüli megjelenítése vagy elrejtése, a szöveg másolása, hozzáadás a szűrőhöz</value>
+    <value>Egy bejegyzés menüjének megnyitása: csak egy logger megjelenítése vagy elrejtése, megjelenítése a loggerfában, a szöveg másolása, hozzáadás a szűrőhöz, az időtartomány beállítása, ugrás egy szintre vagy időpontra</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>A szűrőmező szövegének hozzáadása szűrőkifejezésként</value>
@@ -1392,6 +1392,18 @@
   </data>
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Ez a fül az időzóna nélküli időpontokat {0} szerint olvassa. A(z) {1} fájl időpontjait is {0} szerint olvassa? A Nem a helyi idő szerint olvassa őket.</value>
+  </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>A lista időtartományának kiválasztása: csak egy időszak bejegyzései láthatók</value>
+  </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Ugrás egy időpontra: kijelöli az onnan első bejegyzést</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Ugrás egy szint következő bejegyzésére: F4 Trace, F5 Debug, F6 Info, F7 Figyelmeztetés, F8 Hiba, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Ugrás az adott szint előző bejegyzésére</value>
   </data>
 </root>
 

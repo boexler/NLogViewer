@@ -53,9 +53,13 @@ namespace Sentinel.LogViewer.Wpf.Resolver
 
         private static bool IsLocal(TimeZoneInfo? zone) => zone == null || zone.Equals(TimeZoneInfo.Local);
 
-        public string Resolve(LogEntry logEntry)
+        public string Resolve(LogEntry logEntry) => FormatClock(ToDisplay(logEntry));
+
+        /// <summary>
+        /// A clock time (already in the display zone) in the format of this resolver, e.g. for the time range, so that it reads like the list
+        /// </summary>
+        public string FormatClock(DateTime timeStamp)
         {
-            var timeStamp = ToDisplay(logEntry);
             return Format switch
             {
                 TimeStampFormat.Iso => timeStamp.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture),

@@ -1256,7 +1256,7 @@
     <value>Drag the edge of a column header to change the width of the column</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter</value>
+    <value>Open the menu of an entry: show only or hide a logger, show it in the logger tree, copy the text, add it to the filter, set the time range, jump to a level or a time</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Add the text of the filter box as a filter term</value>
@@ -1395,6 +1395,18 @@
   </data>
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>This tab reads times without a zone as {0}. Read the times of the file {1} as {0} too? Choose No to read them as local time.</value>
+  </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Choose the time range of the list: only the entries of a period are shown</value>
+  </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Go to a time: selects the first entry from then on</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Go to the next entry of a level: F4 Trace, F5 Debug, F6 Info, F7 Warn, F8 Error, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Go to the previous entry of that level</value>
   </data>
 </root>
 

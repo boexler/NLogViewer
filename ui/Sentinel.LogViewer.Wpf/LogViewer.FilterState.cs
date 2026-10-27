@@ -56,7 +56,9 @@ namespace Sentinel.LogViewer.Wpf
             }).ToList(),
             SearchFields = SearchFields,
             LoggerRules = new List<string>(LoggerTree.Rules.ToList()),
-            TimeStampFormat = CustomTimeStampFormat
+            TimeStampFormat = CustomTimeStampFormat,
+            TimeFrom = TimeFrom,
+            TimeTo = TimeTo
         };
 
         /// <summary>
@@ -88,6 +90,7 @@ namespace Sentinel.LogViewer.Wpf
                 SearchFields = state.SearchFields;
                 LoggerTree.Rules.Load(state.LoggerRules);
                 CustomTimeStampFormat = state.TimeStampFormat;
+                ApplyTimeRange(state.TimeFrom, state.TimeTo);
             }
             finally
             {

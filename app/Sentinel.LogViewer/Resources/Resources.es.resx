@@ -1253,7 +1253,7 @@
     <value>Arrastrar el borde del encabezado de una columna para cambiar su ancho</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Abrir el menú de una entrada: mostrar solo un logger u ocultarlo, copiar el texto, añadirlo al filtro</value>
+    <value>Abrir el menú de una entrada: mostrar solo un logger u ocultarlo, mostrarlo en el árbol de loggers, copiar el texto, añadirlo al filtro, fijar el intervalo de tiempo, saltar a un nivel o a una hora</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Añadir el texto del cuadro de filtro como término de filtro</value>
@@ -1392,6 +1392,18 @@
   </data>
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Esta pestaña lee las horas sin zona como {0}. ¿Leer también las horas del archivo {1} como {0}? Con No se leen como hora local.</value>
+  </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Elegir el intervalo de tiempo de la lista: solo se muestran las entradas de un período</value>
+  </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Ir a una hora: selecciona la primera entrada a partir de ella</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Ir a la siguiente entrada de un nivel: F4 Trace, F5 Debug, F6 Info, F7 Advertencia, F8 Error, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Ir a la entrada anterior de ese nivel</value>
   </data>
 </root>
 

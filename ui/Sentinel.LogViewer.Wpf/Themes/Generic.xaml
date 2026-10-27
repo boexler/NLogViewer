@@ -303,6 +303,18 @@
                                                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
                                             </MenuItem>
                                         </Menu>
+                                        <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
+                                        <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                            <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
+                                                <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
+                                                <MenuItem Header="Last hour" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
+                                                <MenuItem Header="Last 24 hours" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
+                                                <MenuItem Header="Last 7 days" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
+                                                <Separator/>
+                                                <MenuItem Header="Choose..." InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
+                                                <MenuItem Header="Clear the time range" Command="{Binding ClearTimeRangeCommand}"/>
+                                            </MenuItem>
+                                        </Menu>
                                         <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
                                         <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                    Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"
@@ -424,6 +436,20 @@
                                             </DataTemplate>
                                         </ItemsControl.Resources>
                                     </ItemsControl>
+
+                                    <!-- The time range, with one click to clear it -->
+                                    <Border Margin="2" Padding="4,2" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left"
+                                            Visibility="{Binding HasTimeRange, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Background="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBackground}"
+                                            BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"
+                                            TextElement.Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=TextSearchTermForeground}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding TimeRangeText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
+                                            <Button Content="&#x2715;" Margin="6,0,0,0" Padding="3,0" MinWidth="0" MinHeight="0" BorderThickness="0" Background="Transparent"
+                                                    VerticalAlignment="Center" ToolTip="Show all the entries again"
+                                                    Command="{Binding ClearTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </GroupBox>
 
@@ -513,6 +539,9 @@
                                     </WrapPanel>
                                 </StackPanel>
                             </GroupBox>
+
+                            <!-- What a jump has to say, e.g. that there is no further entry of a level -->
+                            <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,10,3" VerticalAlignment="Center" Opacity="0.8"/>
                         </WrapPanel>
 
                         <Grid Grid.Row="2">
@@ -801,12 +830,13 @@
                                     </Grid>
                                     <TextBox DockPanel.Dock="Top" Margin="0,0,0,6" ToolTip="Search loggers"
                                              Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <TreeView ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
+                                    <TreeView x:Name="PART_LoggerTreeView" ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
                                               BorderThickness="0" Background="Transparent"
                                               VirtualizingPanel.IsVirtualizing="True" ScrollViewer.CanContentScroll="True">
                                         <TreeView.Resources>
                                             <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                                                 <Setter Property="Visibility" Value="{Binding IsListed, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                             </Style>

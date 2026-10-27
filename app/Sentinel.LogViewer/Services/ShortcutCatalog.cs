@@ -47,7 +47,7 @@ public static class ShortcutCatalog
 			new("RightClick", "Shortcut_ColumnMenu", "Choose the columns of the list; the timestamp column also has its format here"),
 			new("Drag", "Shortcut_ReorderColumns", "Drag a column header to change the order of the columns"),
 			new("Drag", "Shortcut_ResizeColumn", "Drag the edge of a column header to change the width of the column"),
-			new("RightClick", "Shortcut_EntryMenu", "Open the menu of an entry: show only or hide a logger, copy the text, add it to the filter"),
+			new("RightClick", "Shortcut_EntryMenu", "Open the menu of an entry: show only or hide a logger, show it in the logger tree, copy the text, add it to the filter, set the time range, jump to a level or a time"),
 			new("RightClick", "Shortcut_LoggerTreeMenu", "On the logger tree: show only one logger or all, expand or collapse all"),
 		}),
 		new("Shortcuts_Group_Filter", "Filter and search", new Shortcut[]
@@ -55,6 +55,10 @@ public static class ShortcutCatalog
 			new("Enter", "Shortcut_AddFilter", "Add the text of the filter box as a filter term"),
 			new("Enter / F3", "Shortcut_NextHit", "Go to the next hit of the search"),
 			new("Shift+Enter / Shift+F3", "Shortcut_PreviousHit", "Go to the previous hit of the search"),
+			new("Ctrl+Shift+T", "Shortcut_TimeRange", "Choose the time range of the list: only the entries of a period are shown"),
+			new("Ctrl+T", "Shortcut_GoToTime", "Go to a time: selects the first entry from then on"),
+			new("F4…F9", "Shortcut_NextLevel", "Go to the next entry of a level: F4 Trace, F5 Debug, F6 Info, F7 Warn, F8 Error, F9 Fatal"),
+			new("Shift+F4…F9", "Shortcut_PreviousLevel", "Go to the previous entry of that level"),
 		}),
 		new("Shortcuts_Group_Settings", "Settings and dialogs", new Shortcut[]
 		{

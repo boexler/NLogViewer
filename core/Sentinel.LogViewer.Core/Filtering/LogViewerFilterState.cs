@@ -53,14 +53,40 @@ public sealed class LogViewerFilterState
 	public TimeStampFormat? TimeStampFormat { get; set; }
 
 	/// <summary>
+	/// The start of the time range: only entries from this moment on (inclusive) are shown; null for no start. A moment in UTC, so it does not
+	/// change when the zone of the display does. It is not saved in presets and not taken over into new tabs: it belongs to the entries that are
+	/// in the tab now.
+	/// </summary>
+	public DateTime? TimeFrom { get; set; }
+
+	/// <summary>
+	/// The end of the time range: only entries up to this moment (inclusive) are shown; null for no end. A moment in UTC.
+	/// </summary>
+	public DateTime? TimeTo { get; set; }
+
+	/// <summary>
 	/// Whether nothing is filtered and the time stamp format is the default
 	/// </summary>
-	public bool IsEmpty => HiddenLevels.Count == 0 && Terms.Count == 0 && LoggerRules.Count == 0 && TimeStampFormat == null && SearchFields == SearchFields.Default;
+	public bool IsEmpty => HiddenLevels.Count == 0 && Terms.Count == 0 && LoggerRules.Count == 0 && TimeStampFormat == null && SearchFields == SearchFields.Default
+		&& TimeFrom == null && TimeTo == null;
+
+	/// <summary>
+	/// A copy of the filters without the time range
+	/// </summary>
+	public LogViewerFilterState WithoutTimeRange()
+	{
+		var copy = Clone();
+		copy.TimeFrom = null;
+		copy.TimeTo = null;
+		return copy;
+	}
 
 	public bool IsSameAs(LogViewerFilterState? other) =>
 		other != null
 		&& TimeStampFormat == other.TimeStampFormat
 		&& SearchFields == other.SearchFields
+		&& TimeFrom == other.TimeFrom
+		&& TimeTo == other.TimeTo
 		&& HiddenLevels.SequenceEqual(other.HiddenLevels, StringComparer.Ordinal)
 		&& LoggerRules.SequenceEqual(other.LoggerRules, StringComparer.Ordinal)
 		&& Terms.Select(TermKey).SequenceEqual(other.Terms.Select(TermKey));
@@ -77,6 +103,8 @@ public sealed class LogViewerFilterState
 		}).ToList(),
 		SearchFields = SearchFields,
 		LoggerRules = LoggerRules.ToList(),
-		TimeStampFormat = TimeStampFormat
+		TimeStampFormat = TimeStampFormat,
+		TimeFrom = TimeFrom,
+		TimeTo = TimeTo
 	};
 }

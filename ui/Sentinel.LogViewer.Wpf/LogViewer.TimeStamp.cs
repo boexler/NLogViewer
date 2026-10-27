@@ -173,6 +173,13 @@ namespace Sentinel.LogViewer.Wpf
                 UpdateTimeStampHeader();
                 _columnWidthFitter?.Reset(GetEffectiveEntries());
             }
+
+            // The time range is a moment, but a time without a zone is read in the zone of the file, and the range is shown in the display zone.
+            if (HasTimeRange)
+            {
+                UpdateTimeRangeText();
+                UpdateFilter();
+            }
         }
     }
 }

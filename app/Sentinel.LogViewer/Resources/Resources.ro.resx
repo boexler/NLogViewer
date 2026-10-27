@@ -1253,7 +1253,7 @@
     <value>Trage marginea antetului unei coloane pentru a-i schimba lățimea</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Deschide meniul unei intrări: arată doar un logger sau ascunde-l, copiază textul, adaugă-l la filtru</value>
+    <value>Deschideți meniul unei intrări: afișați doar un logger sau ascundeți-l, afișați-l în arborele de loggeri, copiați textul, adăugați-l la filtru, setați intervalul de timp, sariți la un nivel sau la o oră</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Adaugă textul din câmpul de filtru ca termen de filtrare</value>
@@ -1392,6 +1392,18 @@
   </data>
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Această filă citește orele fără fus orar ca {0}. Citiți orele fișierului {1} tot ca {0}? Cu Nu sunt citite ca ora locală.</value>
+  </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Alegeți intervalul de timp al listei: sunt afișate doar intrările unei perioade</value>
+  </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Mergeți la o oră: selectează prima intrare de atunci</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Mergeți la următoarea intrare a unui nivel: F4 Trace, F5 Debug, F6 Info, F7 Avertisment, F8 Eroare, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Mergeți la intrarea anterioară a acelui nivel</value>
   </data>
 </root>
 

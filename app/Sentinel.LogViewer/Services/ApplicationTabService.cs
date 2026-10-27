@@ -132,7 +132,8 @@ public class ApplicationTabService(ConfigurationService configurationService)
 			return;
 
 		configuration.Applications.TryGetValue(key, out var existing);
-		var state = filters is { IsEmpty: false } ? filters.Clone() : null;
+		// The time range belongs to the entries of this tab, not to the next one.
+		var state = filters?.WithoutTimeRange() is { IsEmpty: false } stripped ? stripped : null;
 		if (state == null && existing?.Filters == null)
 			return;
 

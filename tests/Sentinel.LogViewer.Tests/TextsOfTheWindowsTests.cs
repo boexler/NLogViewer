@@ -90,7 +90,7 @@ public class TextsOfTheWindowsTests
 	[Fact]
 	public void TheKeysOfTheShortcuts_AreNamesToTranslate_OrKeysThatAreTheSameInEveryLanguage()
 	{
-		var same = new Regex(@"^(F\d{1,2}|[A-Z0-9,]|1…8)$");
+		var same = new Regex(@"^(F\d{1,2}|[A-Z0-9,]|1…8|F\d{1,2}…F\d{1,2})$");
 
 		var parts = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).SelectMany(combination => combination.Split('+')).Distinct();
 

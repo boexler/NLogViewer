@@ -1253,7 +1253,7 @@
     <value>Glisser le bord de l'en-tête d'une colonne pour changer sa largeur</value>
   </data>
   <data name="Shortcut_EntryMenu" xml:space="preserve">
-    <value>Ouvrir le menu d'une entrée : afficher seulement un logger ou le masquer, copier le texte, l'ajouter au filtre</value>
+    <value>Ouvrir le menu d’une entrée : n’afficher qu’un logger ou le masquer, l’afficher dans l’arbre des loggers, copier le texte, l’ajouter au filtre, définir la période, aller à un niveau ou à une heure</value>
   </data>
   <data name="Shortcut_AddFilter" xml:space="preserve">
     <value>Ajouter le texte du champ de filtre comme terme de filtre</value>
@@ -1392,6 +1392,18 @@
   </data>
   <data name="TimeZone_AskText" xml:space="preserve">
     <value>Cet onglet lit les heures sans fuseau comme {0}. Lire aussi les heures du fichier {1} comme {0} ? Avec Non, elles sont lues comme heure locale.</value>
+  </data>
+  <data name="Shortcut_TimeRange" xml:space="preserve">
+    <value>Choisir la période de la liste : seules les entrées d’une période sont affichées</value>
+  </data>
+  <data name="Shortcut_GoToTime" xml:space="preserve">
+    <value>Aller à une heure : sélectionne la première entrée à partir de là</value>
+  </data>
+  <data name="Shortcut_NextLevel" xml:space="preserve">
+    <value>Aller à l’entrée suivante d’un niveau : F4 Trace, F5 Debug, F6 Info, F7 Avertissement, F8 Erreur, F9 Fatal</value>
+  </data>
+  <data name="Shortcut_PreviousLevel" xml:space="preserve">
+    <value>Aller à l’entrée précédente de ce niveau</value>
   </data>
 </root>
 
