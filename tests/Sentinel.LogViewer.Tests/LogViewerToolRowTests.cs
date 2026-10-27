@@ -160,6 +160,10 @@ public class LogViewerToolRowTests
 				Assert.Equal((hint, glyph), (((Wpf.Helper.WatermarkTextBox)box).Hint, ((Wpf.Helper.WatermarkTextBox)box).Glyph));
 				Assert.Equal(System.Windows.Visibility.Visible, shown.Visibility);
 
+				// The hint goes as soon as the box has the focus, not only when something is typed.
+				box.Focus();
+				Assert.Equal(System.Windows.Visibility.Collapsed, shown.Visibility);
+
 				box.Text = "x";
 				Assert.Equal(System.Windows.Visibility.Collapsed, shown.Visibility);
 			}

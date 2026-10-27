@@ -14,7 +14,7 @@
     <SolidColorBrush x:Key="ThemeSurface" po:Freeze="True" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ThemeSurfaceAlt" po:Freeze="True" Color="#EFEDE4"/>
     <SolidColorBrush x:Key="ThemeBorder" po:Freeze="True" Color="#E0DDD2"/>
-    <SolidColorBrush x:Key="ThemeBorderStrong" po:Freeze="True" Color="#BDB9AA"/>
+    <SolidColorBrush x:Key="ThemeBorderStrong" po:Freeze="True" Color="#CDC9BC"/>
     <SolidColorBrush x:Key="ThemeTextPrimary" po:Freeze="True" Color="#1F1E1D"/>
     <SolidColorBrush x:Key="ThemeTextSecondary" po:Freeze="True" Color="#4A4944"/>
     <SolidColorBrush x:Key="ThemeTextMuted" po:Freeze="True" Color="#6B685F"/>

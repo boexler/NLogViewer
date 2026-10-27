@@ -62,18 +62,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:LogViewer}">
                     <ControlTemplate.Resources>
-                        <Style x:Key="ToolButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                            <Setter Property="Width" Value="28"/>
-                            <Setter Property="Height" Value="26"/>
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="0,0,2,0"/>
-                        </Style>
-                        <Style x:Key="ToolToggle" TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-                            <Setter Property="MinWidth" Value="28"/>
-                            <Setter Property="Height" Value="26"/>
-                            <Setter Property="Padding" Value="4,0"/>
-                            <Setter Property="Margin" Value="0,0,2,0"/>
-                        </Style>
                         <!-- The icon of a level button: hidden when the buttons show a letter only -->
                         <Style x:Key="LevelIcon" TargetType="Image">
                             <Setter Property="Width" Value="16"/>
@@ -122,11 +110,16 @@
                             <Setter Property="VerticalAlignment" Value="Center"/>
                         </Style>
                         <!-- A text box with a symbol in front and a hint while it is empty -->
-                        <Style x:Key="WatermarkBox" TargetType="helper:WatermarkTextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Style x:Key="WatermarkBox" TargetType="helper:WatermarkTextBox">
+                            <Setter Property="Padding" Value="4,1"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="helper:WatermarkTextBox">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                        <Border x:Name="Frame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" SnapsToDevicePixels="True">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -144,8 +137,16 @@
                                             </Grid>
                                         </Border>
                                         <ControlTemplate.Triggers>
-                                            <Trigger Property="Text" Value="">
+                                            <!-- The hint goes as soon as the box has the focus, not only when something is typed -->
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="Text" Value=""/>
+                                                    <Condition Property="IsKeyboardFocusWithin" Value="False"/>
+                                                </MultiTrigger.Conditions>
                                                 <Setter TargetName="Hint" Property="Visibility" Value="Visible"/>
+                                            </MultiTrigger>
+                                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                                <Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
                                             </Trigger>
                                             <Trigger Property="IsEnabled" Value="False">
                                                 <Setter Property="Opacity" Value="0.5"/>
@@ -154,8 +155,7 @@
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
-                        </Style>
-                        <Style x:Key="ToolSeparator" TargetType="Rectangle">
+                        </Style>                        <Style x:Key="ToolSeparator" TargetType="Rectangle">
                             <Setter Property="Width" Value="1"/>
                             <Setter Property="Height" Value="20"/>
                             <Setter Property="Margin" Value="6,0,8,0"/>
@@ -175,17 +175,17 @@
                                 <!-- Controls -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
                                             Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Auto-Scroll"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Auto-Scroll"
                                                   ToolTip="Auto-Scroll: scroll to the newest entry when new entries arrive"
                                                   IsChecked="{Binding Path=AutoScroll, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <Image Source="../Images/Small/ScrollDown.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Pause"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Pause"
                                                   ToolTip="Pause: no new entries are added to the list while it is pressed"
                                                   IsChecked="{Binding Path=Pause, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <Image Source="../Images/Small/Pause.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </ToggleButton>
-                                    <Button Style="{StaticResource ToolButton}" AutomationProperties.Name="Clear"
+                                    <Button Width="28" Height="26" Padding="0" Margin="0,0,2,0" AutomationProperties.Name="Clear"
                                             ToolTip="Clear: remove all entries from the list"
                                             Command="{Binding Path=ClearCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <Image Source="../Images/Small/Clear.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -196,7 +196,7 @@
                                 <!-- Levels: pressed hides the entries of the level -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
                                             Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Trace"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Trace"
                                                   ToolTip="Hide the Trace entries (press again to show them)"
                                                   IsChecked="{Binding Path=TraceFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -204,7 +204,7 @@
                                             <TextBlock Text="T" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Debug"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Debug"
                                                   ToolTip="Hide the Debug entries (press again to show them)"
                                                   IsChecked="{Binding Path=DebugFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -212,7 +212,7 @@
                                             <TextBlock Text="D" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Info"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Info"
                                                   ToolTip="Hide the Info entries (press again to show them)"
                                                   IsChecked="{Binding Path=InfoFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -220,7 +220,7 @@
                                             <TextBlock Text="I" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Warn"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Warn"
                                                   ToolTip="Hide the Warn entries (press again to show them)"
                                                   IsChecked="{Binding Path=WarnFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -228,7 +228,7 @@
                                             <TextBlock Text="W" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Error"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Error"
                                                   ToolTip="Hide the Error entries (press again to show them)"
                                                   IsChecked="{Binding Path=ErrorFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -236,7 +236,7 @@
                                             <TextBlock Text="E" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" AutomationProperties.Name="Fatal"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Fatal"
                                                   ToolTip="Hide the Fatal entries (press again to show them)"
                                                   IsChecked="{Binding Path=FatalFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
@@ -286,11 +286,11 @@
                                         <ComboBoxItem Content="Error"/>
                                         <ComboBoxItem Content="Fatal"/>
                                     </ComboBox>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case"
                                                   IsChecked="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word"
                                                   IsChecked="{Binding FilterWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    <ToggleButton Style="{StaticResource ToolToggle}" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex"
                                                   IsChecked="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}}"/>
                                     <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                         <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
@@ -338,7 +338,7 @@
                                                ToolTip="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 </StackPanel>
 
-                                <Button Style="{StaticResource ToolButton}" Margin="8,0,0,2" AutomationProperties.Name="Search" ToolTip="Search (Ctrl+F)"
+                                <Button Width="28" Height="26" Padding="0" Margin="8,0,0,2" AutomationProperties.Name="Search" ToolTip="Search (Ctrl+F)"
                                         Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
                                         Command="{Binding OpenFindCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                     <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
@@ -395,11 +395,11 @@
                                     <ComboBoxItem Content="Error"/>
                                     <ComboBoxItem Content="Fatal"/>
                                 </ComboBox>
-                                <ToggleButton Style="{StaticResource ToolToggle}" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case of the search" Margin="0,0,2,2"
+                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case of the search" Margin="0,0,2,2"
                                               IsChecked="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <ToggleButton Style="{StaticResource ToolToggle}" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word of the search" Margin="0,0,2,2"
+                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word of the search" Margin="0,0,2,2"
                                               IsChecked="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <ToggleButton Style="{StaticResource ToolToggle}" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex of the search" Margin="0,0,2,2"
+                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex of the search" Margin="0,0,2,2"
                                               IsChecked="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                     <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
@@ -431,15 +431,15 @@
                                                   Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
                                     </MenuItem>
                                 </Menu>
-                                <Button Content="▲" Style="{StaticResource ToolButton}" Margin="6,0,2,2" AutomationProperties.Name="Previous hit"
+                                <Button Content="▲" Width="28" Height="26" Padding="0" Margin="6,0,2,2" AutomationProperties.Name="Previous hit"
                                         Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Previous hit (Shift+F3)"/>
-                                <Button Content="▼" Style="{StaticResource ToolButton}" Margin="0,0,0,2" AutomationProperties.Name="Next hit"
+                                <Button Content="▼" Width="28" Height="26" Padding="0" Margin="0,0,0,2" AutomationProperties.Name="Next hit"
                                         Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Next hit (F3)"/>
                                 <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="80" Margin="10,0,0,2" VerticalAlignment="Center"
                                            ToolTip="{Binding FindError, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <Button Style="{StaticResource ToolButton}" Margin="6,0,0,2" Content="&#x2715;" AutomationProperties.Name="Close the search" ToolTip="Close the search (Esc)"
+                                <Button Width="28" Height="26" Padding="0" Margin="6,0,0,2" Content="&#x2715;" AutomationProperties.Name="Close the search" ToolTip="Close the search (Esc)"
                                         Command="{Binding CloseFindCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </WrapPanel>
 
