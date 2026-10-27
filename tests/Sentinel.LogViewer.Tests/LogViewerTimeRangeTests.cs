@@ -167,9 +167,7 @@ public class LogViewerTimeRangeTests
 	public void ControlShiftT_OpensTheDialogOfTheTimeRange() =>
 		WithViewer((viewer, _) =>
 		{
-			var binding = viewer.InputBindings.OfType<KeyBinding>().Single(candidate => candidate.Key == Key.T && candidate.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift));
-
-			Assert.Same(viewer.ChooseTimeRangeCommand, binding.Command);
+			Assert.Contains(LogViewerCommands.ChooseTimeRange.InputGestures.OfType<KeyGesture>(), gesture => gesture.Key == Key.T && gesture.Modifiers == (ModifierKeys.Control | ModifierKeys.Shift));
 		});
 
 	[Fact]

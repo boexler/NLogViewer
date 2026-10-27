@@ -207,4 +207,28 @@ public class LogViewerToolRowTests
 			Assert.True(message.IsChecked);
 			message.Command.Execute(message.CommandParameter);
 			Assert.False(viewer.SearchFields.HasFlag(SearchFields.Message));
+		});
+
+	[Fact]
+	public void ThePatterns_OfTheFilterAndOfTheSearch_GoIntoTheirOwnBox() =>
+		WithViewer(viewer =>
+		{
+			ApplicationCommands.Find.Execute(null, viewer);
+			WpfTestHelper.Settle();
+			var options = WpfTestHelper.Descendants<Wpf.Helper.SearchOptions>(viewer).ToList();
+			var pattern = Wpf.LogViewer.RegexTemplates.First().Pattern;
+
+			foreach (var (row, text) in new[] { (options[0], (Func<string>)(() => viewer.CurrentSearchText)), (options[1], () => viewer.FindText) })
+			{
+				var menu = WpfTestHelper.Descendants<MenuItem>(row).Single(item => (string)item.Header == "Patterns ▾");
+				menu.IsSubmenuOpen = true;
+				WpfTestHelper.Settle();
+
+				var first = (MenuItem)menu.ItemContainerGenerator.ContainerFromIndex(0);
+				Assert.NotNull(first.Command);
+				first.Command.Execute(first.CommandParameter);
+				menu.IsSubmenuOpen = false;
+
+				Assert.Equal(pattern, text());
+			}
 		});}

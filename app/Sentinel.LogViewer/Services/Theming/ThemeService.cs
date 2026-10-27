@@ -135,6 +135,7 @@ public class ThemeService : IDisposable
 		resources[SystemColors.ControlTextBrushKey] = application.FindResource("ThemeTextPrimary");
 		resources[SystemColors.GrayTextBrushKey] = application.FindResource("ThemeTextMuted");
 		resources[SystemColors.ControlDarkBrushKey] = application.FindResource("ThemeBorder");
+		resources[SystemColors.ControlDarkDarkBrushKey] = application.FindResource("ThemeBorderStrong");
 		resources[SystemColors.HighlightBrushKey] = application.FindResource("ThemeAccent");
 		resources[SystemColors.HighlightTextBrushKey] = application.FindResource("ThemeOnAccent");
 		resources[SystemColors.InactiveSelectionHighlightBrushKey] = application.FindResource("ThemeAccentSoft");

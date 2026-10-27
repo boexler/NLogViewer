@@ -75,9 +75,7 @@ namespace Sentinel.LogViewer
                     }));
             }
 
-            // The keys of the viewer that the menu shows also work when the focus is elsewhere in the window, e.g. on a tab header
-            InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.GoToTime, Key.T, ModifierKeys.Control));
-            InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.ChooseTimeRange, Key.T, ModifierKeys.Control | ModifierKeys.Shift));
+            // The level keys of the viewer (F4 to F9) also work when the focus is elsewhere in the window, e.g. on a tab header; the other keys are the gestures of the commands
             var levels = new[] { LogEntryLevel.Trace, LogEntryLevel.Debug, LogEntryLevel.Info, LogEntryLevel.Warn, LogEntryLevel.Error, LogEntryLevel.Fatal };
             for (var i = 0; i < levels.Length; i++)
             {

@@ -10,10 +10,12 @@ namespace Sentinel.LogViewer.Wpf
     public static class LogViewerCommands
     {
         /// <summary>Opens the dialog for a time and selects the first entry from then on (Ctrl+T)</summary>
-        public static readonly RoutedUICommand GoToTime = new("Go to time", nameof(GoToTime), typeof(LogViewerCommands));
+        public static readonly RoutedUICommand GoToTime = new("Go to time", nameof(GoToTime), typeof(LogViewerCommands),
+            new InputGestureCollection { new KeyGesture(Key.T, ModifierKeys.Control) });
 
         /// <summary>Opens the dialog for the time range (Ctrl+Shift+T)</summary>
-        public static readonly RoutedUICommand ChooseTimeRange = new("Choose the time range", nameof(ChooseTimeRange), typeof(LogViewerCommands));
+        public static readonly RoutedUICommand ChooseTimeRange = new("Choose the time range", nameof(ChooseTimeRange), typeof(LogViewerCommands),
+            new InputGestureCollection { new KeyGesture(Key.T, ModifierKeys.Control | ModifierKeys.Shift) });
 
         /// <summary>Shows all the entries again</summary>
         public static readonly RoutedUICommand ClearTimeRange = new("Clear the time range", nameof(ClearTimeRange), typeof(LogViewerCommands));

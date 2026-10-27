@@ -1273,7 +1273,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 
 			var list = (System.Windows.Controls.ListView)viewer.Template.FindName("PART_ListView", viewer);
 			Assert.Equal("error entry", ((LogEntry)list.SelectedItem).Message);
-			Assert.Contains(session.Window.InputBindings.OfType<System.Windows.Input.KeyBinding>(), candidate => candidate.Key == System.Windows.Input.Key.T && candidate.Command == Wpf.LogViewerCommands.GoToTime);
+			Assert.Contains(Wpf.LogViewerCommands.GoToTime.InputGestures.OfType<System.Windows.Input.KeyGesture>(), gesture => gesture.Key == System.Windows.Input.Key.T);
 		});
 	}
 

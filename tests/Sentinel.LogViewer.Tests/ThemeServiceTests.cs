@@ -41,6 +41,18 @@ public class ThemeServiceTests : IDisposable
 	}
 
 	[Fact]
+	public void Apply_GivesTheBoxesOfTheViewerTheStrongBorderOfTheTheme()
+	{
+		_context.RunOnSta(() =>
+		{
+			new ThemeService(() => true).Apply(new AppConfiguration { ThemeMode = ThemeCatalog.ModeLight, Theme = ThemeCatalog.NewschoolId });
+
+			// The boxes of the viewer cannot name the brushes of the application, so they use this system brush; the text boxes of the application use the strong border.
+			Assert.Same(Application.Current.FindResource("ThemeBorderStrong"), Application.Current.FindResource(SystemColors.ControlDarkDarkBrushKey));
+		});
+	}
+
+	[Fact]
 	public void Apply_UsesTheCustomColoursOfTheSelectedThemeOnly()
 	{
 		_context.RunOnSta(() =>
