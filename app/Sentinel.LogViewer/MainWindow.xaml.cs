@@ -75,6 +75,16 @@ namespace Sentinel.LogViewer
                     }));
             }
 
+            // The keys of the viewer that the menu shows also work when the focus is elsewhere in the window, e.g. on a tab header
+            InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.GoToTime, Key.T, ModifierKeys.Control));
+            InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.ChooseTimeRange, Key.T, ModifierKeys.Control | ModifierKeys.Shift));
+            var levels = new[] { LogEntryLevel.Trace, LogEntryLevel.Debug, LogEntryLevel.Info, LogEntryLevel.Warn, LogEntryLevel.Error, LogEntryLevel.Fatal };
+            for (var i = 0; i < levels.Length; i++)
+            {
+                InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.NextLevel, Key.F4 + i, ModifierKeys.None) { CommandParameter = levels[i] });
+                InputBindings.Add(new KeyBinding(Wpf.LogViewerCommands.PreviousLevel, Key.F4 + i, ModifierKeys.Shift) { CommandParameter = levels[i] });
+            }
+
             // Setup keyboard shortcuts
             this.InputBindings.Add(new KeyBinding(_viewModel.OpenFileCommand,
                 new KeyGesture(Key.O, ModifierKeys.Control)));

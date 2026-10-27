@@ -29,6 +29,11 @@ public sealed class LoggerVisibilityRules
 	public bool HasRules => _rules.Count > 0;
 
 	/// <summary>
+	/// How many rules there are
+	/// </summary>
+	public int Count => _rules.Count;
+
+	/// <summary>
 	/// Returns whether the entries of the logger are shown
 	/// </summary>
 	public bool IsVisible(string loggerName)

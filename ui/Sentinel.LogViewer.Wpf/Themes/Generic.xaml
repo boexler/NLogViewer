@@ -286,41 +286,12 @@
                                         <ComboBoxItem Content="Error"/>
                                         <ComboBoxItem Content="Fatal"/>
                                     </ComboBox>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case"
-                                                  IsChecked="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word"
-                                                  IsChecked="{Binding FilterWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex"
-                                                  IsChecked="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                    <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                        <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
-                                                  ToolTip="Put a ready-made regular expression into the input">
-                                            <MenuItem.ItemContainerStyle>
-                                                <Style TargetType="MenuItem">
-                                                    <Setter Property="Header" Value="{Binding Name}"/>
-                                                    <Setter Property="ToolTip" Value="{Binding Pattern}"/>
-                                                    <Setter Property="Command" Value="{Binding Tag.InsertRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                                    <Setter Property="CommandParameter" Value="{Binding}"/>
-                                                </Style>
-                                            </MenuItem.ItemContainerStyle>
-                                        </MenuItem>
-                                        <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
-                                            <MenuItem Header="Message" StaysOpenOnClick="True"
-                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
-                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
-                                            <MenuItem Header="Logger name" StaysOpenOnClick="True"
-                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
-                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
-                                            <MenuItem Header="Exception" StaysOpenOnClick="True"
-                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
-                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
-                                            <MenuItem Header="Thread" StaysOpenOnClick="True"
-                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
-                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
-                                            <MenuItem Header="Other properties" StaysOpenOnClick="True"
-                                                      IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
-                                                      Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
-                                        </MenuItem>
+                                    <helper:SearchOptions Margin="0,0,0,0"
+                                                          MatchCase="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                          WholeWord="{Binding FilterWholeWord, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                          UseRegex="{Binding UseRegexSearch, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                          PatternCommand="{Binding InsertRegexTemplateCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <Menu Background="Transparent" VerticalAlignment="Center" Margin="-6,0,0,0" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                         <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
                                         <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
                                             <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
@@ -395,42 +366,11 @@
                                     <ComboBoxItem Content="Error"/>
                                     <ComboBoxItem Content="Fatal"/>
                                 </ComboBox>
-                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content="Aa" ToolTip="Match case" AutomationProperties.Name="Match case of the search" Margin="0,0,2,2"
-                                              IsChecked="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content="ab" ToolTip="Whole word" AutomationProperties.Name="Whole word of the search" Margin="0,0,2,2"
-                                              IsChecked="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <ToggleButton MinWidth="28" Height="26" Padding="4,0" Content=".*" ToolTip="Use regex pattern matching" AutomationProperties.Name="Regex of the search" Margin="0,0,2,2"
-                                              IsChecked="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <Menu Background="Transparent" VerticalAlignment="Center" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                                    <MenuItem Header="Patterns ▾" Tag="{Binding}" ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
-                                              ToolTip="Put a ready-made regular expression into the input">
-                                        <MenuItem.ItemContainerStyle>
-                                            <Style TargetType="MenuItem">
-                                                <Setter Property="Header" Value="{Binding Name}"/>
-                                                <Setter Property="ToolTip" Value="{Binding Pattern}"/>
-                                                <Setter Property="Command" Value="{Binding Tag.InsertFindRegexTemplateCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
-                                                <Setter Property="CommandParameter" Value="{Binding}"/>
-                                            </Style>
-                                        </MenuItem.ItemContainerStyle>
-                                    </MenuItem>
-                                    <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
-                                        <MenuItem Header="Message" StaysOpenOnClick="True"
-                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
-                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
-                                        <MenuItem Header="Logger name" StaysOpenOnClick="True"
-                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
-                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
-                                        <MenuItem Header="Exception" StaysOpenOnClick="True"
-                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
-                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
-                                        <MenuItem Header="Thread" StaysOpenOnClick="True"
-                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
-                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
-                                        <MenuItem Header="Other properties" StaysOpenOnClick="True"
-                                                  IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
-                                                  Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
-                                    </MenuItem>
-                                </Menu>
+                                <helper:SearchOptions Margin="0,0,0,2" Scope=" of the search"
+                                                      MatchCase="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                      WholeWord="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                      UseRegex="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                                      PatternCommand="{Binding InsertFindRegexTemplateCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 <Button Content="▲" Width="28" Height="26" Padding="0" Margin="6,0,2,2" AutomationProperties.Name="Previous hit"
                                         Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                         ToolTip="Previous hit (Shift+F3)"/>

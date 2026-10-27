@@ -12,5 +12,5 @@
     <FontFamily x:Key="ThemeIconFont">Segoe MDL2 Assets</FontFamily>
 
     <!-- The font of the windows; a theme may set another one, which is merged behind this one -->
-    <FontFamily x:Key="ThemeFontFamily">Segoe UI</FontFamily>
+    <x:Static x:Key="ThemeFontFamily" Member="SystemFonts.MessageFontFamily"/>
 </ResourceDictionary>

@@ -193,6 +193,19 @@ public class ThemeCatalogTests
 		Assert.Empty(weak);
 	}
 
+	[Theory]
+	[InlineData(ThemeCatalog.WarmId)]
+	[InlineData(ThemeCatalog.WarmDarkId)]
+	public void Warm_ShowsTheEdgeOfAControl_OnTheSurfaceAndOnThePage(string themeId)
+	{
+		var colors = ThemeCatalog.Find(themeId).Colors;
+
+		// The line around text boxes and buttons: 3:1, so that it can be seen by users with weak eyesight.
+		var faint = new[] { "ThemeSurface", "ThemePageBackground" }.Where(background => Contrast(colors["ThemeBorderStrong"], colors[background]) < 3.0);
+
+		Assert.Empty(faint);
+	}
+
 	private static double Contrast(string first, string second)
 	{
 		static double Luminance(string color)

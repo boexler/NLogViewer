@@ -182,4 +182,29 @@ public class LogViewerToolRowTests
 			box.Text = "B";
 			Assert.Equal("B", viewer.LoggerTree.SearchText);
 			Assert.False(viewer.LoggerTree.Find("A")!.IsListed);
+		});
+
+	[Fact]
+	public void TheOptionsOfTheFilterAndTheSearch_AreOneControl_AndEachBindsItsOwnFlags() =>
+		WithViewer(viewer =>
+		{
+			ApplicationCommands.Find.Execute(null, viewer);
+			WpfTestHelper.Settle();
+			var options = WpfTestHelper.Descendants<Wpf.Helper.SearchOptions>(viewer).ToList();
+			Assert.Equal(2, options.Count);
+			var (filter, find) = (options[0], options[1]);
+
+			viewer.FilterMatchCase = true;
+			Assert.Equal((true, false), (filter.MatchCase, find.MatchCase));
+			find.WholeWord = true;
+			Assert.Equal((false, true), (viewer.FilterWholeWord, viewer.FindWholeWord));
+
+			var names = WpfTestHelper.Descendants<ToggleButton>(find).Select(System.Windows.Automation.AutomationProperties.GetName).ToArray();
+			Assert.Equal(new[] { "Match case of the search", "Whole word of the search", "Regex of the search" }, names);
+
+			// The fields are the ones of the viewer, from either row.
+			var message = WpfTestHelper.Descendants<MenuItem>(find).Single(item => (string)item.Header == "Fields ▾").Items.OfType<MenuItem>().Single(item => (string)item.Header == "Message");
+			Assert.True(message.IsChecked);
+			message.Command.Execute(message.CommandParameter);
+			Assert.False(viewer.SearchFields.HasFlag(SearchFields.Message));
 		});}

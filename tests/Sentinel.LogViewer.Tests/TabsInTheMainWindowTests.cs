@@ -586,11 +586,20 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			using var session = Start();
 
-			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).ToHashSet();
+			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).SelectMany(ExpandRange).ToHashSet();
 			var missing = session.Window.InputBindings.OfType<KeyBinding>().Select(Gesture).Distinct().Where(gesture => !listed.Contains(gesture)).ToList();
 
 			Assert.Empty(missing);
 		});
+
+		// "F4…F9" stands for the keys F4, F5 to F9; "Shift+F4…F9" for the same with Shift.
+		static IEnumerable<string> ExpandRange(string keys)
+		{
+			var match = System.Text.RegularExpressions.Regex.Match(keys, @"^(?<prefix>.*?)F(?<from>\d+)…F(?<to>\d+)$");
+			return match.Success
+				? Enumerable.Range(int.Parse(match.Groups["from"].Value), int.Parse(match.Groups["to"].Value) - int.Parse(match.Groups["from"].Value) + 1).Select(number => match.Groups["prefix"].Value + "F" + number)
+				: new[] { keys };
+		}
 	}
 
 	[Fact]
@@ -1245,6 +1254,53 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Equal(System.Windows.Visibility.Visible, ((System.Windows.Controls.TextBlock)box.Template.FindName("Hint", box)).Visibility);
 			Assert.Equal("\uE71C", ((Wpf.Helper.WatermarkTextBox)box).Glyph);
 		});
+	}
+
+	[Fact]
+	public void TheKeysOfTheViewer_AlsoWorkWhenTheFocusIsNotInTheList()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "info entry");
+			Send(session, App("(100)"), "error entry", LogEntryLevel.Error);
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			// F8 in the window, as the menu shows it: the command goes to the viewer of the selected tab.
+			var binding = session.Window.InputBindings.OfType<System.Windows.Input.KeyBinding>().Single(candidate => candidate.Key == System.Windows.Input.Key.F8 && candidate.Modifiers == System.Windows.Input.ModifierKeys.None);
+			Assert.Equal(LogEntryLevel.Error, binding.CommandParameter);
+			((System.Windows.Input.RoutedCommand)binding.Command).Execute(binding.CommandParameter, session.Window);
+
+			var list = (System.Windows.Controls.ListView)viewer.Template.FindName("PART_ListView", viewer);
+			Assert.Equal("error entry", ((LogEntry)list.SelectedItem).Message);
+			Assert.Contains(session.Window.InputBindings.OfType<System.Windows.Input.KeyBinding>(), candidate => candidate.Key == System.Windows.Input.Key.T && candidate.Command == Wpf.LogViewerCommands.GoToTime);
+		});
+	}
+
+	[Fact]
+	public void EveryEntryOfTheMenu_IsWiredToACommand_AndTheCommandsOfTheViewerCanRunWithATab()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "alpha");
+
+			// A menu of the debug build has handlers instead of commands.
+			var entries = session.Window.MainMenu.Items.OfType<System.Windows.Controls.MenuItem>().Where(menu => (string)menu.Header != "_Debug")
+				.SelectMany(Leaves).ToList();
+			Assert.True(entries.Count > 25);
+
+			Assert.Empty(entries.Where(item => item.Command == null && !item.IsCheckable).Select(item => (string)item.Header));
+			// Resetting the filter and clearing the time range wait until there is something to take off.
+			var broken = entries.Where(item => item.Command is System.Windows.Input.RoutedCommand command && command != Wpf.LogViewerCommands.ResetFilter && command != Wpf.LogViewerCommands.ClearTimeRange
+				&& !command.CanExecute(item.CommandParameter, session.Window)).Select(item => (string)item.Header);
+			Assert.Empty(broken);
+		});
+
+		static IEnumerable<System.Windows.Controls.MenuItem> Leaves(System.Windows.Controls.MenuItem item) =>
+			item.Items.OfType<System.Windows.Controls.MenuItem>().Any()
+				? item.Items.OfType<System.Windows.Controls.MenuItem>().SelectMany(Leaves)
+				: item.HasItems || item.ItemsSource != null ? Enumerable.Empty<System.Windows.Controls.MenuItem>() : new[] { item };
 	}
 
 	[Fact]

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Linq;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -137,13 +138,14 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         private void UpdateFilterSummary()
         {
-            var state = GetFilterState();
             var total = GetEffectiveEntries().Count;
             var shown = LogEvents?.View is CollectionView view ? view.Count : 0;
+            var loggerRules = LoggerTree.Rules.Count;
+            var hasFilters = LevelNames.Any(IsLevelHidden) || ActiveSearchTerms.Count > 0 || loggerRules > 0 || TimeFrom != null || TimeTo != null;
 
-            SetValue(HasActiveFilterPropertyKey, state.HasFilters);
-            SetValue(LoggerRuleCountPropertyKey, state.LoggerRules.Count);
-            SetValue(FilterResultTextPropertyKey, state.HasFilters
+            SetValue(HasActiveFilterPropertyKey, hasFilters);
+            SetValue(LoggerRuleCountPropertyKey, loggerRules);
+            SetValue(FilterResultTextPropertyKey, hasFilters
                 ? string.Format(CultureInfo.CurrentCulture, "Entries: {0:N0} of {1:N0}", shown, total)
                 : string.Format(CultureInfo.CurrentCulture, "Entries: {0:N0}", total));
         }
