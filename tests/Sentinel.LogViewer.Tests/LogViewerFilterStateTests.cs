@@ -176,4 +176,30 @@ public class LogViewerFilterStateTests
 			}
 		});
 	}
-}
+
+	[Fact]
+	public void ATermThatIsOff_StaysOffInTheState_InACopy_AndWhenItIsApplied_AndAStateFromBeforeTheSwitchHasAllTermsOn()
+	{
+		var state = new LogViewerFilterState { Terms = { new LogViewerFilterTerm { Text = "a", IsEnabled = false }, new LogViewerFilterTerm { Text = "b" } } };
+
+		Assert.Equal(new[] { false, true }, state.Clone().Terms.Select(term => term.IsEnabled));
+		Assert.False(state.IsSameAs(new LogViewerFilterState { Terms = { new LogViewerFilterTerm { Text = "a" }, new LogViewerFilterTerm { Text = "b" } } }));
+
+		var old = System.Text.Json.JsonSerializer.Deserialize<LogViewerFilterTerm>("""{ "Text": "a", "IsExclude": true }""")!;
+		Assert.True(old.IsEnabled);
+
+		_context.RunOnSta(() =>
+		{
+			var (window, viewer) = WpfTestHelper.ShowInWindow(Entries());
+			try
+			{
+				viewer.ApplyFilterState(state);
+				Assert.Equal(new[] { false, true }, viewer.ActiveSearchTerms.Select(term => term.IsEnabled));
+				Assert.Equal(new[] { false, true }, viewer.GetFilterState().Terms.Select(term => term.IsEnabled));
+			}
+			finally
+			{
+				window.Close();
+			}
+		});
+	}}
