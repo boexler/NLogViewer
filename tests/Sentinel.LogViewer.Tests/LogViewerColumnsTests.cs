@@ -142,7 +142,8 @@ public class LogViewerColumnsTests
 		{
 			var menu = viewer.BuildColumnMenu(ViewOf(viewer).Columns[0], null);
 
-			var columns = menu.Items.OfType<MenuItem>().Where(item => item.IsCheckable).ToList();
+			// The two entries of the sort are checkable too, but they are commands; the columns are switched by a click.
+			var columns = menu.Items.OfType<MenuItem>().Where(item => item.IsCheckable && item.Command == null).ToList();
 			Assert.Equal(new[] { "ID", "Level", "TimeStamp", "LoggerName", "Thread", "Message" }, columns.Select(item => (string)item.Header));
 			Assert.Equal(new[] { true, true, true, true, false, true }, columns.Select(item => item.IsChecked));
 			Assert.False(columns[5].IsEnabled);

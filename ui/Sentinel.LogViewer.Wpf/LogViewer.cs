@@ -1452,6 +1452,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             AttachEffectiveCollectionChangedHandler();
             LoggerTree.Rebuild(GetEffectiveEntries());
+            SetViewSort();
             LogEvents?.View?.Refresh();
             UpdateFilter();
             CollectPropertyNames(GetEffectiveEntries());

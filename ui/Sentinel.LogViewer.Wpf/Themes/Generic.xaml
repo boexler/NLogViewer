@@ -531,6 +531,24 @@
                                     </StackPanel>
                                 </Border>
 
+                                <!-- The sort of the list, with one click to show the entries in the order they came in -->
+                                <Border HorizontalAlignment="Left">
+                                    <Border.Style>
+                                        <Style TargetType="Border" BasedOn="{StaticResource Chip}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SortText, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding SortText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show the entries in the order they came in" AutomationProperties.Name="Reset column sorting"
+                                                Command="{Binding ResetSortCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </StackPanel>
+                                </Border>
+
                                 <Button Content="Reset filter" Margin="6,0,0,0" Padding="8,1" Height="24" VerticalAlignment="Center"
                                         ToolTip="Take the levels, terms, loggers and the time range off"
                                         Visibility="{Binding HasActiveFilter, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"

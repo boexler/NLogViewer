@@ -1450,5 +1450,8 @@
   <data name="Shortcut_Find" xml:space="preserve">
     <value>Suchleiste öffnen; Esc in der Leiste schließt sie und löscht die Suche</value>
   </data>
+  <data name="Tab_ResetSorting" xml:space="preserve">
+    <value>Spaltensortierung zurücksetzen</value>
+  </data>
 </root>
 

@@ -1304,6 +1304,33 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheSortOfTheList_IsKeptInTheTab_AndCanBeResetFromTheTab()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "alpha");
+			var tab = Assert.Single(session.ViewModel.LogTabs);
+			var viewer = ViewerOf(session, tab);
+			Assert.False(session.ViewModel.ResetSortCommand.CanExecute(tab));
+
+			viewer.CycleSort(Wpf.LogColumns.Logger);
+			viewer.CycleSort(Wpf.LogColumns.Logger);
+			WpfTestHelper.Settle();
+
+			Assert.Equal((Wpf.LogColumns.Logger, true), (tab.SortKey, tab.SortDescending));
+			Assert.True(session.ViewModel.ResetSortCommand.CanExecute(tab));
+
+			session.ViewModel.ResetSortCommand.Execute(tab);
+			WpfTestHelper.Settle();
+
+			Assert.Null(viewer.SortKey);
+			Assert.False(viewer.SortDescending);
+			Assert.Equal(string.Empty, viewer.SortText);
+		});
+	}
+
+	[Fact]
 	public void TheNoticeOfTakenOverFilters_GoesWhenOnlyATimeRangeIsLeft()
 	{
 		_context.RunOnSta(() =>

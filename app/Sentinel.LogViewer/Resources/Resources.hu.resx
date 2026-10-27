@@ -1450,6 +1450,9 @@
   <data name="Shortcut_Find" xml:space="preserve">
     <value>A keresősáv megnyitása; az Esc a sávban bezárja és törli a keresést</value>
   </data>
+  <data name="Tab_ResetSorting" xml:space="preserve">
+    <value>Oszloprendezés visszaállítása</value>
+  </data>
 </root>
 
 
