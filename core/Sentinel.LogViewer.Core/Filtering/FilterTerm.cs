@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace Sentinel.LogViewer.Core;
@@ -29,7 +30,7 @@ public enum SearchFields
 /// A text that entries are filtered or searched for, with the options that belong to it. It is the one place that says whether an entry
 /// matches: the filter, the search and the highlighting of the viewer use it.
 /// </summary>
-public sealed class FilterTerm
+public sealed class FilterTerm : INotifyPropertyChanged
 {
 	/// <summary>The name of the property that holds the thread of an entry</summary>
 	public const string ThreadProperty = "Thread";
@@ -38,6 +39,7 @@ public sealed class FilterTerm
 
 	private readonly Regex? _regex;
 	private readonly StringComparison _comparison;
+	private bool _isEnabled = true;
 
 	/// <param name="text">The text to look for; a regular expression when <paramref name="isRegex"/> is set</param>
 	/// <param name="isExclude">Whether entries with a match are hidden instead of the others</param>
@@ -88,6 +90,24 @@ public sealed class FilterTerm
 
 	public LogEntryLevel? Level { get; }
 
+	/// <summary>
+	/// Whether the term is applied. A term that is off stays in the list but does not filter and does not mark anything; <see cref="Matches"/>
+	/// does not look at it, whoever applies the terms does.
+	/// </summary>
+	public bool IsEnabled
+	{
+		get => _isEnabled;
+		set
+		{
+			if (_isEnabled == value)
+				return;
+
+			_isEnabled = value;
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEnabled)));
+		}
+	}
+
+	public event PropertyChangedEventHandler? PropertyChanged;
 	/// <summary>
 	/// Returns why a text is not valid as a term, or null when it is valid (or empty)
 	/// </summary>

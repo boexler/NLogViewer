@@ -404,6 +404,9 @@
                                                               <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermBorderBrush}"/>
                                                               <Setter Property="TextElement.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=TextSearchTermForeground}"/>
                                                               <Style.Triggers>
+                                                                  <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                                                      <Setter Property="Opacity" Value="0.55"/>
+                                                                  </DataTrigger>
                                                                   <DataTrigger Binding="{Binding IsRegex}" Value="True">
                                                                       <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBackground}"/>
                                                                       <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexSearchTermBorderBrush}"/>
@@ -418,6 +421,10 @@
                                                           </Style>
                                                       </Border.Style>
                                                       <StackPanel Orientation="Horizontal">
+                                                          <CheckBox Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Switch this term on or off" AutomationProperties.Name="Term on"
+                                                                    IsChecked="{Binding IsEnabled, Mode=OneWay}"
+                                                                    Command="{Binding ToggleSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
+                                                                    CommandParameter="{Binding}"/>
                                                           <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="Hides the entries that match">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">

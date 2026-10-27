@@ -22,6 +22,9 @@ public sealed class LogViewerFilterTerm
 
 	/// <summary>When given, the term only matches entries of this level</summary>
 	public LogEntryLevel? Level { get; set; }
+
+	/// <summary>Whether the term is applied; a term that is off stays in the list. A state that was saved before the switch existed has all its terms on.</summary>
+	public bool IsEnabled { get; set; } = true;
 }
 
 /// <summary>
@@ -91,15 +94,16 @@ public sealed class LogViewerFilterState
 		&& LoggerRules.SequenceEqual(other.LoggerRules, StringComparer.Ordinal)
 		&& Terms.Select(TermKey).SequenceEqual(other.Terms.Select(TermKey));
 
-	private static (string, bool, bool, bool, bool, LogEntryLevel?) TermKey(LogViewerFilterTerm term) =>
-		(term.Text, term.IsRegex, term.IsExclude, term.MatchCase, term.WholeWord, term.Level);
+	private static (string, bool, bool, bool, bool, LogEntryLevel?, bool) TermKey(LogViewerFilterTerm term) =>
+		(term.Text, term.IsRegex, term.IsExclude, term.MatchCase, term.WholeWord, term.Level, term.IsEnabled);
 
 	public LogViewerFilterState Clone() => new()
 	{
 		HiddenLevels = HiddenLevels.ToList(),
 		Terms = Terms.Select(term => new LogViewerFilterTerm
 		{
-			Text = term.Text, IsRegex = term.IsRegex, IsExclude = term.IsExclude, MatchCase = term.MatchCase, WholeWord = term.WholeWord, Level = term.Level
+			Text = term.Text, IsRegex = term.IsRegex, IsExclude = term.IsExclude, MatchCase = term.MatchCase, WholeWord = term.WholeWord, Level = term.Level,
+			IsEnabled = term.IsEnabled
 		}).ToList(),
 		SearchFields = SearchFields,
 		LoggerRules = LoggerRules.ToList(),

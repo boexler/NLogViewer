@@ -531,7 +531,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                     var fields = SearchFields;
                     foreach (var term in terms)
                     {
-                        if (term.Matches(logEvent, fields) == term.IsExclude)
+                        if (term.IsEnabled && term.Matches(logEvent, fields) == term.IsExclude)
                             return false;
                     }
                 }

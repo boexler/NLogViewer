@@ -52,7 +52,8 @@ namespace Sentinel.LogViewer.Wpf
             HiddenLevels = LevelNames.Where(IsLevelHidden).ToList(),
             Terms = ActiveSearchTerms.Select(term => new LogViewerFilterTerm
             {
-                Text = term.Text, IsRegex = term.IsRegex, IsExclude = term.IsExclude, MatchCase = term.MatchCase, WholeWord = term.WholeWord, Level = term.Level
+                Text = term.Text, IsRegex = term.IsRegex, IsExclude = term.IsExclude, MatchCase = term.MatchCase, WholeWord = term.WholeWord, Level = term.Level,
+                IsEnabled = term.IsEnabled
             }).ToList(),
             SearchFields = SearchFields,
             LoggerRules = new List<string>(LoggerTree.Rules.ToList()),
@@ -79,7 +80,7 @@ namespace Sentinel.LogViewer.Wpf
                 {
                     try
                     {
-                        terms.Add(new FilterTerm(term.Text, term.IsExclude, term.MatchCase, term.WholeWord, term.IsRegex, term.Level));
+                        terms.Add(new FilterTerm(term.Text, term.IsExclude, term.MatchCase, term.WholeWord, term.IsRegex, term.Level) { IsEnabled = term.IsEnabled });
                     }
                     catch (ArgumentException)
                     {

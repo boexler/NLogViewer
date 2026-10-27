@@ -168,4 +168,19 @@ public class FilterTermTests
 		Assert.False(term.IsSameAs(new FilterTerm("a", wholeWord: true, level: LogEntryLevel.Warn)));
 		Assert.False(term.IsSameAs(null));
 	}
-}
+
+	[Fact]
+	public void ATerm_IsOnByDefault_AndTellsWhenItIsSwitched()
+	{
+		var term = new FilterTerm("a");
+		var changed = new List<string?>();
+		term.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
+
+		Assert.True(term.IsEnabled);
+		term.IsEnabled = true;
+		term.IsEnabled = false;
+
+		Assert.False(term.IsEnabled);
+		Assert.Equal(new[] { nameof(FilterTerm.IsEnabled) }, changed);
+		Assert.True(term.Matches(new LogEntry(LogEntryLevel.Info, "A", "a")), "a term that is off still says what it matches; whoever applies the terms skips it");
+	}}
