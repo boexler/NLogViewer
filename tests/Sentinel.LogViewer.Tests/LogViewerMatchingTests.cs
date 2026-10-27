@@ -168,24 +168,24 @@ public class LogViewerMatchingTests
 		WithViewer(viewer =>
 		{
 			viewer.FindText = "cat";
-			Assert.Equal("– / 3", viewer.FindResultText);
+			Assert.Equal("3 hits", viewer.FindResultText);
 
 			viewer.FindWholeWord = true;
-			Assert.Equal("– / 2", viewer.FindResultText);
+			Assert.Equal("2 hits", viewer.FindResultText);
 
 			viewer.FindWholeWord = false;
 			viewer.FindMatchCase = true;
-			Assert.Equal("– / 2", viewer.FindResultText);
+			Assert.Equal("2 hits", viewer.FindResultText);
 
 			viewer.FindMatchCase = false;
 			viewer.FindLevel = LogEntryLevel.Error;
-			Assert.Equal("– / 1", viewer.FindResultText);
+			Assert.Equal("1 hit", viewer.FindResultText);
 
 			viewer.FindLevel = null;
 			viewer.FindText = "timeout";
 			Assert.Equal("No results", viewer.FindResultText);
 			viewer.SearchFields = SearchFields.All;
-			Assert.Equal("– / 1", viewer.FindResultText);
+			Assert.Equal("1 hit", viewer.FindResultText);
 		});
 	}
 
@@ -202,7 +202,7 @@ public class LogViewerMatchingTests
 
 			viewer.FindText = "c.t";
 			Assert.Null(viewer.FindError);
-			Assert.Equal("– / 3", viewer.FindResultText);
+			Assert.Equal("3 hits", viewer.FindResultText);
 		});
 	}
 

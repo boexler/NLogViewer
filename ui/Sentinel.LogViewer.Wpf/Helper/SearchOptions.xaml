@@ -1,0 +1,55 @@
+<UserControl x:Class="Sentinel.LogViewer.Wpf.Helper.SearchOptions"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Sentinel.LogViewer.Wpf"
+             xmlns:helper="clr-namespace:Sentinel.LogViewer.Wpf.Helper"
+             xmlns:core="clr-namespace:Sentinel.LogViewer.Core;assembly=Sentinel.LogViewer.Core"
+             xmlns:xamlConverter="clr-namespace:Sentinel.LogViewer.Wpf.XamlConverter">
+    <!-- The options that the filter and the search have in common: match case, whole word, regular expression, the patterns and the fields.
+         The fields are the ones of the viewer, which is the data context. -->
+    <UserControl.Resources>
+        <xamlConverter:HasFlagConverter x:Key="HasFlagConverter"/>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="Aa" ToolTip="Match case"
+                      AutomationProperties.Name="{Binding Scope, StringFormat='Match case{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+                      IsChecked="{Binding MatchCase, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="ab" ToolTip="Whole word"
+                      AutomationProperties.Name="{Binding Scope, StringFormat='Whole word{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+                      IsChecked="{Binding WholeWord, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content=".*" ToolTip="Use regex pattern matching"
+                      AutomationProperties.Name="{Binding Scope, StringFormat='Regex{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+                      IsChecked="{Binding UseRegex, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
+        <Menu Background="Transparent" VerticalAlignment="Center">
+            <MenuItem Header="Patterns ▾" Tag="{Binding RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+                      ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
+                      ToolTip="Put a ready-made regular expression into the input">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding Name}"/>
+                        <Setter Property="ToolTip" Value="{Binding Pattern}"/>
+                        <Setter Property="Command" Value="{Binding Tag.PatternCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
+                <MenuItem Header="Message" StaysOpenOnClick="True"
+                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
+                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
+                <MenuItem Header="Logger name" StaysOpenOnClick="True"
+                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
+                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
+                <MenuItem Header="Exception" StaysOpenOnClick="True"
+                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
+                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
+                <MenuItem Header="Thread" StaysOpenOnClick="True"
+                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
+                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
+                <MenuItem Header="Other properties" StaysOpenOnClick="True"
+                          IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
+                          Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
+            </MenuItem>
+        </Menu>
+    </StackPanel>
+</UserControl>

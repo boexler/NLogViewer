@@ -65,7 +65,7 @@
     <value>_Affichage</value>
   </data>
   <data name="Menu_Help" xml:space="preserve">
-    <value>_Aide</value>
+    <value>A_ide</value>
   </data>
   <data name="Menu_OpenFile" xml:space="preserve">
     <value>_Ouvrir un fichier...</value>
@@ -82,17 +82,11 @@
   <data name="Menu_About" xml:space="preserve">
     <value>À _propos...</value>
   </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Journaux</value>
-  </data>
   <data name="Menu_Export" xml:space="preserve">
     <value>_Exporter</value>
   </data>
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>format *.log</value>
-  </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_Onglets</value>
   </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
     <value>Fermer l'onglet _actuel</value>
@@ -874,17 +868,14 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Sélectionner la langue</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Filtre</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
-    <value>_Appliquer un préréglage</value>
+    <value>Appliq_uer un préréglage</value>
   </data>
   <data name="Menu_FilterSavePreset" xml:space="preserve">
-    <value>_Enregistrer le filtre actuel comme préréglage...</value>
+    <value>Enregistrer le filtre a_ctuel comme préréglage...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
-    <value>_Gérer les préréglages...</value>
+    <value>Gérer _les préréglages...</value>
   </data>
   <data name="FilterPreset_SaveTitle" xml:space="preserve">
     <value>Enregistrer le préréglage de filtre</value>
@@ -993,24 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Arrêter l'écoute</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Entrées : {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Entrées : {0:N0} sur {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Niveaux masqués : {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Termes : {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Règles de logger : {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Réinitialiser le filtre</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>Langue modifiée. Redémarrez l'application pour que le changement soit complet.</value>
@@ -1304,7 +1277,7 @@
     <value>Afficher le niveau sous forme de</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>La façon dont le niveau d'une entrée s'affiche dans la liste des logs : symbole, texte ou les deux. Le texte aide lors de la copie ou de l'export des lignes et quand les couleurs sont difficiles à distinguer.</value>
+    <value>La façon dont le niveau d'une entrée s'affiche dans la liste des logs : symbole, texte ou les deux. Le texte aide lors de la copie ou de l'export des lignes et quand les couleurs sont difficiles à distinguer. Les boutons de niveau au-dessus de la liste la suivent ; en texte, ils affichent une lettre.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Symbole</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Aller à l’entrée précédente de ce niveau</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>_Onglet</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>_Écoute</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>_Fuseau horaire...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>Pla_ge horaire</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Dernières _15 minutes</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Dernière _heure</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Dernières _24 heures</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Derniers _7 jours</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Choisir...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>_Effacer la plage horaire</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>Aller à l'_heure...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>Entrée _suivante d'un niveau</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>Entrée _précédente d'un niveau</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>_Rechercher</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>Ré_initialiser le filtre</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>Arborescence des _loggers</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>_Sources</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>Ouvrir la barre de recherche ; Échap dans la barre la ferme et efface la recherche</value>
   </data>
 </root>
 

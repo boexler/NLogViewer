@@ -65,7 +65,7 @@
     <value>_Widok</value>
   </data>
   <data name="Menu_Help" xml:space="preserve">
-    <value>_Pomoc</value>
+    <value>Po_moc</value>
   </data>
   <data name="Menu_OpenFile" xml:space="preserve">
     <value>_Otwórz plik...</value>
@@ -82,17 +82,11 @@
   <data name="Menu_About" xml:space="preserve">
     <value>_O programie...</value>
   </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Logi</value>
-  </data>
   <data name="Menu_Export" xml:space="preserve">
     <value>_Eksportuj</value>
   </data>
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>format *.log</value>
-  </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_Karty</value>
   </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
     <value>Zamknij _bieżącą kartę</value>
@@ -874,17 +868,14 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Wybierz język</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Filtr</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
-    <value>_Zastosuj ustawienie wstępne</value>
+    <value>Zastosuj _ustawienie wstępne</value>
   </data>
   <data name="Menu_FilterSavePreset" xml:space="preserve">
-    <value>_Zapisz bieżący filtr jako ustawienie wstępne...</value>
+    <value>Z_apisz bieżący filtr jako ustawienie wstępne...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
-    <value>_Zarządzaj ustawieniami wstępnymi...</value>
+    <value>Zarzą_dzaj ustawieniami wstępnymi...</value>
   </data>
   <data name="FilterPreset_SaveTitle" xml:space="preserve">
     <value>Zapisz ustawienie wstępne filtra</value>
@@ -989,28 +980,10 @@
     <value>Włączone</value>
   </data>
   <data name="Menu_StartReceiving" xml:space="preserve">
-    <value>_Rozpocznij nasłuchiwanie</value>
+    <value>Rozpocznij _nasłuchiwanie</value>
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Zatrzymaj nasłuchiwanie</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Wpisy: {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Wpisy: {0:N0} z {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Ukryte poziomy: {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Wyrażenia: {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Reguły loggerów: {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Resetuj filtr</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>Zmieniono język. Uruchom aplikację ponownie, aby zmiana zadziałała w pełni.</value>
@@ -1304,7 +1277,7 @@
     <value>Pokaż poziom jako</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>Jak poziom wpisu jest pokazywany na liście logów: jako symbol, jako tekst lub jedno i drugie. Tekst pomaga przy kopiowaniu lub eksporcie wierszy oraz gdy trudno odróżnić kolory.</value>
+    <value>Jak poziom wpisu jest pokazywany na liście logów: jako symbol, jako tekst lub jedno i drugie. Tekst pomaga przy kopiowaniu lub eksporcie wierszy oraz gdy trudno odróżnić kolory. Przyciski poziomów nad listą ją uwzględniają; jako tekst pokazują literę.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Symbol</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Przejdź do poprzedniego wpisu tego poziomu</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>_Karta</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>_Nasłuchiwanie</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>Strefa _czasowa...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>_Zakres czasu</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Ostatnie _15 minut</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Ostatnia _godzina</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Ostatnie _24 godziny</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Ostatnie _7 dni</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Wybierz...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>Wy_czyść zakres czasu</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>Przejdź do _godziny...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>_Następny wpis poziomu</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>_Poprzedni wpis poziomu</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>_Szukaj</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>_Resetuj filtr</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>Drzewo _loggerów</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>Źr_ódła</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Ostrzeżenie</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>Otwórz pasek wyszukiwania; Esc w pasku zamyka go i czyści wyszukiwanie</value>
   </data>
 </root>
 

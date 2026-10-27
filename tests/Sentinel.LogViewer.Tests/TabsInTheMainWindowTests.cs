@@ -311,47 +311,6 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
-	public void TheStatusBar_SummarizesTheSelectedTab_AndTheFilterCanBeReset()
-	{
-		_context.RunOnSta(() =>
-		{
-			using var session = Start();
-			var viewModel = session.ViewModel;
-			Assert.Equal(string.Empty, viewModel.TabSummary);
-			Assert.False(viewModel.HasActiveFilter);
-
-			Send(session, App("(100)"), "alpha");
-			Send(session, App("(100)"), "beta", LogEntryLevel.Error);
-			Send(session, App("(100)"), "beta again");
-			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
-			Assert.False(viewModel.HasActiveFilter);
-
-			viewer.AddRegexSearchTerm("beta");
-			viewer.InfoFilter = true;
-			WpfTestHelper.Settle();
-
-			Assert.True(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 1 of 3 · Levels off: 1 · Terms: 1", viewModel.TabSummary);
-			Assert.Equal(1, viewModel.LogTabs[0].VisibleEntryCount);
-
-			viewer.SearchFields = SearchFields.All;
-			viewer.CustomTimeStampFormat = TimeStampFormat.German;
-			viewModel.ResetFilterCommand.Execute(null);
-			WpfTestHelper.Settle();
-
-			Assert.False(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
-			Assert.Empty(viewer.ActiveSearchTerms);
-			Assert.False(viewer.InfoFilter);
-			Assert.Equal((SearchFields.All, TimeStampFormat.German), (viewer.SearchFields, viewer.CustomTimeStampFormat));
-
-			viewModel.LogTabs.Clear();
-			Assert.Equal(string.Empty, viewModel.TabSummary);
-		});
-	}
-
-	[Fact]
 	public void LogsOfAnIgnoredSender_DoNotOpenATab_AndIgnoringATabClosesItsTabs()
 	{
 		_context.RunOnSta(() =>
@@ -627,11 +586,20 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		{
 			using var session = Start();
 
-			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).ToHashSet();
+			var listed = ShortcutCatalog.Groups.SelectMany(group => group.Shortcuts).SelectMany(shortcut => shortcut.Keys.Split(" / ")).SelectMany(ExpandRange).ToHashSet();
 			var missing = session.Window.InputBindings.OfType<KeyBinding>().Select(Gesture).Distinct().Where(gesture => !listed.Contains(gesture)).ToList();
 
 			Assert.Empty(missing);
 		});
+
+		// "F4…F9" stands for the keys F4, F5 to F9; "Shift+F4…F9" for the same with Shift.
+		static IEnumerable<string> ExpandRange(string keys)
+		{
+			var match = System.Text.RegularExpressions.Regex.Match(keys, @"^(?<prefix>.*?)F(?<from>\d+)…F(?<to>\d+)$");
+			return match.Success
+				? Enumerable.Range(int.Parse(match.Groups["from"].Value), int.Parse(match.Groups["to"].Value) - int.Parse(match.Groups["from"].Value) + 1).Select(number => match.Groups["prefix"].Value + "F" + number)
+				: new[] { keys };
+		}
 	}
 
 	[Fact]
@@ -1213,7 +1181,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
-	public void TheTimeRange_CountsInTheSummary_StaysWhenAPresetIsApplied_AndTheResetClearsIt()
+	public void TheTimeRange_StaysWhenAPresetIsApplied_AndTheResetClearsIt()
 	{
 		_context.RunOnSta(() =>
 		{
@@ -1224,11 +1192,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Send(session, App("(100)"), "gamma");
 			var viewer = ViewerOf(session, viewModel.LogTabs[0]);
 
-			// A start in the future hides everything; the summary counts it, but does not name it (the viewer shows it).
 			viewer.TimeFrom = DateTime.UtcNow.AddHours(1);
-			WpfTestHelper.Settle();
-			Assert.True(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 0 of 3", viewModel.TabSummary);
 
 			var service = new FilterPresetService(_environment.Configuration);
 			service.Save("No debug", new LogViewerFilterState { HiddenLevels = { "Debug" }, TimeFrom = DateTime.UtcNow.AddDays(-9) });
@@ -1240,12 +1204,103 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.NotNull(viewer.TimeFrom);
 			Assert.True(viewer.TimeFrom > DateTime.UtcNow);
 
-			viewModel.ResetFilterCommand.Execute(null);
-			WpfTestHelper.Settle();
+			viewer.ResetFilterCommand.Execute(null);
 			Assert.Null(viewer.TimeFrom);
-			Assert.False(viewModel.HasActiveFilter);
-			Assert.Equal("Entries: 3", viewModel.TabSummary);
 		});
+	}
+
+	[Fact]
+	public void TheCommandsOfTheViewer_GoToTheViewerOfTheSelectedTab_AndCannotRunWithoutATab()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var viewModel = session.ViewModel;
+			Assert.False(System.Windows.Input.ApplicationCommands.Find.CanExecute(null, session.Window));
+			Assert.Null(session.Window.SelectedViewer());
+
+			Send(session, App("(100)"), "alpha");
+			Send(session, App("(200)"), "beta");
+			var first = ViewerOf(session, viewModel.LogTabs[0]);
+			Assert.Same(first, session.Window.SelectedViewer());
+			Assert.True(System.Windows.Input.ApplicationCommands.Find.CanExecute(null, session.Window));
+
+			Wpf.LogViewerCommands.TimeRangeLast.Execute("1:00:00", session.Window);
+			Assert.NotNull(first.TimeFrom);
+
+			viewModel.SelectedTab = viewModel.LogTabs[1];
+			WpfTestHelper.Settle();
+			var second = ViewerOf(session, viewModel.LogTabs[1]);
+			Assert.Same(second, session.Window.SelectedViewer());
+			Assert.False(Wpf.LogViewerCommands.ResetFilter.CanExecute(null, session.Window));
+
+			System.Windows.Input.ApplicationCommands.Find.Execute(null, session.Window);
+			Assert.True(second.IsFindOpen);
+			Assert.False(first.IsFindOpen);
+			Assert.Null(second.TimeFrom);
+		});
+	}
+
+	[Fact]
+	public void TheFilterBox_ShowsItsHintAndSymbol_WithTheStylesOfTheApplication()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "alpha");
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			var box = Descendants<System.Windows.Controls.TextBox>(viewer).First(candidate => System.Windows.Automation.AutomationProperties.GetName(candidate) == "Filter");
+			Assert.Equal(System.Windows.Visibility.Visible, ((System.Windows.Controls.TextBlock)box.Template.FindName("Hint", box)).Visibility);
+			Assert.Equal("\uE71C", ((Wpf.Helper.WatermarkTextBox)box).Glyph);
+		});
+	}
+
+	[Fact]
+	public void TheKeysOfTheViewer_AlsoWorkWhenTheFocusIsNotInTheList()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "info entry");
+			Send(session, App("(100)"), "error entry", LogEntryLevel.Error);
+			var viewer = ViewerOf(session, session.ViewModel.LogTabs[0]);
+
+			// F8 in the window, as the menu shows it: the command goes to the viewer of the selected tab.
+			var binding = session.Window.InputBindings.OfType<System.Windows.Input.KeyBinding>().Single(candidate => candidate.Key == System.Windows.Input.Key.F8 && candidate.Modifiers == System.Windows.Input.ModifierKeys.None);
+			Assert.Equal(LogEntryLevel.Error, binding.CommandParameter);
+			((System.Windows.Input.RoutedCommand)binding.Command).Execute(binding.CommandParameter, session.Window);
+
+			var list = (System.Windows.Controls.ListView)viewer.Template.FindName("PART_ListView", viewer);
+			Assert.Equal("error entry", ((LogEntry)list.SelectedItem).Message);
+			Assert.Contains(Wpf.LogViewerCommands.GoToTime.InputGestures.OfType<System.Windows.Input.KeyGesture>(), gesture => gesture.Key == System.Windows.Input.Key.T);
+		});
+	}
+
+	[Fact]
+	public void EveryEntryOfTheMenu_IsWiredToACommand_AndTheCommandsOfTheViewerCanRunWithATab()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)"), "alpha");
+
+			// A menu of the debug build has handlers instead of commands.
+			var entries = session.Window.MainMenu.Items.OfType<System.Windows.Controls.MenuItem>().Where(menu => (string)menu.Header != "_Debug")
+				.SelectMany(Leaves).ToList();
+			Assert.True(entries.Count > 25);
+
+			Assert.Empty(entries.Where(item => item.Command == null && !item.IsCheckable).Select(item => (string)item.Header));
+			// Resetting the filter and clearing the time range wait until there is something to take off.
+			var broken = entries.Where(item => item.Command is System.Windows.Input.RoutedCommand command && command != Wpf.LogViewerCommands.ResetFilter && command != Wpf.LogViewerCommands.ClearTimeRange
+				&& !command.CanExecute(item.CommandParameter, session.Window)).Select(item => (string)item.Header);
+			Assert.Empty(broken);
+		});
+
+		static IEnumerable<System.Windows.Controls.MenuItem> Leaves(System.Windows.Controls.MenuItem item) =>
+			item.Items.OfType<System.Windows.Controls.MenuItem>().Any()
+				? item.Items.OfType<System.Windows.Controls.MenuItem>().SelectMany(Leaves)
+				: item.HasItems || item.ItemsSource != null ? Enumerable.Empty<System.Windows.Controls.MenuItem>() : new[] { item };
 	}
 
 	[Fact]

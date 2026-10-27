@@ -157,7 +157,6 @@ namespace Sentinel.LogViewer.Wpf
                 InputBindings.Add(new KeyBinding(PreviousLevelCommand, key, ModifierKeys.Shift) { CommandParameter = JumpLevels[i] });
             }
 
-            InputBindings.Add(new KeyBinding(GoToTimeCommand, Key.T, ModifierKeys.Control));
         }
     }
 }

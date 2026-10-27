@@ -134,6 +134,6 @@ public class LogViewerJumpTests
 				Assert.Equal(levels[i], previous.CommandParameter);
 			}
 
-			Assert.Same(viewer.GoToTimeCommand, bindings.Single(binding => binding.Key == Key.T && binding.Modifiers == ModifierKeys.Control).Command);
+			Assert.Contains(LogViewerCommands.GoToTime.InputGestures.OfType<KeyGesture>(), gesture => gesture.Key == Key.T && gesture.Modifiers == ModifierKeys.Control);
 		});
 }

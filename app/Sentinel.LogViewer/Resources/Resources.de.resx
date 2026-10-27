@@ -82,23 +82,17 @@
   <data name="Menu_About" xml:space="preserve">
     <value>_Über...</value>
   </data>
-  <data name="Menu_Logs" xml:space="preserve">
-    <value>_Protokolle</value>
-  </data>
   <data name="Menu_Export" xml:space="preserve">
-    <value>_Exportieren</value>
+    <value>E_xportieren</value>
   </data>
   <data name="Menu_ExportLogFormat" xml:space="preserve">
     <value>*.log Format</value>
-  </data>
-  <data name="Menu_Logs_Tabs" xml:space="preserve">
-    <value>_Tabs</value>
   </data>
   <data name="Menu_CloseCurrentTab" xml:space="preserve">
     <value>Aktuelles _Tab schließen</value>
   </data>
   <data name="Menu_CloseAllTabs" xml:space="preserve">
-    <value>Alle Tabs _schließen</value>
+    <value>Alle Tabs sch_ließen</value>
   </data>
   <data name="Confirm_CloseAllTabs_Caption" xml:space="preserve">
     <value>Alle Tabs schließen</value>
@@ -874,14 +868,11 @@
   <data name="LanguageSelection_Title" xml:space="preserve">
     <value>Sprache auswählen</value>
   </data>
-  <data name="Menu_Filter" xml:space="preserve">
-    <value>_Filter</value>
-  </data>
   <data name="Menu_FilterApplyPreset" xml:space="preserve">
     <value>Preset _anwenden</value>
   </data>
   <data name="Menu_FilterSavePreset" xml:space="preserve">
-    <value>Aktuellen Filter als Preset _speichern...</value>
+    <value>Aktuellen Filter als Preset s_peichern...</value>
   </data>
   <data name="Menu_FilterManagePresets" xml:space="preserve">
     <value>Presets _verwalten...</value>
@@ -993,24 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Empfang _beenden</value>
-  </data>
-  <data name="Summary_Entries" xml:space="preserve">
-    <value>Einträge: {0:N0}</value>
-  </data>
-  <data name="Summary_EntriesOf" xml:space="preserve">
-    <value>Einträge: {0:N0} von {1:N0}</value>
-  </data>
-  <data name="Summary_LevelsOff" xml:space="preserve">
-    <value>Level ausgeblendet: {0}</value>
-  </data>
-  <data name="Summary_Terms" xml:space="preserve">
-    <value>Suchbegriffe: {0}</value>
-  </data>
-  <data name="Summary_Loggers" xml:space="preserve">
-    <value>Logger-Regeln: {0}</value>
-  </data>
-  <data name="Summary_Reset" xml:space="preserve">
-    <value>Filter zurücksetzen</value>
   </data>
   <data name="Message_LanguageChanged" xml:space="preserve">
     <value>Sprache geändert. Starten Sie die Anwendung neu, damit die Änderung vollständig wirkt.</value>
@@ -1304,7 +1277,7 @@
     <value>Level anzeigen als</value>
   </data>
   <data name="Settings_LevelDisplay_Description" xml:space="preserve">
-    <value>Wie das Level eines Eintrags in der Logliste angezeigt wird: als Symbol, als Text oder beides. Text hilft, wenn Zeilen kopiert oder exportiert werden und wenn Farben schwer zu unterscheiden sind.</value>
+    <value>Wie das Level eines Eintrags in der Logliste angezeigt wird: als Symbol, als Text oder beides. Text hilft, wenn Zeilen kopiert oder exportiert werden und wenn Farben schwer zu unterscheiden sind. Die Level-Knöpfe über der Liste folgen der Einstellung; als Text zeigen sie einen Buchstaben.</value>
   </data>
   <data name="Settings_LevelDisplay_Symbol" xml:space="preserve">
     <value>Symbol</value>
@@ -1404,6 +1377,78 @@
   </data>
   <data name="Shortcut_PreviousLevel" xml:space="preserve">
     <value>Zum vorherigen Eintrag dieses Levels springen</value>
+  </data>
+  <data name="Menu_Tab" xml:space="preserve">
+    <value>_Tab</value>
+  </data>
+  <data name="Menu_Receiving" xml:space="preserve">
+    <value>_Empfang</value>
+  </data>
+  <data name="Menu_TimeZone" xml:space="preserve">
+    <value>Zeit_zone...</value>
+  </data>
+  <data name="Menu_TimeRange" xml:space="preserve">
+    <value>Z_eitraum</value>
+  </data>
+  <data name="Menu_TimeRangeLast15" xml:space="preserve">
+    <value>Letzte _15 Minuten</value>
+  </data>
+  <data name="Menu_TimeRangeLastHour" xml:space="preserve">
+    <value>Letzte _Stunde</value>
+  </data>
+  <data name="Menu_TimeRangeLast24" xml:space="preserve">
+    <value>Letzte _24 Stunden</value>
+  </data>
+  <data name="Menu_TimeRangeLast7" xml:space="preserve">
+    <value>Letzte _7 Tage</value>
+  </data>
+  <data name="Menu_TimeRangeChoose" xml:space="preserve">
+    <value>_Wählen...</value>
+  </data>
+  <data name="Menu_TimeRangeClear" xml:space="preserve">
+    <value>Zeitraum _löschen</value>
+  </data>
+  <data name="Menu_GoToTime" xml:space="preserve">
+    <value>Zur Zeit _springen...</value>
+  </data>
+  <data name="Menu_NextEntry" xml:space="preserve">
+    <value>_Nächster Eintrag eines Levels</value>
+  </data>
+  <data name="Menu_PreviousEntry" xml:space="preserve">
+    <value>V_orheriger Eintrag eines Levels</value>
+  </data>
+  <data name="Menu_Find" xml:space="preserve">
+    <value>S_uchen</value>
+  </data>
+  <data name="Menu_ResetFilter" xml:space="preserve">
+    <value>Filter zurüc_ksetzen</value>
+  </data>
+  <data name="Menu_LoggerTree" xml:space="preserve">
+    <value>_Logger-Baum</value>
+  </data>
+  <data name="Menu_SourcesPanel" xml:space="preserve">
+    <value>_Quellen</value>
+  </data>
+  <data name="Menu_LevelTrace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Menu_LevelDebug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Menu_LevelInfo" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Menu_LevelWarn" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="Menu_LevelError" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Menu_LevelFatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Shortcut_Find" xml:space="preserve">
+    <value>Suchleiste öffnen; Esc in der Leiste schließt sie und löscht die Suche</value>
   </data>
 </root>
 
