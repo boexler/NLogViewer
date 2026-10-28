@@ -203,13 +203,13 @@ public class SettingsViewModelTests : IDisposable
 	}
 
 	[Fact]
-	public void Language_Change_IsSavedAndAppliedAndNeedsARestart()
+	public void Language_Change_IsSavedAndAppliedAtOnce()
 	{
 		var language = _environment.CreateViewModel().Setting<ChoiceSettingViewModel>("Language");
 
 		language.Value = "fr";
 
-		Assert.True(language.NeedsRestart);
+		Assert.False(language.NeedsRestart);
 		Assert.Equal("fr", _environment.Saved.Language);
 		Assert.Equal("fr", _environment.Localization.CurrentLanguageCode);
 		Assert.Contains(language.Options, option => option.Value == "de" && option.Display == "Deutsch");

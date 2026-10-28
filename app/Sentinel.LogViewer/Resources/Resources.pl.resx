@@ -344,7 +344,7 @@
     <value>Język</value>
   </data>
   <data name="Settings_Language_Description" xml:space="preserve">
-    <value>Język menu i okien dialogowych. W pełni stosowany po ponownym uruchomieniu aplikacji.</value>
+    <value>Język menu i okien dialogowych.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
     <value>Nasłuchuj przy uruchomieniu</value>
@@ -984,9 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Zatrzymaj nasłuchiwanie</value>
-  </data>
-  <data name="Message_LanguageChanged" xml:space="preserve">
-    <value>Zmieniono język. Uruchom aplikację ponownie, aby zmiana zadziałała w pełni.</value>
   </data>
   <data name="Message_LanguageChangeError" xml:space="preserve">
     <value>Nie udało się zmienić języka: {0}</value>

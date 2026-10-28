@@ -107,6 +107,35 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheMainWindow_TakesTheNewLanguageAtOnce_MenusAndStatusBar() =>
+		_context.RunOnSta(() =>
+		{
+			var source = Sentinel.LogViewer.Helpers.ResourceExtension.Localization;
+			try
+			{
+				Sentinel.LogViewer.Helpers.ResourceExtension.Localization = () => _environment.Localization;
+				_environment.Localization.Initialize();
+				_environment.Localization.SetLanguage("en");
+				using var session = Start();
+				var headers = () => Descendants<MenuItem>(session.Window).Select(item => item.Header as string).Where(header => header != null).ToList();
+				var status = session.ViewModel.ReceiveStatusText;
+				Assert.Contains("_File", headers());
+
+				_environment.Localization.SetLanguage("de");
+				Settle();
+
+				Assert.Contains("_Datei", headers());
+				Assert.DoesNotContain("_File", headers());
+				Assert.NotEqual(status, session.ViewModel.ReceiveStatusText);
+			}
+			finally
+			{
+				Sentinel.LogViewer.Helpers.ResourceExtension.Localization = source;
+				_environment.Localization.SetLanguage("en");
+			}
+		});
+
+	[Fact]
 	public void ANewTabOfARestartedApplication_TakesOverTheFilters_AndTheyCanBeRemoved()
 	{
 		_context.RunOnSta(() =>

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Sentinel.LogViewer.Services;
 using Sentinel.LogViewer.Services.Theming;
 using Sentinel.LogViewer.Services.Updates;
@@ -49,7 +50,8 @@ namespace Sentinel.LogViewer.ViewModels
         private readonly LocalizationService _localizationService;
         private readonly SettingsTransferService _transferService;
         private readonly ThemeService _themeService;
-        private readonly List<SettingViewModel> _settings;
+        private readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
+        private List<SettingViewModel> _settings;
         private AppConfiguration _configuration;
         private SettingsCategoryViewModel? _selectedCategory;
         private SettingsCategoryViewModel? _lastCategory;
@@ -72,6 +74,8 @@ namespace Sentinel.LogViewer.ViewModels
             Categories = CreateCategories();
             _footerText = Text("Settings_SavedHint", "Changes are saved immediately");
 
+            PropertyChangedEventManager.AddHandler(_localizationService, OnTextsChanged, System.Windows.Data.Binding.IndexerName);
+
             ClearSearchCommand = new RelayCommand(() => SearchText = string.Empty);
             ResetCategoryCommand = new RelayCommand(ResetCategory, () => CanResetCategory);
             ExportCommand = new RelayCommand(Export);
@@ -83,7 +87,7 @@ namespace Sentinel.LogViewer.ViewModels
         /// <summary>
         /// The categories that have settings
         /// </summary>
-        public IReadOnlyList<SettingsCategoryViewModel> Categories { get; }
+        public IReadOnlyList<SettingsCategoryViewModel> Categories { get; private set; }
 
         /// <summary>
         /// What the right side shows: the page header followed by the settings, or the search results
@@ -210,8 +214,8 @@ namespace Sentinel.LogViewer.ViewModels
             {
                 new ChoiceSettingViewModel(GeneralId, "",
                     Text("Settings_Language", "Language"),
-                    Text("Settings_Language_Description", "Language of the menus and dialogs. Fully applied after restarting the application."),
-                    needsRestart: true,
+                    Text("Settings_Language_Description", "Language of the menus and dialogs."),
+                    needsRestart: false,
                     options: LocalizationService.AvailableLanguages.Keys
                         .Select(code => new ChoiceOption(code, LocalizationService.LanguageNames.GetValueOrDefault(code, code)))
                         .ToList(),
@@ -580,6 +584,30 @@ namespace Sentinel.LogViewer.ViewModels
             HasChanges = true;
             FooterText = Text("Settings_Imported", "Settings imported. Restart the application to apply all changes.");
         }
+
+        /// <summary>
+        /// The language was set (also by the setting itself, which is still running): once it is done, the settings, the categories and the page
+        /// are made again in the new language; the values come from the configuration, which is saved with every change
+        /// </summary>
+        private void OnTextsChanged(object? sender, PropertyChangedEventArgs e) => _dispatcher.BeginInvoke(() =>
+        {
+            var selected = _selectedCategory?.Id;
+            var last = _lastCategory?.Id;
+            _settings = CreateSettings();
+            Categories = CreateCategories();
+            // The list box drops its selection when it gets the new categories.
+            OnPropertyChanged(nameof(Categories));
+            _lastCategory = Categories.FirstOrDefault(category => category.Id == last);
+            _selectedCategory = null;
+            if (selected != null)
+                SelectedCategory = Categories.FirstOrDefault(category => category.Id == selected);
+            else
+                RebuildPage();
+
+            OnPropertyChanged(nameof(CanResetCategory));
+            OnPropertyChanged(nameof(ResetButtonText));
+            FooterText = Text("Settings_SavedHint", "Changes are saved immediately");
+        });
 
         private string Text(string key, string defaultValue) => _localizationService.GetString(key, defaultValue);
 

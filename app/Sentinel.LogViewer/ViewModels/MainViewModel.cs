@@ -84,6 +84,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_applicationTabs = applicationTabService ?? throw new ArgumentNullException(nameof(applicationTabService));
 		_filterPresets = new FilterPresetService(_configService);
 		RefreshFilterPresets();
+		PropertyChangedEventManager.AddHandler(_localizationService, OnTextsChanged, System.Windows.Data.Binding.IndexerName);
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
@@ -1639,14 +1640,28 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			{
 				_noticeUpdate = update;
 				((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
-				UpdateNotice = string.Format(System.Globalization.CultureInfo.CurrentCulture,
-					_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
+				UpdateNotice = UpdateNoticeText(update);
 			}
 		}
 		catch (Exception)
 		{
 			// Offline or rate limited: no notice.
 		}
+	}
+
+	private string UpdateNoticeText(AvailableUpdate update) => string.Format(CultureInfo.CurrentCulture,
+		_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
+
+	/// <summary>
+	/// The language was set: the texts that this view model keeps are made again, the bound ones are read again
+	/// </summary>
+	private void OnTextsChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		UpdateLanguageFlag();
+		OnPropertyChanged(nameof(FontZoomText));
+		RefreshSources();
+		if (_noticeUpdate != null)
+			UpdateNotice = UpdateNoticeText(_noticeUpdate);
 	}
 
 	private void ChangeLanguage(string? languageCode)
@@ -1658,9 +1673,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		{
 			_localizationService.SetLanguage(languageCode);
 			UpdateLanguageFlag();
-                
-			// Notify that language has changed - this will require app restart for full effect
-			Snackbar.Show(_localizationService.GetString("Message_LanguageChanged", "Language changed. Restart the application for the change to take full effect."));
 		}
 		catch (Exception ex)
 		{

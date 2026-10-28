@@ -344,7 +344,7 @@
     <value>Language</value>
   </data>
   <data name="Settings_Language_Description" xml:space="preserve">
-    <value>Language of the menus and dialogs. Fully applied after restarting the application.</value>
+    <value>Language of the menus and dialogs.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
     <value>Start listening on launch</value>
@@ -984,9 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>S_top listening</value>
-  </data>
-  <data name="Message_LanguageChanged" xml:space="preserve">
-    <value>Language changed. Restart the application for the change to take full effect.</value>
   </data>
   <data name="Message_LanguageChangeError" xml:space="preserve">
     <value>Could not change the language: {0}</value>

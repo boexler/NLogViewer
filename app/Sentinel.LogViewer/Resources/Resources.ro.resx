@@ -344,7 +344,7 @@
     <value>Limbă</value>
   </data>
   <data name="Settings_Language_Description" xml:space="preserve">
-    <value>Limba meniurilor și a dialogurilor. Se aplică complet după repornirea aplicației.</value>
+    <value>Limba meniurilor și a dialogurilor.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
     <value>Ascultă la pornire</value>
@@ -984,9 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>_Oprește ascultarea</value>
-  </data>
-  <data name="Message_LanguageChanged" xml:space="preserve">
-    <value>Limba a fost schimbată. Reporniți aplicația pentru ca modificarea să aibă efect complet.</value>
   </data>
   <data name="Message_LanguageChangeError" xml:space="preserve">
     <value>Limba nu a putut fi schimbată: {0}</value>

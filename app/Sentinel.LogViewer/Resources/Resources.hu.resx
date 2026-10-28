@@ -344,7 +344,7 @@
     <value>Nyelv</value>
   </data>
   <data name="Settings_Language_Description" xml:space="preserve">
-    <value>A menük és párbeszédablakok nyelve. Az alkalmazás újraindítása után érvényesül teljesen.</value>
+    <value>A menük és párbeszédablakok nyelve.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
     <value>Figyelés indításkor</value>
@@ -984,9 +984,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Figyelés _leállítása</value>
-  </data>
-  <data name="Message_LanguageChanged" xml:space="preserve">
-    <value>A nyelv megváltozott. Indítsa újra az alkalmazást, hogy a módosítás teljesen érvényesüljön.</value>
   </data>
   <data name="Message_LanguageChangeError" xml:space="preserve">
     <value>A nyelvet nem sikerült módosítani: {0}</value>

@@ -17,6 +17,11 @@ namespace Sentinel.LogViewer.Helpers
         private static ResourceManager? _designTimeResourceManager;
 
         /// <summary>
+        /// Where the texts come from at runtime: the service of the application; the tests give their own
+        /// </summary>
+        internal static Func<LocalizationService?> Localization { get; set; } = () => App.ServiceProvider?.GetService<LocalizationService>();
+
+        /// <summary>
         /// The resource key to look up
         /// </summary>
         public string Key { get; set; } = string.Empty;
@@ -85,11 +90,18 @@ namespace Sentinel.LogViewer.Helpers
             else
             {
                 // At runtime, get LocalizationService from DI container
-                var localizationService = App.ServiceProvider?.GetService<LocalizationService>();
+                var localizationService = Localization();
                 
                 if (localizationService != null)
                 {
-                    return localizationService.GetString(Key, DefaultValue);
+                    // A binding, not the text: the text changes when the language is set, without a restart.
+                    return new System.Windows.Data.Binding($"[{Key}]")
+                    {
+                        Source = localizationService,
+                        Mode = System.Windows.Data.BindingMode.OneWay,
+                        TargetNullValue = DefaultValue,
+                        FallbackValue = DefaultValue
+                    }.ProvideValue(serviceProvider!);
                 }
             }
             
