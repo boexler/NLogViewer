@@ -1447,6 +1447,51 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Zresetuj sortowanie kolumn</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Przypnij kartę</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Odepnij kartę</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Przypięta karta. Zamknij ją z menu.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Zamknij przypiętą kartę</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>Ta karta jest przypięta. Czy na pewno ją zamknąć?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>Niektóre z tych kart są przypięte. Zamknąć także przypięte karty?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>Kolor kart</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>Jak pokazywany jest kolor karty aplikacji: jako pasek nad kartą albo jako podbarwiona karta z kropką.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Pasek</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Podbarwiona karta</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>Kolejność kart</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>Wg czasu: karty stoją w kolejności otwarcia. Wg adresu IP: wg adresu nadawcy, potem wg nazwy aplikacji. Ręcznie: tam, gdzie je ustawisz; nowa karta trafia na koniec. Przypięte karty zawsze stoją na początku. Wybór posortowanej kolejności sortuje karty jeden raz.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>Wg czasu</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>Wg adresu IP</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>Ręcznie</value>
+  </data>
 </root>
 
 

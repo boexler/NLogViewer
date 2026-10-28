@@ -237,6 +237,12 @@ namespace Sentinel.LogViewer.Services
         /// <summary>The newest version that the user chose to skip: the application does not announce it or an older one (empty: none).</summary>
         public string SkippedVersion { get; set; } = string.Empty;
 
+        /// <summary>The order of the tabs: ByTime, ByIpAddress or ByHand, see <see cref="Services.TabOrder"/>.</summary>
+        public string TabOrder { get; set; } = nameof(Services.TabOrder.ByTime);
+
+        /// <summary>How the colour of a tab is shown: Tinted or Stripe, see <see cref="Services.TabLook"/>.</summary>
+        public string TabLook { get; set; } = nameof(Services.TabLook.Tinted);
+
         /// <summary>How the level column of the log list shows the level: Symbol, Text or SymbolAndText.</summary>
         public string LevelDisplay { get; set; } = nameof(Wpf.LevelDisplayMode.Symbol);
 

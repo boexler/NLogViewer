@@ -44,6 +44,13 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <!-- The tint of a tab is light in every theme, so the glyphs are dark there, like the text of the tab -->
+                    <DataTrigger Binding="{Binding (helpers:TabAppearance.IsTinted), RelativeSource={RelativeSource AncestorType=TabItem}}" Value="True">
+                        <Setter Property="Foreground" Value="#101418"/>
+                        <Setter Property="Opacity" Value="0.7"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
             <!-- Arrow in the tab header that opens the menu of the tab -->
             <Style x:Key="TabMenuButtonStyle" TargetType="Button" BasedOn="{StaticResource TabCloseButtonStyle}">
@@ -53,6 +60,16 @@
             </Style>
             <!-- Tab context menu; the TabItem's Tag holds the MainViewModel -->
             <ContextMenu x:Key="TabContextMenu" x:Shared="False">
+                <!-- A file has no key to keep a pin by, so only the tab of an application can be pinned -->
+                <MenuItem Header="{helpers:Resource Key=Tab_Pin, DefaultValue=Pin tab}"
+                          Visibility="{Binding ShowPin, Converter={StaticResource ThemeBoolToVisibility}}"
+                          Command="{Binding PlacementTarget.Tag.PinTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_Unpin, DefaultValue=Unpin tab}"
+                          Visibility="{Binding IsPinned, Converter={StaticResource ThemeBoolToVisibility}}"
+                          Command="{Binding PlacementTarget.Tag.UnpinTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
+                <Separator Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_Close, DefaultValue=Close tab}"
                           Command="{Binding PlacementTarget.Tag.CloseTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
@@ -339,6 +356,10 @@
                     <Setter Property="AllowDrop" Value="True"/>
                     <Setter Property="Tag" Value="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TabControl}}"/>
                     <Setter Property="ContextMenu" Value="{StaticResource TabContextMenu}"/>
+                    <Setter Property="helpers:TabAppearance.Stripe" Value="{Binding StripeBrush}"/>
+                    <Setter Property="helpers:TabAppearance.Tint" Value="{Binding TintBrush}"/>
+                    <Setter Property="helpers:TabAppearance.IsTinted" Value="{Binding IsTinted}"/>
+                    <Setter Property="helpers:TabAppearance.TintSelected" Value="{Binding TintSelectedBrush}"/>
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="LogTabItem_PreviewMouseLeftButtonDown"/>
                     <EventSetter Event="PreviewMouseLeftButtonUp" Handler="LogTabItem_PreviewMouseLeftButtonUp"/>
                     <EventSetter Event="PreviewMouseUp" Handler="LogTabItem_PreviewMouseUp"/>
@@ -350,9 +371,18 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Border Width="4" Height="14" CornerRadius="2" Margin="0,0,6,0" VerticalAlignment="Center"
-                                Background="{Binding AccentBrush}"
-                                Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
+                        <!-- The dot of the tinted look; the stripe of the other look is drawn by the style of the tab -->
+                        <Ellipse Width="9" Height="9" Margin="0,0,6,0" VerticalAlignment="Center" Fill="{Binding DotBrush}">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DotBrush}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
                         <TextBlock Text="{Binding Header}" />
                         <TextBlock Text=" (" 
                                    Margin="2,0,0,0"/>
@@ -362,9 +392,14 @@
                         <Button Style="{StaticResource TabMenuButtonStyle}" Click="TabMenuButton_Click"
                                 ToolTip="{helpers:Resource Key=Tab_Menu, DefaultValue=Tab menu}"/>
                         <Button Style="{StaticResource TabCloseButtonStyle}"
+                                Visibility="{Binding ShowClose, Converter={StaticResource ThemeBoolToVisibility}}"
                                 Command="{Binding DataContext.CloseTabCommand, RelativeSource={RelativeSource AncestorType=TabControl}}"
                                 CommandParameter="{Binding}"
                                 ToolTip="{helpers:Resource Key=Tab_Close, DefaultValue=Close tab}"/>
+                        <!-- A pinned tab shows a pin instead of the close button; it is closed through the menu -->
+                        <TextBlock Text="&#xE718;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"
+                                   Visibility="{Binding IsPinned, Converter={StaticResource ThemeBoolToVisibility}}"
+                                   ToolTip="{helpers:Resource Key=Tab_PinnedToolTip, DefaultValue=Pinned tab. Close it through the menu.}"/>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

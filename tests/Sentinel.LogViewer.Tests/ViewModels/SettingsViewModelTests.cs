@@ -279,7 +279,7 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.False(viewModel.IsSearching);
 		Assert.Equal("Receiving", viewModel.SelectedCategory?.Id);
-		Assert.Equal(1 + 6, viewModel.PageItems.Count);
+		Assert.Equal(1 + 7, viewModel.PageItems.Count);
 	}
 
 	[Fact]

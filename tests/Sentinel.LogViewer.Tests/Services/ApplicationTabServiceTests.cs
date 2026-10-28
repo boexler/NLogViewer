@@ -1,5 +1,6 @@
 using Sentinel.LogViewer.Core;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sentinel.LogViewer.Models;
 using Sentinel.LogViewer.Services;
@@ -240,5 +241,65 @@ public class ApplicationTabServiceTests : IDisposable
 
 		Assert.Equal(nameof(RestartBehavior.NewTab), configuration.RestartBehavior);
 		Assert.Equal(nameof(RestartBehavior.NewTab), configuration.Applications["app;10.0.0.5"].RestartBehavior);
+	}
+
+	[Fact]
+	public void PinningAnApplication_KeepsItsPlaceAmongThePinnedOnes_AndTakingItOffClearsIt()
+	{
+		Assert.Null(_service.PinOrderOf("a;x"));
+
+		Assert.Equal(0, _service.SetPinned("a;x", true));
+		Assert.Equal(1, _service.SetPinned("b;x", true));
+		// Pinning twice does not move it.
+		Assert.Equal(0, _service.SetPinned("a;x", true));
+		Assert.Equal(1, _service.PinOrderOf("b;x"));
+
+		Assert.Null(_service.SetPinned("a;x", false));
+		Assert.Null(_service.PinOrderOf("a;x"));
+		// The next pin goes behind the one that is still pinned.
+		Assert.Equal(2, _service.SetPinned("c;x", true));
+	}
+
+	[Fact]
+	public void MovingPinnedTabs_KeepsThePlacesOfThePinnedApplicationsThatAreNotOpen()
+	{
+		_service.SetPinned("a;x", true);
+		_service.SetPinned("b;x", true);
+		_service.SetPinned("c;x", true);
+
+		// a is not open; the user puts c before b.
+		_service.SetPinOrder(new[] { "c;x", "b;x" });
+
+		Assert.Equal(0, _service.PinOrderOf("a;x"));
+		Assert.Equal(1, _service.PinOrderOf("c;x"));
+		Assert.Equal(2, _service.PinOrderOf("b;x"));
+	}
+
+	[Fact]
+	public void ThePinnedOnesCanBePutInAnotherOrder()
+	{
+		_service.SetPinned("a;x", true);
+		_service.SetPinned("b;x", true);
+
+		_service.SetPinOrder(new[] { "b;x", "a;x" });
+
+		Assert.Equal(0, _service.PinOrderOf("b;x"));
+		Assert.Equal(1, _service.PinOrderOf("a;x"));
+	}
+
+	[Fact]
+	public void PinAndOrder_AreSavedWithTheApplication_AndInvalidValuesAreReplaced()
+	{
+		var configuration = _environment.Saved;
+		configuration.TabOrder = "sideways";
+		configuration.TabLook = "wobbly";
+		configuration.Applications["a;x"] = new ApplicationTabSettings { PinOrder = 3 };
+
+		ApplicationTabService.Sanitize(configuration);
+
+		Assert.Equal(nameof(TabOrder.ByTime), configuration.TabOrder);
+		Assert.Equal(nameof(TabLook.Tinted), configuration.TabLook);
+		Assert.Equal(3, configuration.Applications["a;x"].PinOrder);
+		Assert.False(configuration.Applications["a;x"].IsEmpty);
 	}
 }

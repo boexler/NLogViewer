@@ -1447,6 +1447,51 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Oszloprendezés visszaállítása</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Lap rögzítése</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Lap rögzítésének feloldása</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Rögzített lap. A menüből zárhatod be.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Rögzített lap bezárása</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>Ez a lap rögzítve van. Biztosan bezárod?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>E lapok közül néhány rögzítve van. A rögzített lapokat is bezárod?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>A lapok színe</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>Hogyan jelenik meg egy alkalmazás lapjának színe: csíkként a lap fölött, vagy színezett lapként egy ponttal.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Csík</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Színezett lap</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>A lapok sorrendje</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>Idő szerint: a lapok a megnyitás sorrendjében állnak. IP-cím szerint: a küldő címe szerint, majd az alkalmazás neve szerint. Kézzel: oda, ahová teszed; az új lap a végére kerül. A rögzített lapok mindig elöl állnak. Egy rendezett sorrend kiválasztása egyszer rendezi a lapokat.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>Idő szerint</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>IP-cím szerint</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>Kézzel</value>
+  </data>
 </root>
 
 

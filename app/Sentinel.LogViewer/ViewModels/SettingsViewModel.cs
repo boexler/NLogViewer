@@ -291,6 +291,23 @@ namespace Sentinel.LogViewer.ViewModels
                     },
                     getDefault: () => ConfigurationService.CreateDefaultConfiguration().AutoStartListening),
 
+                new ChoiceSettingViewModel(ReceivingId, "",
+                    Text("Settings_TabOrder", "Order of tabs"),
+                    Text("Settings_TabOrder_Description", "By time: the tabs stand in the order they were opened. By IP address: by the address of the sender, then by the name of the application. By hand: where you put them; a new tab goes to the end. Pinned tabs always stand first. Choosing a sorted order sorts the tabs once."),
+                    options: new[]
+                    {
+                        new ChoiceOption(nameof(TabOrder.ByTime), Text("Settings_TabOrder_Time", "By time")),
+                        new ChoiceOption(nameof(TabOrder.ByIpAddress), Text("Settings_TabOrder_Ip", "By IP address")),
+                        new ChoiceOption(nameof(TabOrder.ByHand), Text("Settings_TabOrder_Hand", "By hand"))
+                    },
+                    get: () => TabOrdering.Parse(_configuration.TabOrder).ToString(),
+                    set: order =>
+                    {
+                        _configuration.TabOrder = order;
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().TabOrder),
+
                 new PortListSettingViewModel(ReceivingId, "",
                     Text("Settings_Ports", "Ports"),
                     Text("Settings_Ports_Description", "Addresses the application listens on for logs, for example udp://0.0.0.0:4000. Changes apply the next time listening is started."),

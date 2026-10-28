@@ -1447,5 +1447,50 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Restablecer la ordenación por columna</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Fijar pestaña</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Soltar pestaña</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Pestaña fijada. Ciérrala desde el menú.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Cerrar pestaña fijada</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>Esta pestaña está fijada. ¿Seguro que quieres cerrarla?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>Algunas de estas pestañas están fijadas. ¿Cerrar también las fijadas?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>Color de las pestañas</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>Cómo se muestra el color de la pestaña de una aplicación: como una franja sobre la pestaña o con la pestaña teñida y un punto.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Franja</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Pestaña teñida</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>Orden de las pestañas</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>Por hora: las pestañas siguen el orden en que se abrieron. Por dirección IP: por la dirección del remitente y luego por el nombre de la aplicación. A mano: donde las pongas; una pestaña nueva va al final. Las pestañas fijadas van siempre primero. Elegir un orden clasificado ordena las pestañas una vez.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>Por hora</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>Por dirección IP</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>A mano</value>
+  </data>
 </root>
 

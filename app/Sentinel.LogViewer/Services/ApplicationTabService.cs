@@ -37,7 +37,10 @@ public class ApplicationTabSettings
 	/// <summary>The filters of the last tab of the application</summary>
 	public LogViewerFilterState? Filters { get; set; }
 
-	public bool IsEmpty => TakeOverFilters == null && RestartBehavior == null && Filters == null;
+	/// <summary>Where the tab of the application stands among the pinned tabs (the order they were pinned in); null when it is not pinned</summary>
+	public int? PinOrder { get; set; }
+
+	public bool IsEmpty => TakeOverFilters == null && RestartBehavior == null && Filters == null && PinOrder == null;
 }
 
 /// <summary>
@@ -66,6 +69,8 @@ public class ApplicationTabService(ConfigurationService configurationService)
 	public static void Sanitize(AppConfiguration configuration)
 	{
 		configuration.RestartBehavior = ParseRestartBehavior(configuration.RestartBehavior).ToString();
+		configuration.TabOrder = TabOrdering.Parse(configuration.TabOrder).ToString();
+		configuration.TabLook = TabOrdering.ParseLook(configuration.TabLook).ToString();
 		configuration.Applications ??= new();
 		foreach (var settings in configuration.Applications.Values)
 		{
@@ -108,6 +113,45 @@ public class ApplicationTabService(ConfigurationService configurationService)
 		settings.RestartBehavior = value == ParseRestartBehavior(configuration.RestartBehavior) ? null : value.ToString();
 
 		Save(configuration, key, settings);
+	}
+
+	/// <summary>Where the tab of the application stands among the pinned tabs, or null when it is not pinned</summary>
+	public int? PinOrderOf(string key) =>
+		configurationService.LoadConfiguration().Applications.TryGetValue(key, out var settings) ? settings.PinOrder : null;
+
+	/// <summary>
+	/// Pins the tabs of the application, after the ones that are pinned already, or takes the pin off
+	/// </summary>
+	/// <returns>The place among the pinned tabs, or null after it was taken off</returns>
+	public int? SetPinned(string key, bool pinned)
+	{
+		var configuration = configurationService.LoadConfiguration();
+		var settings = GetOrCreate(configuration, key);
+		if (!pinned)
+			settings.PinOrder = null;
+		else if (settings.PinOrder == null)
+			settings.PinOrder = configuration.Applications.Values.Select(other => other.PinOrder ?? -1).DefaultIfEmpty(-1).Max() + 1;
+
+		Save(configuration, key, settings);
+		return settings.PinOrder;
+	}
+
+	/// <summary>
+	/// Saves the order of the pinned applications after the user moved a pinned tab: the applications that have a tab open take the places
+	/// they had together, in the new order. The places of pinned applications that are not open stay as they are, so no two share one.
+	/// </summary>
+	public void SetPinOrder(IReadOnlyList<string> keysInOrder)
+	{
+		var configuration = configurationService.LoadConfiguration();
+		var places = keysInOrder.Select((key, index) => GetOrCreate(configuration, key).PinOrder ?? index).OrderBy(place => place).ToList();
+		for (var i = 0; i < keysInOrder.Count; i++)
+		{
+			var settings = GetOrCreate(configuration, keysInOrder[i]);
+			settings.PinOrder = places[i];
+			configuration.Applications[keysInOrder[i]] = settings;
+		}
+
+		configurationService.SaveConfiguration(configuration);
 	}
 
 	/// <summary>

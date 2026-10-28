@@ -1447,5 +1447,50 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Spaltensortierung zurücksetzen</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Tab anheften</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Tab lösen</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Angehefteter Tab. Über das Menü schließen.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Angehefteten Tab schließen</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>Dieser Tab ist angeheftet. Soll er wirklich geschlossen werden?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>Einige dieser Tabs sind angeheftet. Die angehefteten Tabs auch schließen?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>Farbe der Tabs</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>Wie die Farbe des Tabs einer Anwendung gezeigt wird: als Streifen über dem Tab oder als getönter Tab mit einem Punkt.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Streifen</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Getönter Tab</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>Reihenfolge der Tabs</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>Nach Zeit: die Tabs stehen in der Reihenfolge, in der sie geöffnet wurden. Nach IP-Adresse: nach der Adresse des Absenders, dann nach dem Namen der Anwendung. Von Hand: wohin du sie legst; ein neuer Tab kommt ans Ende. Angeheftete Tabs stehen immer zuerst. Eine sortierte Reihenfolge sortiert die Tabs einmal.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>Nach Zeit</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>Nach IP-Adresse</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>Von Hand</value>
+  </data>
 </root>
 

@@ -1174,6 +1174,276 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void APinnedTab_StandsFirst_ShowsAPinInsteadOfTheCloseButton_AndAnApplicationThatSendsAgainOpensItsTabInThePinnedGroup()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(100)", "Alpha"));
+			Send(session, App("(200)", "Beta"));
+			var alpha = session.ViewModel.LogTabs[0];
+			var beta = session.ViewModel.LogTabs[1];
+			Assert.True(alpha.ShowPin);
+
+			session.ViewModel.PinTabCommand.Execute(beta);
+			WpfTestHelper.Settle();
+
+			Assert.Equal(new[] { beta, alpha }, session.ViewModel.LogTabs);
+			Assert.True(beta.IsPinned);
+			Assert.False(beta.ShowPin);
+			var tabItem = Descendants<TabItem>(session.Window).First(item => ReferenceEquals(item.DataContext, beta));
+			Assert.Contains(Descendants<TextBlock>(tabItem), text => text.Text == "" && text.Visibility == Visibility.Visible);
+			Assert.DoesNotContain(Descendants<Button>(tabItem), button => button.Command == session.ViewModel.CloseTabCommand && button.Visibility == Visibility.Visible);
+
+			// The pin belongs to the application: its next process opens a tab in the pinned group, in front of Alpha.
+			Send(session, App("(300)", "Beta"));
+			var again = session.ViewModel.LogTabs.Single(tab => tab.TargetName == App("(300)", "Beta").Id);
+			Assert.True(again.IsPinned);
+			Assert.Equal(alpha, session.ViewModel.LogTabs[^1]);
+
+			session.ViewModel.UnpinTabCommand.Execute(beta);
+			Assert.False(beta.IsPinned);
+			Assert.False(again.IsPinned);
+		});
+	}
+
+	[Fact]
+	public void AFileTab_CannotBePinned()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var file = new LogTabViewModel { Header = "tokyo.log", TargetName = "FileImport_x", MaxCount = int.MaxValue };
+
+			Assert.False(file.ShowPin);
+			Assert.False(session.ViewModel.PinTabCommand.CanExecute(file));
+		});
+	}
+
+	[Fact]
+	public void PinnedTabsMoveOnlyAmongThemselves_AndTheOrderIsKept()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			Send(session, App("(1)", "Alpha"));
+			Send(session, App("(2)", "Beta"));
+			Send(session, App("(3)", "Gamma"));
+			var tabs = session.ViewModel.LogTabs.ToList();
+			session.ViewModel.PinTabCommand.Execute(tabs[0]);
+			session.ViewModel.PinTabCommand.Execute(tabs[1]);
+			Assert.Equal(new[] { tabs[0], tabs[1], tabs[2] }, session.ViewModel.LogTabs);
+
+			// An unpinned tab cannot be dropped into the pinned group, and a pinned one cannot leave it.
+			session.ViewModel.MoveTab(tabs[2], tabs[0], insertBefore: true);
+			session.ViewModel.MoveTab(tabs[0], tabs[2], insertBefore: false);
+			Assert.Equal(new[] { tabs[0], tabs[1], tabs[2] }, session.ViewModel.LogTabs);
+
+			session.ViewModel.MoveTab(tabs[1], tabs[0], insertBefore: true);
+
+			Assert.Equal(new[] { tabs[1], tabs[0], tabs[2] }, session.ViewModel.LogTabs);
+			var service = new ApplicationTabService(_environment.Configuration);
+			Assert.True(service.PinOrderOf(tabs[1].SenderKey!) < service.PinOrderOf(tabs[0].SenderKey!));
+			// Moving a pinned tab is not moving by hand: the order of the others is not switched.
+			Assert.Equal(nameof(TabOrder.ByTime), _environment.Saved.TabOrder);
+		});
+	}
+
+	[Fact]
+	public void MovingATabByHand_SwitchesTheOrderToByHand_AndANewTabGoesToTheEnd()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.TabOrder = nameof(TabOrder.ByIpAddress);
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+			Send(session, App("(1)", "High", sender: "10.0.0.9"));
+			Send(session, App("(2)", "Low", sender: "10.0.0.1"));
+			var low = session.ViewModel.LogTabs[0];
+			var high = session.ViewModel.LogTabs[1];
+			Assert.Equal("10.0.0.1", low.Sender);
+
+			session.ViewModel.MoveTab(low, high, insertBefore: false);
+			Assert.Equal(nameof(TabOrder.ByHand), _environment.Saved.TabOrder);
+			Send(session, App("(3)", "Middle", sender: "10.0.0.5"));
+
+			Assert.Equal(new[] { "10.0.0.9", "10.0.0.1", "10.0.0.5" }, session.ViewModel.LogTabs.Select(tab => tab.Sender));
+		});
+	}
+
+	[Fact]
+	public void ByIpAddress_PutsANewTabInItsPlaceBetweenTheOthers()
+	{
+		_context.RunOnSta(() =>
+		{
+			var configuration = _environment.Saved;
+			configuration.TabOrder = nameof(TabOrder.ByIpAddress);
+			_environment.Configuration.SaveConfiguration(configuration);
+			using var session = Start();
+
+			Send(session, App("(1)", "A", sender: "192.168.0.10"));
+			Send(session, App("(2)", "B", sender: "192.168.0.9"));
+			Send(session, App("(3)", "C", sender: "10.0.0.1"));
+
+			Assert.Equal(new[] { "10.0.0.1", "192.168.0.9", "192.168.0.10" }, session.ViewModel.LogTabs.Select(tab => tab.Sender));
+		});
+	}
+
+	[Fact]
+	public void EachApplicationGetsItsOwnColour_ThatStaysTheSame_AndTheLookCanBeChanged()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			for (var i = 0; i < 8; i++)
+				Send(session, App($"({i})", $"App{i}", sender: $"10.0.0.{i}"));
+
+			var colours = session.ViewModel.LogTabs.Select(tab => tab.ColourIndex).ToList();
+			Assert.Equal(8, colours.Distinct().Count());
+			// The tinted tab is the default, and its text and its buttons are dark, also in a dark theme.
+			Assert.All(session.ViewModel.LogTabs, tab => Assert.NotNull(tab.DotBrush));
+			var first = session.ViewModel.LogTabs[0];
+			var firstItem = Descendants<TabItem>(session.Window).First(item => ReferenceEquals(item.DataContext, first));
+			var dark = Color.FromRgb(0x10, 0x14, 0x18);
+			Assert.Equal(dark, ((SolidColorBrush)firstItem.Foreground).Color);
+			Assert.All(Descendants<Button>(firstItem).Where(button => button.Content is "\u2715" or "\u25BE"),
+				button => Assert.Equal(dark, ((SolidColorBrush)button.Foreground).Color));
+
+			// The same application sends again in a new tab: the same colour as before.
+			Send(session, App("(99)", "App3", sender: "10.0.0.3"));
+			Assert.Equal(colours[3], session.ViewModel.LogTabs.Last(tab => tab.ApplicationName == "App3").ColourIndex);
+
+			var configuration = _environment.Saved;
+			configuration.TabLook = nameof(TabLook.Stripe);
+			_environment.Configuration.SaveConfiguration(configuration);
+			session.ViewModel.LoadConfiguration();
+			Settle();
+			Assert.All(session.ViewModel.LogTabs, tab => Assert.NotNull(tab.StripeBrush));
+			Assert.All(session.ViewModel.LogTabs, tab => Assert.Null(tab.DotBrush));
+			Assert.NotEqual(dark, ((SolidColorBrush)firstItem.Foreground).Color);
+		});
+	}
+
+	/// <summary>Lets the commands that close tabs ask the test instead of a window; returns what they asked</summary>
+	private static List<MessageBoxButton> Answering(Session session, params MessageBoxResult[] answers)
+	{
+		var asked = new List<MessageBoxButton>();
+		var queue = new Queue<MessageBoxResult>(answers);
+		session.ViewModel.Ask = (_, _, buttons) =>
+		{
+			asked.Add(buttons);
+			return queue.Dequeue();
+		};
+		return asked;
+	}
+
+	/// <summary>Three tabs of three applications, the first of them pinned</summary>
+	private static LogTabViewModel[] ThreeTabsTheFirstPinned(Session session)
+	{
+		Send(session, App("(1)", "Alpha"));
+		Send(session, App("(2)", "Beta"));
+		Send(session, App("(3)", "Gamma"));
+		var tabs = session.ViewModel.LogTabs.ToArray();
+		session.ViewModel.PinTabCommand.Execute(tabs[0]);
+		return tabs;
+	}
+
+	[Theory]
+	[InlineData(MessageBoxResult.Yes, 0)]
+	[InlineData(MessageBoxResult.No, 1)]
+	[InlineData(MessageBoxResult.Cancel, 3)]
+	public void CloseAllTabs_AsksAboutThePinnedTabs_AndClosesWhatTheAnswerSays(MessageBoxResult pinnedAnswer, int remaining)
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tabs = ThreeTabsTheFirstPinned(session);
+			var asked = Answering(session, MessageBoxResult.Yes, pinnedAnswer);
+
+			session.ViewModel.CloseAllTabsCommand.Execute(null);
+
+			Assert.Equal(new[] { MessageBoxButton.YesNo, MessageBoxButton.YesNoCancel }, asked);
+			Assert.Equal(remaining, session.ViewModel.LogTabs.Count);
+			// Without the pinned tabs only the pinned one stays, and it is the first.
+			if (remaining == 1)
+				Assert.Equal(tabs[0], session.ViewModel.LogTabs.Single());
+		});
+	}
+
+	[Theory]
+	[InlineData(MessageBoxResult.Yes, 1)]
+	[InlineData(MessageBoxResult.No, 2)]
+	[InlineData(MessageBoxResult.Cancel, 3)]
+	public void CloseOtherTabs_AsksAboutThePinnedTabs_AndClosesWhatTheAnswerSays(MessageBoxResult pinnedAnswer, int remaining)
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tabs = ThreeTabsTheFirstPinned(session);
+			Answering(session, MessageBoxResult.Yes, pinnedAnswer);
+
+			session.ViewModel.CloseOtherTabsCommand.Execute(tabs[1]);
+
+			Assert.Equal(remaining, session.ViewModel.LogTabs.Count);
+			Assert.Contains(tabs[1], session.ViewModel.LogTabs);
+			Assert.Equal(pinnedAnswer != MessageBoxResult.Yes, session.ViewModel.LogTabs.Contains(tabs[0]));
+		});
+	}
+
+	[Fact]
+	public void ClosingTheTabsToTheRight_AsksNothingAboutPinnedTabs_WhenNoneOfThemIsAffected()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tabs = ThreeTabsTheFirstPinned(session);
+			var asked = Answering(session, MessageBoxResult.Yes);
+
+			session.ViewModel.CloseTabsToTheRightCommand.Execute(tabs[0]);
+
+			Assert.Equal(new[] { MessageBoxButton.YesNo }, asked);
+			Assert.Equal(new[] { tabs[0] }, session.ViewModel.LogTabs);
+		});
+	}
+
+	[Theory]
+	[InlineData(MessageBoxResult.Yes, 2)]
+	[InlineData(MessageBoxResult.No, 3)]
+	[InlineData(MessageBoxResult.Cancel, 3)]
+	public void ClosingThePinnedTabWithTheKeyboardOrTheMiddleButton_AsksFirst(MessageBoxResult answer, int remaining)
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tabs = ThreeTabsTheFirstPinned(session);
+			session.ViewModel.SelectedTab = tabs[0];
+			Answering(session, answer);
+
+			session.ViewModel.CloseCurrentTabCommand.Execute(null);
+
+			Assert.Equal(remaining, session.ViewModel.LogTabs.Count);
+		});
+	}
+
+	[Fact]
+	public void ClosingATabThatIsNotPinnedWithTheKeyboard_AsksNothing()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var session = Start();
+			var tabs = ThreeTabsTheFirstPinned(session);
+			session.ViewModel.SelectedTab = tabs[1];
+			var asked = Answering(session);
+
+			session.ViewModel.CloseCurrentTabCommand.Execute(null);
+
+			Assert.Empty(asked);
+			Assert.Equal(2, session.ViewModel.LogTabs.Count);
+		});
+	}
+
+	[Fact]
 	public void TheMenuOfAFileTab_HasNoEntriesForAnApplication_AndTheMenuOfALiveTab_HasThem()
 	{
 		_context.RunOnSta(() =>
