@@ -13,7 +13,7 @@ namespace Sentinel.LogViewer.Wpf.XamlMultiValueConverter
     {
         public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture) =>
             values.Length > 1 && values[0] is LogEntry logEntry && values[1] is TimeStampResolver { IsConverting: true } resolver
-                ? "Original: " + resolver.Original(logEntry)
+                ? LogViewerTexts.Format("Cell_Original", resolver.Original(logEntry))
                 : null;
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>

@@ -35,6 +35,9 @@ namespace Sentinel.LogViewer
             // Initialize localization service BEFORE XAML is loaded
             // This ensures the correct culture is set for resource loading
             var localizationService = _host.Services.GetRequiredService<LocalizationService>();
+
+            // The control has its own texts; it follows the language of the application, also when that is changed later.
+            localizationService.SetsLanguageOfControl = true;
             localizationService.Initialize();
         }
 

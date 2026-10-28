@@ -36,7 +36,7 @@ namespace Sentinel.LogViewer.Wpf.Resolver
         /// <summary>The time as it is in the entry, with its zone, e.g. <c>2025-12-18 14:02:11.385 (UTC+9)</c></summary>
         public string Original(LogEntry logEntry) =>
             logEntry.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture) +
-            " (" + EntryTime.Label(EntryTime.ZoneOf(logEntry.TimeStamp, FileZone)) + ")";
+            " (" + LogViewerTexts.ZoneLabel(EntryTime.ZoneOf(logEntry.TimeStamp, FileZone)) + ")";
 
         /// <summary>The label of the zones for the header: <c>UTC</c>, <c>UTC+9 → local</c>, or nothing while nothing is converted</summary>
         public string ZoneLabel
@@ -46,8 +46,8 @@ namespace Sentinel.LogViewer.Wpf.Resolver
                 if (!IsConverting)
                     return string.Empty;
 
-                var display = EntryTime.Label(DisplayZone);
-                return IsLocal(FileZone) || Equals(FileZone, DisplayZone) ? display : EntryTime.Label(FileZone) + " \u2192 " + display;
+                var display = LogViewerTexts.ZoneLabel(DisplayZone);
+                return IsLocal(FileZone) || Equals(FileZone, DisplayZone) ? display : LogViewerTexts.ZoneLabel(FileZone) + " \u2192 " + display;
             }
         }
 

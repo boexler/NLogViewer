@@ -124,6 +124,12 @@ namespace Sentinel.LogViewer.Services
             }
         }
 
+        /// <summary>
+        /// Whether setting the language also sets the language of the control, which has its own texts. Only the application turns it on:
+        /// the language of the control is one for the whole process, and tests of the settings must not change it.
+        /// </summary>
+        public bool SetsLanguageOfControl { get; set; }
+
         public void SetLanguage(string languageCode)
         {
             try
@@ -152,6 +158,9 @@ namespace Sentinel.LogViewer.Services
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
                 Thread.CurrentThread.CurrentUICulture = _currentCulture;
             }
+
+            if (SetsLanguageOfControl)
+                Sentinel.LogViewer.Wpf.LogViewerTexts.Language = Sentinel.LogViewer.Wpf.LogViewerTexts.FromCode(CurrentLanguageCode);
         }
 
         public string GetString(string key, string defaultValue = "")

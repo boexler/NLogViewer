@@ -25,14 +25,14 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         public static IReadOnlyList<RegexTemplate> RegexTemplates { get; } = new RegexTemplate[]
         {
-            new("Date (2025-12-18)", @"\d{4}-\d{2}-\d{2}"),
-            new("GUID", @"[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"),
-            new("IPv4 address", @"\b\d{1,3}(\.\d{1,3}){3}\b"),
-            new("URL", @"https?://\S+"),
-            new("E-mail address", @"[\w.+-]+@[\w-]+(\.[\w-]+)+"),
-            new("HTTP error status (4xx, 5xx)", @"\b[45]\d{2}\b"),
-            new("Exception type", @"\b\w+(\.\w+)*Exception\b"),
-            new("One of several words", @"(error|fail|timeout)"),
+            new("Tpl_Date", @"\d{4}-\d{2}-\d{2}"),
+            new("Tpl_Guid", @"[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"),
+            new("Tpl_Ip", @"\b\d{1,3}(\.\d{1,3}){3}\b"),
+            new("Tpl_Url", @"https?://\S+"),
+            new("Tpl_Email", @"[\w.+-]+@[\w-]+(\.[\w-]+)+"),
+            new("Tpl_Http", @"\b[45]\d{2}\b"),
+            new("Tpl_Exception", @"\b\w+(\.\w+)*Exception\b"),
+            new("Tpl_Words", @"(error|fail|timeout)"),
         };
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace Sentinel.LogViewer.Wpf
                 var term = new FilterTerm(CurrentSearchText, FilterIsExclude, FilterMatchCase, FilterWholeWord, UseRegexSearch, FilterLevel);
                 var fields = SearchFields;
                 var hits = LogEvents.View.OfType<LogEntry>().Count(entry => term.Matches(entry, fields));
-                text = hits == 1 ? "1 hit" : $"{hits} hits";
+                text = hits == 1 ? LogViewerTexts.Get("Hits_One") : LogViewerTexts.Format("Hits_Many", hits);
             }
 
             SetValue(FilterHitTextPropertyKey, text);
@@ -342,7 +342,11 @@ namespace Sentinel.LogViewer.Wpf
     /// <summary>
     /// A pattern that the filter and the search can put into their input
     /// </summary>
-    /// <param name="Name">What the pattern finds</param>
+    /// <param name="Key">The key of the text that says what the pattern finds</param>
     /// <param name="Pattern">The regular expression</param>
-    public sealed record RegexTemplate(string Name, string Pattern);
+    public sealed record RegexTemplate(string Key, string Pattern)
+    {
+        /// <summary>What the pattern finds, in the language of the control</summary>
+        public string Name => LogViewerTexts.Get(Key);
+    }
 }

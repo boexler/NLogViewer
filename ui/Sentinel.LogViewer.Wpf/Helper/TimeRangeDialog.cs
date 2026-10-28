@@ -11,8 +11,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
     /// </summary>
     internal sealed class TimeRangeDialog : Window
     {
-        private readonly MomentPicker _from = new("From", withCheckBox: true);
-        private readonly MomentPicker _to = new("Until", withCheckBox: true);
+        private readonly MomentPicker _from = new(LogViewerTexts.Get("Dlg_From"), withCheckBox: true);
+        private readonly MomentPicker _to = new(LogViewerTexts.Get("Dlg_Until"), withCheckBox: true);
         private readonly TextBlock _error = new() { Foreground = System.Windows.Media.Brushes.Firebrick, TextWrapping = TextWrapping.Wrap, MaxWidth = 440 };
         private readonly TimeZoneInfo? _zone;
         private readonly DateTime? _fromBefore;
@@ -32,7 +32,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _toBefore = to;
             _first = first;
             _last = last;
-            Title = "Time range";
+            Title = LogViewerTexts.Get("Dlg_TrTitle");
             SizeToContent = SizeToContent.WidthAndHeight;
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
@@ -44,7 +44,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             var hint = new TextBlock
             {
-                Text = $"Dates and times of the list ({EntryTime.Label(zone)}). An end that is switched off has no limit; changing it switches it on.",
+                Text = LogViewerTexts.Format("Dlg_TrText", LogViewerTexts.ZoneLabel(zone)),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 440,
                 Opacity = 0.7,
@@ -58,7 +58,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 if (TryAccept())
                     DialogResult = true;
             };
-            var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
+            var cancel = new Button { Content = LogViewerTexts.Get("Dlg_Cancel"), IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
 
             Content = new StackPanel
@@ -66,8 +66,8 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 Margin = new Thickness(14),
                 Children =
                 {
-                    Row(_from, "First entry", first, UseFirst),
-                    Row(_to, "Last entry", last, UseLast),
+                    Row(_from, LogViewerTexts.Get("Dlg_FirstEntry"), first, UseFirst),
+                    Row(_to, LogViewerTexts.Get("Dlg_LastEntry"), last, UseLast),
                     hint,
                     _error,
                     buttons
@@ -111,7 +111,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 Padding = new Thickness(8, 2, 8, 2),
                 VerticalAlignment = VerticalAlignment.Center,
                 IsEnabled = offered != null,
-                ToolTip = "Take the time of this entry"
+                ToolTip = LogViewerTexts.Get("Dlg_TakeTime")
             };
             button.Click += (_, _) => use();
             return new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6), Children = { picker, button } };
@@ -127,7 +127,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             _error.Text = string.Empty;
             if (_from.IsActive && !_from.HasDate || _to.IsActive && !_to.HasDate)
             {
-                _error.Text = "Pick a date.";
+                _error.Text = LogViewerTexts.Get("Dlg_PickDate");
                 return false;
             }
 
@@ -135,7 +135,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
             var to = _to.IsActive ? TimeRangeInput.EndOf(_to.Clock, _zone, _toBefore) : (DateTime?)null;
             if (from > to)
             {
-                _error.Text = "The start is after the end.";
+                _error.Text = LogViewerTexts.Get("Dlg_StartAfterEnd");
                 return false;
             }
 

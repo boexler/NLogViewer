@@ -76,20 +76,23 @@ public static class EntryTime
 		_ => fileZone ?? TimeZoneInfo.Local
 	};
 
+	/// <summary>The label of the local zone; the control shows its own word for it</summary>
+	public const string LocalLabel = "local";
+
 	/// <summary>
 	/// A short name of a zone for headers and tooltips: <c>local</c>, <c>UTC</c>, or the offset like <c>UTC+9</c> or <c>UTC-3:30</c>
 	/// </summary>
 	public static string Label(TimeZoneInfo? zone)
 	{
 		if (zone == null)
-			return "local";
+			return LocalLabel;
 
 		// UTC first: on a computer that runs in UTC, the zone that is named UTC is the local one as well, and it should still say UTC.
 		if (zone.Equals(TimeZoneInfo.Utc))
 			return "UTC";
 
 		if (zone.Equals(TimeZoneInfo.Local))
-			return "local";
+			return LocalLabel;
 
 		var offset = zone.BaseUtcOffset;
 		var sign = offset < TimeSpan.Zero ? "-" : "+";

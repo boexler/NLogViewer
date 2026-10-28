@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Level_Warn" xml:space="preserve">
+    <value>Warnung</value>
+  </data>
+  <data name="Level_Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Level_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Level_Any" xml:space="preserve">
+    <value>Alle Level</value>
+  </data>
+  <data name="Level_OnlyTip" xml:space="preserve">
+    <value>Nur Einträge dieses Levels</value>
+  </data>
+  <data name="Level_HideTip" xml:space="preserve">
+    <value>Einträge der Stufe {0} ausblenden (erneut drücken zum Einblenden)</value>
+  </data>
+  <data name="Ctl_AutoScroll" xml:space="preserve">
+    <value>Automatisch scrollen</value>
+  </data>
+  <data name="Ctl_AutoScrollTip" xml:space="preserve">
+    <value>Automatisch scrollen: zum neuesten Eintrag springen, wenn neue Einträge ankommen</value>
+  </data>
+  <data name="Ctl_Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Ctl_PauseTip" xml:space="preserve">
+    <value>Pause: Solange gedrückt, kommen keine neuen Einträge in die Liste</value>
+  </data>
+  <data name="Ctl_Clear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="Ctl_ClearTip" xml:space="preserve">
+    <value>Leeren: alle Einträge aus der Liste entfernen</value>
+  </data>
+  <data name="Filter_Name" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Filter_Hint" xml:space="preserve">
+    <value>Einträge filtern</value>
+  </data>
+  <data name="Filter_Tip" xml:space="preserve">
+    <value>Einträge nach den gewählten Feldern filtern (Enter zum Hinzufügen)</value>
+  </data>
+  <data name="Filter_ShowHideName" xml:space="preserve">
+    <value>Treffer anzeigen oder ausblenden</value>
+  </data>
+  <data name="Filter_ShowHideTip" xml:space="preserve">
+    <value>Passende Einträge anzeigen oder ausblenden</value>
+  </data>
+  <data name="Filter_Show" xml:space="preserve">
+    <value>Anzeigen</value>
+  </data>
+  <data name="Filter_Hide" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Filter_LevelName" xml:space="preserve">
+    <value>Level des Filters</value>
+  </data>
+  <data name="Search_LevelName" xml:space="preserve">
+    <value>Level der Suche</value>
+  </data>
+  <data name="Opt_MatchCase" xml:space="preserve">
+    <value>Groß-/Kleinschreibung</value>
+  </data>
+  <data name="Opt_WholeWord" xml:space="preserve">
+    <value>Ganzes Wort</value>
+  </data>
+  <data name="Opt_Regex" xml:space="preserve">
+    <value>Reguläre Ausdrücke verwenden</value>
+  </data>
+  <data name="Opt_RegexName" xml:space="preserve">
+    <value>Regex</value>
+  </data>
+  <data name="Opt_MatchCaseSearch" xml:space="preserve">
+    <value>Groß-/Kleinschreibung der Suche</value>
+  </data>
+  <data name="Opt_WholeWordSearch" xml:space="preserve">
+    <value>Ganzes Wort der Suche</value>
+  </data>
+  <data name="Opt_RegexSearch" xml:space="preserve">
+    <value>Regex der Suche</value>
+  </data>
+  <data name="Opt_Patterns" xml:space="preserve">
+    <value>Muster ▾</value>
+  </data>
+  <data name="Opt_PatternsTip" xml:space="preserve">
+    <value>Einen fertigen regulären Ausdruck in die Eingabe setzen</value>
+  </data>
+  <data name="Opt_Fields" xml:space="preserve">
+    <value>Felder ▾</value>
+  </data>
+  <data name="Opt_FieldsTip" xml:space="preserve">
+    <value>Die Teile eines Eintrags, in denen Filter und Suche suchen</value>
+  </data>
+  <data name="Fld_Message" xml:space="preserve">
+    <value>Nachricht</value>
+  </data>
+  <data name="Fld_Logger" xml:space="preserve">
+    <value>Loggername</value>
+  </data>
+  <data name="Fld_Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="Fld_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Fld_Other" xml:space="preserve">
+    <value>Weitere Eigenschaften</value>
+  </data>
+  <data name="Tpl_Date" xml:space="preserve">
+    <value>Datum (2025-12-18)</value>
+  </data>
+  <data name="Tpl_Guid" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Tpl_Ip" xml:space="preserve">
+    <value>IPv4-Adresse</value>
+  </data>
+  <data name="Tpl_Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Tpl_Email" xml:space="preserve">
+    <value>E-Mail-Adresse</value>
+  </data>
+  <data name="Tpl_Http" xml:space="preserve">
+    <value>HTTP-Fehlerstatus (4xx, 5xx)</value>
+  </data>
+  <data name="Tpl_Exception" xml:space="preserve">
+    <value>Exception-Typ</value>
+  </data>
+  <data name="Tpl_Words" xml:space="preserve">
+    <value>Eines von mehreren Wörtern</value>
+  </data>
+  <data name="Tr_Menu" xml:space="preserve">
+    <value>Zeitraum ▾</value>
+  </data>
+  <data name="Tr_MenuTip" xml:space="preserve">
+    <value>Nur die Einträge eines Zeitraums zeigen</value>
+  </data>
+  <data name="Tr_Last15" xml:space="preserve">
+    <value>Letzte 15 Minuten</value>
+  </data>
+  <data name="Tr_LastHour" xml:space="preserve">
+    <value>Letzte Stunde</value>
+  </data>
+  <data name="Tr_Last24" xml:space="preserve">
+    <value>Letzte 24 Stunden</value>
+  </data>
+  <data name="Tr_Last7" xml:space="preserve">
+    <value>Letzte 7 Tage</value>
+  </data>
+  <data name="Tr_Choose" xml:space="preserve">
+    <value>Wählen...</value>
+  </data>
+  <data name="Tr_Clear" xml:space="preserve">
+    <value>Zeitraum löschen</value>
+  </data>
+  <data name="Tr_ClearTip" xml:space="preserve">
+    <value>Wieder alle Einträge zeigen</value>
+  </data>
+  <data name="Tr_From" xml:space="preserve">
+    <value>ab {0}</value>
+  </data>
+  <data name="Tr_Until" xml:space="preserve">
+    <value>bis {0}</value>
+  </data>
+  <data name="Hits_One" xml:space="preserve">
+    <value>1 Treffer</value>
+  </data>
+  <data name="Hits_Many" xml:space="preserve">
+    <value>{0} Treffer</value>
+  </data>
+  <data name="Find_None" xml:space="preserve">
+    <value>Keine Ergebnisse</value>
+  </data>
+  <data name="Find_Invalid" xml:space="preserve">
+    <value>Ungültiges Muster</value>
+  </data>
+  <data name="Find_EntryOf" xml:space="preserve">
+    <value>Eintrag {0} von {1}</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>Suche</value>
+  </data>
+  <data name="Search_Tip" xml:space="preserve">
+    <value>Suchen (Strg+F)</value>
+  </data>
+  <data name="Search_Hint" xml:space="preserve">
+    <value>In den Einträgen suchen</value>
+  </data>
+  <data name="Search_BoxTip" xml:space="preserve">
+    <value>In den gewählten Feldern suchen, ohne Einträge auszublenden (Enter / Umschalt+Enter oder F3 / Umschalt+F3: nächster / vorheriger Treffer, Esc: schließen)</value>
+  </data>
+  <data name="Search_PrevName" xml:space="preserve">
+    <value>Vorheriger Treffer</value>
+  </data>
+  <data name="Search_PrevTip" xml:space="preserve">
+    <value>Vorheriger Treffer (Umschalt+F3)</value>
+  </data>
+  <data name="Search_NextName" xml:space="preserve">
+    <value>Nächster Treffer</value>
+  </data>
+  <data name="Search_NextTip" xml:space="preserve">
+    <value>Nächster Treffer (F3)</value>
+  </data>
+  <data name="Search_CloseName" xml:space="preserve">
+    <value>Suche schließen</value>
+  </data>
+  <data name="Search_CloseTip" xml:space="preserve">
+    <value>Suche schließen (Esc)</value>
+  </data>
+  <data name="Result_All" xml:space="preserve">
+    <value>Einträge: {0:N0}</value>
+  </data>
+  <data name="Result_Of" xml:space="preserve">
+    <value>Einträge: {0:N0} von {1:N0}</value>
+  </data>
+  <data name="Result_Reset" xml:space="preserve">
+    <value>Filter zurücksetzen</value>
+  </data>
+  <data name="Result_ResetTip" xml:space="preserve">
+    <value>Level, Begriffe, Logger und Zeitraum entfernen</value>
+  </data>
+  <data name="Loggers" xml:space="preserve">
+    <value>Logger</value>
+  </data>
+  <data name="Chip_LoggersTip" xml:space="preserve">
+    <value>Regeln des Logger-Baums: nur gezeigte oder ausgeblendete Logger</value>
+  </data>
+  <data name="Chip_ShowAll" xml:space="preserve">
+    <value>Alle Logger zeigen</value>
+  </data>
+  <data name="Chip_Regex" xml:space="preserve">
+    <value>Regex:</value>
+  </data>
+  <data name="Chip_SwitchTip" xml:space="preserve">
+    <value>Diesen Begriff ein- oder ausschalten</value>
+  </data>
+  <data name="Chip_ApplyName" xml:space="preserve">
+    <value>Begriff {0} anwenden</value>
+  </data>
+  <data name="Chip_EditTip" xml:space="preserve">
+    <value>Filterbegriff bearbeiten</value>
+  </data>
+  <data name="Chip_EditName" xml:space="preserve">
+    <value>Begriff {0} bearbeiten</value>
+  </data>
+  <data name="Chip_RemoveTip" xml:space="preserve">
+    <value>Filterbegriff entfernen</value>
+  </data>
+  <data name="Chip_RemoveName" xml:space="preserve">
+    <value>Begriff {0} entfernen</value>
+  </data>
+  <data name="Chip_ExcludeTip" xml:space="preserve">
+    <value>Blendet die passenden Einträge aus</value>
+  </data>
+  <data name="Sort_By" xml:space="preserve">
+    <value>Sortiert nach {0}</value>
+  </data>
+  <data name="Sort_ResetName" xml:space="preserve">
+    <value>Spaltensortierung zurücksetzen</value>
+  </data>
+  <data name="Sort_ResetTip" xml:space="preserve">
+    <value>Einträge in der Reihenfolge des Eingangs zeigen</value>
+  </data>
+  <data name="Sort_Asc" xml:space="preserve">
+    <value>Aufsteigend sortieren</value>
+  </data>
+  <data name="Sort_Desc" xml:space="preserve">
+    <value>Absteigend sortieren</value>
+  </data>
+  <data name="Default_View" xml:space="preserve">
+    <value>Standardansicht</value>
+  </data>
+  <data name="Jump_NoFurther" xml:space="preserve">
+    <value>Kein weiterer Eintrag der Stufe {0}</value>
+  </data>
+  <data name="Jump_NoEarlier" xml:space="preserve">
+    <value>Kein früherer Eintrag der Stufe {0}</value>
+  </data>
+  <data name="Jump_NoTime" xml:space="preserve">
+    <value>Kein Eintrag ab dieser Zeit, der letzte ist ausgewählt</value>
+  </data>
+  <data name="Row_ShowOnly" xml:space="preserve">
+    <value>Nur diesen Logger zeigen</value>
+  </data>
+  <data name="Row_Hide" xml:space="preserve">
+    <value>Diesen Logger ausblenden</value>
+  </data>
+  <data name="Row_ShowInTree" xml:space="preserve">
+    <value>Im Logger-Baum zeigen</value>
+  </data>
+  <data name="Row_TrFrom" xml:space="preserve">
+    <value>Zeitraum: ab hier</value>
+  </data>
+  <data name="Row_TrUntil" xml:space="preserve">
+    <value>Zeitraum: bis hier</value>
+  </data>
+  <data name="Row_GoTo" xml:space="preserve">
+    <value>Zur Zeit springen...</value>
+  </data>
+  <data name="Row_NextWarn" xml:space="preserve">
+    <value>Nächste Warnung</value>
+  </data>
+  <data name="Row_PrevWarn" xml:space="preserve">
+    <value>Vorherige Warnung</value>
+  </data>
+  <data name="Row_NextErr" xml:space="preserve">
+    <value>Nächster Fehler</value>
+  </data>
+  <data name="Row_PrevErr" xml:space="preserve">
+    <value>Vorheriger Fehler</value>
+  </data>
+  <data name="Row_AddFilter" xml:space="preserve">
+    <value>Zum Filter hinzufügen</value>
+  </data>
+  <data name="Row_Copy" xml:space="preserve">
+    <value>In die Zwischenablage kopieren</value>
+  </data>
+  <data name="Tree_ExpandAll" xml:space="preserve">
+    <value>Alle aufklappen</value>
+  </data>
+  <data name="Tree_CollapseAll" xml:space="preserve">
+    <value>Alle zuklappen</value>
+  </data>
+  <data name="Tree_MoveTip" xml:space="preserve">
+    <value>Logger-Baum auf die andere Seite verschieben</value>
+  </data>
+  <data name="Tree_SearchHint" xml:space="preserve">
+    <value>Logger suchen</value>
+  </data>
+  <data name="Tree_SearchTip" xml:space="preserve">
+    <value>Nur Logger zeigen, deren Name den Text enthält; die Einträge der Liste ändern sich nicht</value>
+  </data>
+  <data name="Tree_DragTip" xml:space="preserve">
+    <value>Ziehen, um die Breite des Logger-Baums zu ändern</value>
+  </data>
+  <data name="Tree_ToggleTip" xml:space="preserve">
+    <value>Logger-Baum ein- oder ausblenden</value>
+  </data>
+  <data name="Tree_EntriesTip" xml:space="preserve">
+    <value>Einträge</value>
+  </data>
+  <data name="Tree_ErrorsTip" xml:space="preserve">
+    <value>Fehler und schwere Fehler</value>
+  </data>
+  <data name="Tree_WarningsTip" xml:space="preserve">
+    <value>Warnungen</value>
+  </data>
+  <data name="Col_Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Col_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Col_TimeStamp" xml:space="preserve">
+    <value>Zeitstempel</value>
+  </data>
+  <data name="Col_Logger" xml:space="preserve">
+    <value>Loggername</value>
+  </data>
+  <data name="Col_Thread" xml:space="preserve">
+    <value>Thread</value>
+  </data>
+  <data name="Col_Message" xml:space="preserve">
+    <value>Nachricht</value>
+  </data>
+  <data name="Col_Properties" xml:space="preserve">
+    <value>Eigenschaften</value>
+  </data>
+  <data name="Col_TimeZone" xml:space="preserve">
+    <value>Zeitzone...</value>
+  </data>
+  <data name="Col_Format" xml:space="preserve">
+    <value>Zeitstempelformat</value>
+  </data>
+  <data name="Col_FormatSystem" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Cell_Original" xml:space="preserve">
+    <value>Original: {0}</value>
+  </data>
+  <data name="Dlg_GoToTitle" xml:space="preserve">
+    <value>Zur Zeit springen</value>
+  </data>
+  <data name="Dlg_GoToText" xml:space="preserve">
+    <value>Datum und Uhrzeit der Liste ({0}). Der erste Eintrag ab dann wird ausgewählt.</value>
+  </data>
+  <data name="Dlg_Time" xml:space="preserve">
+    <value>Zeit</value>
+  </data>
+  <data name="Dlg_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Dlg_PickDate" xml:space="preserve">
+    <value>Wählen Sie ein Datum.</value>
+  </data>
+  <data name="Dlg_TrTitle" xml:space="preserve">
+    <value>Zeitraum</value>
+  </data>
+  <data name="Dlg_TrText" xml:space="preserve">
+    <value>Datum und Uhrzeit der Liste ({0}). Ein ausgeschaltetes Ende hat keine Grenze; wird es geändert, schaltet es sich ein.</value>
+  </data>
+  <data name="Dlg_From" xml:space="preserve">
+    <value>Von</value>
+  </data>
+  <data name="Dlg_Until" xml:space="preserve">
+    <value>Bis</value>
+  </data>
+  <data name="Dlg_FirstEntry" xml:space="preserve">
+    <value>Erster Eintrag</value>
+  </data>
+  <data name="Dlg_LastEntry" xml:space="preserve">
+    <value>Letzter Eintrag</value>
+  </data>
+  <data name="Dlg_TakeTime" xml:space="preserve">
+    <value>Zeit dieses Eintrags übernehmen</value>
+  </data>
+  <data name="Dlg_StartAfterEnd" xml:space="preserve">
+    <value>Der Beginn liegt nach dem Ende.</value>
+  </data>
+  <data name="Mp_Date" xml:space="preserve">
+    <value>{0}: Datum</value>
+  </data>
+  <data name="Mp_Hour" xml:space="preserve">
+    <value>{0}: Stunde</value>
+  </data>
+  <data name="Mp_Minute" xml:space="preserve">
+    <value>{0}: Minute</value>
+  </data>
+  <data name="Mp_Second" xml:space="preserve">
+    <value>{0}: Sekunde</value>
+  </data>
+  <data name="Msg_ClipFail" xml:space="preserve">
+    <value>Kopieren in die Zwischenablage fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Msg_ClipTitle" xml:space="preserve">
+    <value>Fehler der Zwischenablage</value>
+  </data>
+  <data name="Msg_NoExport" xml:space="preserve">
+    <value>Keine Einträge zum Exportieren.</value>
+  </data>
+  <data name="Msg_ExportTitle" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Msg_ExportOk" xml:space="preserve">
+    <value>{0} Einträge nach {1} exportiert</value>
+  </data>
+  <data name="Msg_ExportDone" xml:space="preserve">
+    <value>Export abgeschlossen</value>
+  </data>
+  <data name="Msg_ExportFail" xml:space="preserve">
+    <value>Export fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Msg_ExportErr" xml:space="preserve">
+    <value>Exportfehler</value>
+  </data>
+  <data name="Zone_Local" xml:space="preserve">
+    <value>lokal</value>
+  </data>
+</root>

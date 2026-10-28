@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Level_Warn" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
+  <data name="Level_Error" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="Level_Fatal" xml:space="preserve">
+    <value>Fatális</value>
+  </data>
+  <data name="Level_Any" xml:space="preserve">
+    <value>Bármely szint</value>
+  </data>
+  <data name="Level_OnlyTip" xml:space="preserve">
+    <value>Csak ennek a szintnek a bejegyzései</value>
+  </data>
+  <data name="Level_HideTip" xml:space="preserve">
+    <value>A(z) {0} szintű bejegyzések elrejtése (újra megnyomva ismét megjelennek)</value>
+  </data>
+  <data name="Ctl_AutoScroll" xml:space="preserve">
+    <value>Automatikus görgetés</value>
+  </data>
+  <data name="Ctl_AutoScrollTip" xml:space="preserve">
+    <value>Automatikus görgetés: ugrás a legújabb bejegyzésre, amikor újak érkeznek</value>
+  </data>
+  <data name="Ctl_Pause" xml:space="preserve">
+    <value>Szünet</value>
+  </data>
+  <data name="Ctl_PauseTip" xml:space="preserve">
+    <value>Szünet: amíg le van nyomva, nem kerülnek új bejegyzések a listába</value>
+  </data>
+  <data name="Ctl_Clear" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Ctl_ClearTip" xml:space="preserve">
+    <value>Törlés: az összes bejegyzés eltávolítása a listából</value>
+  </data>
+  <data name="Filter_Name" xml:space="preserve">
+    <value>Szűrő</value>
+  </data>
+  <data name="Filter_Hint" xml:space="preserve">
+    <value>Bejegyzések szűrése</value>
+  </data>
+  <data name="Filter_Tip" xml:space="preserve">
+    <value>A bejegyzések szűrése a kiválasztott mezők szerint (Enter a hozzáadáshoz)</value>
+  </data>
+  <data name="Filter_ShowHideName" xml:space="preserve">
+    <value>A találatok megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="Filter_ShowHideTip" xml:space="preserve">
+    <value>A találatok megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="Filter_Show" xml:space="preserve">
+    <value>Mutat</value>
+  </data>
+  <data name="Filter_Hide" xml:space="preserve">
+    <value>Elrejt</value>
+  </data>
+  <data name="Filter_LevelName" xml:space="preserve">
+    <value>A szűrő szintje</value>
+  </data>
+  <data name="Search_LevelName" xml:space="preserve">
+    <value>A keresés szintje</value>
+  </data>
+  <data name="Opt_MatchCase" xml:space="preserve">
+    <value>Kis- és nagybetűk megkülönböztetése</value>
+  </data>
+  <data name="Opt_WholeWord" xml:space="preserve">
+    <value>Teljes szó</value>
+  </data>
+  <data name="Opt_Regex" xml:space="preserve">
+    <value>Reguláris kifejezések használata</value>
+  </data>
+  <data name="Opt_RegexName" xml:space="preserve">
+    <value>Regex</value>
+  </data>
+  <data name="Opt_MatchCaseSearch" xml:space="preserve">
+    <value>Kis- és nagybetűk a keresésben</value>
+  </data>
+  <data name="Opt_WholeWordSearch" xml:space="preserve">
+    <value>Teljes szó a keresésben</value>
+  </data>
+  <data name="Opt_RegexSearch" xml:space="preserve">
+    <value>Regex a keresésben</value>
+  </data>
+  <data name="Opt_Patterns" xml:space="preserve">
+    <value>Minták ▾</value>
+  </data>
+  <data name="Opt_PatternsTip" xml:space="preserve">
+    <value>Kész reguláris kifejezés beillesztése a bevitelbe</value>
+  </data>
+  <data name="Opt_Fields" xml:space="preserve">
+    <value>Mezők ▾</value>
+  </data>
+  <data name="Opt_FieldsTip" xml:space="preserve">
+    <value>A bejegyzés azon részei, amelyekben a szűrő és a keresés keres</value>
+  </data>
+  <data name="Fld_Message" xml:space="preserve">
+    <value>Üzenet</value>
+  </data>
+  <data name="Fld_Logger" xml:space="preserve">
+    <value>Logger neve</value>
+  </data>
+  <data name="Fld_Exception" xml:space="preserve">
+    <value>Kivétel</value>
+  </data>
+  <data name="Fld_Thread" xml:space="preserve">
+    <value>Szál</value>
+  </data>
+  <data name="Fld_Other" xml:space="preserve">
+    <value>Egyéb tulajdonságok</value>
+  </data>
+  <data name="Tpl_Date" xml:space="preserve">
+    <value>Dátum (2025-12-18)</value>
+  </data>
+  <data name="Tpl_Guid" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Tpl_Ip" xml:space="preserve">
+    <value>IPv4-cím</value>
+  </data>
+  <data name="Tpl_Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Tpl_Email" xml:space="preserve">
+    <value>E-mail-cím</value>
+  </data>
+  <data name="Tpl_Http" xml:space="preserve">
+    <value>HTTP-hibakód (4xx, 5xx)</value>
+  </data>
+  <data name="Tpl_Exception" xml:space="preserve">
+    <value>Kivételtípus</value>
+  </data>
+  <data name="Tpl_Words" xml:space="preserve">
+    <value>Több szó egyike</value>
+  </data>
+  <data name="Tr_Menu" xml:space="preserve">
+    <value>Időtartomány ▾</value>
+  </data>
+  <data name="Tr_MenuTip" xml:space="preserve">
+    <value>Csak egy időszak bejegyzéseinek megjelenítése</value>
+  </data>
+  <data name="Tr_Last15" xml:space="preserve">
+    <value>Elmúlt 15 perc</value>
+  </data>
+  <data name="Tr_LastHour" xml:space="preserve">
+    <value>Elmúlt óra</value>
+  </data>
+  <data name="Tr_Last24" xml:space="preserve">
+    <value>Elmúlt 24 óra</value>
+  </data>
+  <data name="Tr_Last7" xml:space="preserve">
+    <value>Elmúlt 7 nap</value>
+  </data>
+  <data name="Tr_Choose" xml:space="preserve">
+    <value>Kiválasztás...</value>
+  </data>
+  <data name="Tr_Clear" xml:space="preserve">
+    <value>Az időtartomány törlése</value>
+  </data>
+  <data name="Tr_ClearTip" xml:space="preserve">
+    <value>Az összes bejegyzés újbóli megjelenítése</value>
+  </data>
+  <data name="Tr_From" xml:space="preserve">
+    <value>{0}-tól</value>
+  </data>
+  <data name="Tr_Until" xml:space="preserve">
+    <value>{0}-ig</value>
+  </data>
+  <data name="Hits_One" xml:space="preserve">
+    <value>1 találat</value>
+  </data>
+  <data name="Hits_Many" xml:space="preserve">
+    <value>{0} találat</value>
+  </data>
+  <data name="Find_None" xml:space="preserve">
+    <value>Nincs találat</value>
+  </data>
+  <data name="Find_Invalid" xml:space="preserve">
+    <value>Érvénytelen minta</value>
+  </data>
+  <data name="Find_EntryOf" xml:space="preserve">
+    <value>{0}. bejegyzés / {1}</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="Search_Tip" xml:space="preserve">
+    <value>Keresés (Ctrl+F)</value>
+  </data>
+  <data name="Search_Hint" xml:space="preserve">
+    <value>Keresés a bejegyzésekben</value>
+  </data>
+  <data name="Search_BoxTip" xml:space="preserve">
+    <value>Keresés a kiválasztott mezőkben a bejegyzések elrejtése nélkül (Enter / Shift+Enter vagy F3 / Shift+F3: következő / előző találat, Esc: bezárás)</value>
+  </data>
+  <data name="Search_PrevName" xml:space="preserve">
+    <value>Előző találat</value>
+  </data>
+  <data name="Search_PrevTip" xml:space="preserve">
+    <value>Előző találat (Shift+F3)</value>
+  </data>
+  <data name="Search_NextName" xml:space="preserve">
+    <value>Következő találat</value>
+  </data>
+  <data name="Search_NextTip" xml:space="preserve">
+    <value>Következő találat (F3)</value>
+  </data>
+  <data name="Search_CloseName" xml:space="preserve">
+    <value>A keresés bezárása</value>
+  </data>
+  <data name="Search_CloseTip" xml:space="preserve">
+    <value>A keresés bezárása (Esc)</value>
+  </data>
+  <data name="Result_All" xml:space="preserve">
+    <value>Bejegyzések: {0:N0}</value>
+  </data>
+  <data name="Result_Of" xml:space="preserve">
+    <value>Bejegyzések: {0:N0} / {1:N0}</value>
+  </data>
+  <data name="Result_Reset" xml:space="preserve">
+    <value>Szűrő visszaállítása</value>
+  </data>
+  <data name="Result_ResetTip" xml:space="preserve">
+    <value>A szintek, kifejezések, loggerek és az időtartomány eltávolítása</value>
+  </data>
+  <data name="Loggers" xml:space="preserve">
+    <value>Loggerek</value>
+  </data>
+  <data name="Chip_LoggersTip" xml:space="preserve">
+    <value>A loggerfa szabályai: csak megjelenített vagy elrejtett loggerek</value>
+  </data>
+  <data name="Chip_ShowAll" xml:space="preserve">
+    <value>Az összes logger megjelenítése</value>
+  </data>
+  <data name="Chip_Regex" xml:space="preserve">
+    <value>Regex:</value>
+  </data>
+  <data name="Chip_SwitchTip" xml:space="preserve">
+    <value>Ennek a kifejezésnek a be- vagy kikapcsolása</value>
+  </data>
+  <data name="Chip_ApplyName" xml:space="preserve">
+    <value>A(z) {0} kifejezés alkalmazása</value>
+  </data>
+  <data name="Chip_EditTip" xml:space="preserve">
+    <value>Szűrőkifejezés szerkesztése</value>
+  </data>
+  <data name="Chip_EditName" xml:space="preserve">
+    <value>A(z) {0} kifejezés szerkesztése</value>
+  </data>
+  <data name="Chip_RemoveTip" xml:space="preserve">
+    <value>Szűrőkifejezés eltávolítása</value>
+  </data>
+  <data name="Chip_RemoveName" xml:space="preserve">
+    <value>A(z) {0} kifejezés eltávolítása</value>
+  </data>
+  <data name="Chip_ExcludeTip" xml:space="preserve">
+    <value>Elrejti a találatokat</value>
+  </data>
+  <data name="Sort_By" xml:space="preserve">
+    <value>Rendezés: {0}</value>
+  </data>
+  <data name="Sort_ResetName" xml:space="preserve">
+    <value>Oszloprendezés visszaállítása</value>
+  </data>
+  <data name="Sort_ResetTip" xml:space="preserve">
+    <value>A bejegyzések megjelenítése érkezési sorrendben</value>
+  </data>
+  <data name="Sort_Asc" xml:space="preserve">
+    <value>Rendezés növekvő sorrendben</value>
+  </data>
+  <data name="Sort_Desc" xml:space="preserve">
+    <value>Rendezés csökkenő sorrendben</value>
+  </data>
+  <data name="Default_View" xml:space="preserve">
+    <value>Alapértelmezett nézet</value>
+  </data>
+  <data name="Jump_NoFurther" xml:space="preserve">
+    <value>Nincs további {0} szintű bejegyzés</value>
+  </data>
+  <data name="Jump_NoEarlier" xml:space="preserve">
+    <value>Nincs korábbi {0} szintű bejegyzés</value>
+  </data>
+  <data name="Jump_NoTime" xml:space="preserve">
+    <value>Nincs bejegyzés attól az időponttól, az utolsó van kijelölve</value>
+  </data>
+  <data name="Row_ShowOnly" xml:space="preserve">
+    <value>Csak ennek a loggernek a megjelenítése</value>
+  </data>
+  <data name="Row_Hide" xml:space="preserve">
+    <value>Ennek a loggernek az elrejtése</value>
+  </data>
+  <data name="Row_ShowInTree" xml:space="preserve">
+    <value>Megjelenítés a loggerfában</value>
+  </data>
+  <data name="Row_TrFrom" xml:space="preserve">
+    <value>Időtartomány: innentől</value>
+  </data>
+  <data name="Row_TrUntil" xml:space="preserve">
+    <value>Időtartomány: idáig</value>
+  </data>
+  <data name="Row_GoTo" xml:space="preserve">
+    <value>Ugrás időponthoz...</value>
+  </data>
+  <data name="Row_NextWarn" xml:space="preserve">
+    <value>Következő figyelmeztetés</value>
+  </data>
+  <data name="Row_PrevWarn" xml:space="preserve">
+    <value>Előző figyelmeztetés</value>
+  </data>
+  <data name="Row_NextErr" xml:space="preserve">
+    <value>Következő hiba</value>
+  </data>
+  <data name="Row_PrevErr" xml:space="preserve">
+    <value>Előző hiba</value>
+  </data>
+  <data name="Row_AddFilter" xml:space="preserve">
+    <value>Hozzáadás a szűrőhöz</value>
+  </data>
+  <data name="Row_Copy" xml:space="preserve">
+    <value>Másolás a vágólapra</value>
+  </data>
+  <data name="Tree_ExpandAll" xml:space="preserve">
+    <value>Összes kibontása</value>
+  </data>
+  <data name="Tree_CollapseAll" xml:space="preserve">
+    <value>Összes összecsukása</value>
+  </data>
+  <data name="Tree_MoveTip" xml:space="preserve">
+    <value>A loggerfa áthelyezése a másik oldalra</value>
+  </data>
+  <data name="Tree_SearchHint" xml:space="preserve">
+    <value>Loggerek keresése</value>
+  </data>
+  <data name="Tree_SearchTip" xml:space="preserve">
+    <value>Csak azokat a loggereket mutatja, amelyek neve tartalmazza a szöveget; a lista bejegyzései nem változnak</value>
+  </data>
+  <data name="Tree_DragTip" xml:space="preserve">
+    <value>Húzással módosítható a loggerfa szélessége</value>
+  </data>
+  <data name="Tree_ToggleTip" xml:space="preserve">
+    <value>A loggerfa megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="Tree_EntriesTip" xml:space="preserve">
+    <value>Bejegyzések</value>
+  </data>
+  <data name="Tree_ErrorsTip" xml:space="preserve">
+    <value>Hibák és végzetes hibák</value>
+  </data>
+  <data name="Tree_WarningsTip" xml:space="preserve">
+    <value>Figyelmeztetések</value>
+  </data>
+  <data name="Col_Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Col_Level" xml:space="preserve">
+    <value>Szint</value>
+  </data>
+  <data name="Col_TimeStamp" xml:space="preserve">
+    <value>Időbélyeg</value>
+  </data>
+  <data name="Col_Logger" xml:space="preserve">
+    <value>Logger neve</value>
+  </data>
+  <data name="Col_Thread" xml:space="preserve">
+    <value>Szál</value>
+  </data>
+  <data name="Col_Message" xml:space="preserve">
+    <value>Üzenet</value>
+  </data>
+  <data name="Col_Properties" xml:space="preserve">
+    <value>Tulajdonságok</value>
+  </data>
+  <data name="Col_TimeZone" xml:space="preserve">
+    <value>Időzóna...</value>
+  </data>
+  <data name="Col_Format" xml:space="preserve">
+    <value>Időbélyeg formátuma</value>
+  </data>
+  <data name="Col_FormatSystem" xml:space="preserve">
+    <value>Rendszer</value>
+  </data>
+  <data name="Cell_Original" xml:space="preserve">
+    <value>Eredeti: {0}</value>
+  </data>
+  <data name="Dlg_GoToTitle" xml:space="preserve">
+    <value>Ugrás időponthoz</value>
+  </data>
+  <data name="Dlg_GoToText" xml:space="preserve">
+    <value>A lista dátuma és időpontja ({0}). Az onnantól első bejegyzés lesz kijelölve.</value>
+  </data>
+  <data name="Dlg_Time" xml:space="preserve">
+    <value>Idő</value>
+  </data>
+  <data name="Dlg_Cancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="Dlg_PickDate" xml:space="preserve">
+    <value>Válasszon dátumot.</value>
+  </data>
+  <data name="Dlg_TrTitle" xml:space="preserve">
+    <value>Időtartomány</value>
+  </data>
+  <data name="Dlg_TrText" xml:space="preserve">
+    <value>A lista dátumai és időpontjai ({0}). A kikapcsolt végpontnak nincs határa; módosításkor bekapcsol.</value>
+  </data>
+  <data name="Dlg_From" xml:space="preserve">
+    <value>Ettől</value>
+  </data>
+  <data name="Dlg_Until" xml:space="preserve">
+    <value>Eddig</value>
+  </data>
+  <data name="Dlg_FirstEntry" xml:space="preserve">
+    <value>Első bejegyzés</value>
+  </data>
+  <data name="Dlg_LastEntry" xml:space="preserve">
+    <value>Utolsó bejegyzés</value>
+  </data>
+  <data name="Dlg_TakeTime" xml:space="preserve">
+    <value>Ennek a bejegyzésnek az időpontja</value>
+  </data>
+  <data name="Dlg_StartAfterEnd" xml:space="preserve">
+    <value>A kezdet a vég után van.</value>
+  </data>
+  <data name="Mp_Date" xml:space="preserve">
+    <value>{0}: dátum</value>
+  </data>
+  <data name="Mp_Hour" xml:space="preserve">
+    <value>{0}: óra</value>
+  </data>
+  <data name="Mp_Minute" xml:space="preserve">
+    <value>{0}: perc</value>
+  </data>
+  <data name="Mp_Second" xml:space="preserve">
+    <value>{0}: másodperc</value>
+  </data>
+  <data name="Msg_ClipFail" xml:space="preserve">
+    <value>A vágólapra másolás sikertelen: {0}</value>
+  </data>
+  <data name="Msg_ClipTitle" xml:space="preserve">
+    <value>Vágólaphiba</value>
+  </data>
+  <data name="Msg_NoExport" xml:space="preserve">
+    <value>Nincs exportálandó bejegyzés.</value>
+  </data>
+  <data name="Msg_ExportTitle" xml:space="preserve">
+    <value>Exportálás</value>
+  </data>
+  <data name="Msg_ExportOk" xml:space="preserve">
+    <value>{0} bejegyzés exportálva ide: {1}</value>
+  </data>
+  <data name="Msg_ExportDone" xml:space="preserve">
+    <value>Az exportálás kész</value>
+  </data>
+  <data name="Msg_ExportFail" xml:space="preserve">
+    <value>Az exportálás sikertelen: {0}</value>
+  </data>
+  <data name="Msg_ExportErr" xml:space="preserve">
+    <value>Exportálási hiba</value>
+  </data>
+  <data name="Zone_Local" xml:space="preserve">
+    <value>helyi</value>
+  </data>
+</root>

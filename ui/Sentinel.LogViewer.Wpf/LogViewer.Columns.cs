@@ -176,7 +176,7 @@ namespace Sentinel.LogViewer.Wpf
             if (SortKey != null && !LogColumns.Normalize(ColumnKeys).Contains(SortKey))
                 ResetSort();
             else
-                UpdateSortMarks();
+                UpdateHeaders();
 
             _columnWidthFitter?.Apply();
         }
@@ -307,26 +307,26 @@ namespace Sentinel.LogViewer.Wpf
                     })
                 };
 
-                menu.Items.Add(Sort("Sort ascending", descending: false));
-                menu.Items.Add(Sort("Sort descending", descending: true));
+                menu.Items.Add(Sort(LogViewerTexts.Get("Sort_Asc"), descending: false));
+                menu.Items.Add(Sort(LogViewerTexts.Get("Sort_Desc"), descending: true));
                 if (SortKey != null)
-                    menu.Items.Add(new MenuItem { Header = "Default view", Command = ResetSortCommand });
+                    menu.Items.Add(new MenuItem { Header = LogViewerTexts.Get("Default_View"), Command = ResetSortCommand });
 
                 menu.Items.Add(new Separator());
             }
 
-            menu.Items.Add(Column("ID", LogColumns.Id));
-            menu.Items.Add(Column("Level", LogColumns.Level));
-            menu.Items.Add(Column("TimeStamp", LogColumns.TimeStamp));
-            menu.Items.Add(Column("LoggerName", LogColumns.Logger));
-            menu.Items.Add(Column("Thread", LogColumns.Thread));
-            menu.Items.Add(Column("Message", LogColumns.Message, enabled: false));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.Id, false), LogColumns.Id));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.Level, false), LogColumns.Level));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.TimeStamp, false), LogColumns.TimeStamp));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.Logger, false), LogColumns.Logger));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.Thread, false), LogColumns.Thread));
+            menu.Items.Add(Column(ColumnTitle(LogColumns.Message, false), LogColumns.Message, enabled: false));
 
             var shown = keys.Where(key => LogColumns.IsProperty(key, out _)).Select(key => key[LogColumns.PropertyPrefix.Length..]);
             var names = _propertyNames.Union(shown, StringComparer.OrdinalIgnoreCase).OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList();
             if (names.Count > 0)
             {
-                var properties = new MenuItem { Header = "Properties" };
+                var properties = new MenuItem { Header = LogViewerTexts.Get("Col_Properties") };
                 foreach (var name in names)
                     properties.Items.Add(Column(name, LogColumns.Property(name)));
 
@@ -339,7 +339,7 @@ namespace Sentinel.LogViewer.Wpf
                 menu.Items.Add(new Separator());
                 menu.Items.Add(TimeStampFormatItems());
                 if (ChangeTimeZoneCommand != null)
-                    menu.Items.Add(new MenuItem { Header = "Time zone...", Command = ChangeTimeZoneCommand, CommandParameter = DataContext });
+                    menu.Items.Add(new MenuItem { Header = LogViewerTexts.Get("Col_TimeZone"), Command = ChangeTimeZoneCommand, CommandParameter = DataContext });
             }
 
             return menu;
@@ -348,19 +348,11 @@ namespace Sentinel.LogViewer.Wpf
         /// <summary>
         /// The header of the time stamp column says which zones are converted, e.g. <c>TimeStamp (UTC+9 → local)</c>
         /// </summary>
-        private void UpdateTimeStampHeader()
-        {
-            if (!_columnsByKey.TryGetValue(LogColumns.TimeStamp, out var column))
-                return;
-
-            var label = (TimeStampResolver as Resolver.TimeStampResolver)?.ZoneLabel;
-            column.Header = string.IsNullOrEmpty(label) ? "TimeStamp" : $"TimeStamp ({label})";
-            UpdateSortMarks();
-        }
+        private void UpdateTimeStampHeader() => UpdateHeaders();
 
         private MenuItem TimeStampFormatItems()
         {
-            var formats = new MenuItem { Header = "Timestamp format", IsEnabled = CanChangeTimeStampFormat };
+            var formats = new MenuItem { Header = LogViewerTexts.Get("Col_Format"), IsEnabled = CanChangeTimeStampFormat };
 
             MenuItem Format(string title, TimeStampFormat format) => new()
             {
@@ -370,12 +362,12 @@ namespace Sentinel.LogViewer.Wpf
                 CommandParameter = format
             };
 
-            formats.Items.Add(Format("System", TimeStampFormat.System));
+            formats.Items.Add(Format(LogViewerTexts.Get("Col_FormatSystem"), TimeStampFormat.System));
             formats.Items.Add(Format("ISO  2025-12-18 15:11:48.385", TimeStampFormat.Iso));
             formats.Items.Add(Format("German  18.12.2025 15:11:48.385", TimeStampFormat.German));
             formats.Items.Add(Format("English  12/18/2025 03:11:48.385 PM", TimeStampFormat.English));
             formats.Items.Add(new Separator());
-            formats.Items.Add(new MenuItem { Header = "Default view", Command = ResetTimeStampFormatCommand });
+            formats.Items.Add(new MenuItem { Header = LogViewerTexts.Get("Default_View"), Command = ResetTimeStampFormatCommand });
             return formats;
         }
 

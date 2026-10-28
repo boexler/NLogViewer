@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Level_Warn" xml:space="preserve">
+    <value>Advertencia</value>
+  </data>
+  <data name="Level_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Level_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Level_Any" xml:space="preserve">
+    <value>Cualquier nivel</value>
+  </data>
+  <data name="Level_OnlyTip" xml:space="preserve">
+    <value>Solo entradas de este nivel</value>
+  </data>
+  <data name="Level_HideTip" xml:space="preserve">
+    <value>Ocultar las entradas de nivel {0} (pulsa de nuevo para mostrarlas)</value>
+  </data>
+  <data name="Ctl_AutoScroll" xml:space="preserve">
+    <value>Desplazamiento automático</value>
+  </data>
+  <data name="Ctl_AutoScrollTip" xml:space="preserve">
+    <value>Desplazamiento automático: ir a la entrada más reciente cuando llegan nuevas</value>
+  </data>
+  <data name="Ctl_Pause" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="Ctl_PauseTip" xml:space="preserve">
+    <value>Pausa: mientras está pulsado, no se añaden entradas nuevas a la lista</value>
+  </data>
+  <data name="Ctl_Clear" xml:space="preserve">
+    <value>Vaciar</value>
+  </data>
+  <data name="Ctl_ClearTip" xml:space="preserve">
+    <value>Vaciar: quitar todas las entradas de la lista</value>
+  </data>
+  <data name="Filter_Name" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="Filter_Hint" xml:space="preserve">
+    <value>Filtrar las entradas</value>
+  </data>
+  <data name="Filter_Tip" xml:space="preserve">
+    <value>Filtrar las entradas por los campos elegidos (Intro para añadir)</value>
+  </data>
+  <data name="Filter_ShowHideName" xml:space="preserve">
+    <value>Mostrar u ocultar las entradas que coinciden</value>
+  </data>
+  <data name="Filter_ShowHideTip" xml:space="preserve">
+    <value>Mostrar las entradas que coinciden, u ocultarlas</value>
+  </data>
+  <data name="Filter_Show" xml:space="preserve">
+    <value>Mostrar</value>
+  </data>
+  <data name="Filter_Hide" xml:space="preserve">
+    <value>Ocultar</value>
+  </data>
+  <data name="Filter_LevelName" xml:space="preserve">
+    <value>Nivel del filtro</value>
+  </data>
+  <data name="Search_LevelName" xml:space="preserve">
+    <value>Nivel de la búsqueda</value>
+  </data>
+  <data name="Opt_MatchCase" xml:space="preserve">
+    <value>Coincidir mayúsculas</value>
+  </data>
+  <data name="Opt_WholeWord" xml:space="preserve">
+    <value>Palabra completa</value>
+  </data>
+  <data name="Opt_Regex" xml:space="preserve">
+    <value>Usar expresiones regulares</value>
+  </data>
+  <data name="Opt_RegexName" xml:space="preserve">
+    <value>Regex</value>
+  </data>
+  <data name="Opt_MatchCaseSearch" xml:space="preserve">
+    <value>Coincidir mayúsculas en la búsqueda</value>
+  </data>
+  <data name="Opt_WholeWordSearch" xml:space="preserve">
+    <value>Palabra completa en la búsqueda</value>
+  </data>
+  <data name="Opt_RegexSearch" xml:space="preserve">
+    <value>Regex en la búsqueda</value>
+  </data>
+  <data name="Opt_Patterns" xml:space="preserve">
+    <value>Patrones ▾</value>
+  </data>
+  <data name="Opt_PatternsTip" xml:space="preserve">
+    <value>Poner una expresión regular preparada en la entrada</value>
+  </data>
+  <data name="Opt_Fields" xml:space="preserve">
+    <value>Campos ▾</value>
+  </data>
+  <data name="Opt_FieldsTip" xml:space="preserve">
+    <value>Las partes de una entrada en las que buscan el filtro y la búsqueda</value>
+  </data>
+  <data name="Fld_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="Fld_Logger" xml:space="preserve">
+    <value>Nombre del logger</value>
+  </data>
+  <data name="Fld_Exception" xml:space="preserve">
+    <value>Excepción</value>
+  </data>
+  <data name="Fld_Thread" xml:space="preserve">
+    <value>Hilo</value>
+  </data>
+  <data name="Fld_Other" xml:space="preserve">
+    <value>Otras propiedades</value>
+  </data>
+  <data name="Tpl_Date" xml:space="preserve">
+    <value>Fecha (2025-12-18)</value>
+  </data>
+  <data name="Tpl_Guid" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Tpl_Ip" xml:space="preserve">
+    <value>Dirección IPv4</value>
+  </data>
+  <data name="Tpl_Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Tpl_Email" xml:space="preserve">
+    <value>Dirección de correo</value>
+  </data>
+  <data name="Tpl_Http" xml:space="preserve">
+    <value>Estado de error HTTP (4xx, 5xx)</value>
+  </data>
+  <data name="Tpl_Exception" xml:space="preserve">
+    <value>Tipo de excepción</value>
+  </data>
+  <data name="Tpl_Words" xml:space="preserve">
+    <value>Una de varias palabras</value>
+  </data>
+  <data name="Tr_Menu" xml:space="preserve">
+    <value>Intervalo de tiempo ▾</value>
+  </data>
+  <data name="Tr_MenuTip" xml:space="preserve">
+    <value>Mostrar solo las entradas de un periodo</value>
+  </data>
+  <data name="Tr_Last15" xml:space="preserve">
+    <value>Últimos 15 minutos</value>
+  </data>
+  <data name="Tr_LastHour" xml:space="preserve">
+    <value>Última hora</value>
+  </data>
+  <data name="Tr_Last24" xml:space="preserve">
+    <value>Últimas 24 horas</value>
+  </data>
+  <data name="Tr_Last7" xml:space="preserve">
+    <value>Últimos 7 días</value>
+  </data>
+  <data name="Tr_Choose" xml:space="preserve">
+    <value>Elegir...</value>
+  </data>
+  <data name="Tr_Clear" xml:space="preserve">
+    <value>Borrar el intervalo de tiempo</value>
+  </data>
+  <data name="Tr_ClearTip" xml:space="preserve">
+    <value>Mostrar de nuevo todas las entradas</value>
+  </data>
+  <data name="Tr_From" xml:space="preserve">
+    <value>desde {0}</value>
+  </data>
+  <data name="Tr_Until" xml:space="preserve">
+    <value>hasta {0}</value>
+  </data>
+  <data name="Hits_One" xml:space="preserve">
+    <value>1 coincidencia</value>
+  </data>
+  <data name="Hits_Many" xml:space="preserve">
+    <value>{0} coincidencias</value>
+  </data>
+  <data name="Find_None" xml:space="preserve">
+    <value>Sin resultados</value>
+  </data>
+  <data name="Find_Invalid" xml:space="preserve">
+    <value>Patrón no válido</value>
+  </data>
+  <data name="Find_EntryOf" xml:space="preserve">
+    <value>Entrada {0} de {1}</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>Búsqueda</value>
+  </data>
+  <data name="Search_Tip" xml:space="preserve">
+    <value>Buscar (Ctrl+F)</value>
+  </data>
+  <data name="Search_Hint" xml:space="preserve">
+    <value>Buscar en las entradas</value>
+  </data>
+  <data name="Search_BoxTip" xml:space="preserve">
+    <value>Buscar en los campos elegidos sin ocultar entradas (Intro / Mayús+Intro o F3 / Mayús+F3: siguiente / anterior, Esc: cerrar)</value>
+  </data>
+  <data name="Search_PrevName" xml:space="preserve">
+    <value>Coincidencia anterior</value>
+  </data>
+  <data name="Search_PrevTip" xml:space="preserve">
+    <value>Coincidencia anterior (Mayús+F3)</value>
+  </data>
+  <data name="Search_NextName" xml:space="preserve">
+    <value>Coincidencia siguiente</value>
+  </data>
+  <data name="Search_NextTip" xml:space="preserve">
+    <value>Coincidencia siguiente (F3)</value>
+  </data>
+  <data name="Search_CloseName" xml:space="preserve">
+    <value>Cerrar la búsqueda</value>
+  </data>
+  <data name="Search_CloseTip" xml:space="preserve">
+    <value>Cerrar la búsqueda (Esc)</value>
+  </data>
+  <data name="Result_All" xml:space="preserve">
+    <value>Entradas: {0:N0}</value>
+  </data>
+  <data name="Result_Of" xml:space="preserve">
+    <value>Entradas: {0:N0} de {1:N0}</value>
+  </data>
+  <data name="Result_Reset" xml:space="preserve">
+    <value>Restablecer filtro</value>
+  </data>
+  <data name="Result_ResetTip" xml:space="preserve">
+    <value>Quitar los niveles, términos, loggers y el intervalo de tiempo</value>
+  </data>
+  <data name="Loggers" xml:space="preserve">
+    <value>Loggers</value>
+  </data>
+  <data name="Chip_LoggersTip" xml:space="preserve">
+    <value>Reglas del árbol de loggers: loggers mostrados solos u ocultos</value>
+  </data>
+  <data name="Chip_ShowAll" xml:space="preserve">
+    <value>Mostrar todos los loggers</value>
+  </data>
+  <data name="Chip_Regex" xml:space="preserve">
+    <value>Regex:</value>
+  </data>
+  <data name="Chip_SwitchTip" xml:space="preserve">
+    <value>Activar o desactivar este término</value>
+  </data>
+  <data name="Chip_ApplyName" xml:space="preserve">
+    <value>Aplicar el término {0}</value>
+  </data>
+  <data name="Chip_EditTip" xml:space="preserve">
+    <value>Editar término de filtro</value>
+  </data>
+  <data name="Chip_EditName" xml:space="preserve">
+    <value>Editar el término {0}</value>
+  </data>
+  <data name="Chip_RemoveTip" xml:space="preserve">
+    <value>Quitar término de filtro</value>
+  </data>
+  <data name="Chip_RemoveName" xml:space="preserve">
+    <value>Quitar el término {0}</value>
+  </data>
+  <data name="Chip_ExcludeTip" xml:space="preserve">
+    <value>Oculta las entradas que coinciden</value>
+  </data>
+  <data name="Sort_By" xml:space="preserve">
+    <value>Ordenado por {0}</value>
+  </data>
+  <data name="Sort_ResetName" xml:space="preserve">
+    <value>Restablecer la ordenación por columna</value>
+  </data>
+  <data name="Sort_ResetTip" xml:space="preserve">
+    <value>Mostrar las entradas en el orden de llegada</value>
+  </data>
+  <data name="Sort_Asc" xml:space="preserve">
+    <value>Ordenar ascendente</value>
+  </data>
+  <data name="Sort_Desc" xml:space="preserve">
+    <value>Ordenar descendente</value>
+  </data>
+  <data name="Default_View" xml:space="preserve">
+    <value>Vista predeterminada</value>
+  </data>
+  <data name="Jump_NoFurther" xml:space="preserve">
+    <value>No hay más entradas de nivel {0}</value>
+  </data>
+  <data name="Jump_NoEarlier" xml:space="preserve">
+    <value>No hay entradas anteriores de nivel {0}</value>
+  </data>
+  <data name="Jump_NoTime" xml:space="preserve">
+    <value>No hay entradas desde esa hora; se selecciona la última</value>
+  </data>
+  <data name="Row_ShowOnly" xml:space="preserve">
+    <value>Mostrar solo este logger</value>
+  </data>
+  <data name="Row_Hide" xml:space="preserve">
+    <value>Ocultar este logger</value>
+  </data>
+  <data name="Row_ShowInTree" xml:space="preserve">
+    <value>Mostrar en el árbol de loggers</value>
+  </data>
+  <data name="Row_TrFrom" xml:space="preserve">
+    <value>Intervalo de tiempo: desde aquí</value>
+  </data>
+  <data name="Row_TrUntil" xml:space="preserve">
+    <value>Intervalo de tiempo: hasta aquí</value>
+  </data>
+  <data name="Row_GoTo" xml:space="preserve">
+    <value>Ir a la hora...</value>
+  </data>
+  <data name="Row_NextWarn" xml:space="preserve">
+    <value>Siguiente advertencia</value>
+  </data>
+  <data name="Row_PrevWarn" xml:space="preserve">
+    <value>Advertencia anterior</value>
+  </data>
+  <data name="Row_NextErr" xml:space="preserve">
+    <value>Siguiente error</value>
+  </data>
+  <data name="Row_PrevErr" xml:space="preserve">
+    <value>Error anterior</value>
+  </data>
+  <data name="Row_AddFilter" xml:space="preserve">
+    <value>Añadir al filtro</value>
+  </data>
+  <data name="Row_Copy" xml:space="preserve">
+    <value>Copiar al portapapeles</value>
+  </data>
+  <data name="Tree_ExpandAll" xml:space="preserve">
+    <value>Expandir todo</value>
+  </data>
+  <data name="Tree_CollapseAll" xml:space="preserve">
+    <value>Contraer todo</value>
+  </data>
+  <data name="Tree_MoveTip" xml:space="preserve">
+    <value>Mover el árbol de loggers al otro lado</value>
+  </data>
+  <data name="Tree_SearchHint" xml:space="preserve">
+    <value>Buscar loggers</value>
+  </data>
+  <data name="Tree_SearchTip" xml:space="preserve">
+    <value>Mostrar solo los loggers cuyo nombre contiene el texto; las entradas de la lista no cambian</value>
+  </data>
+  <data name="Tree_DragTip" xml:space="preserve">
+    <value>Arrastra para cambiar el ancho del árbol de loggers</value>
+  </data>
+  <data name="Tree_ToggleTip" xml:space="preserve">
+    <value>Mostrar u ocultar el árbol de loggers</value>
+  </data>
+  <data name="Tree_EntriesTip" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="Tree_ErrorsTip" xml:space="preserve">
+    <value>Errores y errores fatales</value>
+  </data>
+  <data name="Tree_WarningsTip" xml:space="preserve">
+    <value>Advertencias</value>
+  </data>
+  <data name="Col_Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Col_Level" xml:space="preserve">
+    <value>Nivel</value>
+  </data>
+  <data name="Col_TimeStamp" xml:space="preserve">
+    <value>Marca de tiempo</value>
+  </data>
+  <data name="Col_Logger" xml:space="preserve">
+    <value>Nombre del logger</value>
+  </data>
+  <data name="Col_Thread" xml:space="preserve">
+    <value>Hilo</value>
+  </data>
+  <data name="Col_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="Col_Properties" xml:space="preserve">
+    <value>Propiedades</value>
+  </data>
+  <data name="Col_TimeZone" xml:space="preserve">
+    <value>Zona horaria...</value>
+  </data>
+  <data name="Col_Format" xml:space="preserve">
+    <value>Formato de la marca de tiempo</value>
+  </data>
+  <data name="Col_FormatSystem" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="Cell_Original" xml:space="preserve">
+    <value>Original: {0}</value>
+  </data>
+  <data name="Dlg_GoToTitle" xml:space="preserve">
+    <value>Ir a la hora</value>
+  </data>
+  <data name="Dlg_GoToText" xml:space="preserve">
+    <value>Fecha y hora de la lista ({0}). Se selecciona la primera entrada desde entonces.</value>
+  </data>
+  <data name="Dlg_Time" xml:space="preserve">
+    <value>Hora</value>
+  </data>
+  <data name="Dlg_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Dlg_PickDate" xml:space="preserve">
+    <value>Elija una fecha.</value>
+  </data>
+  <data name="Dlg_TrTitle" xml:space="preserve">
+    <value>Intervalo de tiempo</value>
+  </data>
+  <data name="Dlg_TrText" xml:space="preserve">
+    <value>Fechas y horas de la lista ({0}). Un extremo desactivado no tiene límite; al cambiarlo se activa.</value>
+  </data>
+  <data name="Dlg_From" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="Dlg_Until" xml:space="preserve">
+    <value>Hasta</value>
+  </data>
+  <data name="Dlg_FirstEntry" xml:space="preserve">
+    <value>Primera entrada</value>
+  </data>
+  <data name="Dlg_LastEntry" xml:space="preserve">
+    <value>Última entrada</value>
+  </data>
+  <data name="Dlg_TakeTime" xml:space="preserve">
+    <value>Tomar la hora de esta entrada</value>
+  </data>
+  <data name="Dlg_StartAfterEnd" xml:space="preserve">
+    <value>El inicio es posterior al final.</value>
+  </data>
+  <data name="Mp_Date" xml:space="preserve">
+    <value>{0}: fecha</value>
+  </data>
+  <data name="Mp_Hour" xml:space="preserve">
+    <value>{0}: hora</value>
+  </data>
+  <data name="Mp_Minute" xml:space="preserve">
+    <value>{0}: minuto</value>
+  </data>
+  <data name="Mp_Second" xml:space="preserve">
+    <value>{0}: segundo</value>
+  </data>
+  <data name="Msg_ClipFail" xml:space="preserve">
+    <value>No se pudo copiar al portapapeles: {0}</value>
+  </data>
+  <data name="Msg_ClipTitle" xml:space="preserve">
+    <value>Error del portapapeles</value>
+  </data>
+  <data name="Msg_NoExport" xml:space="preserve">
+    <value>No hay entradas que exportar.</value>
+  </data>
+  <data name="Msg_ExportTitle" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="Msg_ExportOk" xml:space="preserve">
+    <value>Se exportaron {0} entradas a {1}</value>
+  </data>
+  <data name="Msg_ExportDone" xml:space="preserve">
+    <value>Exportación completada</value>
+  </data>
+  <data name="Msg_ExportFail" xml:space="preserve">
+    <value>No se pudo exportar: {0}</value>
+  </data>
+  <data name="Msg_ExportErr" xml:space="preserve">
+    <value>Error de exportación</value>
+  </data>
+  <data name="Zone_Local" xml:space="preserve">
+    <value>local</value>
+  </data>
+</root>
