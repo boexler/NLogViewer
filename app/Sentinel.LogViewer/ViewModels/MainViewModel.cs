@@ -53,6 +53,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private TimeZoneInfo? _lastFileTimeZone;
 	private Wpf.LevelDisplayMode _levelDisplay;
 	private Wpf.RowHeightMode _rowHeight;
+	private TabOrder _tabOrder;
+	private TabLook _tabLook;
+	private bool _arrangingTabs;
 	private string _listFontFamilyName = string.Empty;
 	private int _listFontSize = SettingsRules.DefaultListFontSize;
 	private int _fontZoom;
@@ -119,6 +122,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		ChangeLanguageCommand = new RelayCommand<string>(ChangeLanguage);
 		ExportLogsCommand = new RelayCommand(() => ExportLogs(SelectedTab), () => SelectedTab != null);
 		CloseTabCommand = new RelayCommand<LogTabViewModel>(CloseTab);
+		PinTabCommand = new RelayCommand<LogTabViewModel>(tab => SetPinned(tab, true), tab => tab is { ShowPin: true });
+		UnpinTabCommand = new RelayCommand<LogTabViewModel>(tab => SetPinned(tab, false), tab => tab is { IsPinned: true });
 		CloseOtherTabsCommand = new RelayCommand<LogTabViewModel>(CloseOtherTabs, _ => LogTabs.Count > 1);
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		ChangeTimeZoneCommand = new RelayCommand<LogTabViewModel>(ChangeTimeZone);
@@ -191,7 +196,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		if (tab == null)
 		{
 			tab = CreateLiveTab(firstEvent.AppInfo);
-			LogTabs.Add(tab);
+			AddTab(tab);
 			SelectedTab = tab;
 		}
 		else if (tab.TargetName != appInfoId)
@@ -337,7 +342,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	private void OnLogTabsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
-		if (e.NewItems != null)
+		// A move lists the tab as new and as old, but it is the same tab: it keeps what the user set in it.
+		var moved = e.Action == NotifyCollectionChangedAction.Move;
+		if (e.NewItems != null && !moved)
 		{
 			// A new tab starts with the logger tree and the search fields the way the settings say, before its viewer exists. What the user changes in a tab
 			// is saved as the setting, so that the next tab and the next start use it; tabs that are open keep what they have.
@@ -353,7 +360,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			}
 		}
 
-		if (e.OldItems != null)
+		if (e.OldItems != null && !moved)
 		{
 			foreach (var tab in e.OldItems.OfType<LogTabViewModel>())
 				tab.PropertyChanged -= OnTabViewSettingsChanged;
@@ -370,7 +377,29 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// <summary>
 	/// Removes the selected tab; like the close button of a tab, it does not ask.
 	/// </summary>
-	private void CloseCurrentTab() => CloseTab(SelectedTab);
+	private void CloseCurrentTab() => CloseTabAskingWhenPinned(SelectedTab);
+
+	/// <summary>
+	/// Asks the user a question of a command that closes tabs; the tests answer it themselves
+	/// </summary>
+	internal Func<string, string?, MessageBoxButton, MessageBoxResult> Ask { get; set; } = (message, caption, buttons) =>
+		MessageDialogWindow.Show(System.Windows.Application.Current.MainWindow, message, caption, buttons, MessageBoxImage.Question);
+
+	/// <summary>
+	/// Closes a tab; a pinned tab only after the user confirms (the keyboard and the middle mouse button close it by accident easily)
+	/// </summary>
+	public void CloseTabAskingWhenPinned(LogTabViewModel? tab)
+	{
+		if (tab is { IsPinned: true })
+		{
+			var caption = _localizationService.GetString("Confirm_ClosePinned_Caption", "Close pinned tab");
+			var message = _localizationService.GetString("Confirm_ClosePinned_Message", "This tab is pinned. Do you really want to close it?");
+			if (Ask(message, caption, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+				return;
+		}
+
+		CloseTab(tab);
+	}
 
 	/// <summary>
 	/// Removes a tab without asking (tab header close button and context menu).
@@ -430,6 +459,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			tab.FiltersTakenOver = true;
 		}
 
+		tab.ColourIndex = TabColors.Choose(key, LogTabs.Where(open => open.SenderKey != null).Select(open => (open.SenderKey!, open.ColourIndex)));
+		tab.Look = _tabLook;
+		tab.PinOrder = _applicationTabs.PinOrderOf(key);
 		tab.PropertyChanged += OnLiveTabPropertyChanged;
 		return tab;
 	}
@@ -511,12 +543,15 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var message = _localizationService.GetString(
 			"Confirm_CloseOtherTabs_Message",
 			"Do you really want to close all other tabs?");
-		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
-		    MessageBoxResult.Yes)
+		if (Ask(message, caption, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		foreach (var other in LogTabs.Where(t => !ReferenceEquals(t, tab)).ToList())
+		var others = LogTabs.Where(t => !ReferenceEquals(t, tab)).ToList();
+		var withPinned = AskAboutPinned(others);
+		if (withPinned == null)
+			return;
+
+		foreach (var other in others.Where(t => withPinned == true || !t.IsPinned))
 			LogTabs.Remove(other);
 
 		SelectedTab = tab;
@@ -535,13 +570,17 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var message = _localizationService.GetString(
 			"Confirm_CloseTabsToTheRight_Message",
 			"Do you really want to close all tabs to the right of this one?");
-		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
-		    MessageBoxResult.Yes)
+		if (Ask(message, caption, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		var selectedIsClosed = LogTabs.IndexOf(SelectedTab!) > index;
-		foreach (var right in LogTabs.Skip(index + 1).ToList())
+		var rightOfIt = LogTabs.Skip(index + 1).ToList();
+		var withPinned = AskAboutPinned(rightOfIt);
+		if (withPinned == null)
+			return;
+
+		var closed = rightOfIt.Where(t => withPinned == true || !t.IsPinned).ToList();
+		var selectedIsClosed = closed.Contains(SelectedTab!);
+		foreach (var right in closed)
 			LogTabs.Remove(right);
 
 		if (selectedIsClosed)
@@ -624,13 +663,37 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		var message = _localizationService.GetString(
 			"Confirm_CloseAllTabs_Message",
 			"Do you really want to close all tabs?");
-		var owner = System.Windows.Application.Current.MainWindow;
-		if (MessageDialogWindow.Show(owner, message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) !=
-		    MessageBoxResult.Yes)
+		if (Ask(message, caption, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
 			return;
 
-		LogTabs.Clear();
-		SelectedTab = null;
+		var withPinned = AskAboutPinned(LogTabs.ToList());
+		if (withPinned == null)
+			return;
+
+		foreach (var tab in LogTabs.Where(t => withPinned == true || !t.IsPinned).ToList())
+			LogTabs.Remove(tab);
+
+		if (SelectedTab != null && !LogTabs.Contains(SelectedTab))
+			SelectedTab = LogTabs.FirstOrDefault();
+	}
+
+	/// <summary>
+	/// When some of the tabs that are about to be closed are pinned, asks whether to close them too
+	/// </summary>
+	/// <returns>True to close the pinned tabs as well, false to keep them, null when the user cancels</returns>
+	private bool? AskAboutPinned(IEnumerable<LogTabViewModel> affected)
+	{
+		if (!affected.Any(tab => tab.IsPinned))
+			return true;
+
+		var caption = _localizationService.GetString("Confirm_ClosePinned_Caption", "Close pinned tab");
+		var message = _localizationService.GetString("Confirm_ClosePinnedToo_Message", "Some of these tabs are pinned. Close the pinned tabs too?");
+		return Ask(message, caption, MessageBoxButton.YesNoCancel) switch
+		{
+			MessageBoxResult.Yes => true,
+			MessageBoxResult.No => false,
+			_ => null
+		};
 	}
 
 	/// <summary>
@@ -644,6 +707,10 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public void MoveTab(LogTabViewModel source, LogTabViewModel target, bool insertBefore)
 	{
 		if (source == null || target == null || ReferenceEquals(source, target))
+			return;
+
+		// Pinned tabs stand first and move only among themselves; a tab that is not pinned cannot be dropped between them.
+		if (source.IsPinned != target.IsPinned)
 			return;
 
 		var oldIndex = LogTabs.IndexOf(source);
@@ -660,6 +727,74 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		newIndex = Math.Clamp(newIndex, 0, LogTabs.Count - 1);
 		LogTabs.Move(oldIndex, newIndex);
+
+		if (source.IsPinned)
+		{
+			// The new order of the pinned tabs is kept for their applications.
+			var keys = LogTabs.Where(t => t.IsPinned && t.SenderKey != null).Select(t => t.SenderKey!).Distinct().ToList();
+			_applicationTabs.SetPinOrder(keys);
+			foreach (var pinned in LogTabs.Where(t => t.IsPinned && t.SenderKey != null))
+				pinned.PinOrder = _applicationTabs.PinOrderOf(pinned.SenderKey!);
+		}
+		else if (_tabOrder != TabOrder.ByHand)
+		{
+			// Moving a tab by hand: from now on nothing is sorted and a new tab goes to the end.
+			_tabOrder = TabOrder.ByHand;
+			var configuration = _configService.LoadConfiguration();
+			configuration.TabOrder = nameof(TabOrder.ByHand);
+			_configService.SaveConfiguration(configuration);
+		}
+	}
+
+	/// <summary>
+	/// Adds a tab and puts it where it belongs: after the pinned tabs, and in its place when the tabs are sorted
+	/// </summary>
+	private void AddTab(LogTabViewModel tab)
+	{
+		LogTabs.Add(tab);
+		ArrangeTabs();
+	}
+
+	/// <summary>
+	/// Puts the tabs in the order of the setting, with the pinned tabs first
+	/// </summary>
+	private void ArrangeTabs()
+	{
+		if (_arrangingTabs)
+			return;
+
+		_arrangingTabs = true;
+		try
+		{
+			var wanted = TabOrdering.Arrange(LogTabs.ToList(), _tabOrder);
+			for (var i = 0; i < wanted.Count; i++)
+			{
+				var current = LogTabs.IndexOf(wanted[i]);
+				if (current != i)
+					LogTabs.Move(current, i);
+			}
+		}
+		finally
+		{
+			_arrangingTabs = false;
+		}
+	}
+
+	/// <summary>
+	/// Pins or unpins the tabs of the application of a tab; every tab of the application follows, also the ones that open later
+	/// </summary>
+	private void SetPinned(LogTabViewModel? tab, bool pinned)
+	{
+		if (tab?.SenderKey is not { } key)
+			return;
+
+		var order = _applicationTabs.SetPinned(key, pinned);
+		foreach (var other in LogTabs.Where(t => t.SenderKey == key))
+			other.PinOrder = order;
+
+		ArrangeTabs();
+		((RelayCommand<LogTabViewModel>)PinTabCommand).RaiseCanExecuteChanged();
+		((RelayCommand<LogTabViewModel>)UnpinTabCommand).RaiseCanExecuteChanged();
 	}
 
 	public bool IsListening
@@ -978,6 +1113,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	public ICommand ExportLogsCommand { get; }
 	public ICommand CloseTabCommand { get; }
 
+	/// <summary>Pins the tabs of the application of a tab (the parameter): they stand first, and the pin is kept for the application</summary>
+	public ICommand PinTabCommand { get; }
+
+	/// <summary>Takes the pin off the tabs of the application of a tab</summary>
+	public ICommand UnpinTabCommand { get; }
+
 	/// <summary>Switches whether new tabs of the application of the tab take over its filters; the parameter is the tab</summary>
 	public ICommand ToggleTakeOverFiltersCommand { get; }
 
@@ -1056,7 +1197,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		}
 	}
 
-	private void LoadConfiguration()
+	internal void LoadConfiguration()
 	{
 		var config = _configService.LoadConfiguration();
 		DefaultTimeStampFormat = TimeStampFormats.Parse(config.TimeStampFormat);
@@ -1071,6 +1212,18 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_listFontFamilyName = config.ListFontFamily;
 		LevelDisplay = SettingsRules.ParseLevelDisplay(config.LevelDisplay);
 		RowHeight = SettingsRules.ParseRowHeight(config.RowHeight);
+		_tabLook = TabOrdering.ParseLook(config.TabLook);
+		foreach (var open in LogTabs)
+			open.Look = _tabLook;
+
+		// A sorted order is applied once when it is chosen; by hand nothing is sorted.
+		var order = TabOrdering.Parse(config.TabOrder);
+		if (order != _tabOrder)
+		{
+			_tabOrder = order;
+			ArrangeTabs();
+		}
+
 		_listFontSize = config.ListFontSize;
 		_fontZoom = 0;
 		NotifyFont();
@@ -1452,7 +1605,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 						MaxCount = int.MaxValue,
 						FileTimeZone = newTabZone
 					};
-					LogTabs.Add(ctx.SharedNewTab);
+					AddTab(ctx.SharedNewTab);
 					SelectedTab = ctx.SharedNewTab;
 				}
 				else
@@ -1470,7 +1623,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 					MaxCount = int.MaxValue,
 					FileTimeZone = newTabZone
 				};
-				LogTabs.Add(tab);
+				AddTab(tab);
 				SelectedTab = tab;
 				break;
 		}

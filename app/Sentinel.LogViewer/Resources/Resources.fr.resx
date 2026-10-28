@@ -1447,5 +1447,50 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Réinitialiser le tri des colonnes</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Épingler l’onglet</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Détacher l’onglet</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Onglet épinglé. Fermez-le depuis le menu.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Fermer l’onglet épinglé</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>Cet onglet est épinglé. Voulez-vous vraiment le fermer ?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>Certains de ces onglets sont épinglés. Fermer aussi les onglets épinglés ?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>Couleur des onglets</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>Comment la couleur de l’onglet d’une application est affichée : une bande sur l’onglet ou l’onglet teinté avec un point.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Bande</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Onglet teinté</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>Ordre des onglets</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>Par heure : les onglets suivent l’ordre d’ouverture. Par adresse IP : par l’adresse de l’expéditeur, puis par le nom de l’application. À la main : là où vous les placez ; un nouvel onglet va à la fin. Les onglets épinglés restent toujours en premier. Choisir un ordre trié trie les onglets une fois.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>Par heure</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>Par adresse IP</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>À la main</value>
+  </data>
 </root>
 

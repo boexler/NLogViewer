@@ -140,6 +140,22 @@ namespace Sentinel.LogViewer.ViewModels
             yield return theme;
             yield return timeStampFormat;
 
+            yield return new ChoiceSettingViewModel(AppearanceId, "",
+                Text("Settings_TabLook", "Colour of the tabs"),
+                Text("Settings_TabLook_Description", "How the colour of the tab of an application is shown: a stripe over the tab, or the tab tinted with a dot."),
+                options: new[]
+                {
+                    new ChoiceOption(nameof(TabLook.Stripe), Text("Settings_TabLook_Stripe", "Stripe")),
+                    new ChoiceOption(nameof(TabLook.Tinted), Text("Settings_TabLook_Tinted", "Tinted tab"))
+                },
+                get: () => TabOrdering.ParseLook(_configuration.TabLook).ToString(),
+                set: look =>
+                {
+                    _configuration.TabLook = look;
+                    Commit();
+                },
+                getDefault: () => ConfigurationService.CreateDefaultConfiguration().TabLook);
+
             var loggerTree = new SettingGroup("\uE8FD",
                 Text("Settings_Group_LoggerTree", "Logger tree"),
                 Text("Settings_Group_LoggerTree_Subtitle", "Default view for new tabs"));

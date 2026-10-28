@@ -341,7 +341,7 @@ namespace Sentinel.LogViewer
         {
             if (e.ChangedButton == MouseButton.Middle && sender is TabItem { DataContext: LogTabViewModel tab })
             {
-                _viewModel.CloseTabCommand.Execute(tab);
+                _viewModel.CloseTabAskingWhenPinned(tab);
                 e.Handled = true;
             }
         }

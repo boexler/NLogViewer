@@ -1450,5 +1450,50 @@
   <data name="Tab_ResetSorting" xml:space="preserve">
     <value>Reset column sorting</value>
   </data>
+  <data name="Tab_Pin" xml:space="preserve">
+    <value>Pin tab</value>
+  </data>
+  <data name="Tab_Unpin" xml:space="preserve">
+    <value>Unpin tab</value>
+  </data>
+  <data name="Tab_PinnedToolTip" xml:space="preserve">
+    <value>Pinned tab. Close it through the menu.</value>
+  </data>
+  <data name="Confirm_ClosePinned_Caption" xml:space="preserve">
+    <value>Close pinned tab</value>
+  </data>
+  <data name="Confirm_ClosePinned_Message" xml:space="preserve">
+    <value>This tab is pinned. Do you really want to close it?</value>
+  </data>
+  <data name="Confirm_ClosePinnedToo_Message" xml:space="preserve">
+    <value>Some of these tabs are pinned. Close the pinned tabs too?</value>
+  </data>
+  <data name="Settings_TabLook" xml:space="preserve">
+    <value>Colour of the tabs</value>
+  </data>
+  <data name="Settings_TabLook_Description" xml:space="preserve">
+    <value>How the colour of the tab of an application is shown: a stripe over the tab, or the tab tinted with a dot.</value>
+  </data>
+  <data name="Settings_TabLook_Stripe" xml:space="preserve">
+    <value>Stripe</value>
+  </data>
+  <data name="Settings_TabLook_Tinted" xml:space="preserve">
+    <value>Tinted tab</value>
+  </data>
+  <data name="Settings_TabOrder" xml:space="preserve">
+    <value>Order of tabs</value>
+  </data>
+  <data name="Settings_TabOrder_Description" xml:space="preserve">
+    <value>By time: the tabs stand in the order they were opened. By IP address: by the address of the sender, then by the name of the application. By hand: where you put them; a new tab goes to the end. Pinned tabs always stand first. Choosing a sorted order sorts the tabs once.</value>
+  </data>
+  <data name="Settings_TabOrder_Time" xml:space="preserve">
+    <value>By time</value>
+  </data>
+  <data name="Settings_TabOrder_Ip" xml:space="preserve">
+    <value>By IP address</value>
+  </data>
+  <data name="Settings_TabOrder_Hand" xml:space="preserve">
+    <value>By hand</value>
+  </data>
 </root>
 

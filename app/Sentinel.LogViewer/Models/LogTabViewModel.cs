@@ -28,6 +28,10 @@ namespace Sentinel.LogViewer.Models
         private TimeZoneInfo? _displayTimeZone;
         private string? _sortKey;
         private bool _sortDescending;
+        private static long _lastSequence;
+        private int _colourIndex = -1;
+        private TabLook _look;
+        private int? _pinOrder;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewer.ItemsSource"/>.
@@ -88,8 +92,89 @@ namespace Sentinel.LogViewer.Models
         /// </summary>
         public string? SenderKey { get; set; }
 
-        /// <summary>The colour of the tab of an application that sends logs; null for the tab of a file</summary>
-        public System.Windows.Media.Brush? AccentBrush => SenderKey == null ? null : Services.TabColors.BrushFor(SenderKey);
+        /// <summary>Counts the tabs in the order they were made, so tabs can be put in the order of time</summary>
+        public long Sequence { get; } = System.Threading.Interlocked.Increment(ref _lastSequence);
+
+        /// <summary>The number of the colour of the tab of an application that sends logs, see <see cref="Services.TabColors"/>; -1 for the tab of a file</summary>
+        public int ColourIndex
+        {
+            get => _colourIndex;
+            set
+            {
+                if (_colourIndex == value)
+                    return;
+
+                _colourIndex = value;
+                NotifyLook();
+            }
+        }
+
+        /// <summary>How the colour is shown, which the application sets for all tabs</summary>
+        public TabLook Look
+        {
+            get => _look;
+            set
+            {
+                if (_look == value)
+                    return;
+
+                _look = value;
+                NotifyLook();
+            }
+        }
+
+        private bool HasColour => IsLive && _colourIndex >= 0;
+
+        /// <summary>The stripe over the whole tab in the dark shade; null when the tab is shown tinted or has no colour</summary>
+        public System.Windows.Media.Brush? StripeBrush => HasColour && _look == TabLook.Stripe ? Services.TabColors.DarkBrush(_colourIndex) : null;
+
+        /// <summary>Whether the tab is tinted</summary>
+        public bool IsTinted => HasColour && _look == TabLook.Tinted;
+
+        /// <summary>The round dot in the dark shade, for the tinted tab</summary>
+        public System.Windows.Media.Brush? DotBrush => HasColour && _look == TabLook.Tinted ? Services.TabColors.DarkBrush(_colourIndex) : null;
+
+        /// <summary>The light shade as the background of a tinted tab</summary>
+        public System.Windows.Media.Brush? TintBrush => HasColour && _look == TabLook.Tinted ? Services.TabColors.LightBrush(_colourIndex) : null;
+
+        /// <summary>The background of a tinted tab that is selected: stronger than the tint</summary>
+        public System.Windows.Media.Brush? TintSelectedBrush => HasColour && _look == TabLook.Tinted ? Services.TabColors.StrongBrush(_colourIndex) : null;
+
+        private void NotifyLook()
+        {
+            OnPropertyChanged(nameof(ColourIndex));
+            OnPropertyChanged(nameof(Look));
+            OnPropertyChanged(nameof(StripeBrush));
+            OnPropertyChanged(nameof(IsTinted));
+            OnPropertyChanged(nameof(DotBrush));
+            OnPropertyChanged(nameof(TintBrush));
+            OnPropertyChanged(nameof(TintSelectedBrush));
+        }
+
+        /// <summary>Where the tab stands among the pinned tabs; null when it is not pinned</summary>
+        public int? PinOrder
+        {
+            get => _pinOrder;
+            set
+            {
+                if (_pinOrder == value)
+                    return;
+
+                _pinOrder = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsPinned));
+                OnPropertyChanged(nameof(ShowPin));
+                OnPropertyChanged(nameof(ShowClose));
+            }
+        }
+
+        public bool IsPinned => _pinOrder != null;
+
+        /// <summary>Whether the menu offers to pin the tab: only the tab of an application can be pinned, a file has no key to keep it by</summary>
+        public bool ShowPin => IsLive && !IsPinned;
+
+        /// <summary>A pinned tab has no close button</summary>
+        public bool ShowClose => !IsPinned;
 
         /// <summary>The name of the application that sends to the tab; empty for the tab of a file</summary>
         public string ApplicationName { get; set; } = string.Empty;
