@@ -10,13 +10,12 @@ namespace Sentinel.LogViewer.ViewModels.Settings;
 /// </summary>
 public abstract class SettingViewModel : INotifyPropertyChanged
 {
-	protected SettingViewModel(string categoryId, string icon, string title, string description, bool needsRestart)
+	protected SettingViewModel(string categoryId, string icon, string title, string description)
 	{
 		CategoryId = categoryId;
 		Icon = icon;
 		Title = title;
 		Description = description;
-		NeedsRestart = needsRestart;
 	}
 
 	public string CategoryId { get; }
@@ -45,11 +44,6 @@ public abstract class SettingViewModel : INotifyPropertyChanged
 	/// and is not offered by the search
 	/// </summary>
 	public bool IsEmbedded { get; init; }
-
-	/// <summary>
-	/// Whether a change only takes full effect after restarting the application
-	/// </summary>
-	public bool NeedsRestart { get; }
 
 	/// <summary>
 	/// Returns whether the title or the description contains the text
@@ -88,9 +82,9 @@ public abstract class ValueSettingViewModel<T> : SettingViewModel
 
 	/// <param name="set">Stores and saves the value</param>
 	/// <param name="reset">Sets the setting back to its default when that is more than assigning the default value</param>
-	protected ValueSettingViewModel(string categoryId, string icon, string title, string description, bool needsRestart,
+	protected ValueSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<T> get, Action<T> set, Func<T> getDefault, Action? reset)
-		: base(categoryId, icon, title, description, needsRestart)
+		: base(categoryId, icon, title, description)
 	{
 		_get = get;
 		_set = set;
@@ -129,7 +123,7 @@ public abstract class ValueSettingViewModel<T> : SettingViewModel
 /// </summary>
 public sealed class BoolSettingViewModel(string categoryId, string icon, string title, string description,
 	Func<bool> get, Action<bool> set, Func<bool> getDefault, Action? reset = null)
-	: ValueSettingViewModel<bool>(categoryId, icon, title, description, false, get, set, getDefault, reset);
+	: ValueSettingViewModel<bool>(categoryId, icon, title, description, get, set, getDefault, reset);
 
 /// <summary>
 /// One entry of a <see cref="ChoiceSettingViewModel"/>
@@ -146,9 +140,9 @@ public sealed record ChoiceOption(string Value, string Display)
 /// <summary>
 /// A setting with a fixed list of values
 /// </summary>
-public sealed class ChoiceSettingViewModel(string categoryId, string icon, string title, string description, bool needsRestart,
+public sealed class ChoiceSettingViewModel(string categoryId, string icon, string title, string description,
 	IReadOnlyList<ChoiceOption> options, Func<string> get, Action<string> set, Func<string> getDefault, Action? reset = null)
-	: ValueSettingViewModel<string>(categoryId, icon, title, description, needsRestart, get, set, getDefault, reset)
+	: ValueSettingViewModel<string>(categoryId, icon, title, description, get, set, getDefault, reset)
 {
 	public IReadOnlyList<ChoiceOption> Options { get; } = options;
 }

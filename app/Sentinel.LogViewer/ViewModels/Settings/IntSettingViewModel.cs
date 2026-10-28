@@ -20,7 +20,7 @@ public class IntSettingViewModel : SettingViewModel
 	/// <param name="invalidMessage">Shown when the input is not a whole number or not allowed</param>
 	public IntSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<int> get, Action<int> set, Func<int> getDefault, Func<int, bool> isValid, string invalidMessage)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_get = get;
 		_set = set;

@@ -63,7 +63,7 @@ public sealed class ListLookSettingViewModel : SettingViewModel
 		IReadOnlyList<ChoiceOption> levelOptions, IReadOnlyList<ChoiceOption> rowHeightOptions, IReadOnlyList<ChoiceOption> fontOptions,
 		Func<string> getLevel, Action<string> setLevel, Func<string> getRowHeight, Action<string> setRowHeight,
 		Func<string> getFamily, Action<string> setFamily, Func<int> getSize, Action<int> setSize, string invalidSizeMessage, Action reset)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_mode = colourMode;
 		_theme = theme;

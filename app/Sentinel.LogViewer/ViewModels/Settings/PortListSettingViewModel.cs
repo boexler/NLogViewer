@@ -25,7 +25,7 @@ public sealed class PortListSettingViewModel : SettingViewModel
 	public PortListSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<IReadOnlyList<string>> get, Action<List<string>> set, Func<IReadOnlyList<string>> getDefault,
 		string invalidAddressMessage, string duplicatePortMessage)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_get = get;
 		_set = set;

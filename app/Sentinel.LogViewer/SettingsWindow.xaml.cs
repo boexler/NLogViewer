@@ -2,7 +2,11 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Threading;
+using Sentinel.LogViewer.Controls;
 using Sentinel.LogViewer.Helpers;
 using Sentinel.LogViewer.ViewModels;
 
@@ -21,6 +25,48 @@ namespace Sentinel.LogViewer
             _viewModel.Dialogs = new WpfSettingsDialogs(this);
             InitializeComponent();
             DataContext = _viewModel;
+            _viewModel.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(SettingsViewModel.Categories))
+                    KeepFocusInItsCard();
+            };
+        }
+
+        /// <summary>
+        /// The page is made again when the language is set, so the drop-down that was just used with the keyboard is a new one; the focus goes
+        /// to the same card on the new page
+        /// </summary>
+        private void KeepFocusInItsCard()
+        {
+            var card = FocusManager.GetFocusedElement(this) as DependencyObject;
+            while (card != null && card is not SettingCard)
+                card = VisualTreeHelper.GetParent(card);
+
+            var index = Cards(this).IndexOf((SettingCard?)card!);
+            if (index < 0)
+                return;
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () =>
+            {
+                var cards = Cards(this);
+                if (index < cards.Count)
+                    cards[index].MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
+            });
+        }
+
+        private static List<SettingCard> Cards(DependencyObject parent)
+        {
+            var cards = new List<SettingCard>();
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is SettingCard card)
+                    cards.Add(card);
+
+                cards.AddRange(Cards(child));
+            }
+
+            return cards;
         }
 
         /// <summary>

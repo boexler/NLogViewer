@@ -304,9 +304,6 @@
   <data name="Settings_ExportFailed" xml:space="preserve">
     <value>Setările nu au putut fi exportate: {0}</value>
   </data>
-  <data name="Settings_RestartRequired" xml:space="preserve">
-    <value>Necesită repornire</value>
-  </data>
   <data name="Settings_AddPort" xml:space="preserve">
     <value>Adaugă port</value>
   </data>

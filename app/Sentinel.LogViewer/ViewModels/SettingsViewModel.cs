@@ -215,7 +215,6 @@ namespace Sentinel.LogViewer.ViewModels
                 new ChoiceSettingViewModel(GeneralId, "",
                     Text("Settings_Language", "Language"),
                     Text("Settings_Language_Description", "Language of the menus and dialogs."),
-                    needsRestart: false,
                     options: LocalizationService.AvailableLanguages.Keys
                         .Select(code => new ChoiceOption(code, LocalizationService.LanguageNames.GetValueOrDefault(code, code)))
                         .ToList(),
@@ -245,7 +244,6 @@ namespace Sentinel.LogViewer.ViewModels
                 new ChoiceSettingViewModel(GeneralId, "",
                     Text("Settings_TrayNotify", "Notify about new log entries in the tray"),
                     Text("Settings_TrayNotify_Description", "While the window is in the tray, a notification shows when new entries of at least this level arrive, at most one every 30 seconds. Clicking the notification opens the window."),
-                    needsRestart: false,
                     options: new[]
                     {
                         new ChoiceOption(SettingsRules.TrayNotifyOff, Text("Settings_TrayNotify_Off", "Off")),
@@ -317,7 +315,6 @@ namespace Sentinel.LogViewer.ViewModels
                 new ChoiceSettingViewModel(ReceivingId, "\uE72C",
                     Text("Settings_AfterRestart", "After a restart of an application"),
                     Text("Settings_AfterRestart_Description", "What happens when an application that sends logs starts again. Each application can be set differently in the menu of its tab."),
-                    needsRestart: false,
                     options: new List<ChoiceOption>
                     {
                         new(nameof(RestartBehavior.NewTab), Text("Restart_NewTab", "Open a new tab")),

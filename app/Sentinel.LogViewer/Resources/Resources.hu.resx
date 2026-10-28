@@ -304,9 +304,6 @@
   <data name="Settings_ExportFailed" xml:space="preserve">
     <value>A beállításokat nem sikerült exportálni: {0}</value>
   </data>
-  <data name="Settings_RestartRequired" xml:space="preserve">
-    <value>Újraindítás szükséges</value>
-  </data>
   <data name="Settings_AddPort" xml:space="preserve">
     <value>Port hozzáadása</value>
   </data>

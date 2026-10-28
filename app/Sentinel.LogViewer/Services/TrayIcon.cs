@@ -71,6 +71,9 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 
 	public bool IsVisible => _icon.Visible;
 
+	/// <summary>The texts of the entries of the menu, for the tests</summary>
+	internal string[] MenuTexts => _icon.ContextMenuStrip!.Items.Cast<System.Windows.Forms.ToolStripItem>().Select(item => item.Text ?? string.Empty).ToArray();
+
 	public string ToolTip
 	{
 		set => _icon.Text = value.Length > MaxToolTipLength ? value[..MaxToolTipLength] : value;

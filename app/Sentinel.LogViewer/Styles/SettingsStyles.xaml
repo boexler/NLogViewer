@@ -33,12 +33,6 @@
                                     <TextBlock Text="{Binding Setting.Title, RelativeSource={RelativeSource TemplatedParent}}"
                                                FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource ThemeTextPrimary}"/>
-                                    <Border Background="{DynamicResource ThemeWarningBackground}" CornerRadius="4"
-                                            Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
-                                            Visibility="{Binding Setting.NeedsRestart, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ThemeBoolToVisibility}}">
-                                        <TextBlock Text="{helpers:Resource Key=Settings_RestartRequired, DefaultValue=Restart required}"
-                                                   FontSize="11" Foreground="{DynamicResource ThemeWarningText}"/>
-                                    </Border>
                                 </StackPanel>
                                 <TextBlock Text="{Binding Setting.Description, RelativeSource={RelativeSource TemplatedParent}}"
                                            FontSize="12" TextWrapping="Wrap" Margin="0,3,0,0"

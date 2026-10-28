@@ -136,6 +136,28 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		});
 
 	[Fact]
+	public void TheUpdateNotice_IsWrittenAgainInTheNewLanguage() =>
+		_context.RunOnSta(() =>
+		{
+			try
+			{
+				_environment.Localization.Initialize();
+				_environment.Localization.SetLanguage("en");
+				using var session = Start();
+				Assert.True(ReleaseVersion.TryParse("9.9.9", out var version));
+				session.ViewModel.NoticeUpdate = new AvailableUpdate(version, "https://example.test/release", "v9.9.9", null);
+
+				_environment.Localization.SetLanguage("de");
+
+				Assert.Equal("Update auf 9.9.9 verfügbar", session.ViewModel.UpdateNotice);
+			}
+			finally
+			{
+				_environment.Localization.SetLanguage("en");
+			}
+		});
+
+	[Fact]
 	public void ANewTabOfARestartedApplication_TakesOverTheFilters_AndTheyCanBeRemoved()
 	{
 		_context.RunOnSta(() =>
@@ -623,6 +645,27 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 				: new[] { keys };
 		}
 	}
+
+	[Fact]
+	public void TheMenuOfTheNotifyIcon_IsWrittenAgainInTheNewLanguage() =>
+		_context.RunOnSta(() =>
+		{
+			try
+			{
+				_environment.Localization.Initialize();
+				_environment.Localization.SetLanguage("en");
+				using var tray = new NotifyIconTray(_environment.Localization);
+				Assert.Equal(new[] { "Open", "Exit" }, tray.MenuTexts);
+
+				_environment.Localization.SetLanguage("de");
+
+				Assert.Equal(new[] { "Öffnen", "Beenden" }, tray.MenuTexts);
+			}
+			finally
+			{
+				_environment.Localization.SetLanguage("en");
+			}
+		});
 
 	[Fact]
 	public void TheNotifyIconOfWindows_HasTheIconOfTheApplication_AndAToolTipThatFits()

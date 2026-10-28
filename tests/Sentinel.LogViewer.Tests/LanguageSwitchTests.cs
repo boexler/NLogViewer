@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
+using Sentinel.LogViewer.Controls;
 using Sentinel.LogViewer.Helpers;
 using Sentinel.LogViewer.Tests.ViewModels;
 using Sentinel.LogViewer.ViewModels.Settings;
@@ -73,21 +75,28 @@ public class LanguageSwitchTests
 		WithEnvironment(environment =>
 		{
 			var viewModel = environment.CreateViewModel();
-			viewModel.SelectedCategory = viewModel.Category("Appearance");
 			var window = PrepareForTest(new SettingsWindow(viewModel));
 			window.Show();
 			Settle();
 			try
 			{
 				Assert.Contains(Descendants<TextBlock>(window), text => text.Text == "Appearance");
-				Assert.False(viewModel.Setting<ChoiceSettingViewModel>("Language").NeedsRestart);
 
+				// The drop-down of the language has the focus (keyboard), and the change makes the page again: the focus stays on the new drop-down.
+				viewModel.SelectedCategory = viewModel.Category("General");
+				Settle();
+				var language = () => Descendants<SettingCard>(window).First(card => card.Setting is ChoiceSettingViewModel { CategoryId: "General" });
+				Descendants<ComboBox>(language()).Single().Focus();
 				viewModel.Setting<ChoiceSettingViewModel>("Language").Value = "de";
 				Settle();
 
-				Assert.Equal("Appearance", viewModel.SelectedCategory!.Id);
-				Assert.Equal("Darstellung", viewModel.SelectedCategory.Title);
-				Assert.Contains(viewModel.Categories, category => category.Title == "Allgemein");
+				var focused = (DependencyObject)FocusManager.GetFocusedElement(window)!;
+				Assert.IsType<ComboBox>(focused);
+				Assert.True(language().IsAncestorOf(focused));
+				Assert.Equal("Sprache", language().Setting!.Title);
+
+				Assert.Equal("General", viewModel.SelectedCategory!.Id);
+				Assert.Equal("Allgemein", viewModel.SelectedCategory.Title);
 				Assert.Contains(Descendants<TextBlock>(window), text => text.Text == "Darstellung");
 				Assert.DoesNotContain(Descendants<TextBlock>(window), text => text.Text == "Appearance");
 				Assert.Equal("de", environment.Saved.Language);

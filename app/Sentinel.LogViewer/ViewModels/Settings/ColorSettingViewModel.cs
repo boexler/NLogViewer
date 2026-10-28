@@ -23,7 +23,7 @@ public sealed class ColorSettingViewModel : SettingViewModel
 	/// <param name="invalidMessage">Shown when the input is not a colour</param>
 	public ColorSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<string> getColor, Func<bool> isCustom, Action<string?> setCustom, string invalidMessage)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_getColor = getColor;
 		_isCustom = isCustom;

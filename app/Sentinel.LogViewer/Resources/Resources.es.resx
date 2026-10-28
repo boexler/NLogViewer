@@ -304,9 +304,6 @@
   <data name="Settings_ExportFailed" xml:space="preserve">
     <value>No se pudo exportar la configuración: {0}</value>
   </data>
-  <data name="Settings_RestartRequired" xml:space="preserve">
-    <value>Requiere reinicio</value>
-  </data>
   <data name="Settings_AddPort" xml:space="preserve">
     <value>Añadir puerto</value>
   </data>

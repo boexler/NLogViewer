@@ -209,7 +209,6 @@ public class SettingsViewModelTests : IDisposable
 
 		language.Value = "fr";
 
-		Assert.False(language.NeedsRestart);
 		Assert.Equal("fr", _environment.Saved.Language);
 		Assert.Equal("fr", _environment.Localization.CurrentLanguageCode);
 		Assert.Contains(language.Options, option => option.Value == "de" && option.Display == "Deutsch");
