@@ -69,6 +69,9 @@
                 <MenuItem Header="{helpers:Resource Key=Tab_TimeZone, DefaultValue=Time zone...}"
                           Command="{Binding PlacementTarget.Tag.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                           CommandParameter="{Binding}"/>
+                <MenuItem Header="{helpers:Resource Key=Tab_ResetSorting, DefaultValue=Reset column sorting}"
+                          Command="{Binding PlacementTarget.Tag.ResetSortCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                          CommandParameter="{Binding}"/>
                 <!-- A file has no sender and no restart, so what belongs to an application is only shown for a tab of logs from the network -->
                 <Separator Visibility="{Binding IsLive, Converter={StaticResource ThemeBoolToVisibility}}"/>
                 <MenuItem Header="{helpers:Resource Key=Tab_TakeOverFilters, DefaultValue=Take over the filters into new tabs of this application}"
@@ -155,6 +158,8 @@
                     IsLoggerTreeOnLeft="{Binding DataContext.LoggerTreeOnLeft, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeExpanded="{Binding DataContext.LoggerTreeOpen, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     LoggerTreeWidth="{Binding DataContext.LoggerTreeWidth, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    SortKey="{Binding DataContext.SortKey, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
+                    SortDescending="{Binding DataContext.SortDescending, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     SearchFields="{Binding DataContext.SearchFields, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     ColumnKeys="{Binding DataContext.ColumnKeys, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     FileTimeZone="{Binding DataContext.FileTimeZone, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"

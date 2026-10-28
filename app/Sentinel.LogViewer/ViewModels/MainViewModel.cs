@@ -121,6 +121,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		CloseOtherTabsCommand = new RelayCommand<LogTabViewModel>(CloseOtherTabs, _ => LogTabs.Count > 1);
 		SaveFilteredListCommand = new RelayCommand<LogTabViewModel>(SaveFilteredList);
 		ChangeTimeZoneCommand = new RelayCommand<LogTabViewModel>(ChangeTimeZone);
+		ResetSortCommand = new RelayCommand<LogTabViewModel>(tab =>
+		{
+			tab.SortDescending = false;
+			tab.SortKey = null;
+		}, tab => tab?.SortKey != null);
 		CloseCurrentTabCommand = new RelayCommand(CloseCurrentTab, () => SelectedTab != null && LogTabs.Count > 0);
 		CloseAllTabsCommand = new RelayCommand(CloseAllTabs, () => LogTabs.Count > 0);
 		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
@@ -982,6 +987,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 	/// <summary>Opens the dialog for the time zones of a tab; the parameter is the tab</summary>
 	public ICommand ChangeTimeZoneCommand { get; }
+
+	/// <summary>Shows the entries of a tab in the order in which they came in; the parameter is the tab</summary>
+	public ICommand ResetSortCommand { get; }
 	public ICommand CloseCurrentTabCommand { get; }
 
 	/// <summary>Closes the tabs to the right of the tab; the parameter is the tab</summary>

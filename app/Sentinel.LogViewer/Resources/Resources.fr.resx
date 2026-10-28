@@ -1450,5 +1450,8 @@
   <data name="Shortcut_Find" xml:space="preserve">
     <value>Ouvrir la barre de recherche ; Échap dans la barre la ferme et efface la recherche</value>
   </data>
+  <data name="Tab_ResetSorting" xml:space="preserve">
+    <value>Réinitialiser le tri des colonnes</value>
+  </data>
 </root>
 

@@ -1450,6 +1450,9 @@
   <data name="Shortcut_Find" xml:space="preserve">
     <value>Deschide bara de căutare; Esc în bară o închide și șterge căutarea</value>
   </data>
+  <data name="Tab_ResetSorting" xml:space="preserve">
+    <value>Resetează sortarea coloanelor</value>
+  </data>
 </root>
 
 

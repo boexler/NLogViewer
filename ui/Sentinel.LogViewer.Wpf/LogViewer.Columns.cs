@@ -108,6 +108,7 @@ namespace Sentinel.LogViewer.Wpf
             gridView.Columns.CollectionChanged += OnGridColumnsChanged;
             PART_ListView.PreviewMouseRightButtonUp += OnListViewPreviewMouseRightButtonUp;
             PART_ListView.PreviewMouseRightButtonDown += OnListViewPreviewMouseRightButtonDown;
+            PART_ListView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(OnColumnHeaderClick));
             _columnsReady = true;
             UpdateTimeStampHeader();
 
@@ -170,6 +171,12 @@ namespace Sentinel.LogViewer.Wpf
             {
                 _applyingColumns = false;
             }
+
+            // A column that is hidden cannot be the one that the list is sorted by.
+            if (SortKey != null && !LogColumns.Normalize(ColumnKeys).Contains(SortKey))
+                ResetSort();
+            else
+                UpdateSortMarks();
 
             _columnWidthFitter?.Apply();
         }
@@ -286,6 +293,28 @@ namespace Sentinel.LogViewer.Wpf
                 return item;
             }
 
+            if (_columnKeys.GetValueOrDefault(column) is { } sortKey)
+            {
+                MenuItem Sort(string title, bool descending) => new()
+                {
+                    Header = title,
+                    IsCheckable = true,
+                    IsChecked = SortKey == sortKey && SortDescending == descending,
+                    Command = new RelayCommand(() =>
+                    {
+                        SortDescending = descending;
+                        SortKey = sortKey;
+                    })
+                };
+
+                menu.Items.Add(Sort("Sort ascending", descending: false));
+                menu.Items.Add(Sort("Sort descending", descending: true));
+                if (SortKey != null)
+                    menu.Items.Add(new MenuItem { Header = "Default view", Command = ResetSortCommand });
+
+                menu.Items.Add(new Separator());
+            }
+
             menu.Items.Add(Column("ID", LogColumns.Id));
             menu.Items.Add(Column("Level", LogColumns.Level));
             menu.Items.Add(Column("TimeStamp", LogColumns.TimeStamp));
@@ -326,6 +355,7 @@ namespace Sentinel.LogViewer.Wpf
 
             var label = (TimeStampResolver as Resolver.TimeStampResolver)?.ZoneLabel;
             column.Header = string.IsNullOrEmpty(label) ? "TimeStamp" : $"TimeStamp ({label})";
+            UpdateSortMarks();
         }
 
         private MenuItem TimeStampFormatItems()

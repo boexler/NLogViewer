@@ -542,7 +542,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             // Refresh the view to apply the filter
             collectionView.Refresh();
             if (listView != null)
-                _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter);
+                _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter, shownOrder: SortKey != null);
             ScheduleFindUpdate();
             PublishFilterState();
         }
@@ -801,7 +801,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="IdResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new IdResolver()));
+        public static readonly DependencyProperty IdResolverProperty = DependencyProperty.Register(nameof(IdResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new IdResolver(), OnSortResolverChanged));
         
         /// <summary>
         /// The <see cref="ILogEntryResolver"/> to format the timestamp output
@@ -831,7 +831,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="LoggerNameResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new LoggerNameResolver()));
+        public static readonly DependencyProperty LoggerNameResolverProperty = DependencyProperty.Register(nameof(LoggerNameResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new LoggerNameResolver(), OnSortResolverChanged));
         
         /// <summary>
         /// The <see cref="ILogEntryResolver"/> to format the message
@@ -846,7 +846,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         /// <summary>
         /// The <see cref="MessageResolver"/> DependencyProperty.
         /// </summary>
-        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new MessageResolver()));
+        public static readonly DependencyProperty MessageResolverProperty = DependencyProperty.Register(nameof(MessageResolver), typeof(ILogEntryResolver), typeof(LogViewer), new PropertyMetadata(new MessageResolver(), OnSortResolverChanged));
 
         /// <summary>
         /// The <see cref="ILogExportFormatter"/> to format log entries for export
@@ -1452,6 +1452,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             AttachEffectiveCollectionChangedHandler();
             LoggerTree.Rebuild(GetEffectiveEntries());
+            SetViewSort();
             LogEvents?.View?.Refresh();
             UpdateFilter();
             CollectPropertyNames(GetEffectiveEntries());

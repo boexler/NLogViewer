@@ -153,6 +153,10 @@ namespace Sentinel.LogViewer.Wpf
         {
             (d as LogViewer)?.UpdateTimeStampFormat();
             (d as LogViewer)?.PublishFilterState();
+
+            // The order by time compares moments, which depend on the zone in which the times without a zone were written.
+            if (e.Property == FileTimeZoneProperty && d is LogViewer { SortKey: LogColumns.TimeStamp } viewer)
+                viewer.SetViewSort();
         }
 
         private static void OnTimeStampResolverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

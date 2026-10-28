@@ -26,6 +26,8 @@ namespace Sentinel.LogViewer.Models
         private IReadOnlyList<string> _columnKeys = Wpf.LogColumns.Default;
         private TimeZoneInfo? _fileTimeZone;
         private TimeZoneInfo? _displayTimeZone;
+        private string? _sortKey;
+        private bool _sortDescending;
 
         /// <summary>
         /// Backing collection bound to <see cref="Sentinel.LogViewer.Wpf.LogViewer.ItemsSource"/>.
@@ -171,6 +173,39 @@ namespace Sentinel.LogViewer.Models
         /// Whether the tab receives logs, as opposed to a tab of an imported file
         /// </summary>
         public bool IsLive => SenderKey != null;
+
+        /// <summary>
+        /// The key of the column that the list in the tab is sorted by, or null for the order in which the entries came in; the viewer keeps it up to
+        /// date and takes it when it is set. It is not saved: a sort lasts as long as the tab is open.
+        /// </summary>
+        public string? SortKey
+        {
+            get => _sortKey;
+            set
+            {
+                if (_sortKey != value)
+                {
+                    _sortKey = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Whether the sort goes from the largest value to the smallest
+        /// </summary>
+        public bool SortDescending
+        {
+            get => _sortDescending;
+            set
+            {
+                if (_sortDescending != value)
+                {
+                    _sortDescending = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Whether the logger tree of the viewer in the tab is on the left of the list; the viewer keeps it up to date and takes it when it is set

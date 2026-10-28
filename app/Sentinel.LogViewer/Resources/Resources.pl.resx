@@ -1450,6 +1450,9 @@
   <data name="Shortcut_Find" xml:space="preserve">
     <value>Otwórz pasek wyszukiwania; Esc w pasku zamyka go i czyści wyszukiwanie</value>
   </data>
+  <data name="Tab_ResetSorting" xml:space="preserve">
+    <value>Zresetuj sortowanie kolumn</value>
+  </data>
 </root>
 
 
