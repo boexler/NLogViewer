@@ -250,7 +250,7 @@ public class SettingsTransferServiceTests : IDisposable
 		var saved = _environment.Saved;
 		Assert.Equal(new[] { "udp://0.0.0.0:4000" }, saved.Ports);
 		Assert.Equal(string.Empty, saved.Language);
-		Assert.Equal(10000, saved.MaxLogEntriesPerTab);
+		Assert.Equal(1_000_000, saved.MaxLogEntriesPerTab);
 	}
 
 	[Fact]

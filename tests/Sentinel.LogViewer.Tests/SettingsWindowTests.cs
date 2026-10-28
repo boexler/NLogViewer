@@ -292,7 +292,7 @@ public class SettingsWindowTests
 				box.Text = "12";
 				box.GetBindingExpression(TextBox.TextProperty)!.UpdateSource();
 				Assert.True(setting.HasError);
-				Assert.Equal(10000, environment.Saved.MaxLogEntriesPerTab);
+				Assert.Equal(1_000_000, environment.Saved.MaxLogEntriesPerTab);
 
 				box.Text = "7500";
 				box.GetBindingExpression(TextBox.TextProperty)!.UpdateSource();

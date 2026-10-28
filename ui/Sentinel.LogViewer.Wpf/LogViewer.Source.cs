@@ -119,6 +119,7 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         private void DisposeViewerResources()
         {
+            CancelAllJobs();
             StopListen();
         }
     }

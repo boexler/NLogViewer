@@ -96,7 +96,7 @@ public class SettingsViewModelTests : IDisposable
 
 		Assert.True(setting.HasError);
 		Assert.Contains("between 100 and 1,000,000", setting.Error, StringComparison.OrdinalIgnoreCase);
-		Assert.Equal(10000, _environment.Saved.MaxLogEntriesPerTab);
+		Assert.Equal(1_000_000, _environment.Saved.MaxLogEntriesPerTab);
 	}
 
 	[Fact]
@@ -308,7 +308,7 @@ public class SettingsViewModelTests : IDisposable
 
 		var saved = _environment.Saved;
 		Assert.False(saved.AutoStartListening);
-		Assert.Equal(10000, saved.MaxLogEntriesPerTab);
+		Assert.Equal(1_000_000, saved.MaxLogEntriesPerTab);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000" }, saved.Ports);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000" }, viewModel.Setting<PortListSettingViewModel>(PortsTitle).Items.Select(item => item.Address));
 		Assert.False(saved.CheckForUpdates);

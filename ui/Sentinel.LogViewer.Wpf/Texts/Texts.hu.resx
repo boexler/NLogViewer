@@ -483,4 +483,19 @@
   <data name="Zone_Local" xml:space="preserve">
     <value>helyi</value>
   </data>
+  <data name="Busy_Filtering" xml:space="preserve">
+    <value>Bejegyzések szűrése</value>
+  </data>
+  <data name="Busy_Searching" xml:space="preserve">
+    <value>Keresés a bejegyzésekben</value>
+  </data>
+  <data name="Busy_Progress" xml:space="preserve">
+    <value>{0:N0} / {1:N0}</value>
+  </data>
+  <data name="Busy_Hits" xml:space="preserve">
+    <value>eddig {0:N0} találat</value>
+  </data>
+  <data name="Busy_Cancel" xml:space="preserve">
+    <value>Mégse (Esc)</value>
+  </data>
 </root>

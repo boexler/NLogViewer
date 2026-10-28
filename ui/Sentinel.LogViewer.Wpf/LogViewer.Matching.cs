@@ -198,22 +198,30 @@ namespace Sentinel.LogViewer.Wpf
         {
             var error = FilterTerm.Validate(CurrentSearchText, UseRegexSearch);
             SetValue(FilterErrorPropertyKey, error);
+            // The text changed: a check of the old text is of no use any more.
+            CancelJob(JobKind.Hits);
             UpdateFilterHits();
         }
 
         private void UpdateFilterHits()
         {
-            string text = string.Empty;
-            if (!string.IsNullOrEmpty(CurrentSearchText) && FilterError == null && LogEvents?.View != null)
+            if (string.IsNullOrEmpty(CurrentSearchText) || FilterError != null || LogEvents?.View is not CollectionView view)
             {
-                var term = new FilterTerm(CurrentSearchText, FilterIsExclude, FilterMatchCase, FilterWholeWord, UseRegexSearch, FilterLevel);
-                var fields = SearchFields;
-                var hits = LogEvents.View.OfType<LogEntry>().Count(entry => term.Matches(entry, fields));
-                text = hits == 1 ? LogViewerTexts.Get("Hits_One") : LogViewerTexts.Format("Hits_Many", hits);
+                CancelJob(JobKind.Hits);
+                ShowFilterHits(null);
+                return;
             }
 
-            SetValue(FilterHitTextPropertyKey, text);
+            if (UseBackground(JobKind.Hits, view.Count, StartHitsJob))
+                return;
+
+            var term = new FilterTerm(CurrentSearchText, FilterIsExclude, FilterMatchCase, FilterWholeWord, UseRegexSearch, FilterLevel);
+            var fields = SearchFields;
+            ShowFilterHits(view.OfType<LogEntry>().Count(entry => term.Matches(entry, fields)));
         }
+
+        private void ShowFilterHits(int? hits) =>
+            SetValue(FilterHitTextPropertyKey, hits == null ? string.Empty : hits == 1 ? LogViewerTexts.Get("Hits_One") : LogViewerTexts.Format("Hits_Many", hits));
 
         #endregion
 
