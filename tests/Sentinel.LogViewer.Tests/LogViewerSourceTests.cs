@@ -24,7 +24,7 @@ public class LogViewerSourceTests
 
 	private static Window Show(ViewerControl viewer)
 	{
-		var window = new Window { Width = 600, Height = 400, Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false, Content = viewer };
+		var window = WpfTestHelper.PrepareForTest(new Window { Width = 600, Height = 400, Content = viewer });
 		window.Resources.MergedDictionaries.Add(new ResourceDictionary
 		{
 			Source = new Uri("pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml")

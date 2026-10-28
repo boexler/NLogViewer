@@ -126,7 +126,7 @@ public class ChangelogWindowTests
 				Release("v4.0.0", "- stable four", prerelease: false)
 			})), System.IO.Path.Combine(environment.Directory, "changelog.json"));
 			var viewModel = new ChangelogViewModel(service, environment.Configuration, environment.Localization, Version("5.0.0-beta.2"), Version("5.0.0-beta.1"));
-			var window = new ChangelogWindow(viewModel, selectSince: true) { Left = -10000, Top = -10000, ShowActivated = false };
+			var window = WpfTestHelper.PrepareForTest(new ChangelogWindow(viewModel, selectSince: true));
 			try
 			{
 				window.Show();
@@ -169,7 +169,7 @@ public class ChangelogWindowTests
 			var service = new ChangelogService(new FakeUpdateService(() => throw new HttpRequestException("no network")),
 				System.IO.Path.Combine(environment.Directory, "changelog.json"));
 			var viewModel = new ChangelogViewModel(service, environment.Configuration, environment.Localization, Version("5.0.0-beta.2"));
-			var window = new ChangelogWindow(viewModel) { Left = -10000, Top = -10000, ShowActivated = false };
+			var window = WpfTestHelper.PrepareForTest(new ChangelogWindow(viewModel));
 			try
 			{
 				window.Show();

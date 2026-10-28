@@ -51,22 +51,36 @@ public static class WpfTestHelper
 	}
 
 	/// <summary>
+	/// Puts a window where nobody sees it and where it takes nothing from the user: far off the screen, not activated, without a button in the
+	/// taskbar. Every test that shows a window prepares it with this before <c>Show()</c>.
+	/// </summary>
+	/// <param name="invisible">For tests that minimize or maximize the window: it has no frame and is fully transparent, so it neither shows
+	/// (a minimized window without a taskbar button would show its title bar on the desktop) nor catches clicks on the screen of the user</param>
+	public static T PrepareForTest<T>(T window, bool invisible = false) where T : Window
+	{
+		window.WindowStartupLocation = WindowStartupLocation.Manual;
+		window.Left = -10000;
+		window.Top = -10000;
+		window.ShowActivated = false;
+		window.ShowInTaskbar = false;
+		if (invisible)
+		{
+			window.WindowStyle = WindowStyle.None;
+			window.AllowsTransparency = true;
+			window.Opacity = 0;
+		}
+
+		return window;
+	}
+
+	/// <summary>
 	/// Shows a <see cref="Wpf.LogViewer"/> for the given entries in an off-screen window, with the default theme applied.
 	/// Call from within RunOnSta and close the window afterwards.
 	/// </summary>
 	public static (Window Window, Wpf.LogViewer Viewer) ShowInWindow(ObservableCollection<LogEntry> entries)
 	{
 		var viewer = new Wpf.LogViewer { ItemsSource = entries, AutoScroll = false };
-		var window = new Window
-		{
-			Width = 900,
-			Height = 500,
-			Left = -10000,
-			Top = -10000,
-			ShowActivated = false,
-			ShowInTaskbar = false,
-			Content = viewer
-		};
+		var window = PrepareForTest(new Window { Width = 900, Height = 500, Content = viewer });
 		window.Resources.MergedDictionaries.Add(new ResourceDictionary
 		{
 			Source = new Uri("pack://application:,,,/Sentinel.LogViewer.Wpf;component/Themes/Generic.xaml")

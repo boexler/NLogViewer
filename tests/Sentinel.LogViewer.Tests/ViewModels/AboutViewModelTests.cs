@@ -112,7 +112,7 @@ public class AboutViewModelTests
 			environment.Localization.SetLanguage("en");
 			var about = ChocolateyAbout(environment);
 			// A narrow window, so that the command is longer than the card also with a short version number.
-			var window = new AboutWindow(about) { Width = 560, Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
+			var window = WpfTestHelper.PrepareForTest(new AboutWindow(about) { Width = 560 });
 			try
 			{
 				window.Show();
