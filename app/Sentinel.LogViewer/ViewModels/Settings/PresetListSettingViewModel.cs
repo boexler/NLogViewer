@@ -22,7 +22,7 @@ public sealed class PresetListSettingViewModel : SettingViewModel
 	/// <param name="save">Saves the settings</param>
 	public PresetListSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<List<FilterPreset>> get, Action save, string emptyNameMessage, string nameInUseMessage)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_get = get;
 		_save = save;

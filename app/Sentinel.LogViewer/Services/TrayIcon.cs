@@ -49,9 +49,18 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 		_icon.BalloonTipClicked += (_, _) => NotificationClicked?.Invoke(this, EventArgs.Empty);
 
 		var menu = new System.Windows.Forms.ContextMenuStrip();
-		menu.Items.Add(localization.GetString("Tray_Open", "Open"), null, (_, _) => RestoreRequested?.Invoke(this, EventArgs.Empty));
-		menu.Items.Add(localization.GetString("Tray_Exit", "Exit"), null, (_, _) => ExitRequested?.Invoke(this, EventArgs.Empty));
+		var open = menu.Items.Add(string.Empty, null, (_, _) => RestoreRequested?.Invoke(this, EventArgs.Empty));
+		var exit = menu.Items.Add(string.Empty, null, (_, _) => ExitRequested?.Invoke(this, EventArgs.Empty));
 		_icon.ContextMenuStrip = menu;
+
+		void SetTexts()
+		{
+			open.Text = localization.GetString("Tray_Open", "Open");
+			exit.Text = localization.GetString("Tray_Exit", "Exit");
+		}
+
+		SetTexts();
+		localization.PropertyChanged += (_, _) => SetTexts();
 	}
 
 	public event EventHandler? RestoreRequested;
@@ -61,6 +70,9 @@ public sealed class NotifyIconTray : ITrayIcon, IDisposable
 	public event EventHandler? ExitRequested;
 
 	public bool IsVisible => _icon.Visible;
+
+	/// <summary>The texts of the entries of the menu, for the tests</summary>
+	internal string[] MenuTexts => _icon.ContextMenuStrip!.Items.Cast<System.Windows.Forms.ToolStripItem>().Select(item => item.Text ?? string.Empty).ToArray();
 
 	public string ToolTip
 	{

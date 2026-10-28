@@ -304,9 +304,6 @@
   <data name="Settings_ExportFailed" xml:space="preserve">
     <value>Die Einstellungen konnten nicht exportiert werden: {0}</value>
   </data>
-  <data name="Settings_RestartRequired" xml:space="preserve">
-    <value>Neustart nötig</value>
-  </data>
   <data name="Settings_AddPort" xml:space="preserve">
     <value>Port hinzufügen</value>
   </data>
@@ -344,7 +341,7 @@
     <value>Sprache</value>
   </data>
   <data name="Settings_Language_Description" xml:space="preserve">
-    <value>Sprache der Menüs und Dialoge. Wird nach einem Neustart der Anwendung vollständig übernommen.</value>
+    <value>Sprache der Menüs und Dialoge.</value>
   </data>
   <data name="Settings_AutoStartListening" xml:space="preserve">
     <value>Empfang beim Start</value>
@@ -984,9 +981,6 @@
   </data>
   <data name="Menu_StopReceiving" xml:space="preserve">
     <value>Empfang _beenden</value>
-  </data>
-  <data name="Message_LanguageChanged" xml:space="preserve">
-    <value>Sprache geändert. Starten Sie die Anwendung neu, damit die Änderung vollständig wirkt.</value>
   </data>
   <data name="Message_LanguageChangeError" xml:space="preserve">
     <value>Die Sprache konnte nicht geändert werden: {0}</value>

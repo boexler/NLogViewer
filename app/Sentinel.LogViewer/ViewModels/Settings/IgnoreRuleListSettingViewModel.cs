@@ -23,7 +23,7 @@ public sealed class IgnoreRuleListSettingViewModel : SettingViewModel
 	/// <param name="save">Saves the settings</param>
 	public IgnoreRuleListSettingViewModel(string categoryId, string icon, string title, string description,
 		Func<List<IgnoreRule>> get, Action save, string emptyMessage, string invalidIpMessage)
-		: base(categoryId, icon, title, description, false)
+		: base(categoryId, icon, title, description)
 	{
 		_get = get;
 		_save = save;

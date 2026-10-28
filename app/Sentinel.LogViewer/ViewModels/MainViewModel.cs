@@ -56,7 +56,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	private string _listFontFamilyName = string.Empty;
 	private int _listFontSize = SettingsRules.DefaultListFontSize;
 	private int _fontZoom;
-	private AvailableUpdate? _noticeUpdate;
+	internal AvailableUpdate? NoticeUpdate { get; set; }
 	private bool _minimizeToTray;
 	private Core.LogEntryLevel? _trayNotifyLevel;
 	private TimeSpan _trayNotifyInterval = TimeSpan.FromSeconds(SettingsRules.DefaultTrayNotifyInterval);
@@ -84,6 +84,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		_applicationTabs = applicationTabService ?? throw new ArgumentNullException(nameof(applicationTabService));
 		_filterPresets = new FilterPresetService(_configService);
 		RefreshFilterPresets();
+		PropertyChangedEventManager.AddHandler(_localizationService, OnTextsChanged, System.Windows.Data.Binding.IndexerName);
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
@@ -131,7 +132,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		CloseTabsToTheRightCommand = new RelayCommand<LogTabViewModel>(CloseTabsToTheRight, tab => tab != null && LogTabs.IndexOf(tab) < LogTabs.Count - 1);
 		SelectNextTabCommand = new RelayCommand(() => SelectTabRelative(1), () => LogTabs.Count > 1);
 		SelectPreviousTabCommand = new RelayCommand(() => SelectTabRelative(-1), () => LogTabs.Count > 1);
-		SkipUpdateCommand = new RelayCommand(SkipUpdate, () => _noticeUpdate != null);
+		SkipUpdateCommand = new RelayCommand(SkipUpdate, () => NoticeUpdate != null);
 		ShowShortcutsCommand = new RelayCommand(() => ShortcutsWindow.Show(System.Windows.Application.Current.MainWindow));
 		ZoomInCommand = new RelayCommand(() => Zoom(1));
 		ZoomOutCommand = new RelayCommand(() => Zoom(-1));
@@ -1605,24 +1606,24 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		aboutWindow.ShowDialog(System.Windows.Application.Current.MainWindow);
 
 		// The version may have been skipped in the dialog.
-		if (_noticeUpdate != null && UpdateService.IsSkipped(_noticeUpdate, _configService.LoadConfiguration().SkippedVersion))
+		if (NoticeUpdate != null && UpdateService.IsSkipped(NoticeUpdate, _configService.LoadConfiguration().SkippedVersion))
 			HideUpdateNotice();
 	}
 
 	private void SkipUpdate()
 	{
-		if (_noticeUpdate == null)
+		if (NoticeUpdate == null)
 			return;
 
 		var config = _configService.LoadConfiguration();
-		config.SkippedVersion = _noticeUpdate.Version.ToString();
+		config.SkippedVersion = NoticeUpdate.Version.ToString();
 		_configService.SaveConfiguration(config);
 		HideUpdateNotice();
 	}
 
 	private void HideUpdateNotice()
 	{
-		_noticeUpdate = null;
+		NoticeUpdate = null;
 		UpdateNotice = null;
 		((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
 	}
@@ -1637,16 +1638,30 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 			var update = await _updateService.CheckForUpdateAsync(includePrereleases);
 			if (update != null && !UpdateService.IsSkipped(update, _configService.LoadConfiguration().SkippedVersion))
 			{
-				_noticeUpdate = update;
+				NoticeUpdate = update;
 				((RelayCommand)SkipUpdateCommand).RaiseCanExecuteChanged();
-				UpdateNotice = string.Format(System.Globalization.CultureInfo.CurrentCulture,
-					_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
+				UpdateNotice = UpdateNoticeText(update);
 			}
 		}
 		catch (Exception)
 		{
 			// Offline or rate limited: no notice.
 		}
+	}
+
+	private string UpdateNoticeText(AvailableUpdate update) => string.Format(CultureInfo.CurrentCulture,
+		_localizationService.GetString("Status_UpdateAvailable", "Update to {0} available"), update.Version);
+
+	/// <summary>
+	/// The language was set: the texts that this view model keeps are made again, the bound ones are read again
+	/// </summary>
+	private void OnTextsChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		UpdateLanguageFlag();
+		OnPropertyChanged(nameof(FontZoomText));
+		RefreshSources();
+		if (NoticeUpdate != null)
+			UpdateNotice = UpdateNoticeText(NoticeUpdate);
 	}
 
 	private void ChangeLanguage(string? languageCode)
@@ -1657,10 +1672,6 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 		try
 		{
 			_localizationService.SetLanguage(languageCode);
-			UpdateLanguageFlag();
-                
-			// Notify that language has changed - this will require app restart for full effect
-			Snackbar.Show(_localizationService.GetString("Message_LanguageChanged", "Language changed. Restart the application for the change to take full effect."));
 		}
 		catch (Exception ex)
 		{

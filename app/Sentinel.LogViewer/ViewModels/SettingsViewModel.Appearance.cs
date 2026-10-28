@@ -29,7 +29,6 @@ namespace Sentinel.LogViewer.ViewModels
             var colourMode = new ChoiceSettingViewModel(AppearanceId, "\uE790",
                 Text("Settings_ThemeMode", "Colour mode"),
                 Text("Settings_ThemeMode_Description", "Light or dark, or the same as Windows. The colours below belong to the theme that is in use."),
-                needsRestart: false,
                 options: new[]
                 {
                     new ChoiceOption(ThemeCatalog.ModeSystem, Text("Settings_ThemeMode_System", "Like Windows")),
@@ -55,7 +54,6 @@ namespace Sentinel.LogViewer.ViewModels
             var theme = new ChoiceSettingViewModel(AppearanceId, "\uE771",
                 Text("Settings_Theme", "Theme"),
                 Text("Settings_Theme_Description", "Newschool is flat and modern, Oldschool keeps the classic look and the classic colours of the log list. Works in light and in dark mode."),
-                needsRestart: false,
                 options: ThemeCatalog.Designs.Select(theme => new ChoiceOption(theme.Id, theme.Name)).ToList(),
                 get: () => ThemeCatalog.Find(_configuration.Theme).Id,
                 set: id =>
@@ -68,7 +66,6 @@ namespace Sentinel.LogViewer.ViewModels
             var timeStampFormat = new ChoiceSettingViewModel(AppearanceId, "\uE121",
                 Text("Settings_TimeStampFormat", "Timestamp format"),
                 Text("Settings_TimeStampFormat_Description", "Format of the timestamp column in the log list."),
-                needsRestart: false,
                 options: new[]
                 {
                     new ChoiceOption(TimeStampFormats.ToId(TimeStampFormat.System), Text("Settings_TimeStampFormat_System", "System (format of this computer)")),
@@ -150,7 +147,6 @@ namespace Sentinel.LogViewer.ViewModels
             yield return new ChoiceSettingViewModel(AppearanceId, "",
                 Text("Settings_LoggerTreeSide", "Side"),
                 Text("Settings_LoggerTreeSide_Description", "Which side of the log list the logger tree is on in new tabs. Changing it in a tab saves it here."),
-                needsRestart: false,
                 options: new[]
                 {
                     new ChoiceOption(LoggerTreeLeft, Text("Settings_LoggerTreeSide_Left", "Left")),

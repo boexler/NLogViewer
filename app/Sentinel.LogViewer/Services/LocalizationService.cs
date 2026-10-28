@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -11,7 +12,7 @@ namespace Sentinel.LogViewer.Services
     /// <summary>
     /// Service for managing application localization
     /// </summary>
-    public class LocalizationService
+    public class LocalizationService : INotifyPropertyChanged
     {
         private readonly ConfigurationService _configService;
         private ResourceManager? _resourceManager;
@@ -159,21 +160,35 @@ namespace Sentinel.LogViewer.Services
                 Thread.CurrentThread.CurrentUICulture = _currentCulture;
             }
 
+            // Every text that is bound to the indexer, and every view model that keeps a text, takes the new language.
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(System.Windows.Data.Binding.IndexerName));
+
             if (SetsLanguageOfControl)
                 Sentinel.LogViewer.Wpf.LogViewerTexts.Language = Sentinel.LogViewer.Wpf.LogViewerTexts.FromCode(CurrentLanguageCode);
         }
 
-        public string GetString(string key, string defaultValue = "")
+        /// <summary>
+        /// The text of the key in the current language, or null when there is none; a binding to <c>[key]</c> shows the new text as soon as the
+        /// language is set
+        /// </summary>
+        public string? this[string key]
         {
-            try
+            get
             {
-                return _resourceManager?.GetString(key, _currentCulture) ?? defaultValue;
-            }
-            catch
-            {
-                return defaultValue;
+                try
+                {
+                    return _resourceManager?.GetString(key, _currentCulture);
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
+
+        public string GetString(string key, string defaultValue = "") => this[key] ?? defaultValue;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public CultureInfo CurrentCulture => _currentCulture;
 
