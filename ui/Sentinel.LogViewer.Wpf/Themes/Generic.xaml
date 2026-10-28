@@ -493,7 +493,7 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Level_OnlyTip}">
+                                                          <TextBlock Text="{local:Text KeyOf={Binding Level}, KeyPrefix=Level_}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Level_OnlyTip}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
                                                                       <Style.Triggers>

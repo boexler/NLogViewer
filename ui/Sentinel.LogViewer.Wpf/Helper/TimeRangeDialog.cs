@@ -44,7 +44,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             var hint = new TextBlock
             {
-                Text = LogViewerTexts.Format("Dlg_TrText", EntryTime.Label(zone)),
+                Text = LogViewerTexts.Format("Dlg_TrText", LogViewerTexts.ZoneLabel(zone)),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 440,
                 Opacity = 0.7,

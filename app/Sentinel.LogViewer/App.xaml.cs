@@ -37,7 +37,7 @@ namespace Sentinel.LogViewer
             var localizationService = _host.Services.GetRequiredService<LocalizationService>();
 
             // The control has its own texts; it follows the language of the application, also when that is changed later.
-            localizationService.LanguageChanged += (_, code) => Sentinel.LogViewer.Wpf.LogViewerTexts.Language = Sentinel.LogViewer.Wpf.LogViewerTexts.FromCode(code);
+            localizationService.SetsLanguageOfControl = true;
             localizationService.Initialize();
         }
 

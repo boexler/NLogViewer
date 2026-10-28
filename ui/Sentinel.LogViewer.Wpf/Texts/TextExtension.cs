@@ -34,11 +34,14 @@ namespace Sentinel.LogViewer.Wpf
         /// <summary>The key of the text as a binding, e.g. <c>{local:Text KeyOf={Binding Key}}</c> for the items of a list</summary>
         public BindingBase? KeyOf { get; set; }
 
+        /// <summary>Put before the bound value to make the key, e.g. <c>KeyPrefix=Level_</c> turns the level <c>Warn</c> into <c>Level_Warn</c></summary>
+        public string KeyPrefix { get; set; } = string.Empty;
+
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             if (KeyOf != null)
             {
-                var keyed = new MultiBinding { Converter = new KeyConverter(), Mode = BindingMode.OneWay };
+                var keyed = new MultiBinding { Converter = new KeyConverter(KeyPrefix), Mode = BindingMode.OneWay };
                 keyed.Bindings.Add(new Binding(nameof(TextSource.Language)) { Source = LogViewerTexts.Source, Mode = BindingMode.OneWay });
                 keyed.Bindings.Add(KeyOf);
                 return keyed.ProvideValue(serviceProvider);
@@ -57,8 +60,15 @@ namespace Sentinel.LogViewer.Wpf
 
         private sealed class KeyConverter : IMultiValueConverter
         {
+            private readonly string _prefix;
+
+            public KeyConverter(string prefix)
+            {
+                _prefix = prefix;
+            }
+
             public object Convert(object[] values, Type targetType, object? parameter, CultureInfo culture) =>
-                values.Length > 1 && values[1] is string key ? LogViewerTexts.Get(key) : string.Empty;
+                values.Length > 1 && values[1] is { } key && key != System.Windows.DependencyProperty.UnsetValue ? LogViewerTexts.Get(_prefix + key) : string.Empty;
 
             public object[] ConvertBack(object value, Type[] targetTypes, object? parameter, CultureInfo culture) => throw new NotSupportedException();
         }

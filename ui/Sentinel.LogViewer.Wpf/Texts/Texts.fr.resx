@@ -480,4 +480,7 @@
   <data name="Msg_ExportErr" xml:space="preserve">
     <value>Erreur d'exportation</value>
   </data>
+  <data name="Zone_Local" xml:space="preserve">
+    <value>local</value>
+  </data>
 </root>

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
 using System.Windows.Data;
+using Sentinel.LogViewer.Core;
 
 namespace Sentinel.LogViewer.Wpf
 {
@@ -39,6 +40,15 @@ namespace Sentinel.LogViewer.Wpf
         internal static TextSource Source { get; } = new();
 
         /// <summary>
+        /// The label of a zone for the user: the word for the local zone in the current language, otherwise <see cref="EntryTime.Label"/> (<c>UTC</c>, <c>UTC+9</c>)
+        /// </summary>
+        public static string ZoneLabel(TimeZoneInfo? zone)
+        {
+            var label = EntryTime.Label(zone);
+            return label == EntryTime.LocalLabel ? Get("Zone_Local") : label;
+        }
+
+        /// <summary>
         /// The culture of the language, for the numbers and dates in the texts
         /// </summary>
         public static CultureInfo Culture => CultureOf(_language);
@@ -52,11 +62,6 @@ namespace Sentinel.LogViewer.Wpf
         /// The text of the key with its arguments filled in, in the culture of the language
         /// </summary>
         public static string Format(string key, params object?[] arguments) => string.Format(Culture, Get(key), arguments);
-
-        /// <summary>
-        /// The names of all the keys, for tests
-        /// </summary>
-        internal static ResourceManager ResourceManager => Manager;
 
         internal static CultureInfo CultureOf(LogViewerLanguage language) => CultureInfo.GetCultureInfo(language switch
         {

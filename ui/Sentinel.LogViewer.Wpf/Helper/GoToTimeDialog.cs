@@ -29,7 +29,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             var hint = new TextBlock
             {
-                Text = LogViewerTexts.Format("Dlg_GoToText", EntryTime.Label(zone)),
+                Text = LogViewerTexts.Format("Dlg_GoToText", LogViewerTexts.ZoneLabel(zone)),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 400,
                 Opacity = 0.7,

@@ -58,7 +58,7 @@ public class LogViewerTextsTests
 	{
 		var files = Directory.GetFiles(WpfFolder, "*.*", SearchOption.AllDirectories)
 			.Where(file => (file.EndsWith(".cs") || file.EndsWith(".xaml")) && !file.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}")
-				&& !file.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}") && !file.Contains($"{Path.DirectorySeparatorChar}Texts{Path.DirectorySeparatorChar}"))
+				&& !file.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}") && !file.EndsWith("TextExtension.cs"))
 			.Select(File.ReadAllText).ToList();
 		var source = string.Join("\n", files);
 		var used = Regex.Matches(source, @"(?:Key|Arg0Key)=(?<key>[A-Za-z0-9_]+)|(?:Get|Format)\(""(?<key>[A-Za-z0-9_]+)""|""(?<key>[A-Z][A-Za-z0-9]*_[A-Za-z0-9]+)""")

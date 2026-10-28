@@ -64,7 +64,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 ? $"{Show(from)} – {Show(to)}"
                 : from != null ? LogViewerTexts.Format("Tr_From", Show(from)) : LogViewerTexts.Format("Tr_Until", Show(to));
             // Compared by instance: on a computer that runs in UTC, the local zone is equal to UTC, and a chosen UTC must still say so.
-            return zone == null || ReferenceEquals(zone, TimeZoneInfo.Local) ? text : $"{text} ({EntryTime.Label(zone)})";
+            return zone == null || ReferenceEquals(zone, TimeZoneInfo.Local) ? text : $"{text} ({LogViewerTexts.ZoneLabel(zone)})";
         }
     }
 }

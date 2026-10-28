@@ -99,6 +99,53 @@ public class LogViewerLanguageTests
 		});
 
 	[Fact]
+	public void TheWordForTheLocalZoneAndTheLevelOfAChip_FollowTheLanguage() =>
+		WithViewer(viewer =>
+		{
+			viewer.FileTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");
+			viewer.FilterLevel = LogEntryLevel.Warn;
+			viewer.CurrentSearchText = "t";
+			viewer.AddSearchTerm();
+			WpfTestHelper.Settle();
+			Assert.Equal("local", LogViewerTexts.ZoneLabel(null));
+			Assert.Contains("Warn", WpfTestHelper.Descendants<TextBlock>(viewer).Select(text => text.Text));
+
+			LogViewerTexts.Language = LogViewerLanguage.German;
+
+			Assert.Equal("lokal", LogViewerTexts.ZoneLabel(null));
+			Assert.Equal("UTC", LogViewerTexts.ZoneLabel(TimeZoneInfo.Utc));
+			var headers = WpfTestHelper.Descendants<GridViewColumnHeader>(viewer).Where(header => header.Column != null).Select(header => (string)header.Column.Header).ToArray();
+			Assert.Contains("Zeitstempel (UTC+9 → lokal)", headers);
+			Assert.Contains("Warnung", WpfTestHelper.Descendants<TextBlock>(viewer).Select(text => text.Text));
+		});
+
+	[Fact]
+	public void TheLanguageOfTheApplication_IsPassedToTheControlOnlyWhenTheServiceIsToldTo()
+	{
+		_context.RunOnSta(() =>
+		{
+			using var environment = new Sentinel.LogViewer.Tests.ViewModels.SettingsTestEnvironment();
+			try
+			{
+				environment.Localization.SetLanguage("de");
+				Assert.Equal(LogViewerLanguage.English, LogViewerTexts.Language);
+
+				environment.Localization.SetsLanguageOfControl = true;
+				environment.Localization.SetLanguage("de");
+				Assert.Equal(LogViewerLanguage.German, LogViewerTexts.Language);
+
+				environment.Localization.SetLanguage("xx");
+				Assert.Equal(LogViewerLanguage.English, LogViewerTexts.Language);
+			}
+			finally
+			{
+				environment.Localization.SetLanguage("en");
+				LogViewerTexts.Language = LogViewerLanguage.English;
+			}
+		});
+	}
+
+	[Fact]
 	public void ThePatternsAndTheMenuOfAHeader_AreMadeInTheNewLanguage() =>
 		WithViewer(viewer =>
 		{

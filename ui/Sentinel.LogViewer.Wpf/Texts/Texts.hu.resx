@@ -480,4 +480,7 @@
   <data name="Msg_ExportErr" xml:space="preserve">
     <value>Exportálási hiba</value>
   </data>
+  <data name="Zone_Local" xml:space="preserve">
+    <value>helyi</value>
+  </data>
 </root>
