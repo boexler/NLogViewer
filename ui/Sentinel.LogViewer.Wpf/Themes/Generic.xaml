@@ -829,6 +829,26 @@
                                 </ListView.View>
                             </ListView>
 
+                            <!-- A check of a big list takes a while: grey card over the list only, the tool row stays usable -->
+                            <Grid Grid.Column="3"
+                                  Visibility="{Binding IsBusy, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Border Background="#66808080"/>
+                                <Border HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="280" Padding="16,12" CornerRadius="6" BorderThickness="1"
+                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                        BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding BusyText, RelativeSource={RelativeSource TemplatedParent}}" FontWeight="SemiBold"
+                                                   AutomationProperties.LiveSetting="Polite"/>
+                                        <ProgressBar Minimum="0" Maximum="1" Height="6" Margin="0,8,0,6"
+                                                     Value="{Binding BusyProgress, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                        <TextBlock Text="{Binding BusyDetail, RelativeSource={RelativeSource TemplatedParent}}"
+                                                   Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                        <Button Content="{local:Text Key=Busy_Cancel}" HorizontalAlignment="Right" Margin="0,10,0,0" Padding="10,2"
+                                                Command="{Binding CancelBusyCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
                             <!-- Logger tree: opens on the right of the list -->
                             <GridSplitter x:Name="PART_LoggerTreeSplitter" Grid.Column="4" Width="5" Visibility="Collapsed"
                                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"

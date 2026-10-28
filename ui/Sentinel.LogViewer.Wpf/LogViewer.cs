@@ -494,51 +494,31 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             if (LogEvents?.View is not CollectionView collectionView) return;
 
             var listView = PART_ListView;
+
+            // A big list is checked in the background; the view keeps its old filter until the result is there.
+            if (GetEffectiveEntries().Count >= BackgroundThreshold && HasFilterCriteria())
+            {
+                PublishFilterState();
+                StartFilterJob(collectionView, listView);
+                return;
+            }
+
+            CancelJob(JobKind.Filter);
+            _verdicts = null;
+            var test = BuildFilterTest(LoggerTree.Rules);
+            ApplyFilter(collectionView, listView, item => item is not LogEntry entry || test(entry));
+        }
+
+        /// <summary>
+        /// Gives the view its filter and keeps the entry that the user looks at in place
+        /// </summary>
+        private void ApplyFilter(CollectionView collectionView, ListView? listView, Predicate<object> filter)
+        {
             if (listView != null)
                 _scrollAnchorKeeper.Capture(listView);
 
-            var timeFrom = TimeFrom;
-            var timeTo = TimeTo;
-            var fileZone = FileTimeZone;
+            collectionView.Filter = filter;
 
-            collectionView.Filter = item =>
-            {
-                if (item is not LogEntry logEvent) return true;
-
-                if (!LoggerTree.IsVisible(logEvent.LoggerName)) return false;
-
-                // The time range: only the entries of the period, a time without a zone read in the zone of the file.
-                if ((timeFrom != null || timeTo != null) && !EntryTime.IsInRange(logEvent.TimeStamp, fileZone, timeFrom, timeTo)) return false;
-
-                // Apply level filters first
-                var levelFilterPassed = logEvent.Level switch
-                {
-                    LogEntryLevel.Trace => !TraceFilter,  // If TraceFilter is true, hide Trace entries (!true = false)
-                    LogEntryLevel.Debug => !DebugFilter,  // If DebugFilter is true, hide Debug entries (!true = false)
-                    LogEntryLevel.Info => !InfoFilter,    // If InfoFilter is true, hide Info entries (!true = false)
-                    LogEntryLevel.Warn => !WarnFilter,     // If WarnFilter is true, hide Warn entries (!true = false)
-                    LogEntryLevel.Error => !ErrorFilter,   // If ErrorFilter is true, hide Error entries (!true = false)
-                    LogEntryLevel.Fatal => !FatalFilter,   // If FatalFilter is true, hide Fatal entries (!true = false)
-                    _ => true
-                };
-
-                if (!levelFilterPassed) return false;
-
-                // The filter terms: every term that includes must match, and no term that excludes may match.
-                var terms = ActiveSearchTerms;
-                if (terms != null)
-                {
-                    var fields = SearchFields;
-                    foreach (var term in terms)
-                    {
-                        if (term.IsEnabled && term.Matches(logEvent, fields) == term.IsExclude)
-                            return false;
-                    }
-                }
-
-                return true;
-            };
-            
             // Refresh the view to apply the filter
             collectionView.Refresh();
             if (listView != null)
@@ -546,7 +526,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             ScheduleFindUpdate();
             PublishFilterState();
         }
-        
+
         /// <summary>
         /// Delete all entries
         /// </summary>
@@ -1478,6 +1458,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 return;
 
             UpdateLoggerTree(e, coll);
+            ForgetVerdicts(e);
 
             if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
                 ApplyMaxCountTrim(coll);

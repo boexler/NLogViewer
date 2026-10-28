@@ -483,4 +483,19 @@
   <data name="Zone_Local" xml:space="preserve">
     <value>lokal</value>
   </data>
+  <data name="Busy_Filtering" xml:space="preserve">
+    <value>Einträge werden gefiltert</value>
+  </data>
+  <data name="Busy_Searching" xml:space="preserve">
+    <value>Einträge werden durchsucht</value>
+  </data>
+  <data name="Busy_Progress" xml:space="preserve">
+    <value>{0:N0} von {1:N0}</value>
+  </data>
+  <data name="Busy_Hits" xml:space="preserve">
+    <value>{0:N0} Treffer bisher</value>
+  </data>
+  <data name="Busy_Cancel" xml:space="preserve">
+    <value>Abbrechen (Esc)</value>
+  </data>
 </root>

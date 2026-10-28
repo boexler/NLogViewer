@@ -145,6 +145,7 @@ namespace Sentinel.LogViewer.Wpf
             UpdateFilterSummary();
             UpdateFilterHits();
             UpdateFindResultText();
+            UpdateBusy();
             UpdateTimeRangeText();
             UpdateHeaders();
         }

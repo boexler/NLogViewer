@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -174,6 +175,7 @@ namespace Sentinel.LogViewer.Wpf
         private void OnFindChanged()
         {
             _currentFindMatch = null;
+            CancelJob(JobKind.Find);
             RebuildFindTerm();
             UpdateFindMatches();
             if (PART_ListView != null)
@@ -192,14 +194,29 @@ namespace Sentinel.LogViewer.Wpf
             Dispatcher.InvokeAsync(() =>
             {
                 _findUpdatePending = false;
-                UpdateFindMatches();
-                UpdateFilterHits();
+                // New entries asked for this count; the user did nothing, so the card stays away.
+                _recounting = true;
+                try
+                {
+                    UpdateFindMatches();
+                    UpdateFilterHits();
+                }
+                finally
+                {
+                    _recounting = false;
+                }
+
                 UpdateVisibleEntryCount();
             }, DispatcherPriority.Background);
         }
 
         private void UpdateFindMatches()
         {
+            var count = LogEvents?.View is CollectionView view ? view.Count : 0;
+            if (_findTerm != null && UseBackground(JobKind.Find, count, StartFindJob))
+                return;
+
+            CancelJob(JobKind.Find);
             _findMatches.Clear();
             _findMatchIndices.Clear();
             if (_findTerm != null && LogEvents?.View != null)
