@@ -308,11 +308,7 @@ public class SettingsWindowTests
 
 	private static Window ShowOffScreen(Window window)
 	{
-		window.Left = -10000;
-		window.Top = -10000;
-		window.ShowActivated = false;
-		window.ShowInTaskbar = false;
-		window.Show();
+		WpfTestHelper.PrepareForTest(window).Show();
 		WpfTestHelper.Settle();
 		return window;
 	}

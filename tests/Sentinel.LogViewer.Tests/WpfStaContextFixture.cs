@@ -43,6 +43,9 @@ namespace Sentinel.LogViewer.Tests
                 });
             }
             new Sentinel.LogViewer.Services.Theming.ThemeService(() => true).Apply(new Sentinel.LogViewer.Services.AppConfiguration());
+
+            // A window that a test shows without WpfTestHelper.PrepareForTest would show on the screen of the user; the next Settle() tells which.
+            EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent, new RoutedEventHandler((sender, _) => WpfTestHelper.CheckPrepared((Window)sender)));
             _dispatcher = Dispatcher.CurrentDispatcher;
             _ready.Set();
             Dispatcher.Run();

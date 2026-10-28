@@ -80,14 +80,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 		var viewModel = new MainViewModel(receiver, files, _environment.Configuration, _environment.Localization, updates ?? new UpdateService(), tabs);
 		var events = (Subject<LogEvent>)typeof(LogReceiverService)
 			.GetField("_log4JEventObservable", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(receiver)!;
-		var window = new MainWindow(viewModel, tray) { Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false, WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 };
-		if (invisible)
-		{
-			window.WindowStyle = System.Windows.WindowStyle.None;
-			window.AllowsTransparency = true;
-			window.Opacity = 0;
-		}
-
+		var window = WpfTestHelper.PrepareForTest(new MainWindow(viewModel, tray) { WindowState = System.Windows.WindowState.Normal, Width = 900, Height = 500 }, invisible);
 		window.Show();
 		WpfTestHelper.Settle();
 		return new Session { Window = window, ViewModel = viewModel, Events = events, Tabs = tabs };

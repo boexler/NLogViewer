@@ -55,11 +55,7 @@ public class MessageDialogWindowTests
 	{
 		_context.RunOnSta(() =>
 		{
-			var window = new MessageDialogWindow("Message", "Caption", buttons, MessageBoxImage.Warning);
-			window.Left = -10000;
-			window.Top = -10000;
-			window.ShowActivated = false;
-			window.ShowInTaskbar = false;
+			var window = WpfTestHelper.PrepareForTest(new MessageDialogWindow("Message", "Caption", buttons, MessageBoxImage.Warning));
 			window.Show();
 
 			if (click != null)
