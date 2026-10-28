@@ -10,7 +10,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
     /// </summary>
     internal sealed class GoToTimeDialog : Window
     {
-        private readonly MomentPicker _time = new("Time", withCheckBox: false);
+        private readonly MomentPicker _time = new(LogViewerTexts.Get("Dlg_Time"), withCheckBox: false);
         private readonly TextBlock _error = new() { Foreground = System.Windows.Media.Brushes.Firebrick, TextWrapping = TextWrapping.Wrap, MaxWidth = 400 };
         private readonly TimeZoneInfo? _zone;
 
@@ -19,7 +19,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
         public GoToTimeDialog(TimeZoneInfo? zone, DateTime? initial)
         {
             _zone = zone;
-            Title = "Go to time";
+            Title = LogViewerTexts.Get("Dlg_GoToTitle");
             SizeToContent = SizeToContent.WidthAndHeight;
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
@@ -29,7 +29,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
             var hint = new TextBlock
             {
-                Text = $"Date and time of the list ({EntryTime.Label(zone)}). The first entry from then on is selected.",
+                Text = LogViewerTexts.Format("Dlg_GoToText", EntryTime.Label(zone)),
                 TextWrapping = TextWrapping.Wrap,
                 MaxWidth = 400,
                 Opacity = 0.7,
@@ -41,7 +41,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
                 if (TryAccept())
                     DialogResult = true;
             };
-            var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
+            var cancel = new Button { Content = LogViewerTexts.Get("Dlg_Cancel"), IsCancel = true, MinWidth = 80, Padding = new Thickness(14, 4, 14, 4) };
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Children = { ok, cancel } };
 
             Content = new StackPanel { Margin = new Thickness(14), Children = { _time, hint, _error, buttons } };
@@ -59,7 +59,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
         {
             if (!_time.HasDate)
             {
-                _error.Text = "Pick a date.";
+                _error.Text = LogViewerTexts.Get("Dlg_PickDate");
                 return false;
             }
 

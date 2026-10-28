@@ -1224,7 +1224,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to copy to clipboard: {ex.Message}", "Clipboard Error",
+                MessageBox.Show(LogViewerTexts.Format("Msg_ClipFail", ex.Message), LogViewerTexts.Get("Msg_ClipTitle"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
@@ -1259,7 +1259,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                 
                 if (filteredEntries.Count == 0)
                 {
-                    MessageBox.Show("No log entries to export.", "Export", 
+                    MessageBox.Show(LogViewerTexts.Get("Msg_NoExport"), LogViewerTexts.Get("Msg_ExportTitle"), 
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
@@ -1273,12 +1273,12 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
                         throw new NotSupportedException($"Export format {parameter.Format} is not supported.");
                 }
 
-                MessageBox.Show($"Successfully exported {filteredEntries.Count} log entry(ies) to {parameter.FilePath}", 
-                    "Export Complete", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(LogViewerTexts.Format("Msg_ExportOk", filteredEntries.Count, parameter.FilePath), 
+                    LogViewerTexts.Get("Msg_ExportDone"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to export logs: {ex.Message}", "Export Error",
+                MessageBox.Show(LogViewerTexts.Format("Msg_ExportFail", ex.Message), LogViewerTexts.Get("Msg_ExportErr"),
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -1565,6 +1565,9 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
             AddJumpKeyBindings();
             AddRoutedCommandBindings();
+
+            // The texts that the viewer keeps (the result row, the headers) are made again when the language changes; the manager holds the viewer weakly.
+            PropertyChangedEventManager.AddHandler(LogViewerTexts.Source, OnTextsChanged, string.Empty);
             InputBindings.Add(new KeyBinding(FindPreviousCommand, Key.F3, ModifierKeys.Shift));
             ScrollToEndCommand = new RelayCommand(() =>
             {

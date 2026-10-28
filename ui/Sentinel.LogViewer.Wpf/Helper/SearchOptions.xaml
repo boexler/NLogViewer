@@ -11,42 +11,39 @@
         <xamlConverter:HasFlagConverter x:Key="HasFlagConverter"/>
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="Aa" ToolTip="Match case"
-                      AutomationProperties.Name="{Binding Scope, StringFormat='Match case{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" x:Name="MatchCaseBox" Content="Aa" ToolTip="{local:Text Key=Opt_MatchCase}"
                       IsChecked="{Binding MatchCase, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
-        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content="ab" ToolTip="Whole word"
-                      AutomationProperties.Name="{Binding Scope, StringFormat='Whole word{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" x:Name="WholeWordBox" Content="ab" ToolTip="{local:Text Key=Opt_WholeWord}"
                       IsChecked="{Binding WholeWord, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
-        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" Content=".*" ToolTip="Use regex pattern matching"
-                      AutomationProperties.Name="{Binding Scope, StringFormat='Regex{0}', RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+        <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" x:Name="RegexBox" Content=".*" ToolTip="{local:Text Key=Opt_Regex}"
                       IsChecked="{Binding UseRegex, RelativeSource={RelativeSource AncestorType=helper:SearchOptions}, Mode=TwoWay}"/>
         <Menu Background="Transparent" VerticalAlignment="Center">
-            <MenuItem Header="Patterns ▾" Tag="{Binding RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
+            <MenuItem Header="{local:Text Key=Opt_Patterns}" Tag="{Binding RelativeSource={RelativeSource AncestorType=helper:SearchOptions}}"
                       ItemsSource="{x:Static local:LogViewer.RegexTemplates}"
-                      ToolTip="Put a ready-made regular expression into the input">
+                      ToolTip="{local:Text Key=Opt_PatternsTip}">
                 <MenuItem.ItemContainerStyle>
                     <Style TargetType="MenuItem">
-                        <Setter Property="Header" Value="{Binding Name}"/>
+                        <Setter Property="Header" Value="{local:Text KeyOf={Binding Key}}"/>
                         <Setter Property="ToolTip" Value="{Binding Pattern}"/>
                         <Setter Property="Command" Value="{Binding Tag.PatternCommand, RelativeSource={RelativeSource AncestorType=MenuItem}}"/>
                         <Setter Property="CommandParameter" Value="{Binding}"/>
                     </Style>
                 </MenuItem.ItemContainerStyle>
             </MenuItem>
-            <MenuItem Header="Fields ▾" ToolTip="The parts of an entry that the filter and the search look into">
-                <MenuItem Header="Message" StaysOpenOnClick="True"
+            <MenuItem Header="{local:Text Key=Opt_Fields}" ToolTip="{local:Text Key=Opt_FieldsTip}">
+                <MenuItem Header="{local:Text Key=Fld_Message}" StaysOpenOnClick="True"
                           IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Message}}"
                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Message}"/>
-                <MenuItem Header="Logger name" StaysOpenOnClick="True"
+                <MenuItem Header="{local:Text Key=Fld_Logger}" StaysOpenOnClick="True"
                           IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.LoggerName}}"
                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.LoggerName}"/>
-                <MenuItem Header="Exception" StaysOpenOnClick="True"
+                <MenuItem Header="{local:Text Key=Fld_Exception}" StaysOpenOnClick="True"
                           IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Exception}}"
                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Exception}"/>
-                <MenuItem Header="Thread" StaysOpenOnClick="True"
+                <MenuItem Header="{local:Text Key=Fld_Thread}" StaysOpenOnClick="True"
                           IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Thread}}"
                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Thread}"/>
-                <MenuItem Header="Other properties" StaysOpenOnClick="True"
+                <MenuItem Header="{local:Text Key=Fld_Other}" StaysOpenOnClick="True"
                           IsChecked="{Binding SearchFields, Mode=OneWay, Converter={StaticResource HasFlagConverter}, ConverterParameter={x:Static core:SearchFields.Properties}}"
                           Command="{Binding ToggleSearchFieldCommand}" CommandParameter="{x:Static core:SearchFields.Properties}"/>
             </MenuItem>

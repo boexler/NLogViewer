@@ -133,6 +133,22 @@ namespace Sentinel.LogViewer.Wpf
         private void ResetFilter() =>
             ApplyFilterState(new LogViewerFilterState { SearchFields = SearchFields, TimeStampFormat = CustomTimeStampFormat });
 
+        private void OnTextsChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            // The language can be set from any thread; the viewer belongs to the thread of its window.
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(() => OnTextsChanged(sender, e));
+                return;
+            }
+
+            UpdateFilterSummary();
+            UpdateFilterHits();
+            UpdateFindResultText();
+            UpdateTimeRangeText();
+            UpdateHeaders();
+        }
+
         /// <summary>
         /// Updates what the result row says; the entries are counted once the current batch of changes is done
         /// </summary>
@@ -146,8 +162,8 @@ namespace Sentinel.LogViewer.Wpf
             SetValue(HasActiveFilterPropertyKey, hasFilters);
             SetValue(LoggerRuleCountPropertyKey, loggerRules);
             SetValue(FilterResultTextPropertyKey, hasFilters
-                ? string.Format(CultureInfo.CurrentCulture, "Entries: {0:N0} of {1:N0}", shown, total)
-                : string.Format(CultureInfo.CurrentCulture, "Entries: {0:N0}", total));
+                ? LogViewerTexts.Format("Result_Of", shown, total)
+                : LogViewerTexts.Format("Result_All", total));
         }
 
         /// <summary>

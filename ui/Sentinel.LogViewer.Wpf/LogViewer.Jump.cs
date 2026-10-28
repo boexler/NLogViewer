@@ -75,7 +75,7 @@ namespace Sentinel.LogViewer.Wpf
                 }
             }
 
-            ShowJumpText(forward ? $"No further {level} entry" : $"No earlier {level} entry");
+            ShowJumpText(LogViewerTexts.Format(forward ? "Jump_NoFurther" : "Jump_NoEarlier", LogViewerTexts.Get("Level_" + level)));
             return false;
         }
 
@@ -103,7 +103,7 @@ namespace Sentinel.LogViewer.Wpf
             if (items[items.Count - 1] is LogEntry { } last)
                 SelectForJump(last);
 
-            ShowJumpText("No entry from that time on, the last one is selected");
+            ShowJumpText(LogViewerTexts.Get("Jump_NoTime"));
             return false;
         }
 

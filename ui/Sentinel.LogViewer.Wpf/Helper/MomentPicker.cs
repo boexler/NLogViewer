@@ -26,12 +26,12 @@ namespace Sentinel.LogViewer.Wpf.Helper
             Orientation = Orientation.Horizontal;
             if (withCheckBox)
             {
-                _active = new CheckBox { Content = label, Width = 64, VerticalAlignment = VerticalAlignment.Center };
+                _active = new CheckBox { Content = label, MinWidth = 64, VerticalAlignment = VerticalAlignment.Center };
                 Children.Add(_active);
             }
             else
             {
-                Children.Add(new TextBlock { Text = label, Width = 64, VerticalAlignment = VerticalAlignment.Center });
+                Children.Add(new TextBlock { Text = label, MinWidth = 64, VerticalAlignment = VerticalAlignment.Center });
             }
 
             Children.Add(_date);
@@ -42,10 +42,10 @@ namespace Sentinel.LogViewer.Wpf.Helper
             Children.Add(Colon());
             Children.Add(_second);
 
-            AutomationProperties.SetName(_date, $"{label} date");
-            AutomationProperties.SetName(_hour, $"{label} hour");
-            AutomationProperties.SetName(_minute, $"{label} minute");
-            AutomationProperties.SetName(_second, $"{label} second");
+            AutomationProperties.SetName(_date, LogViewerTexts.Format("Mp_Date", label));
+            AutomationProperties.SetName(_hour, LogViewerTexts.Format("Mp_Hour", label));
+            AutomationProperties.SetName(_minute, LogViewerTexts.Format("Mp_Minute", label));
+            AutomationProperties.SetName(_second, LogViewerTexts.Format("Mp_Second", label));
 
             _date.SelectedDateChanged += (_, _) => Changed();
             foreach (var part in new[] { _hour, _minute, _second })

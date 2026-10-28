@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Level_Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="Level_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="Level_Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Level_Warn" xml:space="preserve">
+    <value>Avertisment</value>
+  </data>
+  <data name="Level_Error" xml:space="preserve">
+    <value>Eroare</value>
+  </data>
+  <data name="Level_Fatal" xml:space="preserve">
+    <value>Fatal</value>
+  </data>
+  <data name="Level_Any" xml:space="preserve">
+    <value>Orice nivel</value>
+  </data>
+  <data name="Level_OnlyTip" xml:space="preserve">
+    <value>Doar intrările acestui nivel</value>
+  </data>
+  <data name="Level_HideTip" xml:space="preserve">
+    <value>Ascunde intrările de nivel {0} (apasă din nou pentru a le afișa)</value>
+  </data>
+  <data name="Ctl_AutoScroll" xml:space="preserve">
+    <value>Derulare automată</value>
+  </data>
+  <data name="Ctl_AutoScrollTip" xml:space="preserve">
+    <value>Derulare automată: mergi la cea mai nouă intrare când sosesc intrări noi</value>
+  </data>
+  <data name="Ctl_Pause" xml:space="preserve">
+    <value>Pauză</value>
+  </data>
+  <data name="Ctl_PauseTip" xml:space="preserve">
+    <value>Pauză: cât timp este apăsat, nu se adaugă intrări noi în listă</value>
+  </data>
+  <data name="Ctl_Clear" xml:space="preserve">
+    <value>Golește</value>
+  </data>
+  <data name="Ctl_ClearTip" xml:space="preserve">
+    <value>Golește: elimină toate intrările din listă</value>
+  </data>
+  <data name="Filter_Name" xml:space="preserve">
+    <value>Filtru</value>
+  </data>
+  <data name="Filter_Hint" xml:space="preserve">
+    <value>Filtrează intrările</value>
+  </data>
+  <data name="Filter_Tip" xml:space="preserve">
+    <value>Filtrează intrările după câmpurile alese (Enter pentru a adăuga)</value>
+  </data>
+  <data name="Filter_ShowHideName" xml:space="preserve">
+    <value>Afișează sau ascunde intrările care se potrivesc</value>
+  </data>
+  <data name="Filter_ShowHideTip" xml:space="preserve">
+    <value>Afișează intrările care se potrivesc sau le ascunde</value>
+  </data>
+  <data name="Filter_Show" xml:space="preserve">
+    <value>Arată</value>
+  </data>
+  <data name="Filter_Hide" xml:space="preserve">
+    <value>Ascunde</value>
+  </data>
+  <data name="Filter_LevelName" xml:space="preserve">
+    <value>Nivelul filtrului</value>
+  </data>
+  <data name="Search_LevelName" xml:space="preserve">
+    <value>Nivelul căutării</value>
+  </data>
+  <data name="Opt_MatchCase" xml:space="preserve">
+    <value>Potrivește majuscule/minuscule</value>
+  </data>
+  <data name="Opt_WholeWord" xml:space="preserve">
+    <value>Cuvânt întreg</value>
+  </data>
+  <data name="Opt_Regex" xml:space="preserve">
+    <value>Folosește expresii regulate</value>
+  </data>
+  <data name="Opt_RegexName" xml:space="preserve">
+    <value>Regex</value>
+  </data>
+  <data name="Opt_MatchCaseSearch" xml:space="preserve">
+    <value>Majuscule/minuscule în căutare</value>
+  </data>
+  <data name="Opt_WholeWordSearch" xml:space="preserve">
+    <value>Cuvânt întreg în căutare</value>
+  </data>
+  <data name="Opt_RegexSearch" xml:space="preserve">
+    <value>Regex în căutare</value>
+  </data>
+  <data name="Opt_Patterns" xml:space="preserve">
+    <value>Modele ▾</value>
+  </data>
+  <data name="Opt_PatternsTip" xml:space="preserve">
+    <value>Pune o expresie regulată gata făcută în câmp</value>
+  </data>
+  <data name="Opt_Fields" xml:space="preserve">
+    <value>Câmpuri ▾</value>
+  </data>
+  <data name="Opt_FieldsTip" xml:space="preserve">
+    <value>Părțile unei intrări în care caută filtrul și căutarea</value>
+  </data>
+  <data name="Fld_Message" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="Fld_Logger" xml:space="preserve">
+    <value>Numele logger-ului</value>
+  </data>
+  <data name="Fld_Exception" xml:space="preserve">
+    <value>Excepție</value>
+  </data>
+  <data name="Fld_Thread" xml:space="preserve">
+    <value>Fir</value>
+  </data>
+  <data name="Fld_Other" xml:space="preserve">
+    <value>Alte proprietăți</value>
+  </data>
+  <data name="Tpl_Date" xml:space="preserve">
+    <value>Dată (2025-12-18)</value>
+  </data>
+  <data name="Tpl_Guid" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Tpl_Ip" xml:space="preserve">
+    <value>Adresă IPv4</value>
+  </data>
+  <data name="Tpl_Url" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="Tpl_Email" xml:space="preserve">
+    <value>Adresă de e-mail</value>
+  </data>
+  <data name="Tpl_Http" xml:space="preserve">
+    <value>Stare de eroare HTTP (4xx, 5xx)</value>
+  </data>
+  <data name="Tpl_Exception" xml:space="preserve">
+    <value>Tip de excepție</value>
+  </data>
+  <data name="Tpl_Words" xml:space="preserve">
+    <value>Unul dintre mai multe cuvinte</value>
+  </data>
+  <data name="Tr_Menu" xml:space="preserve">
+    <value>Interval de timp ▾</value>
+  </data>
+  <data name="Tr_MenuTip" xml:space="preserve">
+    <value>Arată doar intrările unei perioade</value>
+  </data>
+  <data name="Tr_Last15" xml:space="preserve">
+    <value>Ultimele 15 minute</value>
+  </data>
+  <data name="Tr_LastHour" xml:space="preserve">
+    <value>Ultima oră</value>
+  </data>
+  <data name="Tr_Last24" xml:space="preserve">
+    <value>Ultimele 24 de ore</value>
+  </data>
+  <data name="Tr_Last7" xml:space="preserve">
+    <value>Ultimele 7 zile</value>
+  </data>
+  <data name="Tr_Choose" xml:space="preserve">
+    <value>Alege...</value>
+  </data>
+  <data name="Tr_Clear" xml:space="preserve">
+    <value>Șterge intervalul de timp</value>
+  </data>
+  <data name="Tr_ClearTip" xml:space="preserve">
+    <value>Arată din nou toate intrările</value>
+  </data>
+  <data name="Tr_From" xml:space="preserve">
+    <value>de la {0}</value>
+  </data>
+  <data name="Tr_Until" xml:space="preserve">
+    <value>până la {0}</value>
+  </data>
+  <data name="Hits_One" xml:space="preserve">
+    <value>1 potrivire</value>
+  </data>
+  <data name="Hits_Many" xml:space="preserve">
+    <value>{0} potriviri</value>
+  </data>
+  <data name="Find_None" xml:space="preserve">
+    <value>Niciun rezultat</value>
+  </data>
+  <data name="Find_Invalid" xml:space="preserve">
+    <value>Model nevalid</value>
+  </data>
+  <data name="Find_EntryOf" xml:space="preserve">
+    <value>Intrarea {0} din {1}</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>Căutare</value>
+  </data>
+  <data name="Search_Tip" xml:space="preserve">
+    <value>Caută (Ctrl+F)</value>
+  </data>
+  <data name="Search_Hint" xml:space="preserve">
+    <value>Caută în intrări</value>
+  </data>
+  <data name="Search_BoxTip" xml:space="preserve">
+    <value>Caută în câmpurile alese fără a ascunde intrări (Enter / Shift+Enter sau F3 / Shift+F3: următoarea / anterioara potrivire, Esc: închide)</value>
+  </data>
+  <data name="Search_PrevName" xml:space="preserve">
+    <value>Potrivirea anterioară</value>
+  </data>
+  <data name="Search_PrevTip" xml:space="preserve">
+    <value>Potrivirea anterioară (Shift+F3)</value>
+  </data>
+  <data name="Search_NextName" xml:space="preserve">
+    <value>Următoarea potrivire</value>
+  </data>
+  <data name="Search_NextTip" xml:space="preserve">
+    <value>Următoarea potrivire (F3)</value>
+  </data>
+  <data name="Search_CloseName" xml:space="preserve">
+    <value>Închide căutarea</value>
+  </data>
+  <data name="Search_CloseTip" xml:space="preserve">
+    <value>Închide căutarea (Esc)</value>
+  </data>
+  <data name="Result_All" xml:space="preserve">
+    <value>Intrări: {0:N0}</value>
+  </data>
+  <data name="Result_Of" xml:space="preserve">
+    <value>Intrări: {0:N0} din {1:N0}</value>
+  </data>
+  <data name="Result_Reset" xml:space="preserve">
+    <value>Resetează filtrul</value>
+  </data>
+  <data name="Result_ResetTip" xml:space="preserve">
+    <value>Elimină nivelurile, termenii, logger-ii și intervalul de timp</value>
+  </data>
+  <data name="Loggers" xml:space="preserve">
+    <value>Logger-i</value>
+  </data>
+  <data name="Chip_LoggersTip" xml:space="preserve">
+    <value>Regulile arborelui de logger-i: logger-i afișați exclusiv sau ascunși</value>
+  </data>
+  <data name="Chip_ShowAll" xml:space="preserve">
+    <value>Arată toți logger-ii</value>
+  </data>
+  <data name="Chip_Regex" xml:space="preserve">
+    <value>Regex:</value>
+  </data>
+  <data name="Chip_SwitchTip" xml:space="preserve">
+    <value>Activează sau dezactivează acest termen</value>
+  </data>
+  <data name="Chip_ApplyName" xml:space="preserve">
+    <value>Aplică termenul {0}</value>
+  </data>
+  <data name="Chip_EditTip" xml:space="preserve">
+    <value>Editează termenul de filtru</value>
+  </data>
+  <data name="Chip_EditName" xml:space="preserve">
+    <value>Editează termenul {0}</value>
+  </data>
+  <data name="Chip_RemoveTip" xml:space="preserve">
+    <value>Elimină termenul de filtru</value>
+  </data>
+  <data name="Chip_RemoveName" xml:space="preserve">
+    <value>Elimină termenul {0}</value>
+  </data>
+  <data name="Chip_ExcludeTip" xml:space="preserve">
+    <value>Ascunde intrările care se potrivesc</value>
+  </data>
+  <data name="Sort_By" xml:space="preserve">
+    <value>Sortat după {0}</value>
+  </data>
+  <data name="Sort_ResetName" xml:space="preserve">
+    <value>Resetează sortarea coloanelor</value>
+  </data>
+  <data name="Sort_ResetTip" xml:space="preserve">
+    <value>Arată intrările în ordinea sosirii</value>
+  </data>
+  <data name="Sort_Asc" xml:space="preserve">
+    <value>Sortează crescător</value>
+  </data>
+  <data name="Sort_Desc" xml:space="preserve">
+    <value>Sortează descrescător</value>
+  </data>
+  <data name="Default_View" xml:space="preserve">
+    <value>Vizualizare implicită</value>
+  </data>
+  <data name="Jump_NoFurther" xml:space="preserve">
+    <value>Nicio altă intrare de nivel {0}</value>
+  </data>
+  <data name="Jump_NoEarlier" xml:space="preserve">
+    <value>Nicio intrare anterioară de nivel {0}</value>
+  </data>
+  <data name="Jump_NoTime" xml:space="preserve">
+    <value>Nicio intrare de la acea oră, este selectată ultima</value>
+  </data>
+  <data name="Row_ShowOnly" xml:space="preserve">
+    <value>Arată doar acest logger</value>
+  </data>
+  <data name="Row_Hide" xml:space="preserve">
+    <value>Ascunde acest logger</value>
+  </data>
+  <data name="Row_ShowInTree" xml:space="preserve">
+    <value>Arată în arborele de logger-i</value>
+  </data>
+  <data name="Row_TrFrom" xml:space="preserve">
+    <value>Interval de timp: de aici</value>
+  </data>
+  <data name="Row_TrUntil" xml:space="preserve">
+    <value>Interval de timp: până aici</value>
+  </data>
+  <data name="Row_GoTo" xml:space="preserve">
+    <value>Salt la oră...</value>
+  </data>
+  <data name="Row_NextWarn" xml:space="preserve">
+    <value>Următorul avertisment</value>
+  </data>
+  <data name="Row_PrevWarn" xml:space="preserve">
+    <value>Avertismentul anterior</value>
+  </data>
+  <data name="Row_NextErr" xml:space="preserve">
+    <value>Următoarea eroare</value>
+  </data>
+  <data name="Row_PrevErr" xml:space="preserve">
+    <value>Eroarea anterioară</value>
+  </data>
+  <data name="Row_AddFilter" xml:space="preserve">
+    <value>Adaugă la filtru</value>
+  </data>
+  <data name="Row_Copy" xml:space="preserve">
+    <value>Copiază în clipboard</value>
+  </data>
+  <data name="Tree_ExpandAll" xml:space="preserve">
+    <value>Extinde tot</value>
+  </data>
+  <data name="Tree_CollapseAll" xml:space="preserve">
+    <value>Restrânge tot</value>
+  </data>
+  <data name="Tree_MoveTip" xml:space="preserve">
+    <value>Mută arborele de logger-i pe cealaltă parte</value>
+  </data>
+  <data name="Tree_SearchHint" xml:space="preserve">
+    <value>Caută logger-i</value>
+  </data>
+  <data name="Tree_SearchTip" xml:space="preserve">
+    <value>Arată doar logger-ii al căror nume conține textul; intrările din listă nu se schimbă</value>
+  </data>
+  <data name="Tree_DragTip" xml:space="preserve">
+    <value>Trage pentru a schimba lățimea arborelui de logger-i</value>
+  </data>
+  <data name="Tree_ToggleTip" xml:space="preserve">
+    <value>Afișează sau ascunde arborele de logger-i</value>
+  </data>
+  <data name="Tree_EntriesTip" xml:space="preserve">
+    <value>Intrări</value>
+  </data>
+  <data name="Tree_ErrorsTip" xml:space="preserve">
+    <value>Erori și erori fatale</value>
+  </data>
+  <data name="Tree_WarningsTip" xml:space="preserve">
+    <value>Avertismente</value>
+  </data>
+  <data name="Col_Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Col_Level" xml:space="preserve">
+    <value>Nivel</value>
+  </data>
+  <data name="Col_TimeStamp" xml:space="preserve">
+    <value>Marcaj de timp</value>
+  </data>
+  <data name="Col_Logger" xml:space="preserve">
+    <value>Numele logger-ului</value>
+  </data>
+  <data name="Col_Thread" xml:space="preserve">
+    <value>Fir</value>
+  </data>
+  <data name="Col_Message" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="Col_Properties" xml:space="preserve">
+    <value>Proprietăți</value>
+  </data>
+  <data name="Col_TimeZone" xml:space="preserve">
+    <value>Fus orar...</value>
+  </data>
+  <data name="Col_Format" xml:space="preserve">
+    <value>Formatul marcajului de timp</value>
+  </data>
+  <data name="Col_FormatSystem" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="Cell_Original" xml:space="preserve">
+    <value>Original: {0}</value>
+  </data>
+  <data name="Dlg_GoToTitle" xml:space="preserve">
+    <value>Salt la oră</value>
+  </data>
+  <data name="Dlg_GoToText" xml:space="preserve">
+    <value>Data și ora listei ({0}). Se selectează prima intrare de atunci.</value>
+  </data>
+  <data name="Dlg_Time" xml:space="preserve">
+    <value>Ora</value>
+  </data>
+  <data name="Dlg_Cancel" xml:space="preserve">
+    <value>Anulează</value>
+  </data>
+  <data name="Dlg_PickDate" xml:space="preserve">
+    <value>Alegeți o dată.</value>
+  </data>
+  <data name="Dlg_TrTitle" xml:space="preserve">
+    <value>Interval de timp</value>
+  </data>
+  <data name="Dlg_TrText" xml:space="preserve">
+    <value>Datele și orele listei ({0}). Un capăt dezactivat nu are limită; modificarea lui îl activează.</value>
+  </data>
+  <data name="Dlg_From" xml:space="preserve">
+    <value>De la</value>
+  </data>
+  <data name="Dlg_Until" xml:space="preserve">
+    <value>Până la</value>
+  </data>
+  <data name="Dlg_FirstEntry" xml:space="preserve">
+    <value>Prima intrare</value>
+  </data>
+  <data name="Dlg_LastEntry" xml:space="preserve">
+    <value>Ultima intrare</value>
+  </data>
+  <data name="Dlg_TakeTime" xml:space="preserve">
+    <value>Preia ora acestei intrări</value>
+  </data>
+  <data name="Dlg_StartAfterEnd" xml:space="preserve">
+    <value>Începutul este după sfârșit.</value>
+  </data>
+  <data name="Mp_Date" xml:space="preserve">
+    <value>{0}: data</value>
+  </data>
+  <data name="Mp_Hour" xml:space="preserve">
+    <value>{0}: ora</value>
+  </data>
+  <data name="Mp_Minute" xml:space="preserve">
+    <value>{0}: minutul</value>
+  </data>
+  <data name="Mp_Second" xml:space="preserve">
+    <value>{0}: secunda</value>
+  </data>
+  <data name="Msg_ClipFail" xml:space="preserve">
+    <value>Copierea în clipboard a eșuat: {0}</value>
+  </data>
+  <data name="Msg_ClipTitle" xml:space="preserve">
+    <value>Eroare de clipboard</value>
+  </data>
+  <data name="Msg_NoExport" xml:space="preserve">
+    <value>Nu există intrări de exportat.</value>
+  </data>
+  <data name="Msg_ExportTitle" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Msg_ExportOk" xml:space="preserve">
+    <value>{0} intrări exportate în {1}</value>
+  </data>
+  <data name="Msg_ExportDone" xml:space="preserve">
+    <value>Export finalizat</value>
+  </data>
+  <data name="Msg_ExportFail" xml:space="preserve">
+    <value>Exportul a eșuat: {0}</value>
+  </data>
+  <data name="Msg_ExportErr" xml:space="preserve">
+    <value>Eroare de export</value>
+  </data>
+</root>

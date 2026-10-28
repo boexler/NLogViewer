@@ -230,13 +230,13 @@ namespace Sentinel.LogViewer.Wpf
             if (string.IsNullOrEmpty(FindText))
                 text = string.Empty;
             else if (FindError != null)
-                text = "Invalid pattern";
+                text = LogViewerTexts.Get("Find_Invalid");
             else if (_findMatches.Count == 0)
-                text = "No results";
+                text = LogViewerTexts.Get("Find_None");
             else if (_currentFindMatch == null)
-                text = _findMatches.Count == 1 ? "1 hit" : $"{_findMatches.Count} hits";
+                text = _findMatches.Count == 1 ? LogViewerTexts.Get("Hits_One") : LogViewerTexts.Format("Hits_Many", _findMatches.Count);
             else
-                text = $"Entry {_findMatches.IndexOf(_currentFindMatch) + 1} of {_findMatches.Count}";
+                text = LogViewerTexts.Format("Find_EntryOf", _findMatches.IndexOf(_currentFindMatch) + 1, _findMatches.Count);
 
             SetValue(FindResultTextPropertyKey, text);
         }

@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -17,11 +19,16 @@ namespace Sentinel.LogViewer.Wpf.Helper
 
         public static readonly DependencyProperty PatternCommandProperty = Register(nameof(PatternCommand), typeof(ICommand), null);
 
-        public static readonly DependencyProperty ScopeProperty = Register(nameof(Scope), typeof(string), string.Empty);
+        public static readonly DependencyProperty IsSearchProperty = DependencyProperty.Register(nameof(IsSearch), typeof(bool), typeof(SearchOptions),
+            new PropertyMetadata(false, (d, _) => ((SearchOptions)d).UpdateNames()));
 
         public SearchOptions()
         {
             InitializeComponent();
+            UpdateNames();
+
+            // The names that a screen reader reads follow the language.
+            PropertyChangedEventManager.AddHandler(LogViewerTexts.Source, OnTextsChanged, string.Empty);
         }
 
         public bool MatchCase
@@ -49,11 +56,27 @@ namespace Sentinel.LogViewer.Wpf.Helper
             set => SetValue(PatternCommandProperty, value);
         }
 
-        /// <summary>What is added to the names that a screen reader reads, e.g. " of the search", so that the two rows can be told apart</summary>
-        public string Scope
+        /// <summary>Whether these are the options of the search bar, which names them "... of the search" so that a screen reader can tell the two rows apart</summary>
+        public bool IsSearch
         {
-            get => (string)GetValue(ScopeProperty);
-            set => SetValue(ScopeProperty, value);
+            get => (bool)GetValue(IsSearchProperty);
+            set => SetValue(IsSearchProperty, value);
+        }
+
+        private void OnTextsChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (Dispatcher.CheckAccess())
+                UpdateNames();
+            else
+                Dispatcher.BeginInvoke(UpdateNames);
+        }
+
+        private void UpdateNames()
+        {
+            // The names are made again, because the language can change while the control is on the screen.
+            AutomationProperties.SetName(MatchCaseBox, LogViewerTexts.Get(IsSearch ? "Opt_MatchCaseSearch" : "Opt_MatchCase"));
+            AutomationProperties.SetName(WholeWordBox, LogViewerTexts.Get(IsSearch ? "Opt_WholeWordSearch" : "Opt_WholeWord"));
+            AutomationProperties.SetName(RegexBox, LogViewerTexts.Get(IsSearch ? "Opt_RegexSearch" : "Opt_RegexName"));
         }
 
         private static DependencyProperty Register(string name, System.Type type, object? defaultValue) =>

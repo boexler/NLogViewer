@@ -10,6 +10,7 @@ namespace Sentinel.LogViewer.Tests;
 /// <summary>
 /// Tests for the time range without a window: which entries are in it, what the user types, and where it is kept and where it is not
 /// </summary>
+[Collection(WpfCollection.Name)]
 public class TimeRangeTests
 {
 	private static readonly TimeZoneInfo Tokyo = TimeZoneInfo.FindSystemTimeZoneById("Tokyo Standard Time");

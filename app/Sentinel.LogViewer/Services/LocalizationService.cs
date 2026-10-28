@@ -124,6 +124,11 @@ namespace Sentinel.LogViewer.Services
             }
         }
 
+        /// <summary>
+        /// Raised after the language was set, with its code; the application gives it to the control, which has its own texts
+        /// </summary>
+        public event EventHandler<string>? LanguageChanged;
+
         public void SetLanguage(string languageCode)
         {
             try
@@ -152,6 +157,8 @@ namespace Sentinel.LogViewer.Services
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
                 Thread.CurrentThread.CurrentUICulture = _currentCulture;
             }
+
+            LanguageChanged?.Invoke(this, CurrentLanguageCode);
         }
 
         public string GetString(string key, string defaultValue = "")

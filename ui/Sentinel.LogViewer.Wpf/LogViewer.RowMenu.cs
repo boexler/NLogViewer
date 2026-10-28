@@ -114,26 +114,26 @@ namespace Sentinel.LogViewer.Wpf
             var items = new System.Collections.Generic.List<Control>();
 
             // The menu of the logger cell has showing only and hiding the logger already.
-            var hasLoggerActions = menu.Items.OfType<MenuItem>().Any(item => item.Header as string == "Show only this logger");
+            var hasLoggerActions = menu.Items.OfType<MenuItem>().Any(item => item.Header as string == LogViewerTexts.Get("Row_ShowOnly"));
             if (!hasLoggerActions)
             {
-                items.Add(Item("Show only this logger", ShowOnlyLoggerCommand, entry.LoggerName));
-                items.Add(Item("Hide this logger", HideLoggerCommand, entry.LoggerName));
+                items.Add(Item(LogViewerTexts.Get("Row_ShowOnly"), ShowOnlyLoggerCommand, entry.LoggerName));
+                items.Add(Item(LogViewerTexts.Get("Row_Hide"), HideLoggerCommand, entry.LoggerName));
             }
 
-            items.Add(Item("Show in logger tree", ShowInLoggerTreeCommand, entry.LoggerName));
+            items.Add(Item(LogViewerTexts.Get("Row_ShowInTree"), ShowInLoggerTreeCommand, entry.LoggerName));
             items.Add(Separator());
-            items.Add(Item("Time range: from here", TimeFromHereCommand, entry));
-            items.Add(Item("Time range: until here", TimeUntilHereCommand, entry));
+            items.Add(Item(LogViewerTexts.Get("Row_TrFrom"), TimeFromHereCommand, entry));
+            items.Add(Item(LogViewerTexts.Get("Row_TrUntil"), TimeUntilHereCommand, entry));
             if (HasTimeRange)
-                items.Add(Item("Clear the time range", ClearTimeRangeCommand, null));
+                items.Add(Item(LogViewerTexts.Get("Tr_Clear"), ClearTimeRangeCommand, null));
 
             items.Add(Separator());
-            items.Add(Item("Go to time...", GoToTimeCommand, null, "Ctrl+T"));
-            items.Add(Item("Next warning", NextLevelCommand, LogEntryLevel.Warn, "F7"));
-            items.Add(Item("Previous warning", PreviousLevelCommand, LogEntryLevel.Warn, "Shift+F7"));
-            items.Add(Item("Next error", NextLevelCommand, LogEntryLevel.Error, "F8"));
-            items.Add(Item("Previous error", PreviousLevelCommand, LogEntryLevel.Error, "Shift+F8"));
+            items.Add(Item(LogViewerTexts.Get("Row_GoTo"), GoToTimeCommand, null, "Ctrl+T"));
+            items.Add(Item(LogViewerTexts.Get("Row_NextWarn"), NextLevelCommand, LogEntryLevel.Warn, "F7"));
+            items.Add(Item(LogViewerTexts.Get("Row_PrevWarn"), PreviousLevelCommand, LogEntryLevel.Warn, "Shift+F7"));
+            items.Add(Item(LogViewerTexts.Get("Row_NextErr"), NextLevelCommand, LogEntryLevel.Error, "F8"));
+            items.Add(Item(LogViewerTexts.Get("Row_PrevErr"), PreviousLevelCommand, LogEntryLevel.Error, "Shift+F8"));
 
             if (menu.Items.Count > 0)
                 menu.Items.Add(Separator());

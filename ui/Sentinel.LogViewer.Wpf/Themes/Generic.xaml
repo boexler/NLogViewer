@@ -21,8 +21,8 @@
 
     <!-- Format of the time stamp column; on the header and on the cells, the control is the Tag of the element -->
     <ContextMenu x:Key="TimeStampFormatMenu" x:Shared="False">
-        <MenuItem Header="Timestamp format" IsEnabled="False"/>
-        <MenuItem Header="System"
+        <MenuItem Header="{local:Text Key=Col_Format}" IsEnabled="False"/>
+        <MenuItem Header="{local:Text Key=Col_FormatSystem}"
                   IsChecked="{Binding PlacementTarget.Tag.EffectiveTimeStampFormat, RelativeSource={RelativeSource AncestorType=ContextMenu}, Mode=OneWay, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static core:TimeStampFormat.System}}"
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                   CommandParameter="{x:Static core:TimeStampFormat.System}"/>
@@ -39,10 +39,10 @@
                   Command="{Binding PlacementTarget.Tag.SetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                   CommandParameter="{x:Static core:TimeStampFormat.English}"/>
         <Separator/>
-        <MenuItem Header="Default view"
+        <MenuItem Header="{local:Text Key=Default_View}"
                   Command="{Binding PlacementTarget.Tag.ResetTimeStampFormatCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
         <!-- The application gives the command; without one there is nothing to show -->
-        <MenuItem Header="Time zone..."
+        <MenuItem Header="{local:Text Key=Col_TimeZone}"
                   Command="{Binding PlacementTarget.Tag.ChangeTimeZoneCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                   CommandParameter="{Binding PlacementTarget.Tag.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
             <MenuItem.Style>
@@ -175,18 +175,18 @@
                                 <!-- Controls -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
                                             Visibility="{Binding ShowControlButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Auto-Scroll"
-                                                  ToolTip="Auto-Scroll: scroll to the newest entry when new entries arrive"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Ctl_AutoScroll}"
+                                                  ToolTip="{local:Text Key=Ctl_AutoScrollTip}"
                                                   IsChecked="{Binding Path=AutoScroll, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <Image Source="../Images/Small/ScrollDown.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Pause"
-                                                  ToolTip="Pause: no new entries are added to the list while it is pressed"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Ctl_Pause}"
+                                                  ToolTip="{local:Text Key=Ctl_PauseTip}"
                                                   IsChecked="{Binding Path=Pause, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <Image Source="../Images/Small/Pause.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </ToggleButton>
-                                    <Button Width="28" Height="26" Padding="0" Margin="0,0,2,0" AutomationProperties.Name="Clear"
-                                            ToolTip="Clear: remove all entries from the list"
+                                    <Button Width="28" Height="26" Padding="0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Ctl_Clear}"
+                                            ToolTip="{local:Text Key=Ctl_ClearTip}"
                                             Command="{Binding Path=ClearCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                         <Image Source="../Images/Small/Clear.png" Width="16" Height="16" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
                                     </Button>
@@ -196,48 +196,48 @@
                                 <!-- Levels: pressed hides the entries of the level -->
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
                                             Visibility="{Binding ShowFilterButtons, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Trace"
-                                                  ToolTip="Hide the Trace entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Trace}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Trace}"
                                                   IsChecked="{Binding Path=TraceFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Trace.png" Style="{StaticResource LevelIcon}"/>
                                             <TextBlock Text="T" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Debug"
-                                                  ToolTip="Hide the Debug entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Debug}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Debug}"
                                                   IsChecked="{Binding Path=DebugFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Debug.png" Style="{StaticResource LevelIcon}"/>
                                             <TextBlock Text="D" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Info"
-                                                  ToolTip="Hide the Info entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Info}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Info}"
                                                   IsChecked="{Binding Path=InfoFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Info.png" Style="{StaticResource LevelIcon}"/>
                                             <TextBlock Text="I" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Warn"
-                                                  ToolTip="Hide the Warn entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Warn}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Warn}"
                                                   IsChecked="{Binding Path=WarnFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Warning.png" Style="{StaticResource LevelIcon}"/>
                                             <TextBlock Text="W" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Error"
-                                                  ToolTip="Hide the Error entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Error}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Error}"
                                                   IsChecked="{Binding Path=ErrorFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Error.png" Style="{StaticResource LevelIcon}"/>
                                             <TextBlock Text="E" Style="{StaticResource LevelLetter}"/>
                                         </StackPanel>
                                     </ToggleButton>
-                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="Fatal"
-                                                  ToolTip="Hide the Fatal entries (press again to show them)"
+                                    <ToggleButton MinWidth="28" Height="26" Padding="4,0" Margin="0,0,2,0" AutomationProperties.Name="{local:Text Key=Level_Fatal}"
+                                                  ToolTip="{local:Text Key=Level_HideTip, Arg0Key=Level_Fatal}"
                                                   IsChecked="{Binding Path=FatalFilter, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Source="../Images/Large/Fatal.png" Style="{StaticResource LevelIcon}"/>
@@ -251,9 +251,9 @@
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2" VerticalAlignment="Center"
                                             Visibility="{Binding ShowSearchControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <helper:WatermarkTextBox Height="26" Padding="4,1" VerticalContentAlignment="Center" Width="220" Margin="0,0,6,0"
-                                             AutomationProperties.Name="Filter" Glyph="&#xE71C;" Hint="Filter the entries"
+                                             AutomationProperties.Name="{local:Text Key=Filter_Name}" Glyph="&#xE71C;" Hint="{local:Text Key=Filter_Hint}"
                                              Text="{Binding CurrentSearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
-                                             ToolTip="Filter the entries by the chosen fields (Press Enter to add)">
+                                             ToolTip="{local:Text Key=Filter_Tip}">
                                         <TextBox.InputBindings>
                                             <KeyBinding Key="Return" Command="{Binding AddSearchTermCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                         </TextBox.InputBindings>
@@ -267,24 +267,24 @@
                                             </Style>
                                         </TextBox.Style>
                                     </helper:WatermarkTextBox>
-                                    <ComboBox Width="70" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
-                                              SelectedValuePath="Tag" AutomationProperties.Name="Show or hide the entries that match"
+                                    <ComboBox MinWidth="80" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                              SelectedValuePath="Tag" AutomationProperties.Name="{local:Text Key=Filter_ShowHideName}"
                                               SelectedValue="{Binding FilterIsExclude, RelativeSource={RelativeSource TemplatedParent}}"
-                                              ToolTip="Show the entries that match, or hide them">
-                                        <ComboBoxItem Content="Show"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
-                                        <ComboBoxItem Content="Hide"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                              ToolTip="{local:Text Key=Filter_ShowHideTip}">
+                                        <ComboBoxItem Content="{local:Text Key=Filter_Show}"><ComboBoxItem.Tag><sys:Boolean>False</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
+                                        <ComboBoxItem Content="{local:Text Key=Filter_Hide}"><ComboBoxItem.Tag><sys:Boolean>True</sys:Boolean></ComboBoxItem.Tag></ComboBoxItem>
                                     </ComboBox>
-                                    <ComboBox Width="90" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
-                                              AutomationProperties.Name="Level of the filter"
+                                    <ComboBox MinWidth="112" Height="26" Padding="6,0" Margin="0,0,6,0" VerticalAlignment="Center"
+                                              AutomationProperties.Name="{local:Text Key=Filter_LevelName}"
                                               SelectedIndex="{Binding FilterLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
-                                              ToolTip="Only entries of this level">
-                                        <ComboBoxItem Content="Any level"/>
-                                        <ComboBoxItem Content="Trace"/>
-                                        <ComboBoxItem Content="Debug"/>
-                                        <ComboBoxItem Content="Info"/>
-                                        <ComboBoxItem Content="Warn"/>
-                                        <ComboBoxItem Content="Error"/>
-                                        <ComboBoxItem Content="Fatal"/>
+                                              ToolTip="{local:Text Key=Level_OnlyTip}">
+                                        <ComboBoxItem Content="{local:Text Key=Level_Any}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Trace}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Debug}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Info}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Warn}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Error}"/>
+                                        <ComboBoxItem Content="{local:Text Key=Level_Fatal}"/>
                                     </ComboBox>
                                     <helper:SearchOptions Margin="0,0,0,0"
                                                           MatchCase="{Binding FilterMatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
@@ -293,23 +293,33 @@
                                                           PatternCommand="{Binding InsertRegexTemplateCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                     <Menu Background="Transparent" VerticalAlignment="Center" Margin="-6,0,0,0" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                         <!-- The quick choices are counted back from the last entry; the dialog is for exact times -->
-                                        <MenuItem Header="Time range ▾" ToolTip="Show only the entries of a period">
-                                            <MenuItem Header="Last 15 minutes" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
-                                            <MenuItem Header="Last hour" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
-                                            <MenuItem Header="Last 24 hours" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
-                                            <MenuItem Header="Last 7 days" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
+                                        <MenuItem Header="{local:Text Key=Tr_Menu}" ToolTip="{local:Text Key=Tr_MenuTip}">
+                                            <MenuItem Header="{local:Text Key=Tr_Last15}" Command="{Binding TimeRangeLastCommand}" CommandParameter="0:15:00"/>
+                                            <MenuItem Header="{local:Text Key=Tr_LastHour}" Command="{Binding TimeRangeLastCommand}" CommandParameter="1:00:00"/>
+                                            <MenuItem Header="{local:Text Key=Tr_Last24}" Command="{Binding TimeRangeLastCommand}" CommandParameter="24:00:00"/>
+                                            <MenuItem Header="{local:Text Key=Tr_Last7}" Command="{Binding TimeRangeLastCommand}" CommandParameter="7.00:00:00"/>
                                             <Separator/>
-                                            <MenuItem Header="Choose..." InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
-                                            <MenuItem Header="Clear the time range" Command="{Binding ClearTimeRangeCommand}"/>
+                                            <MenuItem Header="{local:Text Key=Tr_Choose}" InputGestureText="Ctrl+Shift+T" Command="{Binding ChooseTimeRangeCommand}"/>
+                                            <MenuItem Header="{local:Text Key=Tr_Clear}" Command="{Binding ClearTimeRangeCommand}"/>
                                         </MenuItem>
                                     </Menu>
                                     <TextBlock Text="{Binding FilterHitText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center" Opacity="0.7"/>
-                                    <TextBlock Text="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,0" VerticalAlignment="Center"
-                                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}" MaxWidth="320" TextTrimming="CharacterEllipsis"
-                                               ToolTip="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <TextBlock Text="{local:Text Key=Find_Invalid}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                               Foreground="{Binding RelativeSource={RelativeSource AncestorType=local:LogViewer}, Path=ErrorForeground}"
+                                               ToolTip="{Binding FilterError, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding FilterError, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </StackPanel>
 
-                                <Button Width="28" Height="26" Padding="0" Margin="8,0,0,2" AutomationProperties.Name="Search" ToolTip="Search (Ctrl+F)"
+                                <Button Width="28" Height="26" Padding="0" Margin="8,0,0,2" AutomationProperties.Name="{local:Text Key=Search_Name}" ToolTip="{local:Text Key=Search_Tip}"
                                         Visibility="{Binding ShowFindControls, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
                                         Command="{Binding OpenFindCommand, RelativeSource={RelativeSource TemplatedParent}}">
                                     <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
@@ -336,9 +346,9 @@
                                     </Style>
                                 </WrapPanel.Style>
                                 <helper:WatermarkTextBox x:Name="PART_FindBox" Height="26" Padding="4,1" VerticalContentAlignment="Center" Width="220" Margin="0,0,6,2"
-                                         AutomationProperties.Name="Search" Glyph="&#xE721;" Hint="Find in the entries"
+                                         AutomationProperties.Name="{local:Text Key=Search_Name}" Glyph="&#xE721;" Hint="{local:Text Key=Search_Hint}"
                                          Text="{Binding FindText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
-                                         ToolTip="Find in the chosen fields without hiding entries (Enter / Shift+Enter or F3 / Shift+F3: next / previous hit, Esc: close)">
+                                         ToolTip="{local:Text Key=Search_BoxTip}">
                                     <TextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                         <KeyBinding Key="Return" Modifiers="Shift" Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -354,32 +364,32 @@
                                         </Style>
                                     </TextBox.Style>
                                 </helper:WatermarkTextBox>
-                                <ComboBox Width="90" Height="26" Padding="6,0" Margin="0,0,6,2" VerticalAlignment="Center"
-                                          AutomationProperties.Name="Level of the search"
+                                <ComboBox MinWidth="112" Height="26" Padding="6,0" Margin="0,0,6,2" VerticalAlignment="Center"
+                                          AutomationProperties.Name="{local:Text Key=Search_LevelName}"
                                           SelectedIndex="{Binding FindLevel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LevelIndexConverter}}"
-                                          ToolTip="Only entries of this level">
-                                    <ComboBoxItem Content="Any level"/>
-                                    <ComboBoxItem Content="Trace"/>
-                                    <ComboBoxItem Content="Debug"/>
-                                    <ComboBoxItem Content="Info"/>
-                                    <ComboBoxItem Content="Warn"/>
-                                    <ComboBoxItem Content="Error"/>
-                                    <ComboBoxItem Content="Fatal"/>
+                                          ToolTip="{local:Text Key=Level_OnlyTip}">
+                                    <ComboBoxItem Content="{local:Text Key=Level_Any}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Trace}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Debug}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Info}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Warn}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Error}"/>
+                                    <ComboBoxItem Content="{local:Text Key=Level_Fatal}"/>
                                 </ComboBox>
-                                <helper:SearchOptions Margin="0,0,0,2" Scope=" of the search"
+                                <helper:SearchOptions Margin="0,0,0,2" IsSearch="True"
                                                       MatchCase="{Binding FindMatchCase, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                       WholeWord="{Binding FindWholeWord, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                       UseRegex="{Binding FindUseRegex, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                                       PatternCommand="{Binding InsertFindRegexTemplateCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <Button Content="▲" Width="28" Height="26" Padding="0" Margin="6,0,2,2" AutomationProperties.Name="Previous hit"
+                                <Button Content="▲" Width="28" Height="26" Padding="0" Margin="6,0,2,2" AutomationProperties.Name="{local:Text Key=Search_PrevName}"
                                         Command="{Binding FindPreviousCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        ToolTip="Previous hit (Shift+F3)"/>
-                                <Button Content="▼" Width="28" Height="26" Padding="0" Margin="0,0,0,2" AutomationProperties.Name="Next hit"
+                                        ToolTip="{local:Text Key=Search_PrevTip}"/>
+                                <Button Content="▼" Width="28" Height="26" Padding="0" Margin="0,0,0,2" AutomationProperties.Name="{local:Text Key=Search_NextName}"
                                         Command="{Binding FindNextCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        ToolTip="Next hit (F3)"/>
+                                        ToolTip="{local:Text Key=Search_NextTip}"/>
                                 <TextBlock Text="{Binding FindResultText, RelativeSource={RelativeSource TemplatedParent}}" MinWidth="80" Margin="10,0,0,2" VerticalAlignment="Center"
                                            ToolTip="{Binding FindError, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                <Button Width="28" Height="26" Padding="0" Margin="6,0,0,2" Content="&#x2715;" AutomationProperties.Name="Close the search" ToolTip="Close the search (Esc)"
+                                <Button Width="28" Height="26" Padding="0" Margin="6,0,0,2" Content="&#x2715;" AutomationProperties.Name="{local:Text Key=Search_CloseName}" ToolTip="{local:Text Key=Search_CloseTip}"
                                         Command="{Binding CloseFindCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </WrapPanel>
 
@@ -418,11 +428,11 @@
                                                           </Style>
                                                       </Border.Style>
                                                       <StackPanel Orientation="Horizontal">
-                                                          <CheckBox Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Switch this term on or off" AutomationProperties.Name="{Binding Text, StringFormat='Apply the term {0}'}"
+                                                          <CheckBox Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Chip_SwitchTip}" AutomationProperties.Name="{local:Text Key=Chip_ApplyName, Arg0={Binding Text}}"
                                                                     IsChecked="{Binding IsEnabled, Mode=OneWay}"
                                                                     Command="{Binding ToggleSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                     CommandParameter="{Binding}"/>
-                                                          <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="Hides the entries that match">
+                                                          <TextBlock Text="−" FontWeight="Bold" Margin="0,0,4,0" ToolTip="{local:Text Key=Chip_ExcludeTip}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
                                                                       <Setter Property="Visibility" Value="Collapsed"/>
@@ -434,7 +444,7 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="Regex:" FontWeight="Bold" Margin="0,0,4,0"
+                                                          <TextBlock Text="{local:Text Key=Chip_Regex}" FontWeight="Bold" Margin="0,0,4,0"
                                                                      Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}, Path=RegexPrefixForeground}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
@@ -459,7 +469,7 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Match case">
+                                                          <TextBlock Text="Aa" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Opt_MatchCase}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
                                                                       <Setter Property="Visibility" Value="Collapsed"/>
@@ -471,7 +481,7 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="W" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Whole word">
+                                                          <TextBlock Text="W" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Opt_WholeWord}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
                                                                       <Setter Property="Visibility" Value="Collapsed"/>
@@ -483,7 +493,7 @@
                                                                   </Style>
                                                               </TextBlock.Style>
                                                           </TextBlock>
-                                                          <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="Only entries of this level">
+                                                          <TextBlock Text="{Binding Level}" FontSize="10" Margin="0,1,4,0" VerticalAlignment="Center" ToolTip="{local:Text Key=Level_OnlyTip}">
                                                               <TextBlock.Style>
                                                                   <Style TargetType="TextBlock">
                                                                       <Style.Triggers>
@@ -502,7 +512,7 @@
                                                                   Margin="0,0,2,0"
                                                                   Command="{Binding EditSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                   CommandParameter="{Binding}"
-                                                                  ToolTip="Edit filter term" AutomationProperties.Name="{Binding Text, StringFormat='Edit the term {0}'}"/>
+                                                                  ToolTip="{local:Text Key=Chip_EditTip}" AutomationProperties.Name="{local:Text Key=Chip_EditName, Arg0={Binding Text}}"/>
                                                           <Button Content="×"
                                                                   Width="16"
                                                                   Height="16"
@@ -511,7 +521,7 @@
                                                                   Margin="0"
                                                                   Command="{Binding RemoveSearchTermCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:LogViewer}}"
                                                                   CommandParameter="{Binding}"
-                                                                  ToolTip="Remove filter term" AutomationProperties.Name="{Binding Text, StringFormat='Remove the term {0}'}"/>
+                                                                  ToolTip="{local:Text Key=Chip_RemoveTip}" AutomationProperties.Name="{local:Text Key=Chip_RemoveName, Arg0={Binding Text}}"/>
                                                       </StackPanel>
                                                   </Border>
                                               </DataTemplate>
@@ -523,7 +533,7 @@
                                         Visibility="{Binding HasTimeRange, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding TimeRangeText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
-                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show all the entries again" AutomationProperties.Name="Clear the time range"
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="{local:Text Key=Tr_ClearTip}" AutomationProperties.Name="{local:Text Key=Tr_Clear}"
                                                 Command="{Binding ClearTimeRangeCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </StackPanel>
                                 </Border>
@@ -540,8 +550,8 @@
                                         </Style>
                                     </Border.Style>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Loggers" VerticalAlignment="Center" ToolTip="Rules of the logger tree: loggers that are shown only, or hidden"/>
-                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show all loggers" AutomationProperties.Name="Show all loggers"
+                                        <TextBlock Text="{local:Text Key=Loggers}" VerticalAlignment="Center" ToolTip="{local:Text Key=Chip_LoggersTip}"/>
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="{local:Text Key=Chip_ShowAll}" AutomationProperties.Name="{local:Text Key=Chip_ShowAll}"
                                                 Command="{Binding LoggerTree.ShowAllCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </StackPanel>
                                 </Border>
@@ -559,13 +569,13 @@
                                     </Border.Style>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding SortText, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center"/>
-                                        <Button Style="{StaticResource ChipClose}" ToolTip="Show the entries in the order they came in" AutomationProperties.Name="Reset column sorting"
+                                        <Button Style="{StaticResource ChipClose}" ToolTip="{local:Text Key=Sort_ResetTip}" AutomationProperties.Name="{local:Text Key=Sort_ResetName}"
                                                 Command="{Binding ResetSortCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                                     </StackPanel>
                                 </Border>
 
-                                <Button Content="Reset filter" Margin="6,0,0,0" Padding="8,1" Height="24" VerticalAlignment="Center"
-                                        ToolTip="Take the levels, terms, loggers and the time range off"
+                                <Button Content="{local:Text Key=Result_Reset}" Margin="6,0,0,0" Padding="8,1" Height="24" VerticalAlignment="Center"
+                                        ToolTip="{local:Text Key=Result_ResetTip}"
                                         Visibility="{Binding HasActiveFilter, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}"
                                         Command="{Binding ResetFilterCommand, RelativeSource={RelativeSource TemplatedParent}}"/>
                             </WrapPanel>
@@ -647,7 +657,7 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.View>
                                     <helper:AutoSizedGridView>
-                                        <GridViewColumn Header="ID" Width="40">
+                                        <GridViewColumn Header="{local:Text Key=Col_Id}" Width="40">
                                             <GridViewColumn.DisplayMemberBinding>
                                                 <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
                                                     <Binding Path="."/>
@@ -655,7 +665,7 @@
                                                 </MultiBinding>
                                             </GridViewColumn.DisplayMemberBinding>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="Level" Width="Auto">
+                                        <GridViewColumn Header="{local:Text Key=Col_Level}" Width="Auto">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -714,7 +724,7 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="TimeStamp" Width="Auto">
+                                        <GridViewColumn Header="{local:Text Key=Col_TimeStamp}" Width="Auto">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock
@@ -738,7 +748,7 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="LoggerName" Width="Auto">
+                                        <GridViewColumn Header="{local:Text Key=Col_Logger}" Width="Auto">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock
@@ -752,15 +762,15 @@
                                                                     Header="{Binding LoggerName, Converter={StaticResource ContextMenuHeaderConverter}}"
                                                                     IsEnabled="False"/>
                                                                 <MenuItem
-                                                                    Header="Show only this logger"
+                                                                    Header="{local:Text Key=Row_ShowOnly}"
                                                                     Command="{Binding PlacementTarget.Tag.ShowOnlyLoggerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                                     CommandParameter="{Binding LoggerName}"/>
                                                                 <MenuItem
-                                                                    Header="Hide this logger"
+                                                                    Header="{local:Text Key=Row_Hide}"
                                                                     Command="{Binding PlacementTarget.Tag.HideLoggerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                                     CommandParameter="{Binding LoggerName}"/>
                                                                 <MenuItem
-                                                                    Header="Copy to Clipboard"
+                                                                    Header="{local:Text Key=Row_Copy}"
                                                                     Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                                     <MenuItem.CommandParameter>
                                                                         <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
@@ -775,7 +785,7 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="Message" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
+                                        <GridViewColumn Header="{local:Text Key=Col_Message}" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock
@@ -790,7 +800,7 @@
                                                                     Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
                                                                     IsEnabled="False"/>
                                                                 <MenuItem
-                                                                    Header="Add to Filter"
+                                                                    Header="{local:Text Key=Row_AddFilter}"
                                                                     Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                                     <MenuItem.CommandParameter>
                                                                         <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
@@ -800,7 +810,7 @@
                                                                     </MenuItem.CommandParameter>
                                                                 </MenuItem>
                                                                 <MenuItem
-                                                                    Header="Copy to Clipboard"
+                                                                    Header="{local:Text Key=Row_Copy}"
                                                                     Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
                                                                     <MenuItem.CommandParameter>
                                                                         <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
@@ -823,7 +833,7 @@
                             <GridSplitter x:Name="PART_LoggerTreeSplitter" Grid.Column="4" Width="5" Visibility="Collapsed"
                                           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                           ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
-                                          ToolTip="Drag to change the width of the logger tree">
+                                          ToolTip="{local:Text Key=Tree_DragTip}">
                                 <GridSplitter.Template>
                                     <ControlTemplate TargetType="GridSplitter">
                                         <Border Background="Transparent">
@@ -836,9 +846,9 @@
                             <Border x:Name="PART_LoggerTreePanel" Grid.Column="5" Visibility="Collapsed">
                                 <DockPanel Margin="6">
                                     <Grid DockPanel.Dock="Top" Margin="2,0,0,4">
-                                        <TextBlock Text="Loggers" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{local:Text Key=Loggers}" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                         <ToggleButton HorizontalAlignment="Right" Width="24" Height="22" Padding="0"
-                                                      ToolTip="Move the logger tree to the other side"
+                                                      ToolTip="{local:Text Key=Tree_MoveTip}"
                                                       IsChecked="{Binding IsLoggerTreeOnLeft, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
                                             <TextBlock FontSize="14">
                                                 <TextBlock.Style>
@@ -856,8 +866,8 @@
                                         </ToggleButton>
                                     </Grid>
                                     <helper:WatermarkTextBox DockPanel.Dock="Top" Height="26" Margin="0,0,0,6" Style="{StaticResource WatermarkBox}"
-                                                             Glyph="&#xE721;" Hint="Search loggers" AutomationProperties.Name="Search loggers"
-                                                             ToolTip="Show only the loggers whose name contains the text; the entries of the list do not change"
+                                                             Glyph="&#xE721;" Hint="{local:Text Key=Tree_SearchHint}" AutomationProperties.Name="{local:Text Key=Tree_SearchHint}"
+                                                             ToolTip="{local:Text Key=Tree_SearchTip}"
                                                              Text="{Binding LoggerTree.SearchText, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
                                     <TreeView x:Name="PART_LoggerTreeView" ItemsSource="{Binding LoggerTree.Roots, RelativeSource={RelativeSource TemplatedParent}}"
                                               BorderThickness="0" Background="Transparent"
@@ -880,15 +890,15 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Grid.ContextMenu>
                                                         <ContextMenu>
-                                                            <MenuItem Header="Show only this logger"
+                                                            <MenuItem Header="{local:Text Key=Row_ShowOnly}"
                                                                       Command="{Binding PlacementTarget.DataContext.Tree.ShowOnlyCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
                                                                       CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                                            <MenuItem Header="Show all loggers"
+                                                            <MenuItem Header="{local:Text Key=Chip_ShowAll}"
                                                                       Command="{Binding PlacementTarget.DataContext.Tree.ShowAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                                             <Separator/>
-                                                            <MenuItem Header="Expand all"
+                                                            <MenuItem Header="{local:Text Key=Tree_ExpandAll}"
                                                                       Command="{Binding PlacementTarget.DataContext.Tree.ExpandAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
-                                                            <MenuItem Header="Collapse all"
+                                                            <MenuItem Header="{local:Text Key=Tree_CollapseAll}"
                                                                       Command="{Binding PlacementTarget.DataContext.Tree.CollapseAllCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                                         </ContextMenu>
                                                     </Grid.ContextMenu>
@@ -906,7 +916,7 @@
                                                             </Style>
                                                         </TextBlock.Style>
                                                     </TextBlock>
-                                                    <Border Grid.Column="2" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Warnings"
+                                                    <Border Grid.Column="2" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="{local:Text Key=Tree_WarningsTip}"
                                                             Background="{Binding WarnBackground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
@@ -920,7 +930,7 @@
                                                         <TextBlock Text="{Binding WarnCount}" FontSize="10"
                                                                    Foreground="{Binding WarnForeground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}"/>
                                                     </Border>
-                                                    <Border Grid.Column="3" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="Errors and fatal errors"
+                                                    <Border Grid.Column="3" Margin="4,0,0,0" Padding="5,0" CornerRadius="7" ToolTip="{local:Text Key=Tree_ErrorsTip}"
                                                             Background="{Binding ErrorBackground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}">
                                                         <Border.Style>
                                                             <Style TargetType="Border">
@@ -934,7 +944,7 @@
                                                         <TextBlock Text="{Binding ErrorCount}" FontSize="10"
                                                                    Foreground="{Binding ErrorForeground, RelativeSource={RelativeSource AncestorType=local:LogViewer}}"/>
                                                     </Border>
-                                                    <TextBlock Grid.Column="4" Margin="6,0,0,0" Text="{Binding TotalCount}" ToolTip="Entries"
+                                                    <TextBlock Grid.Column="4" Margin="6,0,0,0" Text="{Binding TotalCount}" ToolTip="{local:Text Key=Tree_EntriesTip}"
                                                                Foreground="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </HierarchicalDataTemplate>
@@ -943,9 +953,9 @@
                                 </DockPanel>
                             </Border>
                             <ToggleButton x:Name="PART_LoggerTreeHandle" Grid.Column="6" Width="22" Margin="2,0,0,0"
-                                          ToolTip="Show or hide the logger tree"
+                                          ToolTip="{local:Text Key=Tree_ToggleTip}"
                                           IsChecked="{Binding IsLoggerTreeExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                <TextBlock Text="Loggers">
+                                <TextBlock Text="{local:Text Key=Loggers}">
                                     <TextBlock.LayoutTransform>
                                         <RotateTransform Angle="90"/>
                                     </TextBlock.LayoutTransform>

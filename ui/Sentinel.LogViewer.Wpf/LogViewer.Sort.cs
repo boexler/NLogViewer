@@ -134,7 +134,7 @@ namespace Sentinel.LogViewer.Wpf
                 _autoScrollBeforeSort = null;
             }
 
-            UpdateSortMarks();
+            UpdateHeaders();
             ShowSelectedOrTop();
         }
 
@@ -148,21 +148,40 @@ namespace Sentinel.LogViewer.Wpf
         }
 
         /// <summary>
-        /// Puts the mark of the sort on the header of its column and takes it off the others; tells <see cref="SortText"/>
+        /// Writes the headers of the columns in the language of the control, with the mark of the sort on the header of its column; tells
+        /// <see cref="SortText"/>
         /// </summary>
-        private void UpdateSortMarks()
+        private void UpdateHeaders()
         {
             var text = string.Empty;
             foreach (var (column, key) in _columnKeys)
             {
-                var title = (column.Header as string ?? string.Empty).Replace(AscendingMark, string.Empty).Replace(DescendingMark, string.Empty);
                 var mark = key == SortKey ? (SortDescending ? DescendingMark : AscendingMark) : string.Empty;
-                column.Header = title + mark;
+                column.Header = ColumnTitle(key, withZone: true) + mark;
                 if (mark.Length > 0)
-                    text = $"Sorted by {title.Split(" (")[0]}{mark}";
+                    text = LogViewerTexts.Format("Sort_By", ColumnTitle(key, withZone: false) + mark);
             }
 
             SetValue(SortTextPropertyKey, text);
+        }
+
+        /// <summary>
+        /// The title of a column in the language of the control; the time stamp column says which zones are converted, e.g. <c>TimeStamp (UTC+9 → local)</c>
+        /// </summary>
+        private string ColumnTitle(string key, bool withZone)
+        {
+            switch (key)
+            {
+                case LogColumns.Id: return LogViewerTexts.Get("Col_Id");
+                case LogColumns.Level: return LogViewerTexts.Get("Col_Level");
+                case LogColumns.TimeStamp:
+                    var label = withZone ? (TimeStampResolver as Resolver.TimeStampResolver)?.ZoneLabel : null;
+                    return LogViewerTexts.Get("Col_TimeStamp") + (string.IsNullOrEmpty(label) ? string.Empty : $" ({label})");
+                case LogColumns.Logger: return LogViewerTexts.Get("Col_Logger");
+                case LogColumns.Thread: return LogViewerTexts.Get("Col_Thread");
+                case LogColumns.Message: return LogViewerTexts.Get("Col_Message");
+                default: return LogColumns.IsProperty(key, out var name) ? name : key;
+            }
         }
 
         private void OnColumnHeaderClick(object sender, RoutedEventArgs e)
