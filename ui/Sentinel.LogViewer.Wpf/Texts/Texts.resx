@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Cancel (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Add bookmark</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Remove bookmark</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Bookmark comment...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Next bookmark</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Previous bookmark</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Bookmark</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Bookmark comment</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Comment for the bookmark. Leave it empty for none.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>There are no bookmarks in the list</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>No further bookmark. Press the key again to start at the first one</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>No earlier bookmark. Press the key again to start at the last one</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Show the list of the bookmarks (F2 next, Shift+F2 previous)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Bookmarks</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>No bookmarks yet. Select entries and press Ctrl+B.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>The entry is hidden by a filter</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Remove all</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Go to entry</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Remove all {0} bookmarks? The {1} comments are lost.</value>
+  </data>
 </root>

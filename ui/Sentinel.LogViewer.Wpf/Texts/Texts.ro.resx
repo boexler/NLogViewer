@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Anulează (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Adaugă marcaj</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Elimină marcajul</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Comentariul marcajului...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Marcajul următor</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Marcajul anterior</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Marcaj</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Comentariul marcajului</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Comentariul marcajului. Lasă gol dacă nu există.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>Nu există marcaje în listă</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>Nu mai există marcaje. Apasă din nou tasta pentru a începe de la primul</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>Nu mai există marcaje înainte. Apasă din nou tasta pentru a începe de la ultimul</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Marcaje</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Arată lista marcajelor (F2 următorul, Shift+F2 anteriorul)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Marcaje</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Încă nu există marcaje. Selectează intrări și apasă Ctrl+B.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>Intrarea este ascunsă de un filtru</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Elimină toate</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Salt la intrare</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Comentariu</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Eliminați toate cele {0} semne de carte? Cele {1} comentarii se pierd.</value>
+  </data>
 </root>

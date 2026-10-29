@@ -1,0 +1,75 @@
+<UserControl x:Class="Sentinel.LogViewer.Wpf.Helper.BookmarkList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Sentinel.LogViewer.Wpf">
+    <!-- The list of the bookmarks of a viewer, which is the data context. It is the content of a window; a panel can host it as well. -->
+    <UserControl.Resources>
+        <!-- The buttons for a bookmark are off as long as no row is selected -->
+        <Style x:Key="RowButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="90"/>
+            <Setter Property="Padding" Value="12,3"/>
+            <Setter Property="Margin" Value="0,0,6,0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem, ElementName=BookmarkRows}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <DockPanel Margin="10">
+        <DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+            <Button DockPanel.Dock="Right" Style="{StaticResource RowButton}" Margin="0" Content="{local:Text Key=Bm_RemoveAll}"
+                    Command="{Binding ClearBookmarksCommand}"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource RowButton}" IsDefault="True" Content="{local:Text Key=Bm_GoTo}"
+                        Command="{Binding GoToBookmarkCommand}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkRows}"/>
+                <Button Style="{StaticResource RowButton}" Content="{local:Text Key=Row_BookmarkComment}"
+                        Command="{Binding EditBookmarkCommentCommand}" CommandParameter="{Binding SelectedItem.Entry, ElementName=BookmarkRows}"/>
+                <Button Style="{StaticResource RowButton}" Content="{local:Text Key=Row_BookmarkOff}"
+                        Command="{Binding RemoveBookmarkItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=BookmarkRows}"/>
+            </StackPanel>
+        </DockPanel>
+        <!-- What "Go to entry" has to say, e.g. that a filter hides the entry; the main window may be covered by this one -->
+        <TextBlock DockPanel.Dock="Bottom" Text="{Binding JumpText}" TextWrapping="Wrap" Margin="0,8,0,0" Opacity="0.8"/>
+        <TextBlock DockPanel.Dock="Top" Text="{local:Text Key=Bm_Empty}" TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,6">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding BookmarkCount}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ListView x:Name="BookmarkRows" ItemsSource="{Binding BookmarkItems, NotifyOnTargetUpdated=True}" SelectionMode="Single"
+                  MouseDoubleClick="OnRowDoubleClick" SelectionChanged="OnSelectionChanged" Binding.TargetUpdated="OnItemsChanged" HorizontalContentAlignment="Stretch">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <!-- The comment and the whole message, as a tip -->
+                    <Setter Property="ToolTip">
+                        <Setter.Value>
+                            <ToolTip MaxWidth="640" Content="{Binding PlacementTarget.DataContext.ToolTipText, RelativeSource={RelativeSource Self}}">
+                                <ToolTip.ContentTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+                                    </DataTemplate>
+                                </ToolTip.ContentTemplate>
+                            </ToolTip>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="{local:Text Key=Col_TimeStamp}" Width="160" DisplayMemberBinding="{Binding Time}"/>
+                    <GridViewColumn Header="{local:Text Key=Col_Level}" Width="70" DisplayMemberBinding="{Binding Level}"/>
+                    <GridViewColumn Header="{local:Text Key=Col_Logger}" Width="170" DisplayMemberBinding="{Binding Logger}"/>
+                    <GridViewColumn Header="{local:Text Key=Col_Message}" Width="380" DisplayMemberBinding="{Binding Message}"/>
+                    <GridViewColumn Header="{local:Text Key=Bm_Comment}" Width="240" DisplayMemberBinding="{Binding Comment}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</UserControl>

@@ -1492,5 +1492,35 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>Von Hand</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>Leseze_ichen</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Lesezeichen setzen oder entfernen</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Nächstes Lesezeichen</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>_Vorheriges Lesezeichen</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Kommentar...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Alle Lesezeichen entfernen</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Lesezeichen auf den gewählten Einträgen setzen oder entfernen</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Zum nächsten Lesezeichen springen, mit Umschalt zum vorherigen; am Ende geht dieselbe Taste am anderen Ende weiter</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Die gewählten Zeilen der Liste kopieren, eine Zeile pro Eintrag</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>L_iste anzeigen</value>
+  </data>
 </root>
 

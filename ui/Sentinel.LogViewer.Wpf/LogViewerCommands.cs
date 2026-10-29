@@ -29,6 +29,27 @@ namespace Sentinel.LogViewer.Wpf
         /// <summary>Selects the previous entry of the level that is the parameter (Shift+F4 to Shift+F9)</summary>
         public static readonly RoutedUICommand PreviousLevel = new("Previous entry of a level", nameof(PreviousLevel), typeof(LogViewerCommands));
 
+        /// <summary>Puts a bookmark on the selected entries or takes it off (Ctrl+B)</summary>
+        public static readonly RoutedUICommand ToggleBookmark = new("Toggle bookmark", nameof(ToggleBookmark), typeof(LogViewerCommands),
+            new InputGestureCollection { new KeyGesture(Key.B, ModifierKeys.Control) });
+
+        /// <summary>Selects the next entry with a bookmark (F2)</summary>
+        public static readonly RoutedUICommand NextBookmark = new("Next bookmark", nameof(NextBookmark), typeof(LogViewerCommands),
+            new InputGestureCollection { new KeyGesture(Key.F2) });
+
+        /// <summary>Selects the previous entry with a bookmark (Shift+F2)</summary>
+        public static readonly RoutedUICommand PreviousBookmark = new("Previous bookmark", nameof(PreviousBookmark), typeof(LogViewerCommands),
+            new InputGestureCollection { new KeyGesture(Key.F2, ModifierKeys.Shift) });
+
+        /// <summary>Opens the dialog for the comment of the bookmark of the selected entry</summary>
+        public static readonly RoutedUICommand EditBookmarkComment = new("Bookmark comment", nameof(EditBookmarkComment), typeof(LogViewerCommands));
+
+        /// <summary>Opens the list of the bookmarks</summary>
+        public static readonly RoutedUICommand ShowBookmarks = new("Bookmarks", nameof(ShowBookmarks), typeof(LogViewerCommands));
+
+        /// <summary>Takes all the bookmarks off</summary>
+        public static readonly RoutedUICommand ClearBookmarks = new("Remove all bookmarks", nameof(ClearBookmarks), typeof(LogViewerCommands));
+
         /// <summary>Takes the levels, terms, rules for loggers and the time range off; the fields and the format of the time stamp stay</summary>
         public static readonly RoutedUICommand ResetFilter = new("Reset filter", nameof(ResetFilter), typeof(LogViewerCommands));
 
@@ -38,7 +59,8 @@ namespace Sentinel.LogViewer.Wpf
         /// </summary>
         public static IReadOnlyList<RoutedCommand> All { get; } = new RoutedCommand[]
         {
-            ApplicationCommands.Find, GoToTime, ChooseTimeRange, ClearTimeRange, TimeRangeLast, NextLevel, PreviousLevel, ResetFilter
+            ApplicationCommands.Find, GoToTime, ChooseTimeRange, ClearTimeRange, TimeRangeLast, NextLevel, PreviousLevel, ResetFilter,
+            ToggleBookmark, NextBookmark, PreviousBookmark, EditBookmarkComment, ShowBookmarks, ClearBookmarks
         };
     }
 }

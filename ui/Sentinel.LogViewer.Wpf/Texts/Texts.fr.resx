@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Annuler (Échap)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Ajouter un signet</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Retirer le signet</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Commentaire du signet...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Signet suivant</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Signet précédent</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Signet</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Commentaire du signet</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Commentaire du signet. Laissez vide pour aucun.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>Il n’y a aucun signet dans la liste</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>Plus de signet. Appuyez de nouveau sur la touche pour recommencer au premier</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>Plus de signet avant. Appuyez de nouveau sur la touche pour recommencer au dernier</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Signets</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Afficher la liste des signets (F2 suivant, Maj+F2 précédent)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Signets</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Pas encore de signet. Sélectionnez des entrées et appuyez sur Ctrl+B.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>L’entrée est masquée par un filtre</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Tout retirer</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Aller à l'entrée</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Commentaire</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Retirer les {0} signets ? Les {1} commentaires seront perdus.</value>
+  </data>
 </root>

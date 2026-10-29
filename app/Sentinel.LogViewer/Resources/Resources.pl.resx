@@ -1492,6 +1492,36 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>Ręcznie</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>Za_kładki</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Dodaj lub usuń zakładkę</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Następna zakładka</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>_Poprzednia zakładka</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Komentarz...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Usuń wszystkie zakładki</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Dodaj lub usuń zakładkę na zaznaczonych wpisach</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Przejdź do następnej zakładki, z Shift do poprzedniej; na końcu ten sam klawisz zaczyna od drugiego końca</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Skopiuj zaznaczone wiersze listy, jeden wiersz na wpis</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>P_okaż listę</value>
+  </data>
 </root>
 
 

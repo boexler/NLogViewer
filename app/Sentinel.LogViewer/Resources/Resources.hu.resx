@@ -1492,6 +1492,36 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>Kézzel</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>K_önyvjelzők</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Könyvjelző be- vagy kikapcsolása</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>K_övetkező könyvjelző</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>_Előző könyvjelző</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Megjegyzés...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>Ö_sszes könyvjelző eltávolítása</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Könyvjelző felvétele vagy eltávolítása a kijelölt bejegyzéseken</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Ugrás a következő könyvjelzőre, Shift-tel az előzőre; a végén ugyanaz a billentyű a másik végén folytatja</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>A lista kijelölt sorainak másolása, bejegyzésenként egy sor</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>_Lista megjelenítése</value>
+  </data>
 </root>
 
 

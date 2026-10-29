@@ -523,6 +523,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             collectionView.Refresh();
             if (listView != null)
                 _scrollAnchorKeeper.Restore(listView, GetEffectiveEntries(), collectionView.Filter, shownOrder: SortKey != null);
+            // A bookmark that the filter hides leaves the count of the places.
+            UpdateBookmarkLabel();
             ScheduleFindUpdate();
             PublishFilterState();
         }
@@ -1272,19 +1274,26 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         private void ExportToLogFormat(string filePath, IEnumerable<LogEntry> logEntries, ILogExportFormatter? customFormatter = null)
         {
             using var writer = new StreamWriter(filePath, false, System.Text.Encoding.UTF8);
-            
+
+            foreach (var line in FormatForExport(logEntries, customFormatter))
+                writer.WriteLine(line);
+        }
+
+        /// <summary>
+        /// The entries as lines of text, as they are saved to a file and copied with Ctrl+C
+        /// </summary>
+        private IEnumerable<string> FormatForExport(IEnumerable<LogEntry> logEntries, ILogExportFormatter? customFormatter = null)
+        {
             // Use custom formatter if provided, otherwise use ExportFormatter, fall back to default formatter
             var formatter = customFormatter ?? ExportFormatter ?? new DefaultLogExportFormatter();
-            
+
             foreach (var logEvent in logEntries)
             {
-                var formattedLine = formatter.Format(
+                yield return formatter.Format(
                     logEvent,
                     TimeStampResolver ?? new TimeStampResolver(),
                     LoggerNameResolver ?? new LoggerNameResolver(),
                     MessageResolver ?? new MessageResolver());
-                
-                writer.WriteLine(formattedLine);
             }
         }
 
@@ -1432,6 +1441,8 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             AttachEffectiveCollectionChangedHandler();
             LoggerTree.Rebuild(GetEffectiveEntries());
+            // The bookmarks belong to the entries of the old list.
+            ClearBookmarks();
             SetViewSort();
             LogEvents?.View?.Refresh();
             UpdateFilter();
@@ -1459,6 +1470,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
 
             UpdateLoggerTree(e, coll);
             ForgetVerdicts(e);
+            ForgetBookmarks(e);
 
             if (e.Action is NotifyCollectionChangedAction.Add or NotifyCollectionChangedAction.Reset or NotifyCollectionChangedAction.Replace)
                 ApplyMaxCountTrim(coll);
@@ -1545,6 +1557,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
             FindPreviousCommand = new RelayCommand(() => FindNext(forward: false));
             InputBindings.Add(new KeyBinding(FindNextCommand, Key.F3, ModifierKeys.None));
             AddJumpKeyBindings();
+            AddBookmarkKeyBindings();
             AddRoutedCommandBindings();
 
             // The texts that the viewer keeps (the result row, the headers) are made again when the language changes; the manager holds the viewer weakly.

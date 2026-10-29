@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Cancelar (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Añadir marcador</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Quitar marcador</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Comentario del marcador...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Marcador siguiente</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Marcador anterior</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Marcador</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Comentario del marcador</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Comentario del marcador. Déjalo vacío para ninguno.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>No hay marcadores en la lista</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>No hay más marcadores. Pulsa de nuevo la tecla para empezar por el primero</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>No hay marcadores anteriores. Pulsa de nuevo la tecla para empezar por el último</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Marcadores</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Mostrar la lista de marcadores (F2 siguiente, Mayús+F2 anterior)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Marcadores</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Aún no hay marcadores. Selecciona entradas y pulsa Ctrl+B.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>La entrada está oculta por un filtro</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Quitar todos</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Ir a la entrada</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Comentario</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>¿Quitar los {0} marcadores? Se pierden los {1} comentarios.</value>
+  </data>
 </root>

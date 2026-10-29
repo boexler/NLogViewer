@@ -180,6 +180,12 @@ namespace Sentinel.LogViewer.Wpf
             Bind(LogViewerCommands.NextLevel, NextLevelCommand);
             Bind(LogViewerCommands.PreviousLevel, PreviousLevelCommand);
             Bind(LogViewerCommands.ResetFilter, ResetFilterCommand);
+            Bind(LogViewerCommands.ToggleBookmark, ToggleBookmarkCommand);
+            Bind(LogViewerCommands.NextBookmark, NextBookmarkCommand);
+            Bind(LogViewerCommands.PreviousBookmark, PreviousBookmarkCommand);
+            Bind(LogViewerCommands.EditBookmarkComment, EditBookmarkCommentCommand);
+            Bind(LogViewerCommands.ShowBookmarks, ShowBookmarksCommand);
+            Bind(LogViewerCommands.ClearBookmarks, ClearBookmarksCommand);
 
             void Bind(RoutedCommand routed, ICommand command) => CommandBindings.Add(new CommandBinding(routed,
                 (_, e) => command.Execute(e.Parameter),

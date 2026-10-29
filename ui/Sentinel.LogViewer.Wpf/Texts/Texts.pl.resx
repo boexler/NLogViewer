@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Anuluj (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Dodaj zakładkę</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Usuń zakładkę</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Komentarz do zakładki...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Następna zakładka</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Poprzednia zakładka</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Zakładka</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Komentarz do zakładki</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Komentarz do zakładki. Zostaw puste, jeśli go nie ma.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>Na liście nie ma zakładek</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>Brak kolejnych zakładek. Naciśnij klawisz jeszcze raz, aby zacząć od pierwszej</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>Brak wcześniejszych zakładek. Naciśnij klawisz jeszcze raz, aby zacząć od ostatniej</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Zakładki</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Pokaż listę zakładek (F2 następna, Shift+F2 poprzednia)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Zakładki</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Nie ma jeszcze zakładek. Zaznacz wpisy i naciśnij Ctrl+B.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>Wpis jest ukryty przez filtr</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Usuń wszystkie</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Przejdź do wpisu</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Komentarz</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Usunąć wszystkie zakładki ({0})? Komentarze ({1}) zostaną utracone.</value>
+  </data>
 </root>

@@ -1492,5 +1492,35 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>À la main</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>Sig_nets</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Ajouter ou retirer un signet</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Signet suivant</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>S_ignet précédent</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Commentaire...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Retirer tous les signets</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Ajouter ou retirer un signet sur les entrées sélectionnées</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Aller au signet suivant, avec Maj au précédent ; à la fin la même touche continue à l’autre bout</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Copier les lignes sélectionnées de la liste, une ligne par entrée</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>A_fficher la liste</value>
+  </data>
 </root>
 

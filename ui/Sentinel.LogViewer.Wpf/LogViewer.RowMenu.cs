@@ -129,6 +129,12 @@ namespace Sentinel.LogViewer.Wpf
                 items.Add(Item(LogViewerTexts.Get("Tr_Clear"), ClearTimeRangeCommand, null));
 
             items.Add(Separator());
+            items.Add(Item(LogViewerTexts.Get(IsBookmarked(entry) ? "Row_BookmarkOff" : "Row_Bookmark"), ToggleEntryBookmarkCommand, entry, "Ctrl+B", withIcon: true));
+            items.Add(Item(LogViewerTexts.Get("Row_BookmarkComment"), EditBookmarkCommentCommand, entry));
+            items.Add(Item(LogViewerTexts.Get("Row_NextBookmark"), NextBookmarkCommand, null, "F2"));
+            items.Add(Item(LogViewerTexts.Get("Row_PrevBookmark"), PreviousBookmarkCommand, null, "Shift+F2"));
+
+            items.Add(Separator());
             items.Add(Item(LogViewerTexts.Get("Row_GoTo"), GoToTimeCommand, null, "Ctrl+T"));
             items.Add(Item(LogViewerTexts.Get("Row_NextWarn"), NextLevelCommand, LogEntryLevel.Warn, "F7"));
             items.Add(Item(LogViewerTexts.Get("Row_PrevWarn"), PreviousLevelCommand, LogEntryLevel.Warn, "Shift+F7"));
@@ -143,8 +149,12 @@ namespace Sentinel.LogViewer.Wpf
 
             static Control Separator() => new Separator { Tag = RowActionMark };
 
-            static Control Item(string header, ICommand command, object? parameter, string? gesture = null) =>
-                new MenuItem { Header = header, Command = command, CommandParameter = parameter, InputGestureText = gesture ?? string.Empty, Tag = RowActionMark };
+            static Control Item(string header, ICommand command, object? parameter, string? gesture = null, bool withIcon = false) =>
+                new MenuItem
+                {
+                    Header = header, Command = command, CommandParameter = parameter, InputGestureText = gesture ?? string.Empty, Tag = RowActionMark,
+                    Icon = withIcon ? BookmarkIcon.ForMenu() : null
+                };
         }
     }
 }
