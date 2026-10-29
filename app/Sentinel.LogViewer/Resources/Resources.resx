@@ -1495,5 +1495,35 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>By hand</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>_Bookmarks</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Toggle bookmark</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Next bookmark</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>_Previous bookmark</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Comment...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Remove all bookmarks</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Put a bookmark on the selected entries, or take it off</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Go to the next bookmark, with Shift to the previous one; at the end the same key goes on at the other end</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Copy the selected rows of the list, one line per entry</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>_Show list</value>
+  </data>
 </root>
 

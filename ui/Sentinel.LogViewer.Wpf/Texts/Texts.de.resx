@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Abbrechen (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Lesezeichen setzen</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Lesezeichen entfernen</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Kommentar zum Lesezeichen...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Nächstes Lesezeichen</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Vorheriges Lesezeichen</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Lesezeichen</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>Kommentar zum Lesezeichen</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Kommentar zum Lesezeichen. Leer lassen für keinen.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>Es gibt keine Lesezeichen in der Liste</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>Kein weiteres Lesezeichen. Dieselbe Taste noch einmal: weiter beim ersten</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>Kein früheres Lesezeichen. Dieselbe Taste noch einmal: weiter beim letzten</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Lesezeichen</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>Liste der Lesezeichen anzeigen (F2 nächstes, Umschalt+F2 vorheriges)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Lesezeichen</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Noch keine Lesezeichen. Einträge wählen und Strg+B drücken.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>Der Eintrag ist durch einen Filter ausgeblendet</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Alle entfernen</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Zum Eintrag springen</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Kommentar</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Alle {0} Lesezeichen entfernen? Die {1} Kommentare gehen verloren.</value>
+  </data>
 </root>

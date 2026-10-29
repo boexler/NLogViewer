@@ -91,9 +91,14 @@ namespace Sentinel.LogViewer.Wpf
 
             // The built-in columns are the ones of the template, in this order.
             var keys = new[] { LogColumns.Id, LogColumns.Level, LogColumns.TimeStamp, LogColumns.Logger, LogColumns.Message };
-            for (var i = 0; i < Math.Min(keys.Length, gridView.Columns.Count); i++)
+
+            // The narrow column of the bookmarks (the first of the template, when the template has it) is always there, at the left, and is not one of
+            // the columns that can be chosen.
+            _bookmarkColumn = gridView.Columns.Count > 0 && GetIsBookmarkColumn(gridView.Columns[0]) ? gridView.Columns[0] : null;
+            var first = _bookmarkColumn != null ? 1 : 0;
+            for (var i = 0; i < Math.Min(keys.Length, gridView.Columns.Count - first); i++)
             {
-                var column = gridView.Columns[i];
+                var column = gridView.Columns[i + first];
                 _columnKeys[column] = keys[i];
                 _columnsByKey[keys[i]] = column;
                 _initialColumnWidths[column] = column.Width;
@@ -109,6 +114,9 @@ namespace Sentinel.LogViewer.Wpf
             PART_ListView.PreviewMouseRightButtonUp += OnListViewPreviewMouseRightButtonUp;
             PART_ListView.PreviewMouseRightButtonDown += OnListViewPreviewMouseRightButtonDown;
             PART_ListView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(OnColumnHeaderClick));
+            AddCopyBinding(PART_ListView);
+            PART_ListView.SelectionChanged += (_, _) => UpdateBookmarkLabel();
+            PART_ListView.MouseDoubleClick += OnRowDoubleClick;
             _columnsReady = true;
             UpdateTimeStampHeader();
 
@@ -137,7 +145,7 @@ namespace Sentinel.LogViewer.Wpf
                 var wanted = LogColumns.Normalize(ColumnKeys);
                 foreach (var column in gridView.Columns.ToList())
                 {
-                    if (!wanted.Contains(_columnKeys.GetValueOrDefault(column) ?? string.Empty))
+                    if (!ReferenceEquals(column, _bookmarkColumn) && !wanted.Contains(_columnKeys.GetValueOrDefault(column) ?? string.Empty))
                     {
                         gridView.Columns.Remove(column);
                         if (_fittedColumns.Remove(column))
@@ -145,6 +153,8 @@ namespace Sentinel.LogViewer.Wpf
                     }
                 }
 
+                // The column of the bookmarks stands at 0, so the chosen ones start at 1.
+                var first = _bookmarkColumn != null ? 1 : 0;
                 for (var i = 0; i < wanted.Count; i++)
                 {
                     var column = ColumnOf(wanted[i]);
@@ -153,12 +163,12 @@ namespace Sentinel.LogViewer.Wpf
                     {
                         // A column that is shown again starts with its original width.
                         column.Width = _initialColumnWidths.GetValueOrDefault(column, double.NaN);
-                        gridView.Columns.Insert(i, column);
+                        gridView.Columns.Insert(i + first, column);
                         RegisterFittedProperty(column, wanted[i]);
                     }
-                    else if (at != i)
+                    else if (at != i + first)
                     {
-                        gridView.Columns.Move(at, i);
+                        gridView.Columns.Move(at, i + first);
                     }
                 }
 
@@ -228,6 +238,10 @@ namespace Sentinel.LogViewer.Wpf
             _applyingColumns = true;
             try
             {
+                // A header that was dragged to the left of the column of the bookmarks: that one goes back to the left.
+                if (_bookmarkColumn != null && gridView.Columns.IndexOf(_bookmarkColumn) is > 0 and var misplaced)
+                    gridView.Columns.Move(misplaced, 0);
+
                 SetCurrentValue(ColumnKeysProperty, keys);
             }
             finally
@@ -263,7 +277,7 @@ namespace Sentinel.LogViewer.Wpf
         private void OnListViewPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             var header = FindAncestor<GridViewColumnHeader>(e.OriginalSource as DependencyObject);
-            if (header == null || header.Role == GridViewColumnHeaderRole.Padding || header.Column == null)
+            if (header == null || header.Role == GridViewColumnHeaderRole.Padding || header.Column == null || ReferenceEquals(header.Column, _bookmarkColumn))
                 return;
 
             e.Handled = true;

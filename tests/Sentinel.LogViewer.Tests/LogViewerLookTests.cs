@@ -111,7 +111,7 @@ public class LogViewerLookTests
 	{
 		WithViewer(viewer =>
 		{
-			var column = ((GridView)((ListView)viewer.Template.FindName("PART_ListView", viewer)).View).Columns[1];
+			var column = ((GridView)((ListView)viewer.Template.FindName("PART_ListView", viewer)).View).Columns[2];
 			var symbolWidth = column.ActualWidth;
 
 			viewer.LevelDisplay = LevelDisplayMode.SymbolAndText;

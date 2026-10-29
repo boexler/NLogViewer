@@ -1492,6 +1492,36 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>Manual</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>_Marcaje</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Adaugă sau elimină marcajul</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Marcajul următor</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>Ma_rcajul anterior</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Comentariu...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Elimină toate marcajele</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Adaugă sau elimină un marcaj pe intrările selectate</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Mergi la marcajul următor, cu Shift la cel anterior; la capăt aceeași tastă continuă de la celălalt capăt</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Copiază rândurile selectate din listă, câte o linie pe intrare</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>Ara_tă lista</value>
+  </data>
 </root>
 
 

@@ -1492,5 +1492,35 @@
   <data name="Settings_TabOrder_Hand" xml:space="preserve">
     <value>A mano</value>
   </data>
+  <data name="Menu_Bookmarks" xml:space="preserve">
+    <value>_Marcadores</value>
+  </data>
+  <data name="Menu_BookmarkToggle" xml:space="preserve">
+    <value>_Poner o quitar marcador</value>
+  </data>
+  <data name="Menu_BookmarkNext" xml:space="preserve">
+    <value>_Marcador siguiente</value>
+  </data>
+  <data name="Menu_BookmarkPrevious" xml:space="preserve">
+    <value>M_arcador anterior</value>
+  </data>
+  <data name="Menu_BookmarkComment" xml:space="preserve">
+    <value>_Comentario...</value>
+  </data>
+  <data name="Menu_BookmarkClear" xml:space="preserve">
+    <value>_Quitar todos los marcadores</value>
+  </data>
+  <data name="Shortcut_Bookmark" xml:space="preserve">
+    <value>Poner o quitar un marcador en las entradas seleccionadas</value>
+  </data>
+  <data name="Shortcut_NextBookmark" xml:space="preserve">
+    <value>Ir al marcador siguiente, con Mayús al anterior; al final la misma tecla sigue por el otro extremo</value>
+  </data>
+  <data name="Shortcut_CopyRows" xml:space="preserve">
+    <value>Copiar las filas seleccionadas de la lista, una línea por entrada</value>
+  </data>
+  <data name="Menu_BookmarkList" xml:space="preserve">
+    <value>M_ostrar lista</value>
+  </data>
 </root>
 

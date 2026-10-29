@@ -136,6 +136,7 @@ namespace Sentinel.LogViewer.Wpf
 
             UpdateHeaders();
             ShowSelectedOrTop();
+            UpdateBookmarkLabel();
         }
 
         /// <summary>

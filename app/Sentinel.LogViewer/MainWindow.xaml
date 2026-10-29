@@ -256,6 +256,28 @@
                 </MenuItem>
                 <MenuItem Header="{helpers:Resource Key=Menu_GoToTime, DefaultValue=_Go to time...}"
                           Command="{x:Static dj:LogViewerCommands.GoToTime}" InputGestureText="Ctrl+T"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_Bookmarks, DefaultValue=_Bookmarks}">
+                    <MenuItem.Icon>
+                        <Path Data="{x:Static dj:BookmarkIcon.Ribbon}" Fill="{x:Static dj:BookmarkIcon.Gold}" Stretch="Uniform" Width="10" Height="14"/>
+                    </MenuItem.Icon>
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkToggle, DefaultValue=_Toggle bookmark}"
+                              Command="{x:Static dj:LogViewerCommands.ToggleBookmark}" InputGestureText="Ctrl+B">
+                        <MenuItem.Icon>
+                            <Path Data="{x:Static dj:BookmarkIcon.Ribbon}" Fill="{x:Static dj:BookmarkIcon.Gold}" Stretch="Uniform" Width="10" Height="14"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkNext, DefaultValue=_Next bookmark}"
+                              Command="{x:Static dj:LogViewerCommands.NextBookmark}" InputGestureText="F2"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkPrevious, DefaultValue=_Previous bookmark}"
+                              Command="{x:Static dj:LogViewerCommands.PreviousBookmark}" InputGestureText="Shift+F2"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkList, DefaultValue=_Show list}"
+                              Command="{x:Static dj:LogViewerCommands.ShowBookmarks}"/>
+                    <Separator />
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkComment, DefaultValue=_Comment...}"
+                              Command="{x:Static dj:LogViewerCommands.EditBookmarkComment}"/>
+                    <MenuItem Header="{helpers:Resource Key=Menu_BookmarkClear, DefaultValue=_Remove all bookmarks}"
+                              Command="{x:Static dj:LogViewerCommands.ClearBookmarks}"/>
+                </MenuItem>
                 <MenuItem Header="{helpers:Resource Key=Menu_NextEntry, DefaultValue=_Next entry of a level}">
                     <MenuItem Header="{helpers:Resource Key=Menu_LevelTrace, DefaultValue=Trace}" Command="{x:Static dj:LogViewerCommands.NextLevel}"
                               CommandParameter="{x:Static core:LogEntryLevel.Trace}" InputGestureText="F4"/>

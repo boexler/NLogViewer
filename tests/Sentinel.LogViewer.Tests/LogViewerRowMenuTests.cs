@@ -53,6 +53,7 @@ public class LogViewerRowMenuTests
 			Assert.Equal(new[]
 			{
 				"Show only this logger", "Hide this logger", "Show in logger tree", "Time range: from here", "Time range: until here",
+				"Add bookmark", "Bookmark comment...", "Next bookmark", "Previous bookmark",
 				"Go to time...", "Next warning", "Previous warning", "Next error", "Previous error"
 			}, Headers(menu));
 			var items = menu.Items.OfType<MenuItem>().ToDictionary(item => (string)item.Header);

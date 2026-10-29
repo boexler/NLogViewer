@@ -33,7 +33,7 @@ public class LogViewerColumnsTests
 
 	private static GridView ViewOf(Wpf.LogViewer viewer) => (GridView)((ListView)viewer.Template.FindName("PART_ListView", viewer)).View;
 
-	private static string[] Headers(Wpf.LogViewer viewer) => ViewOf(viewer).Columns.Select(column => (string)column.Header).ToArray();
+	private static string[] Headers(Wpf.LogViewer viewer) => ViewOf(viewer).Columns.Skip(1).Select(column => (string)column.Header).ToArray();
 
 	private void WithViewer(Action<Wpf.LogViewer> test) => _context.RunOnSta(() =>
 	{
@@ -63,7 +63,7 @@ public class LogViewerColumnsTests
 			viewer.SetColumnVisible(LogColumns.Thread, true);
 
 			Assert.Equal(new[] { "ID", "Level", "TimeStamp", "LoggerName", "Thread", "Message" }, Headers(viewer));
-			var column = ViewOf(viewer).Columns[4];
+			var column = ViewOf(viewer).Columns[5];
 			var binding = (Binding)column.DisplayMemberBinding;
 			var converter = (IValueConverter)binding.Converter;
 			var entries = Entries();
@@ -118,7 +118,7 @@ public class LogViewerColumnsTests
 	public void MovingAColumnHeader_ChangesTheLayout() =>
 		WithViewer(viewer =>
 		{
-			ViewOf(viewer).Columns.Move(0, 2);
+			ViewOf(viewer).Columns.Move(1, 3);
 
 			Assert.Equal(new[] { LogColumns.Level, LogColumns.TimeStamp, LogColumns.Id, LogColumns.Logger, LogColumns.Message }, viewer.ColumnKeys);
 			Assert.Equal(new[] { "Level", "TimeStamp", "ID", "LoggerName", "Message" }, Headers(viewer));
@@ -140,7 +140,7 @@ public class LogViewerColumnsTests
 	public void TheMenuOfTheHeaders_ListsTheColumnsWithTheirState_AndSwitchesThem() =>
 		WithViewer(viewer =>
 		{
-			var menu = viewer.BuildColumnMenu(ViewOf(viewer).Columns[0], null);
+			var menu = viewer.BuildColumnMenu(ViewOf(viewer).Columns[1], null);
 
 			// The two entries of the sort are checkable too, but they are commands; the columns are switched by a click.
 			var columns = menu.Items.OfType<MenuItem>().Where(item => item.IsCheckable && item.Command == null).ToList();
@@ -166,7 +166,7 @@ public class LogViewerColumnsTests
 		WithViewer(viewer =>
 		{
 			var list = (ListView)viewer.Template.FindName("PART_ListView", viewer);
-			var column = ViewOf(viewer).Columns[2];
+			var column = ViewOf(viewer).Columns[3];
 			var before = column.Width;
 
 			viewer.ListFontFamily = new System.Windows.Media.FontFamily("Consolas");

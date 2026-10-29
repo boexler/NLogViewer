@@ -427,7 +427,7 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.Equal(new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message }, _environment.Saved.Columns);
 
 			// A header that is dragged to another place reaches the tab and the settings as well.
-			((GridView)((ListView)first.Template.FindName("PART_ListView", first)).View).Columns.Move(0, 1);
+			((GridView)((ListView)first.Template.FindName("PART_ListView", first)).View).Columns.Move(1, 2);
 			Assert.Equal(new[] { LogColumns.Thread, LogColumns.Level, LogColumns.Property("Class"), LogColumns.Message }, session.ViewModel.LogTabs[0].ColumnKeys);
 			Assert.Equal(session.ViewModel.LogTabs[0].ColumnKeys, _environment.Saved.Columns);
 			first.ColumnKeys = new[] { LogColumns.Level, LogColumns.Thread, LogColumns.Property("Class"), LogColumns.Message };
@@ -1444,6 +1444,29 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	}
 
 	[Fact]
+	public void TheMenusOfTheApplication_ShowTheIconOfAnEntry()
+	{
+		_context.RunOnSta(() =>
+		{
+			AddResourcesOfTheApplication();
+			foreach (var withSubmenu in new[] { false, true })
+			{
+				var icon = Wpf.BookmarkIcon.ForMenu();
+				var item = new System.Windows.Controls.MenuItem { Header = "Add bookmark", Icon = icon };
+				if (withSubmenu)
+					item.Items.Add(new System.Windows.Controls.MenuItem { Header = "Inside" });
+
+				var menu = new System.Windows.Controls.ContextMenu();
+				menu.Items.Add(item);
+				item.ApplyTemplate();
+
+				var presenter = (ContentPresenter)item.Template.FindName("Icon", item);
+				Assert.Same(icon, presenter.Content);
+			}
+		});
+	}
+
+	[Fact]
 	public void TheMenuOfAFileTab_HasNoEntriesForAnApplication_AndTheMenuOfALiveTab_HasThem()
 	{
 		_context.RunOnSta(() =>
@@ -1626,8 +1649,9 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 			Assert.True(entries.Count > 25);
 
 			Assert.Empty(entries.Where(item => item.Command == null && !item.IsCheckable).Select(item => (string)item.Header));
-			// Resetting the filter and clearing the time range wait until there is something to take off.
+			// Resetting the filter, clearing the time range and the bookmarks wait until there is something to take off, and a bookmark needs a selected entry.
 			var broken = entries.Where(item => item.Command is System.Windows.Input.RoutedCommand command && command != Wpf.LogViewerCommands.ResetFilter && command != Wpf.LogViewerCommands.ClearTimeRange
+				&& command != Wpf.LogViewerCommands.ClearBookmarks && command != Wpf.LogViewerCommands.ToggleBookmark
 				&& !command.CanExecute(item.CommandParameter, session.Window)).Select(item => (string)item.Header);
 			Assert.Empty(broken);
 		});

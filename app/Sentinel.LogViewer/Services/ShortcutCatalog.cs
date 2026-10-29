@@ -60,6 +60,9 @@ public static class ShortcutCatalog
 			new("Ctrl+T", "Shortcut_GoToTime", "Go to a time: selects the first entry from then on"),
 			new("F4…F9", "Shortcut_NextLevel", "Go to the next entry of a level: F4 Trace, F5 Debug, F6 Info, F7 Warn, F8 Error, F9 Fatal"),
 			new("Shift+F4…F9", "Shortcut_PreviousLevel", "Go to the previous entry of that level"),
+			new("Ctrl+B", "Shortcut_Bookmark", "Put a bookmark on the selected entries, or take it off"),
+			new("F2 / Shift+F2", "Shortcut_NextBookmark", "Go to the next bookmark, with Shift to the previous one; at the end the same key goes on at the other end"),
+			new("Ctrl+C", "Shortcut_CopyRows", "Copy the selected rows of the list, one line per entry"),
 		}),
 		new("Shortcuts_Group_Settings", "Settings and dialogs", new Shortcut[]
 		{

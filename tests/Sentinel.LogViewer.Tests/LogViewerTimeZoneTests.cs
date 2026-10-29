@@ -67,7 +67,7 @@ public class LogViewerTimeZoneTests
 	public void TheHeaderSaysWhichZonesAreConverted() =>
 		WithViewer((viewer, _) =>
 		{
-			var header = () => (string)ViewOf(viewer).Columns[2].Header;
+			var header = () => (string)ViewOf(viewer).Columns[3].Header;
 			Assert.Equal("TimeStamp", header());
 
 			viewer.FileTimeZone = Tokyo;
@@ -123,7 +123,7 @@ public class LogViewerTimeZoneTests
 	public void TheHeaderMenuOffersTheTimeZone_OnlyWhenTheApplicationGivesACommand() =>
 		WithViewer((viewer, _) =>
 		{
-			var column = ViewOf(viewer).Columns[2];
+			var column = ViewOf(viewer).Columns[3];
 			Assert.DoesNotContain(viewer.BuildColumnMenu(column, null).Items.OfType<MenuItem>(), item => item.Header as string == "Time zone...");
 
 			viewer.ChangeTimeZoneCommand = new NoCommand();

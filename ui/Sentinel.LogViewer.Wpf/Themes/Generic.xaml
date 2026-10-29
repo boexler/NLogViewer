@@ -13,6 +13,8 @@
     <xamlConverter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <xamlMultiValueConverter:ILogEntryResolverToStringConverter x:Key="ILogEntryResolverToStringConverter"/>
     <xamlMultiValueConverter:TimeStampOriginalConverter x:Key="TimeStampOriginalConverter"/>
+    <xamlMultiValueConverter:BookmarkConverter x:Key="BookmarkConverter"/>
+    <xamlConverter:ScaleConverter x:Key="ScaleConverter"/>
     <xamlConverter:ContextMenuHeaderConverter x:Key="ContextMenuHeaderConverter"/>
 
     <xamlConverter:EqualityConverter x:Key="EqualityConverter"/>
@@ -325,6 +327,28 @@
                                     <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
                                 </Button>
 
+                                <!-- The bookmarks: a button with their number that opens the list in a window -->
+                                <Button x:Name="PART_BookmarkButton" MinWidth="28" Height="26" Padding="6,0" Margin="4,0,0,2"
+                                        AutomationProperties.Name="{local:Text Key=Bm_Button}" ToolTip="{local:Text Key=Bm_ButtonTip}"
+                                        Command="{Binding ShowBookmarksCommand, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Data="{x:Static local:BookmarkIcon.Ribbon}" Stretch="Uniform" Width="11" Height="15" VerticalAlignment="Center"
+                                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                        <TextBlock Text="{Binding BookmarkLabel, RelativeSource={RelativeSource TemplatedParent}}" Margin="4,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding BookmarkCount, RelativeSource={RelativeSource AncestorType=local:LogViewer}}" Value="0">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
+
                                 <!-- What a jump has to say, e.g. that there is no further entry of a level -->
                                 <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,2" VerticalAlignment="Center" Opacity="0.8"/>
                             </WrapPanel>
@@ -598,12 +622,47 @@
                                 FontSize="{Binding ListFontSize, RelativeSource={RelativeSource TemplatedParent}}"
                                 ItemsSource="{Binding LogEvents.View, RelativeSource={RelativeSource TemplatedParent}, IsAsync=True}"
                                 BorderThickness="0"
+                                SelectionMode="Extended"
                                 ScrollViewer.CanContentScroll="True"
                                 listViewLayoutManager:ListViewLayoutManager.Enabled="true">
                             <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="BorderBrush" Value="Black" />
                                         <Setter Property="BorderThickness" Value="1" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <Grid SnapsToDevicePixels="True">
+                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"/>
+                                                        <!-- The selection and the mouse tint the background, under the text, so the text keeps its colour -->
+                                                        <Border x:Name="Selection" IsHitTestVisible="False" Opacity="0"
+                                                                Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                                                        <Border x:Name="Bd" Background="Transparent" BorderThickness="{TemplateBinding BorderThickness}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <GridViewRowPresenter Content="{TemplateBinding Content}" Columns="{TemplateBinding GridView.ColumnCollection}"
+                                                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                        </Border>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Selection" Property="Opacity" Value="0.12"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsSelected" Value="True">
+                                                            <Setter TargetName="Selection" Property="Opacity" Value="0.4"/>
+                                                        </Trigger>
+                                                        <MultiTrigger>
+                                                            <MultiTrigger.Conditions>
+                                                                <Condition Property="IsSelected" Value="True"/>
+                                                                <Condition Property="Selector.IsSelectionActive" Value="True"/>
+                                                            </MultiTrigger.Conditions>
+                                                            <Setter TargetName="Selection" Property="Opacity" Value="0.5"/>
+                                                        </MultiTrigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.RowHeight)}"
                                                          Value="{x:Static local:RowHeightMode.Compact}">
@@ -657,6 +716,38 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.View>
                                     <helper:AutoSizedGridView>
+                                        <!-- The narrow column of the bookmarks: always the first, no header, not one of the columns that can be chosen -->
+                                        <GridViewColumn Width="20" listViewLayoutManager:FixedColumn.Width="20" local:LogViewer.IsBookmarkColumn="True">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <!-- The cell has a margin of 6 on both sides, which would leave 8 px for the ribbon: the ribbon takes the whole column -->
+                                                    <Path Fill="{x:Static local:BookmarkIcon.Gold}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-6,0"
+                                                          Height="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).ListFontSize, Converter={StaticResource ScaleConverter}, ConverterParameter=1.5}">
+                                                        <Path.Data>
+                                                            <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="Data">
+                                                                <Binding Path="."/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner)"/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).BookmarkVersion"/>
+                                                            </MultiBinding>
+                                                        </Path.Data>
+                                                        <Path.Visibility>
+                                                            <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="Visible">
+                                                                <Binding Path="."/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner)"/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).BookmarkVersion"/>
+                                                            </MultiBinding>
+                                                        </Path.Visibility>
+                                                        <Path.ToolTip>
+                                                            <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="Tip">
+                                                                <Binding Path="."/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner)"/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).BookmarkVersion"/>
+                                                            </MultiBinding>
+                                                        </Path.ToolTip>
+                                                    </Path>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
                                         <GridViewColumn Header="{local:Text Key=Col_Id}" Width="40">
                                             <GridViewColumn.DisplayMemberBinding>
                                                 <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
@@ -788,40 +879,67 @@
                                         <GridViewColumn Header="{local:Text Key=Col_Message}" Width="Auto" listViewLayoutManager:RangeColumn.IsFillColumn="True">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock
-                                                        x:Name="TextBlock1"
-                                                        helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).MessageResolver}"
-                                                        Background="Transparent"
-                                                        Tag="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner)}"
-                                                        Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
-                                                        <TextBlock.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem
-                                                                    Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
-                                                                    IsEnabled="False"/>
-                                                                <MenuItem
-                                                                    Header="{local:Text Key=Row_AddFilter}"
-                                                                    Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                    <MenuItem.CommandParameter>
-                                                                        <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
+                                                    <!-- The message, and under it the comment of the bookmark, so a long message does not push it out of sight -->
+                                                    <StackPanel>
+                                                        <TextBlock
+                                                            x:Name="TextBlock1"
+                                                            helper:MessageHighlighter.Resolver="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).MessageResolver}"
+                                                            Background="Transparent"
+                                                            Tag="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner)}"
+                                                            Foreground="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListViewItem}, Path=Foreground}">
+                                                            <TextBlock.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem
+                                                                        Header="{Binding Message, Converter={StaticResource ContextMenuHeaderConverter}}"
+                                                                        IsEnabled="False"/>
+                                                                    <MenuItem
+                                                                        Header="{local:Text Key=Row_AddFilter}"
+                                                                        Command="{Binding PlacementTarget.Tag.AddRegexSearchTermCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                        <MenuItem.CommandParameter>
+                                                                            <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
+                                                                                <Binding Path="."/>
+                                                                                <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                            </MultiBinding>
+                                                                        </MenuItem.CommandParameter>
+                                                                    </MenuItem>
+                                                                    <MenuItem
+                                                                        Header="{local:Text Key=Row_Copy}"
+                                                                        Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                                                                        <MenuItem.CommandParameter>
+                                                                            <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
+                                                                                <Binding Path="."/>
+                                                                                <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                            </MultiBinding>
+                                                                        </MenuItem.CommandParameter>
+                                                                    </MenuItem>
+                                                                </ContextMenu>
+                                                            </TextBlock.ContextMenu>
+
+                                                        </TextBlock>
+                                                        <!-- A badge with fixed colours, so it reads the same in the light and the dark theme and on a selected row -->
+                                                        <Border Background="#FBE3B0" BorderBrush="#E0A800" BorderThickness="1" CornerRadius="9" Padding="6,1,8,1" Margin="0,2,0,1" HorizontalAlignment="Left">
+                                                            <Border.Visibility>
+                                                                <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="CommentVisible">
+                                                                <Binding Path="."/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner)"/>
+                                                                <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).BookmarkVersion"/>
+                                                            </MultiBinding>
+                                                            </Border.Visibility>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Path Data="M2,2 L14,2 L14,11 L8,11 L4.5,14.5 L4.5,11 L2,11 Z" Stroke="#7A4F00" StrokeThickness="1.2" StrokeLineJoin="Round" Fill="Transparent"
+                                                                      Width="11" Height="11" Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                                <TextBlock Foreground="#5A3A00" VerticalAlignment="Center">
+                                                                    <TextBlock.Text>
+                                                                        <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="Comment">
                                                                             <Binding Path="."/>
-                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
+                                                                            <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner)"/>
+                                                                            <Binding RelativeSource="{RelativeSource Self}" Path="(local:LogViewer.Owner).BookmarkVersion"/>
                                                                         </MultiBinding>
-                                                                    </MenuItem.CommandParameter>
-                                                                </MenuItem>
-                                                                <MenuItem
-                                                                    Header="{local:Text Key=Row_Copy}"
-                                                                    Command="{Binding PlacementTarget.Tag.CopyToClipboardCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
-                                                                    <MenuItem.CommandParameter>
-                                                                        <MultiBinding Converter="{StaticResource ILogEntryResolverToStringConverter}">
-                                                                            <Binding Path="."/>
-                                                                            <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}" Path="PlacementTarget.Tag.MessageResolver"/>
-                                                                        </MultiBinding>
-                                                                    </MenuItem.CommandParameter>
-                                                                </MenuItem>
-                                                            </ContextMenu>
-                                                        </TextBlock.ContextMenu>
-                                                    </TextBlock>
+                                                                    </TextBlock.Text>
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>

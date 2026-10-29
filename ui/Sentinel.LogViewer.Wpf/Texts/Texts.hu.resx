@@ -498,4 +498,64 @@
   <data name="Busy_Cancel" xml:space="preserve">
     <value>Mégse (Esc)</value>
   </data>
+  <data name="Row_Bookmark" xml:space="preserve">
+    <value>Könyvjelző hozzáadása</value>
+  </data>
+  <data name="Row_BookmarkOff" xml:space="preserve">
+    <value>Könyvjelző eltávolítása</value>
+  </data>
+  <data name="Row_BookmarkComment" xml:space="preserve">
+    <value>Könyvjelző megjegyzése...</value>
+  </data>
+  <data name="Row_NextBookmark" xml:space="preserve">
+    <value>Következő könyvjelző</value>
+  </data>
+  <data name="Row_PrevBookmark" xml:space="preserve">
+    <value>Előző könyvjelző</value>
+  </data>
+  <data name="Bm_Marker" xml:space="preserve">
+    <value>Könyvjelző</value>
+  </data>
+  <data name="Bm_DialogTitle" xml:space="preserve">
+    <value>A könyvjelző megjegyzése</value>
+  </data>
+  <data name="Bm_DialogText" xml:space="preserve">
+    <value>Megjegyzés a könyvjelzőhöz. Hagyd üresen, ha nincs.</value>
+  </data>
+  <data name="Jump_NoBookmarks" xml:space="preserve">
+    <value>Nincs könyvjelző a listában</value>
+  </data>
+  <data name="Jump_BookmarkEnd" xml:space="preserve">
+    <value>Nincs további könyvjelző. Nyomd meg újra a billentyűt, és az elsőtől folytatja</value>
+  </data>
+  <data name="Jump_BookmarkStart" xml:space="preserve">
+    <value>Nincs korábbi könyvjelző. Nyomd meg újra a billentyűt, és az utolsótól folytatja</value>
+  </data>
+  <data name="Bm_Button" xml:space="preserve">
+    <value>Könyvjelzők</value>
+  </data>
+  <data name="Bm_ButtonTip" xml:space="preserve">
+    <value>A könyvjelzők listájának megjelenítése (F2 következő, Shift+F2 előző)</value>
+  </data>
+  <data name="Bm_ListTitle" xml:space="preserve">
+    <value>Könyvjelzők</value>
+  </data>
+  <data name="Bm_Empty" xml:space="preserve">
+    <value>Még nincs könyvjelző. Jelölj ki bejegyzéseket, és nyomd meg a Ctrl+B-t.</value>
+  </data>
+  <data name="Bm_Hidden" xml:space="preserve">
+    <value>A bejegyzést egy szűrő elrejti</value>
+  </data>
+  <data name="Bm_RemoveAll" xml:space="preserve">
+    <value>Összes eltávolítása</value>
+  </data>
+  <data name="Bm_GoTo" xml:space="preserve">
+    <value>Ugrás a bejegyzésre</value>
+  </data>
+  <data name="Bm_Comment" xml:space="preserve">
+    <value>Megjegyzés</value>
+  </data>
+  <data name="Bm_ClearAsk" xml:space="preserve">
+    <value>Eltávolítja mind a(z) {0} könyvjelzőt? A(z) {1} megjegyzés elvész.</value>
+  </data>
 </root>

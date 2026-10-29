@@ -58,6 +58,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
+                <ContentPresenter x:Name="Icon" ContentSource="Icon" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock x:Name="Check" Text="&#xE73E;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="12"
                            VerticalAlignment="Center" Visibility="Collapsed"/>
                 <ContentPresenter Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center"/>
@@ -87,6 +88,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <ContentPresenter x:Name="Icon" ContentSource="Icon" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <ContentPresenter Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center"/>
                     <TextBlock Grid.Column="2" Text="&#xE76C;" FontFamily="{DynamicResource ThemeIconFont}" FontSize="10"
                                Margin="28,0,0,0" VerticalAlignment="Center"
