@@ -497,17 +497,20 @@ public class LogViewerBookmarkTests
 	}
 
 	[Fact]
-	public void ADoubleClickOnARowWithoutABookmark_DoesNothing()
+	public void ADoubleClickOnARowWithoutABookmark_OpensTheDetails_AndMakesNoBookmark()
 	{
 		WithViewer((viewer, entries, list) =>
 		{
 			var row = (ListViewItem)list.ItemContainerGenerator.ContainerFromItem(entries[2]);
 			var click = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = Control.MouseDoubleClickEvent, Source = row };
 
-			// A row with a bookmark opens the dialog of the comment, which waits for an answer and cannot be shown in a test.
-			row.RaiseEvent(click);
+			// The ribbon and the badge of a comment open the dialog of the comment, which waits for an answer and cannot be shown in a test.
+			// The double click of a control does not travel from the row to the list, so it is raised on the list, with the row as its source.
+			list.RaiseEvent(click);
 
-			Assert.False(click.Handled);
+			Assert.True(click.Handled);
+			Assert.True(viewer.IsBottomPanelOpen);
+			Assert.Equal(BottomPanelTab.Details, viewer.BottomPanelTab);
 			Assert.Equal(0, viewer.BookmarkCount);
 		});
 	}
@@ -605,8 +608,11 @@ public class LogViewerBookmarkTests
 			Assert.True(Wpf.LogViewer.GetIsBookmarkColumn(marker));
 			Assert.DoesNotContain(columns.Skip(1), Wpf.LogViewer.GetIsBookmarkColumn);
 
-			// A header that is dragged in front of it: it goes back to the left.
+			// A header that is dragged in front of it: it goes back to the left. A second listener makes the collection refuse a change inside its
+			// own change, as it does when the layout of the list listens as well.
+			columns.CollectionChanged += (_, _) => { };
 			columns.Move(2, 0);
+			WpfTestHelper.Settle();
 
 			Assert.Same(marker, columns[0]);
 			Assert.Equal(new[] { LogColumns.Level, LogColumns.Id, LogColumns.TimeStamp, LogColumns.Logger, LogColumns.Message }, viewer.ColumnKeys);

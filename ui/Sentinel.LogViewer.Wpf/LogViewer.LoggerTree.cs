@@ -165,6 +165,7 @@ namespace Sentinel.LogViewer.Wpf
                 _loggerTreeSplitter.DragCompleted += OnLoggerTreeSplitterDragCompleted;
 
             ApplyLoggerTreeLayout();
+            AttachBottomPanel();
         }
 
         /// <summary>

@@ -169,6 +169,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition x:Name="PART_BottomPanelRow" Height="0"/>
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="1">
@@ -348,6 +350,15 @@
                                         </TextBlock>
                                     </StackPanel>
                                 </Button>
+
+                                <!-- The panel below the list -->
+                                <ToggleButton MinWidth="28" Height="26" Padding="6,0" Margin="4,0,0,2"
+                                              AutomationProperties.Name="{local:Text Key=Panel_Button}" ToolTip="{local:Text Key=Panel_ButtonTip}"
+                                              IsChecked="{Binding IsBottomPanelOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                              Visibility="{Binding ShowBottomPanel, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Path Data="M2,2 L14,2 L14,14 L2,14 Z M2,9 L14,9" Stretch="Uniform" Width="14" Height="14" VerticalAlignment="Center"
+                                          Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}" StrokeThickness="1.4" Fill="Transparent"/>
+                                </ToggleButton>
 
                                 <!-- What a jump has to say, e.g. that there is no further entry of a level -->
                                 <TextBlock Text="{Binding JumpText, RelativeSource={RelativeSource TemplatedParent}}" Margin="10,0,0,2" VerticalAlignment="Center" Opacity="0.8"/>
@@ -721,7 +732,7 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <!-- The cell has a margin of 6 on both sides, which would leave 8 px for the ribbon: the ribbon takes the whole column -->
-                                                    <Path Fill="{x:Static local:BookmarkIcon.Gold}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-6,0"
+                                                    <Path Tag="CommentSpot" Fill="{x:Static local:BookmarkIcon.Gold}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-6,0"
                                                           Height="{Binding RelativeSource={RelativeSource Self}, Path=(local:LogViewer.Owner).ListFontSize, Converter={StaticResource ScaleConverter}, ConverterParameter=1.5}">
                                                         <Path.Data>
                                                             <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="Data">
@@ -917,7 +928,7 @@
 
                                                         </TextBlock>
                                                         <!-- A badge with fixed colours, so it reads the same in the light and the dark theme and on a selected row -->
-                                                        <Border Background="#FBE3B0" BorderBrush="#E0A800" BorderThickness="1" CornerRadius="9" Padding="6,1,8,1" Margin="0,2,0,1" HorizontalAlignment="Left">
+                                                        <Border Tag="CommentSpot" Background="#FBE3B0" BorderBrush="#E0A800" BorderThickness="1" CornerRadius="9" Padding="6,1,8,1" Margin="0,2,0,1" HorizontalAlignment="Left">
                                                             <Border.Visibility>
                                                                 <MultiBinding Converter="{StaticResource BookmarkConverter}" ConverterParameter="CommentVisible">
                                                                 <Binding Path="."/>
@@ -1100,6 +1111,23 @@
                                 </TextBlock>
                             </ToggleButton>
                         </Grid>
+
+                        <!-- The panel below the list: search results, repeated messages, details of the entry -->
+                        <GridSplitter x:Name="PART_BottomPanelSplitter" Grid.Row="3" Height="5" Visibility="Collapsed"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                      ResizeDirection="Rows" ResizeBehavior="PreviousAndNext"
+                                      ToolTip="{local:Text Key=Panel_DragTip}">
+                            <GridSplitter.Template>
+                                <ControlTemplate TargetType="GridSplitter">
+                                    <Border Background="Transparent">
+                                        <Rectangle Height="1" VerticalAlignment="Center"
+                                                   Fill="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </GridSplitter.Template>
+                        </GridSplitter>
+                        <helper:BottomPanel x:Name="PART_BottomPanel" Grid.Row="4" Visibility="Collapsed"
+                                            DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsLoggerTreeExpanded" Value="True">

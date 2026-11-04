@@ -38,6 +38,8 @@ public sealed class LogEntry
 		TimeStamp = timeStamp,
 		Exception = Exception,
 		Properties = Properties,
+		Application = Application,
+		Sender = Sender,
 		Id = Id
 	};
 
@@ -61,6 +63,17 @@ public sealed class LogEntry
 	/// Further values of the entry, e.g. the thread, the class or the fields of a JSON line
 	/// </summary>
 	public IReadOnlyDictionary<string, object?> Properties { get; init; } = NoProperties;
+
+	/// <summary>
+	/// The name of the application that wrote the entry, when the source tells it (e.g. the <c>log4japp</c> of a Log4J message); empty otherwise
+	/// </summary>
+	public string Application { get; init; } = string.Empty;
+
+	/// <summary>
+	/// Where the entry came from, e.g. the machine and the address that sent it; empty when the source does not tell it. It stays with the entry, so
+	/// entries of many applications and computers can be asked for later (by the server of v6 and v7).
+	/// </summary>
+	public string Sender { get; init; } = string.Empty;
 
 	/// <summary>
 	/// Number of the entry. Entries get a growing number when they are created, a source can give its own, e.g. the line of a file.

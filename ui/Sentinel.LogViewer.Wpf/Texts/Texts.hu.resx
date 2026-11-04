@@ -558,4 +558,91 @@
   <data name="Bm_ClearAsk" xml:space="preserve">
     <value>Eltávolítja mind a(z) {0} könyvjelzőt? A(z) {1} megjegyzés elvész.</value>
   </data>
+  <data name="Panel_Button" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="Panel_ButtonTip" xml:space="preserve">
+    <value>A keresési találatokat, az ismétlődő üzeneteket és a bejegyzés részleteit mutató panel megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="Panel_Close" xml:space="preserve">
+    <value>Panel elrejtése</value>
+  </data>
+  <data name="Panel_DragTip" xml:space="preserve">
+    <value>Húzással módosítható a panel magassága</value>
+  </data>
+  <data name="Panel_Results" xml:space="preserve">
+    <value>Találatok</value>
+  </data>
+  <data name="Panel_Repeats" xml:space="preserve">
+    <value>Ismétlődések</value>
+  </data>
+  <data name="Panel_Details" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="Results_Empty" xml:space="preserve">
+    <value>Keressen a Ctrl+F-fel; az összes találat itt látható.</value>
+  </data>
+  <data name="Repeats_Busy" xml:space="preserve">
+    <value>Ismétlődő üzenetek keresése …</value>
+  </data>
+  <data name="Repeats_None" xml:space="preserve">
+    <value>Egyetlen üzenet sem szerepel többször.</value>
+  </data>
+  <data name="Repeats_Many" xml:space="preserve">
+    <value>{0} üzenet ismétlődik, összesen {1} bejegyzés</value>
+  </data>
+  <data name="Busy_Repeats" xml:space="preserve">
+    <value>Ismétlődő üzenetek keresése</value>
+  </data>
+  <data name="Rep_Count" xml:space="preserve">
+    <value>Darab</value>
+  </data>
+  <data name="Rep_First" xml:space="preserve">
+    <value>Első</value>
+  </data>
+  <data name="Rep_Last" xml:space="preserve">
+    <value>Utolsó</value>
+  </data>
+  <data name="Rep_GoFirst" xml:space="preserve">
+    <value>Első előfordulás</value>
+  </data>
+  <data name="Rep_GoLast" xml:space="preserve">
+    <value>Utolsó előfordulás</value>
+  </data>
+  <data name="Det_Empty" xml:space="preserve">
+    <value>Válasszon ki egy bejegyzést a részletek megtekintéséhez.</value>
+  </data>
+  <data name="Det_Message" xml:space="preserve">
+    <value>Üzenet</value>
+  </data>
+  <data name="Det_Exception" xml:space="preserve">
+    <value>Kivétel</value>
+  </data>
+  <data name="Det_Properties" xml:space="preserve">
+    <value>Tulajdonságok</value>
+  </data>
+  <data name="Det_Source" xml:space="preserve">
+    <value>Forrás (fájl és sor)</value>
+  </data>
+  <data name="Det_Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="Det_Value" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="Det_Line" xml:space="preserve">
+    <value>{0}. sor</value>
+  </data>
+  <data name="Det_CopyMessage" xml:space="preserve">
+    <value>Üzenet másolása</value>
+  </data>
+  <data name="Det_CopyException" xml:space="preserve">
+    <value>Kivétel másolása</value>
+  </data>
+  <data name="Det_CopyEntry" xml:space="preserve">
+    <value>Bejegyzés másolása</value>
+  </data>
+  <data name="Repeats_One" xml:space="preserve">
+    <value>1 üzenet ismétlődik, összesen {0} bejegyzés</value>
+  </data>
 </root>

@@ -558,4 +558,91 @@
   <data name="Bm_ClearAsk" xml:space="preserve">
     <value>Alle {0} Lesezeichen entfernen? Die {1} Kommentare gehen verloren.</value>
   </data>
+  <data name="Panel_Button" xml:space="preserve">
+    <value>Bereich</value>
+  </data>
+  <data name="Panel_ButtonTip" xml:space="preserve">
+    <value>Bereich mit Suchergebnissen, wiederholten Meldungen und den Details des Eintrags ein- oder ausblenden</value>
+  </data>
+  <data name="Panel_Close" xml:space="preserve">
+    <value>Bereich ausblenden</value>
+  </data>
+  <data name="Panel_DragTip" xml:space="preserve">
+    <value>Ziehen, um die Höhe des Bereichs zu ändern</value>
+  </data>
+  <data name="Panel_Results" xml:space="preserve">
+    <value>Ergebnisse</value>
+  </data>
+  <data name="Panel_Repeats" xml:space="preserve">
+    <value>Wiederholungen</value>
+  </data>
+  <data name="Panel_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Results_Empty" xml:space="preserve">
+    <value>Mit Strg+F suchen; alle Treffer stehen hier.</value>
+  </data>
+  <data name="Repeats_Busy" xml:space="preserve">
+    <value>Suche wiederholte Meldungen …</value>
+  </data>
+  <data name="Repeats_None" xml:space="preserve">
+    <value>Keine Meldung kommt mehrfach vor.</value>
+  </data>
+  <data name="Repeats_Many" xml:space="preserve">
+    <value>{0} Meldungen wiederholen sich, insgesamt {1} Einträge</value>
+  </data>
+  <data name="Busy_Repeats" xml:space="preserve">
+    <value>Suche wiederholte Meldungen</value>
+  </data>
+  <data name="Rep_Count" xml:space="preserve">
+    <value>Anzahl</value>
+  </data>
+  <data name="Rep_First" xml:space="preserve">
+    <value>Erste</value>
+  </data>
+  <data name="Rep_Last" xml:space="preserve">
+    <value>Letzte</value>
+  </data>
+  <data name="Rep_GoFirst" xml:space="preserve">
+    <value>Erstes Vorkommen</value>
+  </data>
+  <data name="Rep_GoLast" xml:space="preserve">
+    <value>Letztes Vorkommen</value>
+  </data>
+  <data name="Det_Empty" xml:space="preserve">
+    <value>Einen Eintrag auswählen, um seine Details zu sehen.</value>
+  </data>
+  <data name="Det_Message" xml:space="preserve">
+    <value>Meldung</value>
+  </data>
+  <data name="Det_Exception" xml:space="preserve">
+    <value>Ausnahme</value>
+  </data>
+  <data name="Det_Properties" xml:space="preserve">
+    <value>Eigenschaften</value>
+  </data>
+  <data name="Det_Source" xml:space="preserve">
+    <value>Quelle (Datei und Zeile)</value>
+  </data>
+  <data name="Det_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Det_Value" xml:space="preserve">
+    <value>Wert</value>
+  </data>
+  <data name="Det_Line" xml:space="preserve">
+    <value>Zeile {0}</value>
+  </data>
+  <data name="Det_CopyMessage" xml:space="preserve">
+    <value>Meldung kopieren</value>
+  </data>
+  <data name="Det_CopyException" xml:space="preserve">
+    <value>Ausnahme kopieren</value>
+  </data>
+  <data name="Det_CopyEntry" xml:space="preserve">
+    <value>Eintrag kopieren</value>
+  </data>
+  <data name="Repeats_One" xml:space="preserve">
+    <value>1 Meldung wiederholt sich, insgesamt {0} Einträge</value>
+  </data>
 </root>

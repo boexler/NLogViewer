@@ -558,4 +558,91 @@
   <data name="Bm_ClearAsk" xml:space="preserve">
     <value>Usunąć wszystkie zakładki ({0})? Komentarze ({1}) zostaną utracone.</value>
   </data>
+  <data name="Panel_Button" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="Panel_ButtonTip" xml:space="preserve">
+    <value>Pokaż lub ukryj panel z wynikami wyszukiwania, powtarzającymi się komunikatami i szczegółami wpisu</value>
+  </data>
+  <data name="Panel_Close" xml:space="preserve">
+    <value>Ukryj panel</value>
+  </data>
+  <data name="Panel_DragTip" xml:space="preserve">
+    <value>Przeciągnij, aby zmienić wysokość panelu</value>
+  </data>
+  <data name="Panel_Results" xml:space="preserve">
+    <value>Wyniki</value>
+  </data>
+  <data name="Panel_Repeats" xml:space="preserve">
+    <value>Powtórzenia</value>
+  </data>
+  <data name="Panel_Details" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="Results_Empty" xml:space="preserve">
+    <value>Szukaj przez Ctrl+F; wszystkie trafienia pojawią się tutaj.</value>
+  </data>
+  <data name="Repeats_Busy" xml:space="preserve">
+    <value>Szukanie powtarzających się komunikatów …</value>
+  </data>
+  <data name="Repeats_None" xml:space="preserve">
+    <value>Żaden komunikat nie występuje więcej niż raz.</value>
+  </data>
+  <data name="Repeats_Many" xml:space="preserve">
+    <value>{0} komunikatów się powtarza, łącznie {1} wpisów</value>
+  </data>
+  <data name="Busy_Repeats" xml:space="preserve">
+    <value>Szukanie powtarzających się komunikatów</value>
+  </data>
+  <data name="Rep_Count" xml:space="preserve">
+    <value>Liczba</value>
+  </data>
+  <data name="Rep_First" xml:space="preserve">
+    <value>Pierwsze</value>
+  </data>
+  <data name="Rep_Last" xml:space="preserve">
+    <value>Ostatnie</value>
+  </data>
+  <data name="Rep_GoFirst" xml:space="preserve">
+    <value>Pierwsze wystąpienie</value>
+  </data>
+  <data name="Rep_GoLast" xml:space="preserve">
+    <value>Ostatnie wystąpienie</value>
+  </data>
+  <data name="Det_Empty" xml:space="preserve">
+    <value>Zaznacz wpis, aby zobaczyć jego szczegóły.</value>
+  </data>
+  <data name="Det_Message" xml:space="preserve">
+    <value>Komunikat</value>
+  </data>
+  <data name="Det_Exception" xml:space="preserve">
+    <value>Wyjątek</value>
+  </data>
+  <data name="Det_Properties" xml:space="preserve">
+    <value>Właściwości</value>
+  </data>
+  <data name="Det_Source" xml:space="preserve">
+    <value>Źródło (plik i wiersz)</value>
+  </data>
+  <data name="Det_Name" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="Det_Value" xml:space="preserve">
+    <value>Wartość</value>
+  </data>
+  <data name="Det_Line" xml:space="preserve">
+    <value>Wiersz {0}</value>
+  </data>
+  <data name="Det_CopyMessage" xml:space="preserve">
+    <value>Kopiuj komunikat</value>
+  </data>
+  <data name="Det_CopyException" xml:space="preserve">
+    <value>Kopiuj wyjątek</value>
+  </data>
+  <data name="Det_CopyEntry" xml:space="preserve">
+    <value>Kopiuj wpis</value>
+  </data>
+  <data name="Repeats_One" xml:space="preserve">
+    <value>1 komunikat się powtarza, łącznie {0} wpisów</value>
+  </data>
 </root>
