@@ -34,11 +34,15 @@ namespace Sentinel.LogViewer.Wpf
         private static readonly TimeSpan BusyDelay = TimeSpan.FromMilliseconds(200);
         private static readonly TimeSpan CheckPause = TimeSpan.FromMilliseconds(250);
 
+        // shortcut: counting the repeated messages of a big list takes seconds, so while entries keep coming it runs at most every 3 s; upgrade to counting only the new entries
+        private static readonly TimeSpan RepeatsPause = TimeSpan.FromSeconds(3);
+
         private enum JobKind
         {
             Filter,
             Find,
-            Hits
+            Hits,
+            Repeats
         }
 
         private sealed class Job
@@ -61,12 +65,13 @@ namespace Sentinel.LogViewer.Wpf
             public volatile int Hits;
         }
 
-        private readonly Job?[] _jobs = new Job?[3];
-        private readonly bool[] _jobsDirty = new bool[3];
-        private readonly bool[] _requestQuiet = new bool[3];
+        private static readonly int JobKinds = Enum.GetValues<JobKind>().Length;
+        private readonly Job?[] _jobs = new Job?[JobKinds];
+        private readonly bool[] _jobsDirty = new bool[JobKinds];
+        private readonly bool[] _requestQuiet = new bool[JobKinds];
         private bool _recounting;
-        private readonly DispatcherTimer?[] _jobPauses = new DispatcherTimer?[3];
-        private readonly Action?[] _jobStarts = new Action?[3];
+        private readonly DispatcherTimer?[] _jobPauses = new DispatcherTimer?[JobKinds];
+        private readonly Action?[] _jobStarts = new Action?[JobKinds];
         private DispatcherTimer? _busyTimer;
         private ICommand? _cancelBusyCommand;
 
@@ -220,7 +225,7 @@ namespace Sentinel.LogViewer.Wpf
 
         private DispatcherTimer CreatePause(JobKind kind)
         {
-            var pause = new DispatcherTimer(DispatcherPriority.Background, Dispatcher) { Interval = CheckPause };
+            var pause = new DispatcherTimer(DispatcherPriority.Background, Dispatcher) { Interval = kind == JobKind.Repeats ? RepeatsPause : CheckPause };
             pause.Tick += (_, _) =>
             {
                 pause.Stop();
@@ -452,6 +457,7 @@ namespace Sentinel.LogViewer.Wpf
                         _currentFindMatch = null;
 
                     UpdateFindResultText();
+                    NotifyHitsChanged();
                 });
         }
 

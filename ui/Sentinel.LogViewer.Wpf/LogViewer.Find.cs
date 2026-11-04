@@ -200,6 +200,7 @@ namespace Sentinel.LogViewer.Wpf
                 {
                     UpdateFindMatches();
                     UpdateFilterHits();
+                    UpdateRepeats();
                 }
                 finally
                 {
@@ -239,6 +240,7 @@ namespace Sentinel.LogViewer.Wpf
                 _currentFindMatch = null;
 
             UpdateFindResultText();
+            NotifyHitsChanged();
         }
 
         private void UpdateFindResultText()

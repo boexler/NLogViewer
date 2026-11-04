@@ -115,7 +115,11 @@ namespace Sentinel.LogViewer.Wpf
             PART_ListView.PreviewMouseRightButtonDown += OnListViewPreviewMouseRightButtonDown;
             PART_ListView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(OnColumnHeaderClick));
             AddCopyBinding(PART_ListView);
-            PART_ListView.SelectionChanged += (_, _) => UpdateBookmarkLabel();
+            PART_ListView.SelectionChanged += (_, _) =>
+            {
+                UpdateBookmarkLabel();
+                UpdateDetails();
+            };
             PART_ListView.MouseDoubleClick += OnRowDoubleClick;
             _columnsReady = true;
             UpdateTimeStampHeader();
@@ -234,14 +238,41 @@ namespace Sentinel.LogViewer.Wpf
             if (_applyingColumns || e.Action != NotifyCollectionChangedAction.Move || PART_ListView?.View is not GridView gridView)
                 return;
 
+            // A header that was dragged to the left of the column of the bookmarks: that one goes back to the left, and the keys follow. Both wait
+            // until this change is through, as the collection does not allow a change inside its own change when it has two listeners (the layout
+            // of the list is one) and the keys put the columns in order again.
+            if (_bookmarkColumn != null && gridView.Columns.IndexOf(_bookmarkColumn) > 0)
+            {
+                Dispatcher.BeginInvoke(() =>
+                {
+                    _applyingColumns = true;
+                    try
+                    {
+                        if (_bookmarkColumn != null && gridView.Columns.IndexOf(_bookmarkColumn) is > 0 and var misplaced)
+                            gridView.Columns.Move(misplaced, 0);
+                    }
+                    finally
+                    {
+                        _applyingColumns = false;
+                    }
+
+                    TakeOverColumnKeys(gridView);
+                }, System.Windows.Threading.DispatcherPriority.Send);
+                return;
+            }
+
+            TakeOverColumnKeys(gridView);
+        }
+
+        /// <summary>
+        /// Writes the order of the columns of the list into <see cref="ColumnKeys"/>
+        /// </summary>
+        private void TakeOverColumnKeys(GridView gridView)
+        {
             var keys = gridView.Columns.Select(column => _columnKeys.GetValueOrDefault(column)).OfType<string>().ToList();
             _applyingColumns = true;
             try
             {
-                // A header that was dragged to the left of the column of the bookmarks: that one goes back to the left.
-                if (_bookmarkColumn != null && gridView.Columns.IndexOf(_bookmarkColumn) is > 0 and var misplaced)
-                    gridView.Columns.Move(misplaced, 0);
-
                 SetCurrentValue(ColumnKeysProperty, keys);
             }
             finally

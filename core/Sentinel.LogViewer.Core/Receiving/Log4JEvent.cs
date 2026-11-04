@@ -138,7 +138,11 @@ public class Log4JEvent : ILogEvent
 			TimeStamp = timestamp,
 			// Add exception information if throwable data is present
 			Exception = string.IsNullOrEmpty(Throwable) ? null : Throwable,
-			Properties = properties
+			Properties = properties,
+			// shortcut: the same few texts are on every entry of a sender, so they are shared (a list holds up to a million entries); a sender that
+			// keeps sending new machine names would fill the table of shared texts; upgrade to a cache of its own with a limit when that happens.
+			Application = string.Intern(appName?.Name ?? string.Empty),
+			Sender = string.Intern(combinedSender)
 		};
 
 		// Create and return the complete LogEvent

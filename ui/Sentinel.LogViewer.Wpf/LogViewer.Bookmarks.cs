@@ -422,16 +422,36 @@ namespace Sentinel.LogViewer.Wpf
         }
 
         /// <summary>
-        /// A double click on the row of a bookmark opens its comment, to read it or to change it
+        /// A double click on a row opens the details of its entry in the panel; on the ribbon or the badge of a comment it opens the comment
         /// </summary>
         private void OnRowDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource is DependencyObject source && ItemsControl.ContainerFromElement(PART_ListView, source) is ListViewItem { Content: LogEntry entry }
-                && _bookmarks.Contains(entry))
-            {
-                e.Handled = true;
+            if (PART_ListView == null || RowClick.Of(PART_ListView, e) is not var (row, source) || row.Content is not LogEntry entry)
+                return;
+
+            e.Handled = true;
+            if (_bookmarks.Contains(entry) && IsCommentSpot(source))
                 EditBookmarkComment(entry);
+            else
+                OpenBottomPanel(BottomPanelTab.Details);
+        }
+
+        /// <summary>
+        /// Whether an element of a row is the ribbon of a bookmark or the badge of its comment; the template marks them with the tag <c>CommentSpot</c>
+        /// </summary>
+        private static bool IsCommentSpot(DependencyObject? element)
+        {
+            while (element != null && element is not ListViewItem)
+            {
+                if (element is FrameworkElement { Tag: "CommentSpot" })
+                    return true;
+
+                element = element is System.Windows.Media.Visual or System.Windows.Media.Media3D.Visual3D
+                    ? System.Windows.Media.VisualTreeHelper.GetParent(element)
+                    : LogicalTreeHelper.GetParent(element);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -488,16 +508,7 @@ namespace Sentinel.LogViewer.Wpf
 
             // shortcut: all rows are joined on the UI thread, so a copy of a million rows freezes the app for a while; upgrade when a user copies huge lists
             var text = string.Join(Environment.NewLine, FormatForExport(entries));
-            try
-            {
-                // The clipboard may be in use by another program for a moment; the data object keeps the text after the program ends.
-                Clipboard.SetDataObject(text, copy: true);
-            }
-            catch (System.Runtime.InteropServices.ExternalException)
-            {
-                // shortcut: a clipboard that stays locked loses the copy silently; upgrade: tell the user when it comes up
-            }
-
+            PutOnClipboard(text);
             return text;
         }
     }

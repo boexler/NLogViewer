@@ -558,4 +558,91 @@
   <data name="Bm_ClearAsk" xml:space="preserve">
     <value>¿Quitar los {0} marcadores? Se pierden los {1} comentarios.</value>
   </data>
+  <data name="Panel_Button" xml:space="preserve">
+    <value>Panel</value>
+  </data>
+  <data name="Panel_ButtonTip" xml:space="preserve">
+    <value>Mostrar u ocultar el panel con los resultados de la búsqueda, los mensajes repetidos y los detalles de la entrada</value>
+  </data>
+  <data name="Panel_Close" xml:space="preserve">
+    <value>Ocultar el panel</value>
+  </data>
+  <data name="Panel_DragTip" xml:space="preserve">
+    <value>Arrastre para cambiar la altura del panel</value>
+  </data>
+  <data name="Panel_Results" xml:space="preserve">
+    <value>Resultados</value>
+  </data>
+  <data name="Panel_Repeats" xml:space="preserve">
+    <value>Repeticiones</value>
+  </data>
+  <data name="Panel_Details" xml:space="preserve">
+    <value>Detalles</value>
+  </data>
+  <data name="Results_Empty" xml:space="preserve">
+    <value>Busque con Ctrl+F; aquí se muestran todos los resultados.</value>
+  </data>
+  <data name="Repeats_Busy" xml:space="preserve">
+    <value>Buscando mensajes repetidos …</value>
+  </data>
+  <data name="Repeats_None" xml:space="preserve">
+    <value>Ningún mensaje aparece más de una vez.</value>
+  </data>
+  <data name="Repeats_Many" xml:space="preserve">
+    <value>{0} mensajes se repiten, {1} entradas en total</value>
+  </data>
+  <data name="Busy_Repeats" xml:space="preserve">
+    <value>Buscando mensajes repetidos</value>
+  </data>
+  <data name="Rep_Count" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="Rep_First" xml:space="preserve">
+    <value>Primera</value>
+  </data>
+  <data name="Rep_Last" xml:space="preserve">
+    <value>Última</value>
+  </data>
+  <data name="Rep_GoFirst" xml:space="preserve">
+    <value>Primera aparición</value>
+  </data>
+  <data name="Rep_GoLast" xml:space="preserve">
+    <value>Última aparición</value>
+  </data>
+  <data name="Det_Empty" xml:space="preserve">
+    <value>Seleccione una entrada para ver sus detalles.</value>
+  </data>
+  <data name="Det_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="Det_Exception" xml:space="preserve">
+    <value>Excepción</value>
+  </data>
+  <data name="Det_Properties" xml:space="preserve">
+    <value>Propiedades</value>
+  </data>
+  <data name="Det_Source" xml:space="preserve">
+    <value>Origen (archivo y línea)</value>
+  </data>
+  <data name="Det_Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Det_Value" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="Det_Line" xml:space="preserve">
+    <value>Línea {0}</value>
+  </data>
+  <data name="Det_CopyMessage" xml:space="preserve">
+    <value>Copiar mensaje</value>
+  </data>
+  <data name="Det_CopyException" xml:space="preserve">
+    <value>Copiar excepción</value>
+  </data>
+  <data name="Det_CopyEntry" xml:space="preserve">
+    <value>Copiar entrada</value>
+  </data>
+  <data name="Repeats_One" xml:space="preserve">
+    <value>1 mensaje se repite, {0} entradas en total</value>
+  </data>
 </root>

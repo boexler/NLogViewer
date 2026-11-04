@@ -124,6 +124,8 @@ public class PlainTextParser : IDisposable
 		{
 			TimeStamp = entry.TimeStamp,
 			Exception = entry.Exception,
+			Application = entry.Application,
+			Sender = entry.Sender,
 			Id = entry.Id,
 			Properties = new Dictionary<string, object?>(entry.Properties) { [FileLinePropertyName] = lineNumber }
 		};

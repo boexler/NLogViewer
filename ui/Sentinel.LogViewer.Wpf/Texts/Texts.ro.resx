@@ -558,4 +558,91 @@
   <data name="Bm_ClearAsk" xml:space="preserve">
     <value>Eliminați toate cele {0} semne de carte? Cele {1} comentarii se pierd.</value>
   </data>
+  <data name="Panel_Button" xml:space="preserve">
+    <value>Panou</value>
+  </data>
+  <data name="Panel_ButtonTip" xml:space="preserve">
+    <value>Afișează sau ascunde panoul cu rezultatele căutării, mesajele repetate și detaliile intrării</value>
+  </data>
+  <data name="Panel_Close" xml:space="preserve">
+    <value>Ascunde panoul</value>
+  </data>
+  <data name="Panel_DragTip" xml:space="preserve">
+    <value>Trageți pentru a schimba înălțimea panoului</value>
+  </data>
+  <data name="Panel_Results" xml:space="preserve">
+    <value>Rezultate</value>
+  </data>
+  <data name="Panel_Repeats" xml:space="preserve">
+    <value>Repetări</value>
+  </data>
+  <data name="Panel_Details" xml:space="preserve">
+    <value>Detalii</value>
+  </data>
+  <data name="Results_Empty" xml:space="preserve">
+    <value>Căutați cu Ctrl+F; toate rezultatele apar aici.</value>
+  </data>
+  <data name="Repeats_Busy" xml:space="preserve">
+    <value>Se caută mesajele repetate …</value>
+  </data>
+  <data name="Repeats_None" xml:space="preserve">
+    <value>Niciun mesaj nu apare de mai multe ori.</value>
+  </data>
+  <data name="Repeats_Many" xml:space="preserve">
+    <value>{0} mesaje se repetă, {1} intrări în total</value>
+  </data>
+  <data name="Busy_Repeats" xml:space="preserve">
+    <value>Se caută mesajele repetate</value>
+  </data>
+  <data name="Rep_Count" xml:space="preserve">
+    <value>Număr</value>
+  </data>
+  <data name="Rep_First" xml:space="preserve">
+    <value>Prima</value>
+  </data>
+  <data name="Rep_Last" xml:space="preserve">
+    <value>Ultima</value>
+  </data>
+  <data name="Rep_GoFirst" xml:space="preserve">
+    <value>Prima apariție</value>
+  </data>
+  <data name="Rep_GoLast" xml:space="preserve">
+    <value>Ultima apariție</value>
+  </data>
+  <data name="Det_Empty" xml:space="preserve">
+    <value>Selectați o intrare pentru a-i vedea detaliile.</value>
+  </data>
+  <data name="Det_Message" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="Det_Exception" xml:space="preserve">
+    <value>Excepție</value>
+  </data>
+  <data name="Det_Properties" xml:space="preserve">
+    <value>Proprietăți</value>
+  </data>
+  <data name="Det_Source" xml:space="preserve">
+    <value>Sursă (fișier și linie)</value>
+  </data>
+  <data name="Det_Name" xml:space="preserve">
+    <value>Nume</value>
+  </data>
+  <data name="Det_Value" xml:space="preserve">
+    <value>Valoare</value>
+  </data>
+  <data name="Det_Line" xml:space="preserve">
+    <value>Linia {0}</value>
+  </data>
+  <data name="Det_CopyMessage" xml:space="preserve">
+    <value>Copiază mesajul</value>
+  </data>
+  <data name="Det_CopyException" xml:space="preserve">
+    <value>Copiază excepția</value>
+  </data>
+  <data name="Det_CopyEntry" xml:space="preserve">
+    <value>Copiază intrarea</value>
+  </data>
+  <data name="Repeats_One" xml:space="preserve">
+    <value>1 mesaj se repetă, {0} intrări în total</value>
+  </data>
 </root>

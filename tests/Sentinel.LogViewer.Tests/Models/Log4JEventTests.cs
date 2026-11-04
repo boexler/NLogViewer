@@ -37,6 +37,29 @@ namespace Sentinel.LogViewer.Tests.Models
 		}
 
 		[Fact]
+		public void ToLogEvent_TheEntryKnowsItsApplicationAndItsSender()
+		{
+			var log4JEvent = new Log4JEvent
+			{
+				Logger = "TestLogger",
+				Level = Log4JLevel.Info,
+				Timestamp = 1234567890000,
+				Message = "Test message",
+				Properties = new Dictionary<string, string> { { "log4japp", "MyApp" }, { "log4jmachinename", "PC1" } }
+			};
+
+			var entry = log4JEvent.ToLogEvent("10.0.0.5").Entry;
+
+			Assert.Equal("MyApp", entry.Application);
+			Assert.Equal("PC1 (10.0.0.5)", entry.Sender);
+
+			// A copy with another time stamp keeps where the entry came from.
+			var copy = entry.WithTimeStamp(DateTime.UtcNow);
+			Assert.Equal(entry.Application, copy.Application);
+			Assert.Equal(entry.Sender, copy.Sender);
+		}
+
+		[Fact]
 		public void ToLogEvent_AppNameWithPackagePrefix_ExtractsNameCorrectly()
 		{
 			// Arrange

@@ -36,8 +36,7 @@ namespace Sentinel.LogViewer.Wpf.Helper
         private void OnRowDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Only a double click on a row goes to the entry, not one on the header or the empty space.
-            if (e.OriginalSource is DependencyObject source && ItemsControl.ContainerFromElement(BookmarkRows, source) is ListViewItem { Content: BookmarkItem item }
-                && DataContext is LogViewer viewer)
+            if (RowClick.Of(BookmarkRows, e) is var (row, _) && row.Content is BookmarkItem item && DataContext is LogViewer viewer)
                 viewer.GoToBookmarkCommand.Execute(item);
         }
     }
