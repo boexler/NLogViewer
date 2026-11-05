@@ -146,11 +146,34 @@ public class TimeZoneChoicesTests
 		var live = new TimeZoneViewModel(true, Tokyo, TimeZoneInfo.Utc, Moment(14), environment.Localization);
 
 		Assert.True(file.ShowFileZone);
-		Assert.Equal("2025-12-18 14:00:00 (UTC+9) → 2025-12-18 05:00:00 (UTC)", file.Preview);
+		Assert.Equal("2025-12-18 05:00:00 (UTC) → 2025-12-18 05:00:00 (UTC)", file.Preview);
 		Assert.False(live.ShowFileZone);
 		Assert.Equal("2025-12-18 14:00:00 (UTC) → 2025-12-18 14:00:00 (UTC)", live.Preview);
 		Assert.Equal(Tokyo, file.FileZone);
 		Assert.Equal(TimeZoneInfo.Utc, file.DisplayZone);
+	}
+
+	[Fact]
+	public void ThePreview_StartsFromTheZoneThatTheTabShowsNow()
+	{
+		using var environment = new SettingsTestEnvironment();
+		var plus11 = TimeZoneInfo.FindSystemTimeZoneById("Central Pacific Standard Time");
+		var viewModel = new TimeZoneViewModel(false, Tokyo, plus11, Written(14), environment.Localization);
+
+		Assert.Equal("2025-12-18 16:00:00 (UTC+11) → 2025-12-18 16:00:00 (UTC+11)", viewModel.Preview);
+
+		viewModel.SelectedDisplayZone = viewModel.Zones.First(choice => Equals(choice.Zone, TimeZoneInfo.Utc));
+
+		Assert.Equal("2025-12-18 16:00:00 (UTC+11) → 2025-12-18 05:00:00 (UTC)", viewModel.Preview);
+	}
+
+	[Fact]
+	public void ThePreview_SaysTheOffsetOfTheLocalTimeToo()
+	{
+		using var environment = new SettingsTestEnvironment();
+		var viewModel = new TimeZoneViewModel(false, Tokyo, null, Written(14), environment.Localization);
+
+		Assert.Matches(@"\(local UTC[+-]\d+(:\d\d)?\) → .* \(local UTC[+-]\d+(:\d\d)?\)$", viewModel.Preview);
 	}
 
 	[Fact]

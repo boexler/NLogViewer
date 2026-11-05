@@ -384,7 +384,7 @@ namespace Sentinel.LogViewer.Wpf
                 menu.Items.Add(new Separator());
                 menu.Items.Add(TimeStampFormatItems());
                 if (ChangeTimeZoneCommand != null)
-                    menu.Items.Add(new MenuItem { Header = LogViewerTexts.Get("Col_TimeZone"), Command = ChangeTimeZoneCommand, CommandParameter = DataContext });
+                    menu.Items.Add(new MenuItem { Header = LogViewerTexts.Get("Col_TimeZone"), Command = ChangeTimeZoneCommand });
             }
 
             return menu;

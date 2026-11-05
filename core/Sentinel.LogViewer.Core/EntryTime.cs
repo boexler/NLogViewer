@@ -82,18 +82,25 @@ public static class EntryTime
 	/// <summary>
 	/// A short name of a zone for headers and tooltips: <c>local</c>, <c>UTC</c>, or the offset like <c>UTC+9</c> or <c>UTC-3:30</c>
 	/// </summary>
-	public static string Label(TimeZoneInfo? zone)
+	/// <param name="withLocalOffset">Whether the local zone says its offset as well, e.g. <c>local UTC+1</c></param>
+	public static string Label(TimeZoneInfo? zone, bool withLocalOffset = false)
 	{
+		var local = withLocalOffset ? $"{LocalLabel} {Offset(TimeZoneInfo.Local)}" : LocalLabel;
 		if (zone == null)
-			return LocalLabel;
+			return local;
 
 		// UTC first: on a computer that runs in UTC, the zone that is named UTC is the local one as well, and it should still say UTC.
 		if (zone.Equals(TimeZoneInfo.Utc))
 			return "UTC";
 
 		if (zone.Equals(TimeZoneInfo.Local))
-			return LocalLabel;
+			return local;
 
+		return Offset(zone);
+	}
+
+	private static string Offset(TimeZoneInfo zone)
+	{
 		var offset = zone.BaseUtcOffset;
 		var sign = offset < TimeSpan.Zero ? "-" : "+";
 		offset = offset.Duration();

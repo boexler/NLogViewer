@@ -17,6 +17,8 @@ public class TimeZoneViewModel : INotifyPropertyChanged
 {
 	private readonly LocalizationService _localization;
 	private readonly LogEntry? _sample;
+	private readonly TimeZoneInfo? _currentFileZone;
+	private readonly TimeZoneInfo? _currentDisplayZone;
 	private TimeZoneChoice _selectedFileZone;
 	private TimeZoneChoice _selectedDisplayZone;
 
@@ -28,6 +30,8 @@ public class TimeZoneViewModel : INotifyPropertyChanged
 	{
 		_localization = localization ?? throw new ArgumentNullException(nameof(localization));
 		_sample = sample;
+		_currentFileZone = fileZone;
+		_currentDisplayZone = displayZone;
 		ShowFileZone = !isLive;
 		Zones = TimeZoneChoices.Create(localization);
 		_selectedFileZone = TimeZoneChoices.Find(Zones, fileZone);
@@ -80,7 +84,7 @@ public class TimeZoneViewModel : INotifyPropertyChanged
 
 	public ICommand ResetCommand { get; }
 
-	/// <summary>The time of the sample entry as it is written and as it is shown, e.g. <c>2025-12-18 14:02:11 (UTC+9) → 2025-12-18 07:02:11 (local)</c></summary>
+	/// <summary>The time of the sample entry as the tab shows it now and as it will be shown with the chosen zones, e.g. <c>2025-12-18 23:02:11 (UTC+11) → 2025-12-18 07:02:11 (local)</c></summary>
 	public string Preview
 	{
 		get
@@ -88,11 +92,14 @@ public class TimeZoneViewModel : INotifyPropertyChanged
 			if (_sample == null)
 				return string.Empty;
 
-			var fileZone = ShowFileZone ? FileZone : null;
-			var written = _sample.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-			var shown = EntryTime.ToDisplay(_sample.TimeStamp, fileZone, DisplayZone).ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-			return $"{written} ({EntryTime.Label(EntryTime.ZoneOf(_sample.TimeStamp, fileZone))}) → {shown} ({EntryTime.Label(DisplayZone)})";
+			return $"{Shown(_currentFileZone, _currentDisplayZone)} → {Shown(FileZone, DisplayZone)}";
 		}
+	}
+
+	private string Shown(TimeZoneInfo? fileZone, TimeZoneInfo? displayZone)
+	{
+		var time = EntryTime.ToDisplay(_sample!.TimeStamp, ShowFileZone ? fileZone : null, displayZone);
+		return $"{time.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)} ({EntryTime.Label(displayZone, withLocalOffset: true)})";
 	}
 
 	public string PreviewTitle => _localization.GetString("TimeZone_Preview", "Preview");
