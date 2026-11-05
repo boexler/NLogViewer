@@ -99,7 +99,8 @@ jobs:
           -m:1 `
           -p:DisableGitVersionTask=true `
           -p:Version=$env:VERSION `
-          -p:InstallerVersion=$env:INSTALLER_VERSION
+          -p:InstallerVersion=$env:INSTALLER_VERSION `
+          -p:InstallerSemVer=$env:VERSION
         Copy-Item "installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi" `
           "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
 
