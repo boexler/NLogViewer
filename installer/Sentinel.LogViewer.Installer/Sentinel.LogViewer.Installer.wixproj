@@ -23,7 +23,11 @@
 
     <InstallerVersion Condition="'$(InstallerVersion)' == ''">1.0.0.0</InstallerVersion>
 
-    <DefineConstants>$(DefineConstants);InstallerVersion=$(InstallerVersion)</DefineConstants>
+    <!-- Full SemVer incl. prerelease label for the registry; CI passes /p:InstallerSemVer= (GitVersion fullSemVer) without the "+build" metadata. -->
+    <SemVer>$([System.Text.RegularExpressions.Regex]::Replace('$(InstallerSemVer)', '\+.*$', ''))</SemVer>
+    <SemVer Condition="'$(SemVer)' == ''">$(InstallerVersion)</SemVer>
+
+    <DefineConstants>$(DefineConstants);InstallerVersion=$(InstallerVersion);SemVer=$(SemVer)</DefineConstants>
 
     <IsPackable>false</IsPackable>
 
@@ -35,6 +39,13 @@
     NuGet package, so a no-op target is the correct contract here.
   -->
   <Target Name="Pack" />
+
+  <!-- Without it the registry would silently get the numeric 5.0.0.0 again; local builds keep the fallback. -->
+  <Target Name="RequireInstallerSemVer"
+          BeforeTargets="Build"
+          Condition="'$(GITHUB_ACTIONS)' == 'true' And '$(InstallerSemVer)' == ''">
+    <Error Text="Pass /p:InstallerSemVer= (full SemVer) so the MSI writes the real version to the registry." />
+  </Target>
 
   <ItemGroup>
 

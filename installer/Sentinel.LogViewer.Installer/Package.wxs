@@ -184,6 +184,19 @@
                        KeyPath="yes" />
         <RemoveFolder Id="RemoveCompanyFolder" On="uninstall" />
       </Component>
+      <!--
+        The MSI ProductVersion is numeric (5.0.0.0), so external scripts read the full SemVer
+        (with prerelease label) and the chosen install folder from here.
+      -->
+      <Component Id="CmpInstallInfo"
+                 Directory="INSTALLFOLDER"
+                 Guid="F3A4B5C6-D7E8-49AB-8CDE-F0123456789B"
+                 Bitness="always64">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Boexler\Sentinel.LogViewer">
+          <RegistryValue Name="Version" Type="string" Value="$(var.SemVer)" KeyPath="yes" />
+          <RegistryValue Name="InstallFolder" Type="string" Value="[INSTALLFOLDER]" />
+        </RegistryKey>
+      </Component>
     </ComponentGroup>
   </Fragment>
 
