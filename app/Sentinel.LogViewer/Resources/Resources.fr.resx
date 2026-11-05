@@ -1522,5 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>A_fficher la liste</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Ou_vrir une session...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>_Enregistrer la session...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>Sessions ré_centes</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sessions Sentinel.LogViewer (*.slvsession)|*.slvsession|Tous les fichiers (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Enregistrer la session</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Ouvrir une session</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Enregistrement de la session...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Ouverture de la session...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Session enregistrée dans {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Session {0} ouverte : {1} onglets</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>La session n'a pas pu être enregistrée : {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>La session n'a pas pu être ouverte : {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>L'application redémarre pour se mettre à jour. Enregistrer d'abord les onglets ouverts comme session ?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Redémarrer pour mettre à jour</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Les onglets de la dernière exécution ont été conservés. Les restaurer ?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Restaurer les onglets</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Conserver les onglets après un redémarrage</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>À la fermeture de l'application, les onglets qui contiennent des entrées ou des signets sont enregistrés. Au prochain démarrage, on demande s'il faut les restaurer. Désactivé, rien n'est enregistré automatiquement.</value>
+  </data>
 </root>
-

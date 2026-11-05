@@ -30,7 +30,7 @@ namespace Sentinel.LogViewer.ViewModels;
 /// <summary>
 /// Main ViewModel for the application
 /// </summary>
-public class MainViewModel : INotifyPropertyChanged, IDisposable
+public partial class MainViewModel : INotifyPropertyChanged, IDisposable
 {
 	private readonly LogReceiverService _udpReceiverService;
 	private readonly LogFileParserService _fileParserService;
@@ -91,6 +91,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
 		LogTabs = new ObservableCollection<LogTabViewModel>();
 		LogTabs.CollectionChanged += OnLogTabsCollectionChanged;
+		LoadRecentSessions();
 
 		// Initialize commands
 		StartListeningCommand = new AsyncRelayCommand(StartListeningAsync, () => !_isListening);
@@ -406,7 +407,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// </summary>
 	private void OnTabViewSettingsChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (sender is not LogTabViewModel tab)
+		// A tab that comes from a session brings its own view; that is not a choice of the user for the next tab.
+		if (sender is not LogTabViewModel tab || _restoringSession)
 			return;
 
 		var configuration = _configService.LoadConfiguration();

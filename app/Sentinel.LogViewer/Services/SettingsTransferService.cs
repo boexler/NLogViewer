@@ -35,6 +35,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		var settings = configurationService.LoadConfiguration();
 		settings.LastSeenVersion = string.Empty;
 		settings.SkippedVersion = string.Empty;
+		settings.RecentSessions = new();
 		var bundle = new SettingsBundle
 		{
 			Settings = settings,
@@ -78,6 +79,7 @@ public class SettingsTransferService(ConfigurationService configurationService, 
 		var local = configurationService.LoadConfiguration();
 		settings.LastSeenVersion = local.LastSeenVersion;
 		settings.SkippedVersion = local.SkippedVersion;
+		settings.RecentSessions = local.RecentSessions;
 		configurationService.SaveConfiguration(settings);
 		formatConfigService.ReplaceAll(bundle.TextFileFormats);
 	}

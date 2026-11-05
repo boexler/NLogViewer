@@ -262,9 +262,9 @@ public class SettingsWindowTests
 				WpfTestHelper.Settle();
 				var autoStart = Descendants<ToggleButton>(window).Single(toggle => toggle.DataContext == viewModel.Setting<BoolSettingViewModel>("Start listening on launch"));
 
-				autoStart.IsChecked = true;
+				autoStart.IsChecked = false;
 
-				Assert.True(environment.Saved.AutoStartListening);
+				Assert.False(environment.Saved.AutoStartListening);
 				Assert.True(((SettingsWindow)window).HasChanges);
 			}
 			finally

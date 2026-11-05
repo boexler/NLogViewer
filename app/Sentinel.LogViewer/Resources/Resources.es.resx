@@ -1522,5 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>M_ostrar lista</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Abrir sesió_n...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>_Guardar sesión...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>Sesiones _recientes</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sesiones de Sentinel.LogViewer (*.slvsession)|*.slvsession|Todos los archivos (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Guardar sesión</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Abrir sesión</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Guardando sesión...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Abriendo sesión...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Sesión guardada en {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Sesión {0} abierta: {1} pestañas</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>No se pudo guardar la sesión: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>No se pudo abrir la sesión: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>La aplicación se reinicia para actualizarse. ¿Guardar antes las pestañas abiertas como sesión?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Reiniciar para actualizar</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Se conservaron las pestañas de la última ejecución. ¿Restaurarlas?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Restaurar pestañas</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Conservar las pestañas al reiniciar</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>Al cerrar la aplicación se guardan las pestañas que contienen entradas o marcadores. En el próximo inicio se pregunta si se restauran. Desactivado, no se guarda nada automáticamente.</value>
+  </data>
 </root>
-

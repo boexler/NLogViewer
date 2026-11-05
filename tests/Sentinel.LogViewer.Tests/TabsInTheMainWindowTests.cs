@@ -72,6 +72,10 @@ public sealed class TabsInTheMainWindowTests : IDisposable
 	private Session Start(UpdateService? updates = null, ITrayIcon? tray = null, bool invisible = false)
 	{
 		AddResourcesOfTheApplication();
+		// The application starts listening by itself; a test sends its events through the subject and must not open the port of the computer.
+		var configuration = _environment.Saved;
+		configuration.AutoStartListening = false;
+		_environment.Configuration.SaveConfiguration(configuration);
 		var xml = new Log4JEventParser();
 		var receiver = new LogReceiverService(xml);
 		var formats = _environment.Formats;

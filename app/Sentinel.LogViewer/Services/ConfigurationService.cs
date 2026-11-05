@@ -161,7 +161,7 @@ namespace Sentinel.LogViewer.Services
                 Ports = new List<string> { SettingsRules.DefaultPortAddress },
                 Language = string.Empty, // Empty means auto-detect on first start
                 MaxLogEntriesPerTab = 1_000_000,
-                AutoStartListening = false,
+                AutoStartListening = true,
                 CheckForUpdates = true
             };
         }
@@ -188,7 +188,7 @@ namespace Sentinel.LogViewer.Services
         public List<string> Ports { get; set; } = new();
         public string Language { get; set; } = string.Empty; // Empty means auto-detect
         public int MaxLogEntriesPerTab { get; set; } = 1_000_000;
-        public bool AutoStartListening { get; set; } = false;
+        public bool AutoStartListening { get; set; } = true;
 
         /// <summary>When true (Debug only), auto-start the test log generator on startup.</summary>
 
@@ -260,6 +260,12 @@ namespace Sentinel.LogViewer.Services
 
         /// <summary>The columns of the log list of a new tab and their order, as keys of <see cref="Wpf.LogColumns"/> (<c>thread</c>, <c>property:Class</c>, ...).</summary>
         public List<string> Columns { get; set; } = new(Wpf.LogColumns.Default);
+
+        /// <summary>Whether closing the application saves the tabs that hold entries or bookmarks, and the next start offers to restore them.</summary>
+        public bool KeepTabsAcrossRestarts { get; set; } = false;
+
+        /// <summary>The session files that were saved or opened last, the newest first; they belong to this computer.</summary>
+        public List<string> RecentSessions { get; set; } = new();
 
         /// <summary>The saved filter presets, see <see cref="FilterPresetService"/>.</summary>
         public List<FilterPreset> FilterPresets { get; set; } = new();

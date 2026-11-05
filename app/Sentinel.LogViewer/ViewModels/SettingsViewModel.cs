@@ -228,6 +228,17 @@ namespace Sentinel.LogViewer.ViewModels
                     getDefault: LocalizationService.DetectWindowsLanguage),
 
                 new BoolSettingViewModel(GeneralId, "",
+                    Text("Settings_KeepTabs", "Keep tabs across restarts"),
+                    Text("Settings_KeepTabs_Description", "When the application closes, the tabs that hold entries or bookmarks are saved. At the next start you are asked whether to restore them. Switched off, nothing is saved automatically."),
+                    get: () => _configuration.KeepTabsAcrossRestarts,
+                    set: value =>
+                    {
+                        _configuration.KeepTabsAcrossRestarts = value;
+                        Commit();
+                    },
+                    getDefault: () => ConfigurationService.CreateDefaultConfiguration().KeepTabsAcrossRestarts),
+
+                new BoolSettingViewModel(GeneralId, "",
                     Text("Settings_MinimizeToTray", "Minimize to the notification area"),
                     Text("Settings_MinimizeToTray_Description", "Minimizing the window moves it to the notification area (tray), where it keeps receiving logs. The icon shows how receiving is going; double-click it to restore the window."),
                     get: () => _configuration.MinimizeToTray,

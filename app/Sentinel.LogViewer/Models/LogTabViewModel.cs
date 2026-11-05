@@ -38,6 +38,11 @@ namespace Sentinel.LogViewer.Models
         /// </summary>
         public ObservableCollection<LogEntry> LogEntries { get; } = new();
 
+        /// <summary>
+        /// The bookmarks of the entries of the tab; the viewer shows them and changes them, and they are saved with the tab
+        /// </summary>
+        public EntryBookmarks Bookmarks { get; } = new();
+
         public LogTabViewModel()
         {
             LogEntries.CollectionChanged += (_, _) => OnPropertyChanged(nameof(LogCount));

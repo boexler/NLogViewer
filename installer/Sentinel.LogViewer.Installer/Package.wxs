@@ -142,6 +142,8 @@
       <ComponentGroupRef Id="HarvestedComponents" />
       <ComponentGroupRef Id="ShortcutComponents" />
       <ComponentGroupRef Id="InstallFolderComponents" />
+      <!-- The extension is only used by this application, so it is the default of every installation (unlike .log) -->
+      <ComponentGroupRef Id="FileAssocSessionComponents" />
     </Feature>
 
     <Feature Id="FeatureDesktop"
@@ -235,6 +237,32 @@
                   WorkingDirectory="INSTALLFOLDER"
                   Target="[INSTALLFOLDER]Sentinel.LogViewer.exe"
                   Icon="AppIcon.ico" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <!-- Session files (.slvsession): a double click opens them in Sentinel LogViewer -->
+    <ComponentGroup Id="FileAssocSessionComponents" Directory="INSTALLFOLDER">
+      <Component Id="CmpSessionProgId" Guid="A7B8C9D0-E1F2-4345-8678-9ABCDEF01234">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.slvsession">
+          <RegistryValue Type="string" Value="Sentinel LogViewer session" />
+        </RegistryKey>
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.slvsession\DefaultIcon">
+          <RegistryValue Type="string" Value="[INSTALLFOLDER]Sentinel.LogViewer.exe,0" KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpSessionOpenCommand" Guid="B8C9D0E1-F2A3-4456-8789-ABCDEF012345">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\LogViewer.slvsession\shell\open\command">
+          <RegistryValue Type="string"
+                         Value="&quot;[INSTALLFOLDER]Sentinel.LogViewer.exe&quot; &quot;%1&quot;"
+                         KeyPath="yes" />
+        </RegistryKey>
+      </Component>
+      <Component Id="CmpSessionExtension" Guid="C9D0E1F2-A3B4-4567-899A-BCDEF0123456">
+        <RegistryKey Root="HKLM" Key="SOFTWARE\Classes\.slvsession">
+          <RegistryValue Type="string" Value="LogViewer.slvsession" KeyPath="yes" />
+        </RegistryKey>
       </Component>
     </ComponentGroup>
   </Fragment>

@@ -286,6 +286,10 @@ public class AboutViewModel : INotifyPropertyChanged
 		if (_downloadedFile == null)
 			return;
 
+		// The tabs are kept or saved as a session first; the user can still take the restart back.
+		if (Application.Current.MainWindow?.DataContext is MainViewModel main && !main.SaveTabsBeforeUpdate())
+			return;
+
 		try
 		{
 			_updateService.StartInstallation(_downloadedFile);

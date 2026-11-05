@@ -1524,6 +1524,7 @@ new PropertyMetadata(MetadataBrush("#324B5C")));
         public LogViewer()
         {
             DataContext = this;
+            CoerceValue(BookmarksProperty);
 
             Uid = GetHashCode().ToString();
 

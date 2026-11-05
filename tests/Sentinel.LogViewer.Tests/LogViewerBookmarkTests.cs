@@ -53,6 +53,33 @@ public class LogViewerBookmarkTests
 	}
 
 	[Fact]
+	public void TheBookmarksOfTheHost_AreShown_ChangedByTheViewer_AndReplacedWithTheirOwnCount()
+	{
+		WithViewer((viewer, entries, list) =>
+		{
+			// The tab of a session owns its bookmarks, so they are there before its viewer is: the viewer shows what the host gives it.
+			var owned = new EntryBookmarks();
+			owned.Entries.Add(entries[1]);
+			owned.Comments[entries[1]] = "from the session";
+			viewer.Bookmarks = owned;
+
+			Assert.Equal(1, viewer.BookmarkCount);
+			Assert.True(viewer.IsBookmarked(entries[1]));
+			Assert.Equal("from the session", viewer.BookmarkCommentOf(entries[1]));
+
+			Select(list, entries, 3);
+			viewer.ToggleBookmarks();
+			Assert.Equal(2, owned.Count);
+			Assert.Contains(entries[3], owned.Entries);
+
+			viewer.Bookmarks = new EntryBookmarks();
+			Assert.Equal(0, viewer.BookmarkCount);
+			Assert.False(viewer.IsBookmarked(entries[1]));
+			Assert.Equal(2, owned.Count);
+		});
+	}
+
+	[Fact]
 	public void TheBookmarkOfTheSelectedEntries_IsSet_AndTakenOffWhenAllOfThemHaveOne()
 	{
 		WithViewer((viewer, entries, list) =>

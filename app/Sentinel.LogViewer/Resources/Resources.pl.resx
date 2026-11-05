@@ -1522,6 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>P_okaż listę</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Otwórz _sesję...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>Za_pisz sesję...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>Ostatnie ses_je</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sesje Sentinel.LogViewer (*.slvsession)|*.slvsession|Wszystkie pliki (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Zapisz sesję</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Otwórz sesję</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Zapisywanie sesji...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Otwieranie sesji...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Sesja zapisana w {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Sesja {0} otwarta: {1} kart</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>Nie udało się zapisać sesji: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>Nie udało się otworzyć sesji: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>Aplikacja uruchomi się ponownie, aby się zaktualizować. Zapisać wcześniej otwarte karty jako sesję?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Restart w celu aktualizacji</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Karty z ostatniego uruchomienia zostały zachowane. Przywrócić je?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Przywróć karty</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Zachowaj karty po ponownym uruchomieniu</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>Przy zamykaniu aplikacji zapisywane są karty zawierające wpisy lub zakładki. Przy następnym uruchomieniu pojawi się pytanie, czy je przywrócić. Gdy wyłączone, nic nie jest zapisywane automatycznie.</value>
+  </data>
 </root>
-
-

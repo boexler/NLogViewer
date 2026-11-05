@@ -1522,5 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>L_iste anzeigen</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Sitzung ö_ffnen...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>Sitzung s_peichern...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>_Zuletzt verwendete Sitzungen</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sentinel.LogViewer-Sitzungen (*.slvsession)|*.slvsession|Alle Dateien (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Sitzung speichern</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Sitzung öffnen</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Sitzung wird gespeichert...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Sitzung wird geöffnet...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Sitzung gespeichert unter {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Sitzung {0} geöffnet: {1} Tabs</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>Die Sitzung konnte nicht gespeichert werden: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>Die Sitzung konnte nicht geöffnet werden: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>Die Anwendung wird für das Update neu gestartet. Die offenen Tabs vorher als Sitzung speichern?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Neustart für das Update</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Die Tabs der letzten Sitzung wurden behalten. Wiederherstellen?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Tabs wiederherstellen</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Tabs über Neustarts behalten</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>Beim Beenden der Anwendung werden die Tabs gespeichert, die Einträge oder Lesezeichen enthalten. Beim nächsten Start wird gefragt, ob sie wiederhergestellt werden sollen. Ist die Einstellung aus, wird nichts automatisch gespeichert.</value>
+  </data>
 </root>
-
