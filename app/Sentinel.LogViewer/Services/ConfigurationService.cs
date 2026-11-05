@@ -161,7 +161,7 @@ namespace Sentinel.LogViewer.Services
                 Ports = new List<string> { SettingsRules.DefaultPortAddress },
                 Language = string.Empty, // Empty means auto-detect on first start
                 MaxLogEntriesPerTab = 1_000_000,
-                AutoStartListening = false,
+                AutoStartListening = true,
                 CheckForUpdates = true
             };
         }
@@ -188,7 +188,7 @@ namespace Sentinel.LogViewer.Services
         public List<string> Ports { get; set; } = new();
         public string Language { get; set; } = string.Empty; // Empty means auto-detect
         public int MaxLogEntriesPerTab { get; set; } = 1_000_000;
-        public bool AutoStartListening { get; set; } = false;
+        public bool AutoStartListening { get; set; } = true;
 
         /// <summary>When true (Debug only), auto-start the test log generator on startup.</summary>
 

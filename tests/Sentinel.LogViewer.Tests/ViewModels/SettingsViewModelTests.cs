@@ -62,9 +62,9 @@ public class SettingsViewModelTests : IDisposable
 	{
 		var viewModel = _environment.CreateViewModel();
 
-		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 
-		Assert.True(_environment.Saved.AutoStartListening);
+		Assert.False(_environment.Saved.AutoStartListening);
 		Assert.True(viewModel.HasChanges);
 	}
 
@@ -72,13 +72,13 @@ public class SettingsViewModelTests : IDisposable
 	public void SettingsAreReadFromTheConfiguration()
 	{
 		var configuration = _environment.Saved;
-		configuration.AutoStartListening = true;
+		configuration.AutoStartListening = false;
 		configuration.CheckForUpdates = false;
 		_environment.Configuration.SaveConfiguration(configuration);
 
 		var viewModel = _environment.CreateViewModel();
 
-		Assert.True(viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value);
+		Assert.False(viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value);
 		Assert.False(viewModel.Setting<BoolSettingViewModel>(CheckForUpdatesTitle).Value);
 		Assert.False(viewModel.HasChanges);
 	}
@@ -298,7 +298,7 @@ public class SettingsViewModelTests : IDisposable
 	public void ResetCategory_RestoresDefaultsOfThatCategoryOnly()
 	{
 		var viewModel = _environment.CreateViewModel();
-		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 		viewModel.Setting<IntSettingViewModel>(MaxEntriesTitle).Text = "5000";
 		viewModel.Setting<PortListSettingViewModel>(PortsTitle).AddCommand.Execute(null);
 		viewModel.Setting<BoolSettingViewModel>(CheckForUpdatesTitle).Value = false;
@@ -307,7 +307,7 @@ public class SettingsViewModelTests : IDisposable
 		viewModel.ResetCategoryCommand.Execute(null);
 
 		var saved = _environment.Saved;
-		Assert.False(saved.AutoStartListening);
+		Assert.True(saved.AutoStartListening);
 		Assert.Equal(1_000_000, saved.MaxLogEntriesPerTab);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000" }, saved.Ports);
 		Assert.Equal(new[] { "udp://0.0.0.0:4000" }, viewModel.Setting<PortListSettingViewModel>(PortsTitle).Items.Select(item => item.Address));
@@ -320,13 +320,13 @@ public class SettingsViewModelTests : IDisposable
 	public void ResetCategory_WhenDeclined_ChangesNothing()
 	{
 		var viewModel = _environment.CreateViewModel();
-		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 		viewModel.SelectedCategory = viewModel.Category("Receiving");
 		_environment.Dialogs.ConfirmAnswer = false;
 
 		viewModel.ResetCategoryCommand.Execute(null);
 
-		Assert.True(_environment.Saved.AutoStartListening);
+		Assert.False(_environment.Saved.AutoStartListening);
 	}
 
 	[Fact]
@@ -789,7 +789,7 @@ public class SettingsViewModelTests : IDisposable
 		var exportFile = _environment.PathOf("export.json");
 		var source = _environment.CreateViewModel();
 		source.Setting<IntSettingViewModel>(MaxEntriesTitle).Text = "5000";
-		source.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		source.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 		_environment.Formats.SaveFormatForPattern("*.log", new TextFileFormat { Separator = "\t", ColumnCount = 4 });
 		_environment.Dialogs.ExportPath = exportFile;
 
@@ -805,9 +805,9 @@ public class SettingsViewModelTests : IDisposable
 		target.ImportCommand.Execute(null);
 
 		Assert.Equal(5000, other.Saved.MaxLogEntriesPerTab);
-		Assert.True(other.Saved.AutoStartListening);
+		Assert.False(other.Saved.AutoStartListening);
 		Assert.Equal("*.log", Assert.Single(other.Formats.GetAll().Formats).FilePattern);
-		Assert.True(target.Setting<BoolSettingViewModel>(AutoStartTitle).Value);
+		Assert.False(target.Setting<BoolSettingViewModel>(AutoStartTitle).Value);
 		Assert.Equal("5,000", target.Setting<IntSettingViewModel>(MaxEntriesTitle).Text);
 		Assert.True(target.HasChanges);
 		Assert.Single(other.Dialogs.Confirmations);
@@ -819,13 +819,13 @@ public class SettingsViewModelTests : IDisposable
 		var file = _environment.PathOf("other.json");
 		File.WriteAllText(file, "{ \"Name\": \"something else\" }");
 		var viewModel = _environment.CreateViewModel();
-		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 		_environment.Dialogs.ImportPath = file;
 
 		viewModel.ImportCommand.Execute(null);
 
 		Assert.Equal("This is not a settings file exported from Sentinel LogViewer.", Assert.Single(_environment.Dialogs.Errors));
-		Assert.True(_environment.Saved.AutoStartListening);
+		Assert.False(_environment.Saved.AutoStartListening);
 	}
 
 	[Fact]
@@ -835,13 +835,13 @@ public class SettingsViewModelTests : IDisposable
 		var viewModel = _environment.CreateViewModel();
 		_environment.Dialogs.ExportPath = exportFile;
 		viewModel.ExportCommand.Execute(null);
-		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = true;
+		viewModel.Setting<BoolSettingViewModel>(AutoStartTitle).Value = false;
 		_environment.Dialogs.ImportPath = exportFile;
 		_environment.Dialogs.ConfirmAnswer = false;
 
 		viewModel.ImportCommand.Execute(null);
 
-		Assert.True(_environment.Saved.AutoStartListening);
+		Assert.False(_environment.Saved.AutoStartListening);
 	}
 
 	private static string[] SearchResultTitles(Sentinel.LogViewer.ViewModels.SettingsViewModel viewModel) =>

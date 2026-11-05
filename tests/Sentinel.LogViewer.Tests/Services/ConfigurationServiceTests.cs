@@ -31,6 +31,16 @@ namespace Sentinel.LogViewer.Tests.Services
         }
 
         [Fact]
+        public void ListeningStartsWithTheApplication_UnlessTheSettingIsTurnedOff()
+        {
+            // A fresh installation, a settings file without the value and the file that ships with the application all start listening.
+            Assert.True(ConfigurationService.CreateDefaultConfiguration().AutoStartListening);
+            Assert.True(new AppConfiguration().AutoStartListening);
+            Assert.True(System.Text.Json.JsonSerializer.Deserialize<AppConfiguration>("{ \"Language\": \"en\" }")!.AutoStartListening);
+            Assert.False(System.Text.Json.JsonSerializer.Deserialize<AppConfiguration>("{ \"AutoStartListening\": false }")!.AutoStartListening);
+        }
+
+        [Fact]
         public void ResolveConfigPath_WithMarkerFile_UsesBaseDirectory()
         {
             Environment.SetEnvironmentVariable(ConfigurationService.PortableEnvironmentVariableName, null);
