@@ -12,6 +12,7 @@ on:
 permissions:
   contents: write
   packages: write
+  id-token: write # nuget.org Trusted Publishing
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -205,6 +206,13 @@ jobs:
           --notes $notes `
           --target ${{ github.sha }}
 
+    - name: NuGet login (Trusted Publishing)
+      if: ${{ inputs.publish }}
+      id: nuget-login
+      uses: NuGet/login@v1
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Push development NuGet packages
       if: ${{ inputs.publish }}
       run: |
@@ -225,7 +233,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           dotnet nuget push $package.FullName `
             --source "https://api.nuget.org/v3/index.json" `
-            --api-key "${{ secrets.NUGET_API_KEY }}" `
+            --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" `
             --skip-duplicate
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         }
