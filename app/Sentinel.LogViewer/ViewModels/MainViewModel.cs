@@ -618,6 +618,8 @@ public partial class MainViewModel : INotifyPropertyChanged, IDisposable
 	/// </summary>
 	private void ChangeTimeZone(LogTabViewModel? tab)
 	{
+		// The menu of the column header does not know its tab (the control is its own DataContext), and it is always the tab that is shown.
+		tab ??= SelectedTab;
 		if (tab == null)
 			return;
 
