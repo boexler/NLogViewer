@@ -19,14 +19,42 @@ namespace Sentinel.LogViewer.Wpf
     /// </summary>
     public partial class LogViewer
     {
-        private readonly HashSet<LogEntry> _bookmarks = new();
-        private readonly Dictionary<LogEntry, string> _bookmarkComments = new();
+        private HashSet<LogEntry> _bookmarks => Bookmarks.Entries;
+        private Dictionary<LogEntry, string> _bookmarkComments => Bookmarks.Comments;
 
         // Where a jump stopped at the end of the bookmarks; the same jump again goes on at the other end.
         private (bool Forward, LogEntry Entry)? _bookmarkEnd;
 
         private GridViewColumn? _bookmarkColumn;
         private BookmarkListWindow? _bookmarkWindow;
+
+        /// <summary>
+        /// The bookmarks of the viewer and their comments. A host that keeps them with its tab sets it, so they outlive the viewer and can be saved;
+        /// a viewer that is not given any has its own.
+        /// </summary>
+        [Category("LogViewerBookmarks")]
+        [Description("The bookmarks of the viewer and their comments")]
+        public EntryBookmarks Bookmarks
+        {
+            get => (EntryBookmarks)GetValue(BookmarksProperty);
+            set => SetValue(BookmarksProperty, value);
+        }
+
+        /// <summary>
+        /// The <see cref="Bookmarks"/> DependencyProperty.
+        /// </summary>
+        public static readonly DependencyProperty BookmarksProperty =
+            DependencyProperty.Register(nameof(Bookmarks), typeof(EntryBookmarks), typeof(LogViewer),
+                new FrameworkPropertyMetadata(null, OnBookmarksReplaced, (_, value) => value ?? new EntryBookmarks()));
+
+        private static void OnBookmarksReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not LogViewer viewer)
+                return;
+
+            viewer._bookmarkEnd = null;
+            viewer.BookmarksChanged();
+        }
 
         /// <summary>
         /// Marks the narrow column of the bookmarks in the template of the viewer; a template without it has no bookmark column

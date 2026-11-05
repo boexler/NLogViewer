@@ -1522,5 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>_Show list</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Open s_ession...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>Sa_ve session...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>_Recent sessions</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sentinel.LogViewer sessions (*.slvsession)|*.slvsession|All files (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Save session</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Open session</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Saving session...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Opening session...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Session saved to {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Session {0} opened: {1} tabs</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>The session could not be saved: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>The session could not be opened: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>The application restarts to update. Save the open tabs as a session first?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Restart to update</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>The tabs of the last run were kept. Restore them?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Restore tabs</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Keep tabs across restarts</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>When the application closes, the tabs that hold entries or bookmarks are saved. At the next start you are asked whether to restore them. Switched off, nothing is saved automatically.</value>
+  </data>
 </root>
-

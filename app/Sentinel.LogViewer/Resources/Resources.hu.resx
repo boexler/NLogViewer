@@ -1522,6 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>_Lista megjelenítése</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Munkamenet meg_nyitása...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>Munkamenet men_tése...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>_Legutóbbi munkamenetek</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sentinel.LogViewer munkamenetek (*.slvsession)|*.slvsession|Minden fájl (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Munkamenet mentése</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Munkamenet megnyitása</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Munkamenet mentése...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Munkamenet megnyitása...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Munkamenet elmentve: {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>A(z) {0} munkamenet megnyitva: {1} lap</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>A munkamenetet nem sikerült menteni: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>A munkamenetet nem sikerült megnyitni: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>Az alkalmazás újraindul a frissítéshez. Előbb mentsem a nyitott lapokat munkamenetként?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Újraindítás a frissítéshez</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Az utolsó futás lapjai megmaradtak. Visszaállítja őket?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Lapok visszaállítása</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Lapok megőrzése újraindításkor</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>Az alkalmazás bezárásakor a bejegyzéseket vagy könyvjelzőket tartalmazó lapok mentésre kerülnek. A következő indításkor rákérdez, hogy visszaállítsa-e őket. Kikapcsolva semmi sem mentődik automatikusan.</value>
+  </data>
 </root>
-
-

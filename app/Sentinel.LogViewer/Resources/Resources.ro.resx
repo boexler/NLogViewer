@@ -1522,6 +1522,58 @@
   <data name="Menu_BookmarkList" xml:space="preserve">
     <value>Ara_tă lista</value>
   </data>
+  <data name="Menu_OpenSession" xml:space="preserve">
+    <value>Deschide sesiun_e...</value>
+  </data>
+  <data name="Menu_SaveSession" xml:space="preserve">
+    <value>Salvea_ză sesiunea...</value>
+  </data>
+  <data name="Menu_RecentSessions" xml:space="preserve">
+    <value>Sesiuni _recente</value>
+  </data>
+  <data name="Session_Filter" xml:space="preserve">
+    <value>Sesiuni Sentinel.LogViewer (*.slvsession)|*.slvsession|Toate fișierele (*.*)|*.*</value>
+  </data>
+  <data name="Session_SaveTitle" xml:space="preserve">
+    <value>Salvează sesiunea</value>
+  </data>
+  <data name="Session_OpenTitle" xml:space="preserve">
+    <value>Deschide sesiunea</value>
+  </data>
+  <data name="Session_Saving" xml:space="preserve">
+    <value>Se salvează sesiunea...</value>
+  </data>
+  <data name="Session_Opening" xml:space="preserve">
+    <value>Se deschide sesiunea...</value>
+  </data>
+  <data name="Session_Saved" xml:space="preserve">
+    <value>Sesiune salvată în {0}</value>
+  </data>
+  <data name="Session_Opened" xml:space="preserve">
+    <value>Sesiunea {0} a fost deschisă: {1} file</value>
+  </data>
+  <data name="Session_SaveError" xml:space="preserve">
+    <value>Sesiunea nu a putut fi salvată: {0}</value>
+  </data>
+  <data name="Session_OpenError" xml:space="preserve">
+    <value>Sesiunea nu a putut fi deschisă: {0}</value>
+  </data>
+  <data name="Session_UpdateAsk" xml:space="preserve">
+    <value>Aplicația repornește pentru actualizare. Salvați mai întâi filele deschise ca sesiune?</value>
+  </data>
+  <data name="Session_UpdateCaption" xml:space="preserve">
+    <value>Repornire pentru actualizare</value>
+  </data>
+  <data name="Session_RestoreAsk" xml:space="preserve">
+    <value>Filele din ultima rulare au fost păstrate. Le restaurați?</value>
+  </data>
+  <data name="Session_RestoreCaption" xml:space="preserve">
+    <value>Restaurează filele</value>
+  </data>
+  <data name="Settings_KeepTabs" xml:space="preserve">
+    <value>Păstrează filele după repornire</value>
+  </data>
+  <data name="Settings_KeepTabs_Description" xml:space="preserve">
+    <value>La închiderea aplicației se salvează filele care conțin intrări sau semne de carte. La următoarea pornire sunteți întrebat dacă să fie restaurate. Dezactivat, nu se salvează nimic automat.</value>
+  </data>
 </root>
-
-

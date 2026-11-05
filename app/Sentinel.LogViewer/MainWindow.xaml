@@ -171,6 +171,7 @@
                     SearchHighlightBackground="{DynamicResource LogSearchHighlightBackground}"
                     FindHighlightBackground="{DynamicResource LogFindHighlightBackground}"
                     ItemsSource="{Binding DataContext.LogEntries, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
+                    Bookmarks="{Binding DataContext.Bookmarks, RelativeSource={RelativeSource AncestorType=ContentPresenter}}"
                     FilterState="{Binding DataContext.FilterState, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeOnLeft="{Binding DataContext.LoggerTreeOnLeft, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
                     IsLoggerTreeExpanded="{Binding DataContext.LoggerTreeOpen, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=TwoWay}"
@@ -215,6 +216,29 @@
                           InputGestureText="Ctrl+O"/>
                 <MenuItem Header="{helpers:Resource Key=Menu_OpenFileWithMapping, DefaultValue=Open File with Column _Mapping...}"
                           Command="{Binding OpenFileWithMappingCommand}"/>
+                <Separator />
+                <MenuItem Header="{helpers:Resource Key=Menu_OpenSession, DefaultValue=Open s_ession...}"
+                          Command="{Binding OpenSessionCommand}"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_SaveSession, DefaultValue=Sa_ve session...}"
+                          Command="{Binding SaveSessionCommand}"/>
+                <MenuItem Header="{helpers:Resource Key=Menu_RecentSessions, DefaultValue=_Recent sessions}"
+                          ItemsSource="{Binding RecentSessions}" IsEnabled="{Binding HasRecentSessions}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <Setter Property="Header" Value="{Binding}"/>
+                            <!-- The path is shown as it is: an underscore in it is no access key -->
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Command" Value="{Binding DataContext.OpenRecentSessionCommand, RelativeSource={RelativeSource AncestorType=Menu}}"/>
+                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="{helpers:Resource Key=Menu_Settings, DefaultValue=_Settings...}"
                           Command="{Binding OpenSettingsCommand}"

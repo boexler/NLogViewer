@@ -56,6 +56,10 @@ namespace Sentinel.LogViewer
             // After an update the changelog opens once, when the window is up.
             Loaded += (_, _) => Dispatcher.BeginInvoke(new Action(_viewModel.AnnounceUpdate), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 
+            // The tabs that were kept when the application closed last time are offered back once the window is up.
+            Loaded += (_, _) => Dispatcher.BeginInvoke(new Action(async () => await _viewModel.OfferToRestoreTabsAsync()),
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
             // The functions of the viewer (menu Tab) go to the viewer of the selected tab, wherever the focus is
             foreach (var command in Wpf.LogViewerCommands.All)
             {
@@ -238,8 +242,14 @@ namespace Sentinel.LogViewer
         {
             RestoreFromTray();
 
-            if (arguments.Count > 0)
-                _viewModel.BeginImportPathsFromUi(arguments);
+            // A session file (double click in the explorer) opens as a session; the other files are imported as logs.
+            var sessions = arguments.Where(path => path.EndsWith(Core.Sessions.SessionSerializer.Extension, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var session in sessions)
+                _ = _viewModel.OpenSessionAsync(session);
+
+            var logs = arguments.Except(sessions).ToList();
+            if (logs.Count > 0)
+                _viewModel.BeginImportPathsFromUi(logs);
         }
 
         /// <summary>
@@ -458,6 +468,13 @@ namespace Sentinel.LogViewer
 		        _viewModel.ChangeLanguageCommand.Execute(languageWindow.SelectedLanguageCode);
 	        }
 		}
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            if (!e.Cancel)
+                _viewModel.SaveTabsOnExit();
+        }
 
         protected override void OnClosed(System.EventArgs e)
         {
