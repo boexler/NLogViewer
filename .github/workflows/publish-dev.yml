@@ -113,7 +113,8 @@ jobs:
         dotnet build installer/Sentinel.LogViewer.Installer/Sentinel.LogViewer.Installer.wixproj `
           -c Release `
           -m:1 `
-          -p:InstallerVersion=$env:INSTALLER_VERSION
+          -p:InstallerVersion=$env:INSTALLER_VERSION `
+          -p:InstallerSemVer=$env:VERSION
 
         $target = "publish/Sentinel.LogViewer-$env:VERSION-win-x64.msi"
         Copy-Item "installer/Sentinel.LogViewer.Installer/bin/Release/Sentinel.LogViewer.msi" $target
